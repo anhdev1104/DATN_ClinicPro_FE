@@ -1,5 +1,4 @@
-import Button from '@/components/button';
-import React from 'react';
+import { Button } from '@/components/button';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
@@ -43,7 +42,7 @@ const Header = () => {
             </li>
           </ul>
         </nav>
-        <Button>Đặt lịch khám</Button>
+        <Button type="button">Đặt lịch khám</Button>
       </div>
     </header>
   );

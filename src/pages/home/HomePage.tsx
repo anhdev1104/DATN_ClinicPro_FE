@@ -1,5 +1,13 @@
+import Banner from './components/Banner';
+import FormSearchHome from './components/FormSearchHome';
+
 const HomePage = () => {
-  return <div className="container-page mt-[109px]">Home Page</div>;
+  return (
+    <div className="mt-[106px]">
+      <Banner />
+      <FormSearchHome />
+    </div>
+  );
 };
 
 export default HomePage;

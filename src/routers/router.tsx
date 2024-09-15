@@ -1,6 +1,7 @@
 import MainLayout from '@/layouts/MainLayout';
 import HomePage from '@/pages/home/HomePage';
-import { Route, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 interface IRouter {
   path: string;
@@ -17,6 +18,19 @@ const clientRouter: IRouter[] = [
 ];
 
 export default function AppRouter() {
+  const location = useLocation();
+
+  // hàm xử lý hiển thị document title
+  useEffect(() => {
+    const route = clientRouter.find(route => {
+      const routePath = route.path.replace(/:\w+/g, '');
+      return location.pathname.startsWith(routePath);
+    });
+    if (route && route.title) {
+      document.title = route.title;
+    }
+  }, [location]);
+
   return (
     <Routes>
       <Route element={<MainLayout />}>
