@@ -1,5 +1,5 @@
 import { Button } from '@/components/button';
-import { HeaderNavigation } from '@/config/config';
+import { headerNavigation } from '@/config/navigation';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
@@ -11,7 +11,7 @@ const Header = () => {
         </Link>
         <nav>
           <ul className="flex gap-10 items-center">
-            {HeaderNavigation.map((navigation, index) => (
+            {headerNavigation.map((navigation, index) => (
               <li key={index}>
                 <Link to={navigation.href} className="text-primary font-medium capitalize relative menu-item">
                   {navigation.title}

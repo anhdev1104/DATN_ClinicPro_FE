@@ -1,6 +1,6 @@
-import BannerImg from '@/assets/images/banner-thanh-tuu.webp';
-import Achieve from '@/assets/images/thanhtutu.png';
-import Image from '@/assets/images/image-awards.webp';
+import BannerImg from '/images/banner-thanh-tuu.webp';
+import Achieve from '/images/thanhtutu.png';
+import Image from '/images/image-awards.webp';
 const Achievement = () => {
   return (
     <>

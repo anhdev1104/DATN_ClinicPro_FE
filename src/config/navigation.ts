@@ -2,7 +2,7 @@ interface HeaderNavigationProps {
   title: string;
   href: string;
 }
-export const HeaderNavigation: HeaderNavigationProps[] = [
+export const headerNavigation: HeaderNavigationProps[] = [
   {
     title: 'Về chúng tôi',
     href: '',
