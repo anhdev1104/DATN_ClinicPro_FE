@@ -1,5 +1,4 @@
 import { Button } from '@/components/button';
-import { headerNavigation } from '@/config/navigation';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
@@ -11,13 +10,36 @@ const Header = () => {
         </Link>
         <nav>
           <ul className="flex gap-10 items-center">
-            {headerNavigation.map((navigation, index) => (
-              <li key={index}>
-                <Link to={navigation.href} className="text-primary font-medium capitalize relative menu-item">
-                  {navigation.title}
-                </Link>
-              </li>
-            ))}
+            <li>
+              <Link to={''} className="text-primary font-medium capitalize relative menu-item">
+                Về chúng tôi
+              </Link>
+            </li>
+            <li>
+              <Link to={''} className="text-primary font-medium capitalize relative menu-item">
+                Mạng lưới
+              </Link>
+            </li>
+            <li>
+              <Link to={''} className="text-primary font-medium capitalize relative menu-item">
+                Chuyên khoa
+              </Link>
+            </li>
+            <li>
+              <Link to={'/goi-kham'} className="text-primary font-medium capitalize relative menu-item">
+                Gói khám
+              </Link>
+            </li>
+            <li>
+              <Link to={'/thanh-tuu'} className="text-primary font-medium capitalize relative menu-item">
+                Thành tựu
+              </Link>
+            </li>
+            <li>
+              <Link to={''} className="text-primary font-medium capitalize relative menu-item">
+                Cộng đồng
+              </Link>
+            </li>
           </ul>
         </nav>
         <Button type="button">Đặt lịch khám</Button>

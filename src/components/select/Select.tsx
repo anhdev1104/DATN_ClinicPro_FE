@@ -31,7 +31,7 @@ const Select = forwardRef<HTMLInputElement, SelectProps>(
       setValue(e.target.value);
       handleSearchValue(e.target.value);
     };
-    const handleSetValue = (_: React.MouseEvent, data: DataProps) => {
+    const handleChoosePackage = (_: React.MouseEvent, data: DataProps) => {
       setValue(data.name);
       setVisible(false);
     };
@@ -76,7 +76,7 @@ const Select = forwardRef<HTMLInputElement, SelectProps>(
             {options.length > 0 ? (
               options.map(data => (
                 <span
-                  onMouseDown={e => handleSetValue(e, data)}
+                  onMouseDown={e => handleChoosePackage(e, data)}
                   className="py-2 px-4 text-[13px] hover:bg-[#f4f4f8] hover:font-semibold"
                   key={v4()}
                 >

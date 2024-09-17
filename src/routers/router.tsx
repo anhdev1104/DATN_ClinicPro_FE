@@ -1,5 +1,6 @@
 import MainLayout from '@/layouts/MainLayout';
-import { Achievement, Advise } from '@/pages';
+import Achievement from '@/pages/achievement/Achievement';
+import Advise from '@/pages/advise/Advise';
 import HomePage from '@/pages/home/HomePage';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
@@ -34,7 +35,8 @@ export default function AppRouter() {
   // hàm xử lý hiển thị document title
   useEffect(() => {
     const route = clientRouter.find(route => {
-      return route.path.match(location.pathname);
+      const routePath = route.path.replace(/:\w+/g, '');
+      return location.pathname.startsWith(routePath);
     });
     if (route && route.title) {
       document.title = route.title;

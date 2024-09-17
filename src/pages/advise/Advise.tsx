@@ -1,6 +1,6 @@
 import BannerImg from '/images/banner-goi-kham.webp';
 
-import { Select } from '@/components';
+import Select from '@/components/select';
 import { AdvisePackage } from './components/AdvisePackage';
 const fakeData = [
   {
@@ -40,7 +40,6 @@ const fakeData = [
     name: 'Bệnh viện Hoàn Mỹ Cửu Long',
   },
 ];
-
 
 const Advise = () => {
   return (
