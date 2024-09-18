@@ -1,5 +1,7 @@
 import MainLayout from '@/layouts/MainLayout';
 import HomePage from '@/pages/home/HomePage';
+import AboutPage from '@/pages/aboutUs/AboutPage';
+import BranchsPage from '@/pages/branchs/BranchsPage';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
@@ -14,6 +16,16 @@ const clientRouter: IRouter[] = [
     path: '/',
     element: HomePage,
     title: 'ClinicPro',
+  },
+  {
+    path: '/ve-chung-toi',
+    element: AboutPage,
+    title: 'Giới thiệu về chúng tôi | Tập đoàn y khoa Hoàn Mỹ',
+  },
+  {
+    path: '/mang-luoi',
+    element: BranchsPage,
+    title: 'Hệ thồng 16 phòng khám Hoàn Mỹ trên cả nước',
   },
 ];
 

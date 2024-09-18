@@ -18,7 +18,7 @@ const Footer = () => {
             <div className="pr-[15px]">
               <ul className="flex flex-col gap-5">
                 <li className=" transition-all duration-300 ease-linear hover:translate-x-[5px]">
-                  <Link to={''} className="capitalize transition-all duration-300 ease-linear">
+                  <Link to={'/ve-chung-toi'} className="capitalize transition-all duration-300 ease-linear">
                     Về chúng tôi
                   </Link>
                 </li>
