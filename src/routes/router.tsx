@@ -3,6 +3,8 @@ import MainLayout from '@/layouts/MainLayout';
 import Achievement from '@/pages/achievement/Achievement';
 import Advise from '@/pages/advise/Advise';
 import HomePage from '@/pages/home/HomePage';
+import AboutPage from '@/pages/about/AboutPage';
+import BranchsPage from '@/pages/branchs/BranchsPage';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
@@ -27,6 +29,16 @@ const clientRouter: IRouter[] = [
     path: '/thanh-tuu',
     element: Achievement,
     title: 'Thành tựu | Tập đoàn Y khoa Hoàn Mỹ',
+  },
+  {
+    path: '/ve-chung-toi',
+    element: AboutPage,
+    title: 'Giới thiệu về chúng tôi | Tập đoàn y khoa Hoàn Mỹ',
+  },
+  {
+    path: '/mang-luoi',
+    element: BranchsPage,
+    title: 'Hệ thồng 16 phòng khám Hoàn Mỹ trên cả nước',
   },
 ];
 

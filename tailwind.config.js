@@ -13,8 +13,27 @@ export default {
         lightGray: '#E0F2F1',
         dark: '#5d5d5d',
         borderColor: '#ececed',
+        primaryText: '#00749b',
+      },
+
+      keyframes: {
+        slideInRight: {
+          '0%': { opacity: '0', transform: 'translateX(10%)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+      },
+      animation: {
+        'slide-in-right': 'slideInRight 0.5s ease-in-out forwards',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.object-unset': {
+          'object-fit': 'unset',
+        },
+      });
+    },
+  ],
 };

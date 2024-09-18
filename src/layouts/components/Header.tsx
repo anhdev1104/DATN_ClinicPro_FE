@@ -11,12 +11,12 @@ const Header = () => {
         <nav>
           <ul className="flex gap-10 items-center">
             <li>
-              <Link to={''} className="text-primary font-medium capitalize relative menu-item">
+              <Link to={'/ve-chung-toi'} className="text-primary font-medium capitalize relative menu-item">
                 Về chúng tôi
               </Link>
             </li>
             <li>
-              <Link to={''} className="text-primary font-medium capitalize relative menu-item">
+              <Link to={'/mang-luoi'} className="text-primary font-medium capitalize relative menu-item">
                 Mạng lưới
               </Link>
             </li>
