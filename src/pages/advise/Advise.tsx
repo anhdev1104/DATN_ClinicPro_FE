@@ -44,28 +44,26 @@ const fakeData = [
 const Advise = () => {
   return (
     <>
-      <div className="">
-        <div className="relative">
-          <h1 className="absolute top-2/4 left-10 -translate-y-2/4 font-semibold text-third text-lg sm:text-4xl">
-            Gói Khám
-          </h1>
-          <img className="h-[30vh] md:h-auto w-full object-cover" src={BannerImg} alt="banner" />
+      <div className="relative">
+        <img className="h-[30vh] md:h-auto w-full object-cover" src={BannerImg} alt="banner" />
+        <div className="container-page absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 font-semibold text-third text-lg sm:text-6xl">
+          <h1>Gói Khám</h1>
         </div>
-        <div>
-          <div className="grid grid-cols-1 grid-rows-2 md:grid-cols-3 md:grid-rows-1 w-11/12 sm:w-9/12 gap-y-2 md:gap-y-0 md:gap-x-2 mx-auto rounded-3xl bg-white px-10 py-10 shadow-[0px_30px_40px_#00405315] -translate-y-1/4">
-            <div>
-              <Select placeholder="Bệnh Viện hoặc Phòng Khám" data={fakeData} className='' />
-            </div>
-            <div className='col-span-2'>
-              <Select placeholder="Bệnh Viện hoặc Phòng Khám" data={fakeData} className='' />
-            </div>
+      </div>
+      <div className="container-page">
+        <div className="w-full flex gap-y-2 max-md:flex-col md:gap-x-2 rounded-3xl bg-white px-10 py-10 shadow-[0px_30px_40px_#00405315] -translate-y-1/4">
+          <div className="min-w-[330px]">
+            <Select placeholder="Bệnh Viện hoặc Phòng Khám" data={fakeData} className="" />
+          </div>
+          <div className="flex-1">
+            <Select placeholder="Bệnh Viện hoặc Phòng Khám" data={fakeData} className="" />
           </div>
         </div>
-        <div >
-          <AdvisePackage />
-          <AdvisePackage />
-          <AdvisePackage />
-        </div>
+      </div>
+      <div>
+        <AdvisePackage />
+        <AdvisePackage />
+        <AdvisePackage />
       </div>
     </>
   );

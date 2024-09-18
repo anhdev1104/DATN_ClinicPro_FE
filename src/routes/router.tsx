@@ -1,3 +1,4 @@
+import PageToTopUtils from '@/helpers/PageToTopUtils';
 import MainLayout from '@/layouts/MainLayout';
 import Achievement from '@/pages/achievement/Achievement';
 import Advise from '@/pages/advise/Advise';
@@ -44,11 +45,14 @@ export default function AppRouter() {
   }, [location]);
 
   return (
-    <Routes>
-      <Route element={<MainLayout />}>
-        {clientRouter.length > 0 &&
-          clientRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
-      </Route>
-    </Routes>
+    <>
+      <PageToTopUtils />
+      <Routes>
+        <Route element={<MainLayout />}>
+          {clientRouter.length > 0 &&
+            clientRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
+        </Route>
+      </Routes>
+    </>
   );
 }

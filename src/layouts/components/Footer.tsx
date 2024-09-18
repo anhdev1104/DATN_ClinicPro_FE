@@ -1,3 +1,4 @@
+import Field from '@/components/field';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -89,8 +90,19 @@ const Footer = () => {
             <div>
               <span className="block mb-4">Theo dõi bản tin của chúng tôi</span>
               <form>
-                <input type="email" placeholder="Email của bạn" />
-                <button type="submit">Đăng ký</button>
+                <Field className="border border-white rounded-[100rem] justify-between items-center flex">
+                  <input
+                    type="email"
+                    placeholder="Email của bạn"
+                    className="bg-transparent text-white placeholder:text-white outline-none py-2 pl-6 flex-1 pr-4"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-white text-dark px-4 py-2 rounded-[100rem] font-bold hover:scale-110 transition-all ease-linear duration-300"
+                  >
+                    Đăng ký
+                  </button>
+                </Field>
               </form>
             </div>
           </div>

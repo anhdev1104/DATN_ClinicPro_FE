@@ -6,9 +6,11 @@ import { v4 } from 'uuid';
 type DataProps = {
   name: string;
 };
+
 interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   data: DataProps[];
 }
+
 const Select = forwardRef<HTMLInputElement, SelectProps>(
   ({ placeholder = '', className, type = 'text', autoComplete = '', data, ...props }, ref) => {
     const [visible, setVisible] = useState(false);
