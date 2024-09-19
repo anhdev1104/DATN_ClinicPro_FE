@@ -13,6 +13,9 @@ export default {
         dark: '#5d5d5d',
         borderColor: '#ececed',
       },
+      spacing: {
+        '65p': '65%',
+      },
     },
   },
   plugins: [],

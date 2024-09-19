@@ -36,7 +36,7 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link to={''} className="text-primary font-medium capitalize relative menu-item">
+              <Link to={'/Community'} className="text-primary font-medium capitalize relative menu-item">
                 Cộng đồng
               </Link>
             </li>

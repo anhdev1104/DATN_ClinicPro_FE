@@ -1,5 +1,6 @@
 import MainLayout from '@/layouts/MainLayout';
 import HomePage from '@/pages/home/HomePage';
+import CommunityPage from '@/pages/community/CommunityPage';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
@@ -13,6 +14,11 @@ const clientRouter: IRouter[] = [
   {
     path: '/',
     element: HomePage,
+    title: 'ClinicPro',
+  },
+  {
+    path: '/Community',
+    element: CommunityPage,
     title: 'ClinicPro',
   },
 ];
