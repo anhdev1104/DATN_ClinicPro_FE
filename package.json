@@ -19,7 +19,6 @@
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.7.7",
     "clsx": "^2.1.1",
-    "datn-clinicpro-fe": "file:",
     "prettier": "^3.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -48,6 +47,6 @@
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.1"
+    "vite": "^5.4.5"
   }
 }

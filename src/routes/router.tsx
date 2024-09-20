@@ -1,6 +1,7 @@
 import PageToTopUtils from '@/helpers/PageToTopUtils';
 import MainLayout from '@/layouts/MainLayout';
 import Achievement from '@/pages/achievement/Achievement';
+import CommunityPage from '@/pages/community/CommunityPage';
 import Advise from '@/pages/advise/Advise';
 import HomePage from '@/pages/home/HomePage';
 import AboutPage from '@/pages/about/AboutPage';
@@ -39,6 +40,11 @@ const clientRouter: IRouter[] = [
     path: '/mang-luoi',
     element: BranchsPage,
     title: 'Hệ thồng 16 phòng khám Hoàn Mỹ trên cả nước',
+  },
+  {
+    path: '/Community',
+    element: CommunityPage,
+    title: 'ClinicPro',
   },
 ];
 
