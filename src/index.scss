@@ -30,4 +30,21 @@
   .menu-item:hover:before {
     width: 100%;
   }
+
+  .amount__title-small:before {
+    margin: 0 auto;
+    display: block;
+    content: '';
+    width: 50%;
+    height: 1px;
+    background-color: #ffffff4a;
+  }
+  .amount__item .amount__title:before {
+    margin: 0 auto;
+    display: block;
+    content: '';
+    width: 25%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.2901960784);
+  }
 }

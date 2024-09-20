@@ -25,6 +25,9 @@ export default {
       animation: {
         'slide-in-right': 'slideInRight 0.5s ease-in-out forwards',
       },
+      spacing: {
+        '65p': '65%',
+      },
     },
   },
   plugins: [
