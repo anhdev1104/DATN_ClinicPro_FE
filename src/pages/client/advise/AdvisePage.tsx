@@ -41,7 +41,7 @@ const fakeData = [
   },
 ];
 
-const Advise = () => {
+const AdvisePage = () => {
   return (
     <>
       <div className="relative">
@@ -68,4 +68,4 @@ const Advise = () => {
     </>
   );
 };
-export default Advise;
+export default AdvisePage;

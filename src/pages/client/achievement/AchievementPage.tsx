@@ -1,7 +1,7 @@
 import BannerImg from '/images/banner-thanh-tuu.webp';
 import Achieve from '/images/awards2.webp';
 import Image from '/images/image-awards.webp';
-const Achievement = () => {
+const AchievementPage = () => {
   return (
     <>
       <div>
@@ -69,4 +69,4 @@ const Achievement = () => {
     </>
   );
 };
-export default Achievement;
+export default AchievementPage;
