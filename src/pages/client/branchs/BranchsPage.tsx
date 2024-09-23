@@ -40,7 +40,7 @@ const arrBranch = [
 const BranchsPage = () => {
   return (
     <div>
-      <section className="relative mt-[107px]">
+      <section className="relative mt-[106px]">
         <div>
           <img
             className="h-[calc(100vh-107px)] w-full object-cover object-top"

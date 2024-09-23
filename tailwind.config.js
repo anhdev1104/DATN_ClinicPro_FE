@@ -25,6 +25,9 @@ export default {
       animation: {
         'slide-in-right': 'slideInRight 0.5s ease-in-out forwards',
       },
+      spacing: {
+        '65p': '65%',
+      },
     },
   },
   plugins: [
@@ -32,6 +35,9 @@ export default {
       addUtilities({
         '.object-unset': {
           'object-fit': 'unset',
+        },
+        '.clip-path-border': {
+          'clip-path': 'polygon(0 0, 100% 0, 100% 90%, 0 90%)',
         },
       });
     },
