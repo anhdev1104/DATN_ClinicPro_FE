@@ -6,20 +6,18 @@ import { Button } from '@/components/button';
 
 const RegisterPage = () => {
   return (
-    <div className="w-screen h-screen py-[60px] px-[80px] flex justify-center items-center bg-[#f2f2f4]">
-      <div className="flex w-[70%] h-full border bg-white">
-        {/* Left */}
-        <div className="flex-[0_0_45%] py-2 px-3 justify-center flex flex-col">
+    <div className="w-screen h-screen flex justify-center items-center bg-[#f2f2f4]">
+      <div className="flex w-full h-full border bg-white">
+        <div className="w-2/4 py-10 px-20 justify-center flex flex-col">
           <div className="size-full flex flex-col justify-between max-w-full">
             <div className="py-1 px-2 flex justify-between ">
               <img className="h-[40px] object-cover" src="/images/logo-example.webp" alt="" />
-
               <Link to={'/'} className="flex gap-2 items-center">
                 <ArrowLeft className="!size-[15px] !text-dark" />
                 <p className="text-dark text-[14px]">Quay Lại</p>
               </Link>
             </div>
-            <div className="flex justify-center items-center flex-col w-[70%] m-auto gap-5">
+            <div className="flex justify-center items-center flex-col w-[60%] m-auto gap-5">
               <div className="flex justify-center items-center flex-col gap-2">
                 <h1 className="text-primaryText text-[20px] uppercase font-bold">Đăng kí tài khoản</h1>
                 <p className="text-[10px] text-third">Đăng kí để sử dụng dịch vụ từ chúng tôi 1 cách tốt nhất.</p>
@@ -89,7 +87,7 @@ const RegisterPage = () => {
               <div className="flex gap-1 text-[12px] text-[#141313a9]">
                 <p>Nếu đã có tài khoản,</p>
                 <Link className="underline text-primaryText" to="/login">
-                  đăng nhập
+                  Đăng nhập
                 </Link>
                 <p>tại đây!</p>
               </div>
@@ -97,8 +95,7 @@ const RegisterPage = () => {
           </div>
         </div>
 
-        {/* Right */}
-        <div className="flex-[0_0_55%] relative">
+        <div className="w-2/4 relative">
           <img
             className="w-full h-full object-cover"
             style={{ objectPosition: '60% 30%' }}
