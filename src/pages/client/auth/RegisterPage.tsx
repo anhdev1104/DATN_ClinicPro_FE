@@ -6,10 +6,10 @@ import { Button } from '@/components/button';
 
 const RegisterPage = () => {
   return (
-    <div className="w-screen h-screen py-[60px] px-[80px] flex justify-center items-center bg-[#f2f2f4]">
-      <div className="flex w-[70%] h-full border bg-white">
+    <div className="w-screen h-screen flex justify-center items-center bg-[#f2f2f4]">
+      <div className="flex  w-[100%] gap-[20%] h-full border bg-white">
         {/* Left */}
-        <div className="flex-[0_0_45%] py-2 px-3 justify-center flex flex-col">
+        <div className="flex-[0_0_40%] py-2 px-3 justify-center flex flex-col">
           <div className="size-full flex flex-col justify-between max-w-full">
             <div className="py-1 px-2 flex justify-between ">
               <img className="h-[40px] object-cover" src="/images/logo-example.webp" alt="" />
@@ -98,7 +98,7 @@ const RegisterPage = () => {
         </div>
 
         {/* Right */}
-        <div className="flex-[0_0_55%] relative">
+        <div className="flex-[0_0_40%] relative">
           <img
             className="w-full h-full object-cover"
             style={{ objectPosition: '60% 30%' }}
@@ -108,14 +108,15 @@ const RegisterPage = () => {
           <div className="w-full h-auto max-w-[90%] mx-auto bg-[#c6c5c582] backdrop-blur-[1px] p-6 border-[0.5px] border-gray-200 text-white absolute bottom-0 left-[50%] translate-y-[-10%] translate-x-[-50%] flex flex-col gap-3">
             <div>
               <h1 className="text-white text-[18px] leading-[35px] font-semibold">
-                "Chào mừng bạn đến với Hoàn Mỹ. Chúng tôi là mạng lưới chăm sóc sức khỏe tư nhân hàng đầu tại Việt Nam."
+                "Chào mừng bạn đến với ClinicPro. Chúng tôi là mạng lưới chăm sóc sức khỏe tư nhân hàng đầu tại Việt
+                Nam."
               </h1>
             </div>
             <div className="h-[0.5px] bg-white w-full"></div>
 
             <div className="w-full h-auto flex justify-between gap-2">
               <div className="flex-[0_0_50%]">
-                <h1 className="mb-2">Hoan My Hospital</h1>
+                <h1 className="mb-2">ClinicPro Hospital</h1>
                 <p className="text-[9px] text-white opacity-80">
                   Tầng 11, Friendship Tower, 31 Lê Duẩn, Phường Bến Nghé, Quận 1, TP HCM
                 </p>
