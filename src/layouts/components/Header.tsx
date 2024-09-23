@@ -42,7 +42,10 @@ const Header = () => {
             </li>
           </ul>
         </nav>
-        <Button type="button">Đặt lịch khám</Button>
+        <div className="flex gap-5 items-center">
+          <Button type="button">Đặt lịch khám</Button>
+          <Link to={'/login'}>Đăng nhập</Link>
+        </div>
       </div>
     </header>
   );
