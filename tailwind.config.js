@@ -36,6 +36,9 @@ export default {
         '.object-unset': {
           'object-fit': 'unset',
         },
+        '.clip-path-border': {
+          'clip-path': 'polygon(0 0, 100% 0, 100% 90%, 0 90%)',
+        },
       });
     },
   ],
