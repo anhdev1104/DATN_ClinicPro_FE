@@ -47,7 +47,7 @@ const clientRouter: IRouter[] = [
     title: 'Hệ thồng 16 phòng khám Hoàn Mỹ trên cả nước',
   },
   {
-    path: '/Community',
+    path: '/community',
     element: CommunityPage,
     title: 'ClinicPro',
   },

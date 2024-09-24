@@ -80,7 +80,7 @@ const RegisterPage = () => {
                 </div>
 
                 <Button type="submit" className="bg-primaryText rounded-md w-full mt-3">
-                  Đăng kí
+                  Đăng ký
                 </Button>
               </form>
 
