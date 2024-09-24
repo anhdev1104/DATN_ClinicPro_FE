@@ -1,7 +1,6 @@
 import { ArrowLeft } from '@/components/icons';
 import { Link } from 'react-router-dom';
 import Input from '@/components/input';
-import ButtonSocial from './components/ButtonSocial';
 import { Button } from '@/components/button';
 
 const LoginOTP = () => {
@@ -51,13 +50,13 @@ const LoginOTP = () => {
               </div>
 
               <div className="w-full  mb-10">
-                <ButtonSocial
+                {/* <ButtonSocial
                   type="button"
                   className="w-full mb-3 p-2 h-[40px] border-[2px] border-gray-200 rounded-md text-black font-medium"
                   image="/images/auth/google_icon.webp"
                 >
                   Đăng nhập với Google
-                </ButtonSocial>
+                </ButtonSocial> */}
               </div>
 
               <div className="flex flex-col w-full justify-center gap-1 text-[14px] text-[#141313a9]">

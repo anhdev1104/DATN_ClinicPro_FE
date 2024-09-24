@@ -1,7 +1,6 @@
 import { ArrowLeft } from '@/components/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '@/components/input';
-// import ButtonSocial from './components/ButtonSocial';
 import { Button, ButtonSocial } from '@/components/button';
 import Label from '@/components/label';
 import Field from '@/components/field';
