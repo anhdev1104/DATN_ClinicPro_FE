@@ -65,7 +65,7 @@ const LoginPage = () => {
                 <div className="flex gap-1">
                   <p>Nếu chưa có tài khoản,</p>
                   <Link className="underline text-primaryText" to="/register">
-                    đăng kí
+                    đăng ký
                   </Link>
                   <p>tại đây!</p>
                 </div>
@@ -86,7 +86,7 @@ const LoginPage = () => {
             src="/images/banner-goi-kham.webp"
             alt=""
           />
-          <div className="w-full h-auto max-w-[90%] mx-auto bg-[#c6c5c582] backdrop-blur-[1px] p-6 border-[0.5px] border-gray-200 text-white absolute bottom-0 left-[50%] translate-y-[-10%] translate-x-[-50%] flex flex-col gap-3">
+          <div className="w-full h-auto max-w-[90%] mx-auto bg-[#acacac82] backdrop-blur-[1px] p-6 border-[0.5px] border-gray-200 text-white absolute bottom-0 left-[50%] translate-y-[-10%] translate-x-[-50%] flex flex-col gap-3">
             <div>
               <h1 className="text-white text-[20px] leading-[35px] font-semibold">
                 "Chào mừng bạn đến với ClinicPro. Chúng tôi là mạng lưới chăm sóc sức khỏe tư nhân hàng đầu tại Việt
@@ -99,7 +99,7 @@ const LoginPage = () => {
               <div className="flex-[0_0_50%]">
                 <h1 className="mb-2 text-[17px]">ClinicPro Hospital</h1>
                 <p className="text-[11px] text-white opacity-80">
-                  Tầng 11, Friendship Tower, 31 Lê Duẩn, Phường Bến Nghé, Quận 1, TP HCM
+                  575 Tôn Đức Thắng, Phường Hoà Khánh Nam, Quận Liên Chiển, TP Đà Nẵng
                 </p>
               </div>
 
