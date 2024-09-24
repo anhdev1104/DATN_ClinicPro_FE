@@ -1,47 +1,35 @@
 import { ArrowLeft } from '@/components/icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Input from '@/components/input';
-import { Button } from '@/components/button';
+import { Button, ButtonSocial } from '@/components/button';
+import Label from '@/components/label';
+import Field from '@/components/field';
 
 const LoginOTP = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-[#f2f2f4]">
       <div className="flex w-full h-full border bg-white">
         <div className="w-2/4 pt-2 px-20 justify-center flex flex-col">
-          <div className="size-full flex flex-col justify-between max-w-full">
+          <div className="size-full flex flex-col max-w-full">
             <div className="py-1 px-2 flex justify-between ">
               <Link to={'/'}>
                 <img className="h-[40px] object-cover" src="/images/logo-example.webp" alt="" />
               </Link>
-              <Link to={'/'} className="flex gap-2 items-center">
-                <ArrowLeft className="!size-[16px] !text-dark" />
+              <div className="flex gap-2 items-center cursor-pointer" onClick={() => navigate(-1)}>
+                <ArrowLeft className="!size-[16px] !text-dark mt-[2px]" />
                 <p className="text-dark text-[16px]">Quay lại</p>
-              </Link>
+              </div>
             </div>
 
-            <div className="flex justify-center items-center flex-col w-[65%] m-auto gap-5">
-              <div className="flex justify-center items-start flex-col gap-3 mb-2 w-full">
-                <h1 className="text-primaryText text-[20px] font-bold">Đăng nhập OTP</h1>
-                <p className="text-[15px] text-third">Nhập email để nhận mã đăng nhập OTP.</p>
+            <div className="flex justify-center items-center flex-col w-[65%] mt-10 mx-auto gap-2">
+              <div className="flex justify-center items-center flex-col gap-2 mb-2">
+                <h1 className="text-primaryText text-[25px] uppercase font-bold">Đăng nhập OTP</h1>
+                <p className="text-[13px] text-third">Đăng nhập để sử dụng dịch vụ từ chúng tôi một cách tốt nhất.</p>
               </div>
-
-              <form className="w-full">
-                <div className="mb-4 flex flex-col gap-[6px]">
-                  <label className="text-[15px] text-black font-medium" htmlFor="email">
-                    Email:
-                  </label>
-                  <Input
-                    name="email"
-                    type="email"
-                    className="h-[40px] text-[13px] !font-medium !text-black rounded-md bg-white border border-gray-300"
-                    placeholder="Nhập Email ..."
-                  />
-                </div>
-
-                <Button type="submit" className="bg-primaryText rounded-md w-full mt-3 h-[40px] text-[13px]">
-                  Gửi mã
-                </Button>
-              </form>
+              <ButtonSocial type="button" image="/images/auth/google_icon.webp">
+                Đăng nhập với Google
+              </ButtonSocial>
 
               <div className="w-full flex items-center gap-2">
                 <div className="h-[1px] w-full bg-gray-200"></div>
@@ -49,18 +37,23 @@ const LoginOTP = () => {
                 <div className="h-[1px] w-full bg-gray-200"></div>
               </div>
 
-              <div className="w-full  mb-10">
-                {/* <ButtonSocial
-                  type="button"
-                  className="w-full mb-3 p-2 h-[40px] border-[2px] border-gray-200 rounded-md text-black font-medium"
-                  image="/images/auth/google_icon.webp"
-                >
-                  Đăng nhập với Google
-                </ButtonSocial> */}
-              </div>
+              <form action="" className="w-full mb-3">
+                <Field>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    name="email"
+                    type="email"
+                    className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-primaryText"
+                    placeholder="Nhập địa chỉ email ..."
+                  />
+                </Field>
+                <Button type="submit" className="bg-primaryText rounded-md w-full mt-3 h-[40px]">
+                  Gửi mã
+                </Button>
+              </form>
 
-              <div className="flex flex-col w-full justify-center gap-1 text-[14px] text-[#141313a9]">
-                <div className="w-full flex items-center justify-center gap-1">
+              <div className="flex flex-col text-center gap-1 text-[14px] text-[#141313a9]">
+                <div className="flex gap-1">
                   <p>Nếu chưa có tài khoản,</p>
                   <Link className="underline text-primaryText" to="/register">
                     đăng kí
@@ -75,7 +68,7 @@ const LoginOTP = () => {
         <div className="w-2/4 relative">
           <img
             className="w-full h-full object-cover"
-            style={{ objectPosition: '60% 30%' }}
+            style={{ objectPosition: '70% 30%' }}
             src="/images/banner-goi-kham.webp"
             alt=""
           />

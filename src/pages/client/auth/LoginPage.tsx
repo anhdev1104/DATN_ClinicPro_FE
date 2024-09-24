@@ -1,37 +1,35 @@
 import { ArrowLeft } from '@/components/icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Input from '@/components/input';
-import { Button } from '@/components/button';
+import { Button, ButtonSocial } from '@/components/button';
+import Label from '@/components/label';
+import Field from '@/components/field';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-[#f2f2f4]">
       <div className="flex w-full h-full border bg-white">
         <div className="w-2/4 pt-2 px-20 justify-center flex flex-col">
-          <div className="size-full flex flex-col justify-between max-w-full">
+          <div className="size-full flex flex-col max-w-full">
             <div className="py-1 px-2 flex justify-between ">
-              <img className="h-[40px] object-cover" src="/images/logo-example.webp" alt="" />
-              <Link to={'/'} className="flex gap-2 items-center">
-                <ArrowLeft className="!size-[16px] !text-dark" />
-                <p className="text-dark text-[16px]">Quay Lại</p>
+              <Link to={'/'}>
+                <img className="h-[40px] object-cover" src="/images/logo-example.webp" alt="" />
               </Link>
+              <div className="flex gap-2 items-center cursor-pointer" onClick={() => navigate(-1)}>
+                <ArrowLeft className="!size-[16px] !text-dark mt-[2px]" />
+                <p className="text-dark text-[16px]">Quay lại</p>
+              </div>
             </div>
 
-            <div className="flex justify-center items-center flex-col w-[65%] m-auto gap-5">
+            <div className="flex justify-center items-center flex-col w-[65%] mt-10 mx-auto gap-2">
               <div className="flex justify-center items-center flex-col gap-2 mb-2">
                 <h1 className="text-primaryText text-[25px] uppercase font-bold">Đăng nhập tài khoản</h1>
-                <p className="text-[13px] text-third">Đăng nhập để sử dụng dịch vụ từ chúng tôi 1 cách tốt nhất.</p>
+                <p className="text-[13px] text-third">Đăng nhập để sử dụng dịch vụ từ chúng tôi một cách tốt nhất.</p>
               </div>
-
-              <div className="w-full">
-                {/* <ButtonSocial
-                  type="button"
-                  className="w-full mb-3 p-2 h-[40px] border-[2px] border-gray-200 rounded-md text-black font-medium"
-                  image="/images/auth/google_icon.webp"
-                >
-                  Đăng nhập với Google
-                </ButtonSocial> */}
-              </div>
+              <ButtonSocial type="button" image="/images/auth/google_icon.webp">
+                Đăng nhập với Google
+              </ButtonSocial>
 
               <div className="w-full flex items-center gap-2">
                 <div className="h-[1px] w-full bg-gray-200"></div>
@@ -39,57 +37,39 @@ const LoginPage = () => {
                 <div className="h-[1px] w-full bg-gray-200"></div>
               </div>
 
-              <form action="" className="w-full mb-10">
-                <div className="mb-4 flex flex-col gap-[6px]">
-                  <label className="text-[15px] text-black font-medium" htmlFor="email">
-                    Email:
-                  </label>
+              <form action="" className="w-full mb-3">
+                <Field>
+                  <Label htmlFor="email">Email</Label>
                   <Input
                     name="email"
                     type="email"
-                    className="h-[40px] text-[13px] !font-medium !text-black rounded-md bg-white border border-gray-300"
-                    placeholder="Nhập Email ..."
+                    className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-primaryText"
+                    placeholder="Nhập địa chỉ email ..."
                   />
-                </div>
-
-                <div className="mb-3 flex flex-col gap-[6px]">
-                  <label className="text-[13px] text-black font-medium" htmlFor="password">
-                    Mật khẩu:
-                  </label>
+                </Field>
+                <Field>
+                  <Label htmlFor="password">Mật khẩu</Label>
                   <Input
                     name="password"
                     type="password"
-                    className="h-[40px] text-[13px] !font-medium !text-black rounded-md bg-white border border-gray-300"
-                    placeholder="Nhập mật khẩu ..."
+                    className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-primaryText"
+                    placeholder="Mật khẩu tối thiểu 6 kí tự ..."
                   />
-                </div>
-
-                <div className="flex items-center justify-center w-max gap-3 mb-3">
-                  <Input
-                    name="rememberAccount"
-                    type="checkbox"
-                    className="!size-[14px] !font-medium !text-black rounded-md"
-                    placeholder="Nhập mật khẩu ..."
-                  />
-                  <label className="pb-[5px] text-[14px] text-[#141313a9] cursor-pointer" htmlFor="rememberAccount">
-                    Ghi nhớ cho lần đăng nhập sau.
-                  </label>
-                </div>
-
-                <Button type="submit" className="bg-primaryText rounded-md w-full mt-3 h-[40px] text-[13px]">
+                </Field>
+                <Button type="submit" className="bg-primaryText rounded-md w-full mt-3 h-[40px]">
                   Đăng nhập
                 </Button>
               </form>
 
-              <div className="flex flex-col w-full justify-center gap-1 text-[14px] text-[#141313a9]">
-                <div className="w-full flex items-center justify-center gap-1">
+              <div className="flex flex-col text-center gap-1 text-[14px] text-[#141313a9]">
+                <div className="flex gap-1">
                   <p>Nếu chưa có tài khoản,</p>
                   <Link className="underline text-primaryText" to="/register">
                     đăng kí
                   </Link>
                   <p>tại đây!</p>
                 </div>
-                <div className="w-full flex items-center justify-center gap-1">
+                <div>
                   <Link className="underline text-primaryText" to="/login-otp">
                     Đăng nhập OTP?
                   </Link>
@@ -102,7 +82,7 @@ const LoginPage = () => {
         <div className="w-2/4 relative">
           <img
             className="w-full h-full object-cover"
-            style={{ objectPosition: '60% 30%' }}
+            style={{ objectPosition: '70% 30%' }}
             src="/images/banner-goi-kham.webp"
             alt=""
           />
