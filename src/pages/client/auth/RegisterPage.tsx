@@ -8,31 +8,32 @@ const RegisterPage = () => {
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-[#f2f2f4]">
       <div className="flex w-full h-full border bg-white">
-        <div className="w-2/4 pt-3 px-20 justify-center flex flex-col">
+        <div className="w-2/4 pt-2 px-20 justify-center flex flex-col">
           <div className="size-full flex flex-col justify-between max-w-full">
             <div className="py-1 px-2 flex justify-between ">
               <img className="h-[40px] object-cover" src="/images/logo-example.webp" alt="" />
               <Link to={'/'} className="flex gap-2 items-center">
                 <ArrowLeft className="!size-[16px] !text-dark" />
-                <p className="text-dark text-[16px]">Quay Lại</p>
+                <p className="text-dark text-[16px]">Quay lại</p>
               </Link>
             </div>
-            <div className="flex justify-center items-center flex-col w-[65%] m-auto gap-4">
-              <div className="flex justify-center items-center flex-col gap-2">
+
+            <div className="flex justify-center items-center flex-col w-[65%] m-auto gap-2">
+              <div className="flex justify-center items-center flex-col gap-2 mb-2">
                 <h1 className="text-primaryText text-[25px] uppercase font-bold">Đăng kí tài khoản</h1>
                 <p className="text-[13px] text-third">Đăng kí để sử dụng dịch vụ từ chúng tôi 1 cách tốt nhất.</p>
               </div>
 
               <div className="w-full">
                 <ButtonSocial
-                  className="w-full mb-3 p-2 border-[2px] border-gray-200 rounded-md text-black font-medium"
-                  image="/images/auth/google.jpg"
+                  className="w-full mb-3 p-2 h-[40px] border-[2px] border-gray-200 rounded-md text-black font-medium"
+                  image="/images/auth/google_icon.webp"
                 >
                   Đăng nhập với Google
                 </ButtonSocial>
                 <ButtonSocial
-                  className="w-full mb-3 p-2 max-h-[50px] border-[2px] border-gray-200 rounded-md text-black font-medium"
-                  image="/images/auth/facebook.jpg"
+                  className="w-full mb-3 p-2 h-[40px] border-[2px] border-gray-200 rounded-md text-black font-medium"
+                  image="/images/auth/facebook_icon.webp"
                 >
                   Đăng nhập với Facebook
                 </ButtonSocial>
@@ -52,34 +53,45 @@ const RegisterPage = () => {
                   <Input
                     name="email"
                     type="email"
-                    className="h-[50px] text-[15px] !font-medium !text-black rounded-md bg-white border border-gray-300"
+                    className="h-[40px] text-[13px] !font-medium !text-black rounded-md bg-white border border-gray-300"
                     placeholder="Nhập Email ..."
                   />
                 </div>
                 <div className="mb-4 flex flex-col gap-[6px]">
-                  <label className="text-[15px] text-black font-medium" htmlFor="fullName">
+                  <label className="text-[13px] text-black font-medium" htmlFor="fullName">
                     Họ và tên:
                   </label>
                   <Input
                     name="fullName"
                     type="text"
-                    className="h-[50px] text-[15px] !font-medium !text-black rounded-md bg-white border border-gray-300"
+                    className="h-[40px] text-[13px] !font-medium !text-black rounded-md bg-white border border-gray-300"
                     placeholder="Nhập họ và tên ..."
                   />
                 </div>
                 <div className="mb-4 flex flex-col gap-[6px]">
-                  <label className="text-[15px] text-black font-medium" htmlFor="password">
+                  <label className="text-[13px] text-black font-medium" htmlFor="password">
                     Mật khẩu:
                   </label>
                   <Input
                     name="password"
                     type="password"
-                    className="h-[50px] text-[15px] !font-medium !text-black rounded-md bg-white border border-gray-300"
+                    className="h-[40px] text-[13px] !font-medium !text-black rounded-md bg-white border border-gray-300"
+                    placeholder="Nhập mật khẩu ..."
+                  />
+                </div>
+                <div className="mb-4 flex flex-col gap-[6px]">
+                  <label className="text-[13px] text-black font-medium" htmlFor="password">
+                    Xác nhận mật khẩu:
+                  </label>
+                  <Input
+                    name="password"
+                    type="password"
+                    className="h-[40px] text-[13px] !font-medium !text-black rounded-md bg-white border border-gray-300"
                     placeholder="Nhập mật khẩu ..."
                   />
                 </div>
 
-                <Button type="submit" className="bg-primaryText rounded-md w-full mt-3 h-[50px]">
+                <Button type="submit" className="bg-primaryText rounded-md w-full mt-3 h-[40px] text-[13px]">
                   Đăng kí
                 </Button>
               </form>
@@ -87,7 +99,7 @@ const RegisterPage = () => {
               <div className="flex gap-1 text-[14px] text-[#141313a9]">
                 <p>Nếu đã có tài khoản,</p>
                 <Link className="underline text-primaryText" to="/login">
-                  Đăng nhập
+                  đăng nhập
                 </Link>
                 <p>tại đây!</p>
               </div>

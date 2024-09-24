@@ -12,7 +12,7 @@ const ButtonSocial: FC<IButton> = ({ children = '', className = '', image }) => 
       <div className="flex-[0_0_25%]">
         <img className="w-[30px] object-cover float-end" src={image} alt="" />
       </div>
-      <div className="flex-[0_0_70%] text-left text-[15px]">{children}</div>
+      <div className="flex-[0_0_70%] text-left text-[13px]">{children}</div>
     </button>
   );
 };
