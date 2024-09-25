@@ -4,9 +4,64 @@ import Input from '@/components/input';
 import { Button, ButtonSocial } from '@/components/button';
 import Label from '@/components/label';
 import Field from '@/components/field';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { IAccount } from '@/types/auth.type';
+import MessageForm from '@/components/message';
+import { registerService } from '@/services/auth.service';
+import { toast } from 'react-toastify';
+
+const schema = yup.object({
+  fullname: yup.string().trim().required('Vui lòng nhập vào họ và tên !'),
+  email: yup
+    .string()
+    .trim()
+    .required('Trường này là bắt buộc !')
+    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'Email không dúng định dạng !' }),
+  password: yup
+    .string()
+    .trim()
+    .required('Mật khẩu không được để trống !')
+    .min(6, 'Mật khẩu ít nhất 6 ký tự trở lên !')
+    .matches(
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
+      'Mật khẩu phải chứa ít nhất một số và một ký tự đặc biệt !',
+    ),
+
+  password_confirm: yup
+    .string()
+    .trim()
+    .oneOf([yup.ref('password'), undefined], 'Mật khẩu xác nhận phải khớp với mật khẩu đã nhập !'),
+});
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const {
+    handleSubmit,
+    formState: { isSubmitting, errors, isValid },
+    control,
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: 'onChange',
+  });
+
+  const handleRegister: SubmitHandler<IAccount> = async data => {
+    if (!isValid) return;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password_confirm, ...dataRegister } = data;
+    const res = await registerService(dataRegister);
+    if (res.errors) {
+      toast.error(res.message, { position: 'top-right' });
+    } else {
+      toast.success(res.message, { position: 'top-right' });
+    }
+    reset();
+  };
+  console.log('🚀 ~ RegisterPage ~ errors:', errors);
+  console.log('🚀 ~ RegisterPage ~ isSubmitting:', isSubmitting);
+
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-[#f2f2f4]">
       <div className="flex w-full h-full border bg-white">
@@ -37,14 +92,16 @@ const RegisterPage = () => {
                 <div className="h-[1px] w-full bg-gray-200"></div>
               </div>
 
-              <form action="" className="w-full mb-3">
+              <form className="w-full mb-3" onSubmit={handleSubmit(handleRegister)}>
                 <Field>
                   <Label htmlFor="fullname">Họ và tên</Label>
                   <Input
                     name="fullname"
                     className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-primaryText"
                     placeholder="Nhập họ tên đầy đủ ..."
+                    control={control}
                   />
+                  <MessageForm error={errors.fullname?.message} />
                 </Field>
                 <Field>
                   <Label htmlFor="email">Email</Label>
@@ -53,7 +110,9 @@ const RegisterPage = () => {
                     type="email"
                     className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-primaryText"
                     placeholder="Nhập địa chỉ email ..."
+                    control={control}
                   />
+                  <MessageForm error={errors.email?.message} />
                 </Field>
                 <Field>
                   <Label htmlFor="password">Mật khẩu</Label>
@@ -62,7 +121,9 @@ const RegisterPage = () => {
                     type="password"
                     className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-primaryText"
                     placeholder="Mật khẩu tối thiểu 6 kí tự ..."
+                    control={control}
                   />
+                  <MessageForm error={errors.password?.message} />
                 </Field>
                 <Field>
                   <Label htmlFor="password_confirm">Xác nhận mật khẩu</Label>
@@ -71,9 +132,16 @@ const RegisterPage = () => {
                     type="password"
                     className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-primaryText"
                     placeholder="Nhập lại mật khẩu ..."
+                    control={control}
                   />
+                  <MessageForm error={errors.password_confirm?.message} />
                 </Field>
-                <Button type="submit" className="bg-primaryText rounded-md w-full mt-3 h-[40px]">
+                <Button
+                  type="submit"
+                  className="bg-primaryText rounded-md w-full mt-7 h-[40px]"
+                  isLoading={isSubmitting}
+                  disabled={isSubmitting}
+                >
                   Đăng ký
                 </Button>
               </form>

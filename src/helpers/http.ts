@@ -10,7 +10,6 @@ class Http {
       headers: {
         'Content-Type': 'application/json',
       },
-      withCredentials: true,
     });
   }
 

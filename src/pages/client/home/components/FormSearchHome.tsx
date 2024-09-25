@@ -12,7 +12,7 @@ const FormSearchHome = () => {
       >
         <form>
           <Field className="flex items-center gap-3">
-            <Input placeholder="Tìm phòng khám hoặc bác sĩ ..." isGlass />
+            <Input name="" placeholder="Tìm phòng khám hoặc bác sĩ ..." isGlass />
             <button
               type="submit"
               className="w-[53px] h-[48px] flex items-center justify-center bg-primary rounded-[9px] transition-all duration-300 ease-linear hover:scale-110"

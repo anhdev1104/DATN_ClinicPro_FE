@@ -13,10 +13,12 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^6.1.0",
     "@mui/material": "^6.1.0",
     "@types/node": "^22.5.5",
     "@types/react-router-dom": "^5.3.3",
+    "@types/yup": "^0.32.0",
     "axios": "^1.7.7",
     "clsx": "^2.1.1",
     "env": "^0.0.2",
