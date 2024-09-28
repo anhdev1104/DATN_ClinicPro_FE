@@ -56,11 +56,10 @@ const RegisterPage = () => {
       toast.error(res.message, { position: 'top-right' });
     } else {
       toast.success(res.message, { position: 'top-right' });
+      navigate('/login');
     }
     reset();
   };
-  console.log('🚀 ~ RegisterPage ~ errors:', errors);
-  console.log('🚀 ~ RegisterPage ~ isSubmitting:', isSubmitting);
 
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-[#f2f2f4]">
@@ -138,7 +137,7 @@ const RegisterPage = () => {
                 </Field>
                 <Button
                   type="submit"
-                  className="bg-primaryText rounded-md w-full mt-7 h-[40px]"
+                  className="bg-primaryText rounded-md w-full mt-6 h-[40px]"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >

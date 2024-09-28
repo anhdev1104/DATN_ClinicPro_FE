@@ -37,7 +37,7 @@ const LoginOTP = () => {
                 <div className="h-[1px] w-full bg-gray-200"></div>
               </div>
 
-              <form action="" className="w-full mb-3">
+              <form className="w-full mb-3">
                 <Field>
                   <Label htmlFor="email">Email</Label>
                   <Input

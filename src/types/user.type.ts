@@ -1,24 +1,31 @@
+import { STATUS } from '@/constants/define';
 import { IRole } from './role.type';
 
-interface IUserInfo {
-  id?: number;
-  patient_id?: number;
+interface IUserProfile {
+  id: number;
   fullname: string;
-  avatar: string;
-  email: string;
-  phone_number?: string;
-  address?: string;
-  dob?: string;
+  address?: string | null;
+  avatar?: string;
+  phone_number?: string | null;
   gender?: string;
+  dob?: string | null;
+  identity_card_id?: number | null;
+  department_id?: number | null;
   created_at?: string;
   updated_at?: string;
 }
 
-export interface IUser {
-  id?: number;
+interface IUserInfo {
+  id: number;
   email: string;
+  status: keyof typeof STATUS;
   role: IRole;
-  user_info: IUserInfo;
-  created_at?: string;
-  updated_at?: string;
+  user_info: IUserProfile;
+}
+
+export interface IUser {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  data: IUserInfo;
 }

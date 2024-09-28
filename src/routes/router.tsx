@@ -1,5 +1,7 @@
 import PageToTopUtils from '@/helpers/PageToTopUtils';
+import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
+import DashBoard from '@/pages/admin/dashboard/DashBoard';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
 import AchievementPage from '@/pages/client/achievement/AchievementPage';
@@ -53,7 +55,13 @@ const clientRouter: IRouter[] = [
   },
 ];
 
-// const adminRouter: IRouter[] = [];
+const adminRouter: IRouter[] = [
+  {
+    path: '/dashboard',
+    element: DashBoard,
+    title: 'Dashboard',
+  },
+];
 
 const authRouter: IRouter[] = [
   {
@@ -94,6 +102,10 @@ export default function AppRouter() {
         <Route element={<MainLayout />}>
           {clientRouter.length > 0 &&
             clientRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
+        </Route>
+        <Route element={<AdminLayout />}>
+          {adminRouter.length > 0 &&
+            adminRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
         </Route>
         {authRouter.length > 0 &&
           authRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />}></Route>)}
