@@ -1,7 +1,11 @@
 import { Button } from '@/components/button';
+import { RootState } from '@/redux/store';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import HeaderInfo from './HeaderInfo';
 
 const Header = () => {
+  const auth = useSelector((state: RootState) => state.auth.data);
   return (
     <header className="py-5 fixed top-0 left-0 right-0 bg-white z-20">
       <div className="container-page flex justify-between items-center">
@@ -46,7 +50,7 @@ const Header = () => {
           <Button type="button" className="capitalize">
             Đặt lịch khám
           </Button>
-          <Link to={'/login'}>Đăng nhập</Link>
+          {auth?.access_token ? <HeaderInfo /> : <Link to={'/login'}>Đăng nhập</Link>}
         </div>
       </div>
     </header>

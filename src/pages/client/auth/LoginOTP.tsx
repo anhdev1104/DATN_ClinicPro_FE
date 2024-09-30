@@ -4,9 +4,36 @@ import Input from '@/components/input';
 import { Button, ButtonSocial } from '@/components/button';
 import Label from '@/components/label';
 import Field from '@/components/field';
+import PosterAuth from './components/PosterAuth';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import MessageForm from '@/components/message/MessageForm';
+
+const schema = yup.object({
+  email: yup
+    .string()
+    .trim()
+    .required('Trường này là bắt buộc !')
+    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'Email không dúng định dạng !' }),
+});
 
 const LoginOTP = () => {
   const navigate = useNavigate();
+  const {
+    handleSubmit,
+    control,
+    formState: { isSubmitting, errors, isValid },
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: 'onChange',
+  });
+
+  const handleLoginOTP: SubmitHandler<{ email: string }> = async data => {
+    if (!isValid) return;
+    console.log(data);
+  };
+
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-[#f2f2f4]">
       <div className="flex w-full h-full border bg-white">
@@ -21,7 +48,6 @@ const LoginOTP = () => {
                 <p className="text-dark text-[16px]">Quay lại</p>
               </div>
             </div>
-
             <div className="flex justify-center items-center flex-col w-[65%] mt-10 mx-auto gap-2">
               <div className="flex justify-center items-center flex-col gap-2 mb-2">
                 <h1 className="text-primaryText text-[25px] uppercase font-bold">Đăng nhập OTP</h1>
@@ -30,14 +56,12 @@ const LoginOTP = () => {
               <ButtonSocial type="button" image="/images/auth/google_icon.webp">
                 Đăng nhập với Google
               </ButtonSocial>
-
               <div className="w-full flex items-center gap-2">
                 <div className="h-[1px] w-full bg-gray-200"></div>
                 <h3 className="text-dark opacity-70">or</h3>
                 <div className="h-[1px] w-full bg-gray-200"></div>
               </div>
-
-              <form className="w-full mb-3">
+              <form className="w-full mb-3" onSubmit={handleSubmit(handleLoginOTP)}>
                 <Field>
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -45,13 +69,19 @@ const LoginOTP = () => {
                     type="email"
                     className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-primaryText"
                     placeholder="Nhập địa chỉ email ..."
+                    control={control}
                   />
+                  <MessageForm error={errors.email?.message} />
                 </Field>
-                <Button type="submit" className="bg-primaryText rounded-md w-full mt-3 h-[40px]">
+                <Button
+                  type="submit"
+                  className="bg-primaryText rounded-md w-full mt-3 h-[40px]"
+                  isLoading={isSubmitting}
+                  disabled={isSubmitting}
+                >
                   Gửi mã
                 </Button>
               </form>
-
               <div className="flex flex-col text-center gap-1 text-[14px] text-[#141313a9]">
                 <div className="flex gap-1">
                   <p>Nếu chưa có tài khoản,</p>
@@ -64,35 +94,7 @@ const LoginOTP = () => {
             </div>
           </div>
         </div>
-
-        <div className="w-2/4 relative">
-          <img
-            className="w-full h-full object-cover"
-            style={{ objectPosition: '70% 30%' }}
-            src="/images/banner-goi-kham.webp"
-            alt=""
-          />
-          <div className="w-full h-auto max-w-[90%] mx-auto bg-[#acacac82] backdrop-blur-[1px] p-6 border-[0.5px] border-gray-200 text-white absolute bottom-0 left-[50%] translate-y-[-10%] translate-x-[-50%] flex flex-col gap-3">
-            <div>
-              <h1 className="text-white text-[20px] leading-[35px] font-semibold">
-                "Chào mừng bạn đến với ClinicPro. Chúng tôi là mạng lưới chăm sóc sức khỏe tư nhân hàng đầu tại Việt
-                Nam."
-              </h1>
-            </div>
-            <div className="h-[0.5px] bg-white w-full"></div>
-
-            <div className="w-full h-auto flex justify-between gap-2">
-              <div className="flex-[0_0_50%]">
-                <h1 className="mb-2 text-[17px]">ClinicPro Hospital</h1>
-                <p className="text-[11px] text-white opacity-80">
-                  575 Tôn Đức Thắng, Phường Hoà Khánh Nam, Quận Liên Chiển, TP Đà Nẵng
-                </p>
-              </div>
-
-              <div className="flex-[0_0_50%]"></div>
-            </div>
-          </div>
-        </div>
+        <PosterAuth />
       </div>
     </div>
   );

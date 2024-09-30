@@ -1,4 +1,4 @@
-import { loginService } from '@/services/auth.service';
+import { loginService } from '@/services/loginAuth.service';
 import { IAccount } from '@/types/auth.type';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -7,7 +7,6 @@ export const loginAuth = createAsyncThunk('auth/login', async (data: IAccount, t
     const auth = await loginService(data);
     return auth;
   } catch (error) {
-    console.log('Error thunkAPI', error);
     thunAPI.rejectWithValue(error);
   }
 });

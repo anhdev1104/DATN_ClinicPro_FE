@@ -20,7 +20,10 @@ interface IUserInfo {
   email: string;
   status: keyof typeof STATUS;
   role: IRole;
-  user_info: IUserProfile;
+  user_info: {
+    avatar: string;
+    fullname: string;
+  };
 }
 
 export interface IUser {

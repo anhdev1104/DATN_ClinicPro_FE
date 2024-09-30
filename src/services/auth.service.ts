@@ -5,17 +5,17 @@ const http = new Http();
 
 export const registerService = async (newAccount: IAccount) => {
   try {
-    const res = await http.post('/auth/register', newAccount);
-    return res;
+    const response = await http.post('/auth/register', newAccount);
+    return response;
   } catch (error) {
     return error;
   }
 };
 
-export const loginService = async (account: IAccount) => {
+export const logoutService = async () => {
   try {
-    const res = await http.post('/auth/login', account);
-    return res;
+    const response = await http.post('/auth/logout');
+    return response;
   } catch (error) {
     return error;
   }
