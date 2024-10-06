@@ -8,7 +8,7 @@ const Intro = () => {
           alt=""
         />
         <div className="container-page absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4">
-          <h1 className="text-primaryText font-semibold text-2xl md:text-6xl text-wrap">Về Chúng Tôi</h1>
+          <h1 className="text-third font-semibold text-2xl md:text-6xl text-wrap">Về Chúng Tôi</h1>
         </div>
       </section>
       <section className="container-page pt-40 pb-48">
@@ -18,7 +18,7 @@ const Intro = () => {
               <img src="/images/aboutUs/VN-Flag.svg" className="max-w-[50%] object-cover" alt="" />
             </div>
             <div className="">
-              <h2 className="text-[32px] max-w-[450px] leading-[52px] font-semibold text-primaryText">
+              <h2 className="text-[32px] max-w-[450px] leading-[52px] font-semibold text-third">
                 Chào mừng bạn đến với Hoàn Mỹ.
                 <br />
                 Chúng tôi là mạng lưới chăm sóc sức khỏe tư nhân hàng đầu tại Việt Nam.
