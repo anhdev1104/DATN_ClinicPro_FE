@@ -50,7 +50,7 @@ const LoginOTP = () => {
             </div>
             <div className="flex justify-center items-center flex-col w-[65%] mt-10 mx-auto gap-2">
               <div className="flex justify-center items-center flex-col gap-2 mb-2">
-                <h1 className="text-primaryText text-[25px] uppercase font-bold">Đăng nhập OTP</h1>
+                <h1 className="text-third text-[25px] uppercase font-bold">Đăng nhập OTP</h1>
                 <p className="text-[13px] text-third">Đăng nhập để sử dụng dịch vụ từ chúng tôi một cách tốt nhất.</p>
               </div>
               <ButtonSocial type="button" image="/images/auth/google_icon.webp">
@@ -67,7 +67,7 @@ const LoginOTP = () => {
                   <Input
                     name="email"
                     type="email"
-                    className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-primaryText"
+                    className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
                     placeholder="Nhập địa chỉ email ..."
                     control={control}
                   />
@@ -75,7 +75,7 @@ const LoginOTP = () => {
                 </Field>
                 <Button
                   type="submit"
-                  className="bg-primaryText rounded-md w-full mt-3 h-[40px]"
+                  className="bg-third rounded-md w-full mt-3 h-[40px]"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >
@@ -85,7 +85,7 @@ const LoginOTP = () => {
               <div className="flex flex-col text-center gap-1 text-[14px] text-[#141313a9]">
                 <div className="flex gap-1">
                   <p>Nếu chưa có tài khoản,</p>
-                  <Link className="underline text-primaryText" to="/register">
+                  <Link className="underline text-third" to="/register">
                     đăng ký
                   </Link>
                   <p>tại đây!</p>

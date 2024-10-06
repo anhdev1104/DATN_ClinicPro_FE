@@ -44,7 +44,7 @@ const Infomation = () => {
             <div className="flex flex-col gap-12 justify-center h-full max-w-[556px] py-[106px] pl-[99px]">
               {fakeData.map((item, index) => (
                 <div key={index}>
-                  <h3 className="text-[32px] font-semibold leading-[44px] text-primaryText">{item.name}</h3>
+                  <h3 className="text-[32px] font-semibold leading-[44px] text-third">{item.name}</h3>
                   <span className="block m-auto text-[14px] leading-[30px] font-light text-dark ">
                     {item.description}
                   </span>
@@ -57,7 +57,7 @@ const Infomation = () => {
           <div className="flex-[0_0_50%] max-w-[50%]">
             <div className="flex flex-col gap-12 justify-center h-full max-w-[556px] py-[106px] pl-[99px]">
               <div>
-                <h3 className="text-[32px] font-semibold leading-[44px] text-primaryText">Tên gọi của sự Hoàn Hảo</h3>
+                <h3 className="text-[32px] font-semibold leading-[44px] text-third">Tên gọi của sự Hoàn Hảo</h3>
                 <span className="block m-auto text-[14px] leading-[30px] font-light text-dark ">
                   Bạn có biết không? “Hoàn Mỹ” có nghĩa là “không tì vết”, “hoàn hảo” hay “đẹp”. Sự hoàn hảo là ngôi sao
                   Bắc Đẩu định hướng mọi thứ chúng tôi làm tại bệnh viện và phòng khám cho bệnh nhân và cộng đồng mà
@@ -76,9 +76,7 @@ const Infomation = () => {
           <div className="container-page">
             <div className="flex flex-wrap ml-[-15px] mr-[-15px]">
               <div className="flex-[0_0_100%] max-w-full">
-                <h2 className="text-[32px] font-semibold leading-[54px] text-primaryText text-center">
-                  Giá trị của Hoàn Mỹ
-                </h2>
+                <h2 className="text-[32px] font-semibold leading-[54px] text-third text-center">Giá trị của Hoàn Mỹ</h2>
                 <p className="my-4 text-center font-normal text-dark">
                   Đây là kim chỉ nam dẫn lối Hoàn Mỹ trong sứ mệnh nâng cao sức khỏe và hạnh phúc đến tất cả người dân
                   Việt Nam. Tận tâm chăm sóc.
@@ -121,7 +119,7 @@ const Infomation = () => {
                       />
                     </div>
                     <div className="relative text-center m-[-30px] transition-all duration-300 bottom-0 mt-[3rem] pt-[1rem] group-hover:bottom-[8%]">
-                      <h3 className="text-[#00a5b4] text-[20px] font-medium mb-[0.5rem] leading-6 group-hover:scale-[1.1] group-hover:text-primaryText">
+                      <h3 className="text-[#00a5b4] text-[20px] font-medium mb-[0.5rem] leading-6 group-hover:scale-[1.1] group-hover:text-third">
                         Cam kết
                       </h3>
                       <h4 className="text-[#00a5b4] text-[20px] font-light mb-[0.5rem] leading-6">
@@ -170,7 +168,7 @@ const Infomation = () => {
                       />
                     </div>
                     <div className="relative text-center m-[-30px] transition-all duration-300 bottom-0 mt-[3rem] pt-[1rem] group-hover:bottom-[8%]">
-                      <h3 className="text-[#00a5b4] text-[20px] font-medium mb-[0.5rem] leading-6 group-hover:scale-[1.1] group-hover:text-primaryText">
+                      <h3 className="text-[#00a5b4] text-[20px] font-medium mb-[0.5rem] leading-6 group-hover:scale-[1.1] group-hover:text-third">
                         Trách nhiệm
                       </h3>
                       <h4 className="text-[#00a5b4] text-[20px] font-light mb-[0.5rem] leading-6">
@@ -214,7 +212,7 @@ const Infomation = () => {
                       />
                     </div>
                     <div className="relative text-center m-[-30px] transition-all duration-300 bottom-0 mt-[3rem] pt-[1rem] group-hover:bottom-[8%]">
-                      <h3 className="text-[#00a5b4] text-[20px] font-medium mb-[0.5rem] leading-6 group-hover:scale-[1.1] group-hover:text-primaryText">
+                      <h3 className="text-[#00a5b4] text-[20px] font-medium mb-[0.5rem] leading-6 group-hover:scale-[1.1] group-hover:text-third">
                         Tôn trọng
                       </h3>
                       <h4 className="text-[#00a5b4] text-[20px] font-light mb-[0.5rem] leading-6">vì cộng đồng</h4>
@@ -256,7 +254,7 @@ const Infomation = () => {
                       />
                     </div>
                     <div className="relative text-center m-[-30px] transition-all duration-300 bottom-0 mt-[3rem] pt-[1rem] group-hover:bottom-[8%]">
-                      <h3 className="text-[#00a5b4] text-[20px] font-medium mb-[0.5rem] leading-6 group-hover:scale-[1.1] group-hover:text-primaryText">
+                      <h3 className="text-[#00a5b4] text-[20px] font-medium mb-[0.5rem] leading-6 group-hover:scale-[1.1] group-hover:text-third">
                         Đồng cảm
                       </h3>
                       <h4 className="text-[#00a5b4] text-[20px] font-light mb-[0.5rem] leading-6">với người bệnh</h4>
@@ -275,7 +273,7 @@ const Infomation = () => {
         </div>
       </section>
       <section className="h-max flex flex-col">
-        <div className="text-primaryText leading-[54px] text-[32px] font-semibold text-center max-w-full flex-[0_0_100%]">
+        <div className="text-third leading-[54px] text-[32px] font-semibold text-center max-w-full flex-[0_0_100%]">
           Câu chuyện của chúng tôi
         </div>
         <div className="pt-[60px]">
@@ -287,7 +285,7 @@ const Infomation = () => {
                     key={item.year}
                     className="text-center w-max px-3 py-2 cursor-pointer hover:border-b-[4px] hover:border-[#009bab] border-gray-300 border-b-[4px]"
                   >
-                    <span className="text-[18px] font-light text-primaryText">{item.year}</span>
+                    <span className="text-[18px] font-light text-third">{item.year}</span>
                   </div>
                 );
               })}

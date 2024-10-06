@@ -3,19 +3,28 @@ import { SearchIcon } from '../icons';
 import { useController } from 'react-hook-form';
 
 interface IInput {
-  control?: any;
+  control: any;
   name?: string;
   type?: string;
   className?: string;
   placeholder?: string;
   isGlass?: boolean;
+  colorGlass?: string;
 }
 
-const Input: FC<IInput> = ({ name = '', type = 'text', className = '', isGlass = false, control, ...props }) => {
+const Input: FC<IInput> = ({
+  name = '',
+  type = 'text',
+  className = '',
+  isGlass = false,
+  colorGlass = 'text-primary',
+  control,
+  ...props
+}) => {
   const { field } = useController({ control, name, defaultValue: '' });
   return (
     <div className="relative flex-1">
-      {isGlass && <SearchIcon className="text-primary absolute top-[12.5px] left-[12.5px]" />}
+      {isGlass && <SearchIcon className={`absolute top-[12.5px] left-[12.5px] ${colorGlass}`} />}
       <input
         {...field}
         id={field.name}
