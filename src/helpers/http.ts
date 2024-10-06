@@ -43,7 +43,6 @@ class Http {
           } catch (error) {
             store.dispatch(authLogout());
             toast.info('Tài khoản của bạn đã hết phiên đăng nhập !');
-            window.location.href = '/login';
           }
         }
         return Promise.reject(error);
