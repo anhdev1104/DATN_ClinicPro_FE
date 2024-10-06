@@ -50,9 +50,9 @@ const BranchsPage = () => {
         </div>
         <div className="absolute h-[80%] flex items-center left-[50%] top-0 translate-x-[-145%] translate-y-[-20%]">
           <div className="flex justify-center flex-col items-start mt-[74px] mb-[24px]">
-            <h1 className="text-primaryText font-semibold text-2xl md:text-6xl text-wrap mb-2">Bệnh Viện</h1>
+            <h1 className="text-third font-semibold text-2xl md:text-6xl text-wrap mb-2">Bệnh Viện</h1>
             <span className="text-[#abdfe1] font-semibold text-2xl md:text-6xl text-wrap mb-2"> & </span>
-            <h1 className="text-primaryText font-semibold text-2xl md:text-6xl text-wrap">Phòng Khám</h1>
+            <h1 className="text-third font-semibold text-2xl md:text-6xl text-wrap">Phòng Khám</h1>
           </div>
         </div>
       </section>
@@ -68,7 +68,7 @@ const BranchsPage = () => {
                 <img className="size-full object-cover" src={item.img} alt="" />
               </div>
               <div className="flex-1 flex flex-col justify-evenly gap-[10px]">
-                <h4 className="text-[18px] text-primaryText leading-[30px] font-semibold">{item.nameBranch}</h4>
+                <h4 className="text-[18px] text-third leading-[30px] font-semibold">{item.nameBranch}</h4>
                 <div className="">
                   <div className="flex items-center  gap-[10px] mb-[8px]">
                     <img src="/images/branchs/location.svg" alt="" />

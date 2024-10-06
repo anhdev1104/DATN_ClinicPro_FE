@@ -8,12 +8,12 @@ export default {
       },
       colors: {
         primary: '#4DB6AC',
+        primaryAdmin: '#116aef',
         second: '#C8E6C9',
         third: '#00749b',
         lightGray: '#E0F2F1',
         dark: '#5d5d5d',
         borderColor: '#ececed',
-        primaryText: '#00749b',
       },
 
       keyframes: {
@@ -35,6 +35,9 @@ export default {
       addUtilities({
         '.object-unset': {
           'object-fit': 'unset',
+        },
+        '.clip-path-border': {
+          'clip-path': 'polygon(0 0, 100% 0, 100% 90%, 0 90%)',
         },
       });
     },

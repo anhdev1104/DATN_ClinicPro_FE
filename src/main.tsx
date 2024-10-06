@@ -5,11 +5,18 @@ import './index.scss';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ScrollToTopButton from './components/button/ScrollToTopButton.tsx';
+import { Provider } from 'react-redux';
+import persistor, { store } from './redux/store.ts';
+import { PersistGate } from 'redux-persist/integration/react';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <ScrollToTopButton />
-    <App />
-    <ToastContainer position="bottom-right" theme="colored" autoClose={3000} />
-  </StrictMode>,
+  // <StrictMode>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <ScrollToTopButton />
+      <App />
+      <ToastContainer position="bottom-right" theme="colored" autoClose={4000} pauseOnHover={false} />
+    </PersistGate>
+  </Provider>,
+  // </StrictMode>,
 );
