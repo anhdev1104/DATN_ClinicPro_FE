@@ -14,7 +14,7 @@ const AdminLayout = () => {
     <>
       <Topbar />
       <Sidebar />
-      <main>
+      <main className="ml-[250px] mt-[72px] px-[30px] pt-[30px] min-h-screen">
         <Outlet />
       </main>
     </>
