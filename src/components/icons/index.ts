@@ -8,3 +8,7 @@ export { default as eyeOn } from '@mui/icons-material/Visibility';
 export { default as MenuIcon } from '@mui/icons-material/Menu';
 export { default as NotificationsIcon } from '@mui/icons-material/Notifications';
 export { default as LogoutIcon } from '@mui/icons-material/Logout';
+export { default as SpaceDashboardIcon } from '@mui/icons-material/SpaceDashboard';
+export { default as ChevronRightIcon } from '@mui/icons-material/ChevronRight';
+export { default as LocalHospitalIcon } from '@mui/icons-material/LocalHospital';
+export { default as GroupIcon } from '@mui/icons-material/Group';
