@@ -1,7 +1,7 @@
 import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
-import DashBoard from '@/pages/admin/dashboard/DashBoard';
+import Dashboard from '@/pages/admin/dashboard/DashBoard';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
 import AchievementPage from '@/pages/client/achievement/AchievementPage';
@@ -58,7 +58,7 @@ const clientRouter: IRouter[] = [
 const adminRouter: IRouter[] = [
   {
     path: '/dashboard',
-    element: DashBoard,
+    element: Dashboard,
     title: 'Dashboard',
   },
 ];

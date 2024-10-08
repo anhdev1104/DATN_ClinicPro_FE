@@ -1,7 +1,87 @@
-import React from 'react';
+import { LogoutIcon, MenuIcon, NotificationsIcon } from '@/components/icons';
+import Input from '@/components/input';
+import { useForm } from 'react-hook-form';
+
+const hoverIcon: string =
+  'p-2 transition-all duration-300 ease-linear rounded-full hover:bg-primaryAdmin/5 cursor-pointer';
 
 const Topbar = () => {
-  return <header>Topbar</header>;
+  return (
+    <header
+      className="px-5 py-3 fixed top-0 left-0 right-0 bg-white"
+      style={{ boxShadow: '0px 0px 14px rgba(204, 204, 204, 0.25)' }}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            <img
+              src="https://preclinic.dreamstechnologies.com/html/template/assets/img/logo.png"
+              alt="clinicpro-logo"
+              width={35}
+              height={35}
+            />
+            <h1 className="text-primaryAdmin text-xl font-semibold">ClinicPro</h1>
+          </div>
+          <div className="flex items-center gap-7 ml-[55px]">
+            <div className={hoverIcon}>
+              <MenuIcon className="text-primaryAdmin " />
+            </div>
+            <SearchAdmin />
+          </div>
+        </div>
+        <AccountManagement />
+      </div>
+    </header>
+  );
 };
+
+function SearchAdmin() {
+  const { control } = useForm({
+    mode: 'onChange',
+  });
+  return (
+    <form className="w-[300px]">
+      <Input
+        name="searchadmin"
+        className="text-current pl-10 border-none"
+        isGlass
+        colorGlass="text-primaryAdmin"
+        placeholder="Tìm kiếm thông tin ..."
+        control={control}
+      />
+    </form>
+  );
+}
+
+function AccountManagement() {
+  return (
+    <div className="flex items-center gap-10">
+      <div className={`cursor-pointer p-1 relative ${hoverIcon}`}>
+        <NotificationsIcon className="text-primaryAdmin" />
+        <div className="flex items-center justify-center bg-red-500 rounded-full w-4 h-4 text-xs text-white absolute right-[2px] top-1">
+          1
+        </div>
+      </div>
+      <div className="flex gap-2 items-center">
+        <div className="flex gap-2 cursor-pointer">
+          <div className="flex flex-col text-right">
+            <span className="font-bold ">Bùi Hoàng Anh</span>
+            <span className="text-gray-400 text-xs mt-1">Admin</span>
+          </div>
+          <div className="w-10 rounded-[14px] overflow-hidden">
+            <img
+              src="https://avatars.githubusercontent.com/u/121429011?v=4"
+              alt="avartar-"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+        <div className="p-1 ml-3" title="Đăng xuất">
+          <LogoutIcon className="cursor-pointer" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default Topbar;
