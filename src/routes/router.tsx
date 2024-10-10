@@ -90,7 +90,6 @@ const authRouter: IRouter[] = [
 export default function AppRouter() {
   const location = useLocation();
 
-  // hàm xử lý hiển thị document title
   useEffect(() => {
     const route = clientRouter.find((route) => {
       const routePath = route.path.replace(/:\w+/g, '');
