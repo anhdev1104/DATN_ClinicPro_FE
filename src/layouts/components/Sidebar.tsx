@@ -1,4 +1,11 @@
-import { ChevronRightIcon, GroupIcon, LocalHospitalIcon, SpaceDashboardIcon, ApartmentIcon } from '@/components/icons';
+import {
+  ChevronRightIcon,
+  GroupIcon,
+  LocalHospitalIcon,
+  SpaceDashboardIcon,
+  ApartmentIcon,
+  AssignmentIcon,
+} from '@/components/icons';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 interface ICategoryManagement {
@@ -34,6 +41,12 @@ const dumpCategory = [
     path: '/phong-ban',
     icon: ApartmentIcon,
   },
+  {
+    id: 5,
+    categoryName: 'Gói khám',
+    path: '/package',
+    icon: AssignmentIcon,
+  },
 ];
 
 const Sidebar = () => {
@@ -56,7 +69,7 @@ const Sidebar = () => {
       <div>
         <div className="text-base font-medium text-black px-5 py-[14px]">Main</div>
         <div>
-          <ul className='p-0'>
+          <ul className="p-0">
             {categoryManagement.length > 0 &&
               categoryManagement.map((category) => (
                 <li
