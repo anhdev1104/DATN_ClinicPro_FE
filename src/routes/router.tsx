@@ -1,7 +1,8 @@
 import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
-import Dashboard from '@/pages/admin/dashboard/Dashboard';
+import Dashboard from '@/pages/admin/dashboard/DashBoard';
+import PackagePage from '@/pages/admin/package/Package';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
 import AchievementPage from '@/pages/client/achievement/AchievementPage';
@@ -12,7 +13,7 @@ import RegisterPage from '@/pages/client/auth/RegisterPage';
 import BranchsPage from '@/pages/client/branchs/BranchsPage';
 import CommunityPage from '@/pages/client/community/CommunityPage';
 import HomePage from '@/pages/client/home/HomePage';
-
+import AddPackage from '@/pages/admin/package/AddPackage';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
@@ -60,6 +61,16 @@ const adminRouter: IRouter[] = [
     path: '/dashboard',
     element: Dashboard,
     title: 'Dashboard',
+  },
+  {
+    path: '/package',
+    element: PackagePage,
+    title: 'Package',
+  },
+  {
+    path: '/add-package',
+    element: AddPackage,
+    title: 'CreatePackage',
   },
 ];
 

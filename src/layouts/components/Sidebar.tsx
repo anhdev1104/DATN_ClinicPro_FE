@@ -1,4 +1,4 @@
-import { ChevronRightIcon, GroupIcon, LocalHospitalIcon, SpaceDashboardIcon } from '@/components/icons';
+import { ChevronRightIcon, GroupIcon, LocalHospitalIcon, SpaceDashboardIcon, AssignmentIcon } from '@/components/icons';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
@@ -28,6 +28,12 @@ const dumpCategory = [
     categoryName: 'Bệnh nhân',
     path: '',
     icon: GroupIcon,
+  },
+  {
+    id: 4,
+    categoryName: 'Gói khám',
+    path: '/package',
+    icon: AssignmentIcon,
   },
 ];
 
