@@ -3,7 +3,6 @@ import Input from '@/components/input';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { MoreVertIcon } from '@/components/icons';
-import { Button } from '@/components/button';
 const PackagePage = () => {
   const [isOpen, setIsOpen] = useState(false); // Tạo state để quản lý dropdown
 
@@ -108,13 +107,13 @@ const PackagePage = () => {
                   <td className="p-4 text-end">
                     <div className="relative inline-block text-left">
                       <div>
-                        <Button
+                        <button
                           type="button"
                           className="inline-flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
                           onClick={toggleDropdown} // Gọi hàm toggleDropdown khi nhấn nút
                         >
                           <MoreVertIcon />
-                        </Button>
+                        </button>
                       </div>
 
                       {isOpen && ( // Chỉ hiển thị dropdown nếu isOpen là true

@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const AddPackage = () => {
-  const [status, setStatus] = useState('Tích cực'); // Default status
-
   return (
     <section className="addpackage">
       <div className="text-primaryAdmin flex items-center text-base mb-11">
@@ -65,7 +63,7 @@ const AddPackage = () => {
               </label>
               <input
                 type="file"
-                accept="image/*"
+                accept=""
                 className="border rounded-md p-2 focus:ring-2 focus:ring-indigo-500 outline-none"
               />
             </div>
