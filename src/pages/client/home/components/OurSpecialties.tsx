@@ -41,7 +41,7 @@ const OurSpecialties = () => {
   return (
     <>
       {dataSpecialties.length > 0 &&
-        dataSpecialties.map(item => (
+        dataSpecialties.map((item) => (
           <div
             className="px-[15px] flex flex-col justify-between mb-[30px] relative group overflow-hidden"
             key={item.id}

@@ -12,3 +12,4 @@ export { default as SpaceDashboardIcon } from '@mui/icons-material/SpaceDashboar
 export { default as ChevronRightIcon } from '@mui/icons-material/ChevronRight';
 export { default as LocalHospitalIcon } from '@mui/icons-material/LocalHospital';
 export { default as GroupIcon } from '@mui/icons-material/Group';
+export { default as ApartmentIcon } from '@mui/icons-material/Apartment';

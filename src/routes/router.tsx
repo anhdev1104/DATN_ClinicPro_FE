@@ -1,7 +1,8 @@
 import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
-import Dashboard from '@/pages/admin/dashboard/Dashboard';
+import Dashboard from '@/pages/admin/dashboard/DashBoard';
+import Department from '@/pages/admin/department/Department';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
 import AchievementPage from '@/pages/client/achievement/AchievementPage';
@@ -61,6 +62,11 @@ const adminRouter: IRouter[] = [
     element: Dashboard,
     title: 'Dashboard',
   },
+  {
+    path: '/phong-ban',
+    element: Department,
+    title: 'Phòng Ban',
+  },
 ];
 
 const authRouter: IRouter[] = [
@@ -86,7 +92,7 @@ export default function AppRouter() {
 
   // hàm xử lý hiển thị document title
   useEffect(() => {
-    const route = clientRouter.find(route => {
+    const route = clientRouter.find((route) => {
       const routePath = route.path.replace(/:\w+/g, '');
       return location.pathname.startsWith(routePath);
     });
@@ -101,14 +107,14 @@ export default function AppRouter() {
       <Routes>
         <Route element={<MainLayout />}>
           {clientRouter.length > 0 &&
-            clientRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
+            clientRouter.map((route) => <Route key={route.path} path={route.path} element={<route.element />} />)}
         </Route>
         <Route element={<AdminLayout />}>
           {adminRouter.length > 0 &&
-            adminRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
+            adminRouter.map((route) => <Route key={route.path} path={route.path} element={<route.element />} />)}
         </Route>
         {authRouter.length > 0 &&
-          authRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />}></Route>)}
+          authRouter.map((route) => <Route key={route.path} path={route.path} element={<route.element />}></Route>)}
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </>

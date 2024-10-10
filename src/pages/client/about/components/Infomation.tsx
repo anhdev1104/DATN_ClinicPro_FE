@@ -279,7 +279,7 @@ const Infomation = () => {
         <div className="pt-[60px]">
           <div className="flex flex-col">
             <div className="flex justify-center">
-              {years.map(item => {
+              {years.map((item) => {
                 return (
                   <div
                     key={item.year}
