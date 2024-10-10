@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const AddPackage = () => {
   return (
-    <section className="addpackage">
+    <section className="createpackage">
       <div className="text-primaryAdmin flex items-center text-base mb-11">
         <h2>Gói khám</h2>
         <svg
