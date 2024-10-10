@@ -9,7 +9,7 @@ const HeaderInfo = () => {
 
   const handleToggleModal = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShow(prev => !prev);
+    setShow((prev) => !prev);
   };
 
   return (

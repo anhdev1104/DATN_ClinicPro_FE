@@ -29,7 +29,7 @@ const LoginOTP = () => {
     mode: 'onChange',
   });
 
-  const handleLoginOTP: SubmitHandler<{ email: string }> = async data => {
+  const handleLoginOTP: SubmitHandler<{ email: string }> = async (data) => {
     if (!isValid) return;
     console.log(data);
   };

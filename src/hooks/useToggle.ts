@@ -4,7 +4,7 @@ export default function useToggle() {
   const [show, setShow] = useState<boolean>(false);
 
   const handleToggle = () => {
-    setShow(prevShow => !prevShow);
+    setShow((prevShow) => !prevShow);
   };
 
   return {

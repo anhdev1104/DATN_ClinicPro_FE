@@ -45,7 +45,7 @@ const LoginPage = () => {
   });
 
   const dispatch = useDispatch<AppDispatch>();
-  const handleLogin: SubmitHandler<IAccount> = async dataLogin => {
+  const handleLogin: SubmitHandler<IAccount> = async (dataLogin) => {
     if (!isValid) return;
     const res = await dispatch(loginAuth(dataLogin));
     if (res.payload.access_token) {

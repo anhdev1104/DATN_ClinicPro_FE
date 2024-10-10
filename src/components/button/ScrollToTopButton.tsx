@@ -26,7 +26,7 @@ const ScrollToTopButton = () => {
       {showButton && (
         <button
           onClick={scrollToTopUtils}
-          className="fixed bottom-[50px] right-[50px] w-14 h-14 bg-white shadow-xl flex justify-center items-center rounded-full cursor-pointer z-10"
+          className="fixed bottom-[50px] right-[50px] w-14 h-14 bg-white shadow-xl flex justify-center items-center rounded-full cursor-pointer z-10 border-none"
         >
           <KeyboardArrowUpIcon className="text-primary" />
         </button>

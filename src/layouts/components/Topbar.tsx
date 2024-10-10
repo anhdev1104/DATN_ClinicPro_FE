@@ -8,7 +8,7 @@ const hoverIcon: string =
 const Topbar = () => {
   return (
     <header
-      className="px-5 py-3 fixed top-0 left-0 right-0 bg-white"
+      className="px-5 py-3 fixed top-0 left-0 right-0 bg-white z-50"
       style={{ boxShadow: '0px 0px 14px rgba(204, 204, 204, 0.25)' }}
     >
       <div className="flex items-center justify-between">
