@@ -24,7 +24,7 @@ const Select = forwardRef<HTMLInputElement, SelectProps>(
       setVisible(false);
     };
     const handleSearchValue = (value: string) => {
-      const option = data.filter(option => {
+      const option = data.filter((option) => {
         return convertStringToASCII(option.name).includes(convertStringToASCII(value));
       });
       setOptions(option);
@@ -76,9 +76,9 @@ const Select = forwardRef<HTMLInputElement, SelectProps>(
               {placeholder}
             </span>
             {options.length > 0 ? (
-              options.map(data => (
+              options.map((data) => (
                 <span
-                  onMouseDown={e => handleChoosePackage(e, data)}
+                  onMouseDown={(e) => handleChoosePackage(e, data)}
                   className="py-2 px-4 text-[13px] hover:bg-[#f4f4f8] hover:font-semibold"
                   key={v4()}
                 >

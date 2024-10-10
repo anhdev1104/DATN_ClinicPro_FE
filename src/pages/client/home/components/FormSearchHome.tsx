@@ -21,7 +21,7 @@ const FormSearchHome = () => {
     mode: 'onChange',
   });
 
-  const handleSearch: SubmitHandler<{ search: string }> = async query => {
+  const handleSearch: SubmitHandler<{ search: string }> = async (query) => {
     console.log(query);
     reset();
   };

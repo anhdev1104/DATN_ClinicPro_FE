@@ -15,7 +15,7 @@ class Http {
     });
 
     this.api.interceptors.request.use(
-      async config => {
+      async (config) => {
         const accessToken = store.getState().auth.data?.access_token;
         if (accessToken) {
           config.headers['Authorization'] = `Bearer ${accessToken}`;
@@ -28,8 +28,8 @@ class Http {
     );
 
     this.api.interceptors.response.use(
-      response => response,
-      async error => {
+      (response) => response,
+      async (error) => {
         const originalRequest = error.config;
         const errorResponse = error.response.data.message;
 

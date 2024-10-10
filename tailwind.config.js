@@ -15,7 +15,6 @@ export default {
         dark: '#5d5d5d',
         borderColor: '#ececed',
       },
-
       keyframes: {
         slideInRight: {
           '0%': { opacity: '0', transform: 'translateX(10%)' },
@@ -42,4 +41,5 @@ export default {
       });
     },
   ],
+  important: '#root',
 };

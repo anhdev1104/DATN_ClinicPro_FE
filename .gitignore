@@ -26,3 +26,8 @@ dist-ssr
 .env
 .env*.local
 .env*.production
+
+# test
+*.http
+*.rest
+test.txt

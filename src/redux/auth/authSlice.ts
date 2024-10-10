@@ -18,16 +18,16 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    authLogout: state => {
+    authLogout: (state) => {
       state.data = null;
     },
     refreshToken: (state, action) => {
-      state.data = action.payload
-    }
+      state.data = action.payload;
+    },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(loginAuth.pending, state => {
+      .addCase(loginAuth.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })

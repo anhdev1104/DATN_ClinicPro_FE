@@ -13,3 +13,6 @@ export { default as ChevronRightIcon } from '@mui/icons-material/ChevronRight';
 export { default as LocalHospitalIcon } from '@mui/icons-material/LocalHospital';
 export { default as GroupIcon } from '@mui/icons-material/Group';
 export { default as Tablet } from '@mui/icons-material/Bloodtype';
+export { default as ApartmentIcon } from '@mui/icons-material/Apartment';
+export { default as AssignmentIcon } from '@mui/icons-material/Assignment';
+export { default as MoreVertIcon } from '@mui/icons-material/MoreVert';

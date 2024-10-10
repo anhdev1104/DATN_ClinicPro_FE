@@ -59,7 +59,7 @@ const BranchsPage = () => {
 
       <section>
         <div className="container-page pt-[20px] pb-[100px]">
-          {arrBranch.map(item => (
+          {arrBranch.map((item) => (
             <div
               key={item.nameBranch}
               className="flex justify-center gap-[30px] p-[15px] ltr transition-all duration-[300ms] hover:bg-[#f5f7f7]"

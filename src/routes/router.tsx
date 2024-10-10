@@ -2,7 +2,8 @@ import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import Dashboard from '@/pages/admin/dashboard/DashBoard';
-import PrescriptionsPage from '@/pages/admin/prescriptions/PrescriptionsPage';
+import Department from '@/pages/admin/department/Department';
+import PackagePage from '@/pages/admin/package/Package';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
 import AchievementPage from '@/pages/client/achievement/AchievementPage';
@@ -13,9 +14,10 @@ import RegisterPage from '@/pages/client/auth/RegisterPage';
 import BranchsPage from '@/pages/client/branchs/BranchsPage';
 import CommunityPage from '@/pages/client/community/CommunityPage';
 import HomePage from '@/pages/client/home/HomePage';
-
+import AddPackage from '@/pages/admin/package/AddPackage';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import PrescriptionsPage from '@/pages/admin/prescriptions/PrescriptionsPage';
 
 export interface IRouter {
   path: string;
@@ -67,6 +69,21 @@ const adminRouter: IRouter[] = [
     element: PrescriptionsPage,
     title: 'Đơn thuốc',
   },
+  {
+    path: '/phong-ban',
+    element: Department,
+    title: 'Phòng Ban',
+  },
+  {
+    path: '/package',
+    element: PackagePage,
+    title: 'Package',
+  },
+  {
+    path: '/add-package',
+    element: AddPackage,
+    title: 'CreatePackage',
+  },
 ];
 
 const authRouter: IRouter[] = [
@@ -90,9 +107,8 @@ const authRouter: IRouter[] = [
 export default function AppRouter() {
   const location = useLocation();
 
-  // hàm xử lý hiển thị document title
   useEffect(() => {
-    const route = clientRouter.find(route => {
+    const route = clientRouter.find((route) => {
       const routePath = route.path.replace(/:\w+/g, '');
       return location.pathname.startsWith(routePath);
     });
@@ -107,14 +123,14 @@ export default function AppRouter() {
       <Routes>
         <Route element={<MainLayout />}>
           {clientRouter.length > 0 &&
-            clientRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
+            clientRouter.map((route) => <Route key={route.path} path={route.path} element={<route.element />} />)}
         </Route>
         <Route element={<AdminLayout />}>
           {adminRouter.length > 0 &&
-            adminRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
+            adminRouter.map((route) => <Route key={route.path} path={route.path} element={<route.element />} />)}
         </Route>
         {authRouter.length > 0 &&
-          authRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />}></Route>)}
+          authRouter.map((route) => <Route key={route.path} path={route.path} element={<route.element />}></Route>)}
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </>
