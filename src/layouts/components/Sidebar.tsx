@@ -1,6 +1,6 @@
-import { ChevronRightIcon, GroupIcon, LocalHospitalIcon, SpaceDashboardIcon } from '@/components/icons';
+import { ChevronRightIcon, GroupIcon, LocalHospitalIcon, SpaceDashboardIcon, Tablet } from '@/components/icons';
 import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface ICategoryManagement {
   id: number;
@@ -28,6 +28,12 @@ const dumpCategory = [
     categoryName: 'Bệnh nhân',
     path: '',
     icon: GroupIcon,
+  },
+  {
+    id: 4,
+    categoryName: 'Đơn thuốc',
+    path: '/prescriptions',
+    icon: Tablet,
   },
 ];
 

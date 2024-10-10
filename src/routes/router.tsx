@@ -2,6 +2,7 @@ import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import Dashboard from '@/pages/admin/dashboard/DashBoard';
+import PrescriptionsPage from '@/pages/admin/prescriptions/PrescriptionsPage';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
 import AchievementPage from '@/pages/client/achievement/AchievementPage';
@@ -60,6 +61,11 @@ const adminRouter: IRouter[] = [
     path: '/dashboard',
     element: Dashboard,
     title: 'Dashboard',
+  },
+  {
+    path: '/prescriptions',
+    element: PrescriptionsPage,
+    title: 'Đơn thuốc',
   },
 ];
 
