@@ -32,7 +32,7 @@ const Department = () => {
     { id: 6, name: 'hai', manager: 'ahihi', created_at: dayjs().format('MM-DD-YYYY') },
     { id: 7, name: 'hai', manager: 'ahihi', created_at: dayjs().format('MM-DD-YYYY') },
     { id: 8, name: 'hai', manager: 'ahihi', created_at: dayjs().format('MM-DD-YYYY') },
-    { id: 9, name: 'hai', manager: 'ahihi', created_at: dayjs().format('MM-DD-YYYY') },
+    { id: 9, name: 'hai', manager: 'ahihi', created_at: dayjs().format('MM-DD-YYYY') }
   ];
   const columns: GridColDef[] = [
     {
@@ -44,7 +44,7 @@ const Department = () => {
       filterable: false,
       sortable: false,
       disableColumnMenu: true,
-      pinnable: false,
+      pinnable: false
     },
     {
       field: 'name',
@@ -55,7 +55,7 @@ const Department = () => {
       filterable: false,
       sortable: false,
       disableColumnMenu: true,
-      pinnable: false,
+      pinnable: false
     },
     {
       field: 'manager',
@@ -66,7 +66,7 @@ const Department = () => {
       filterable: false,
       sortable: false,
       disableColumnMenu: true,
-      pinnable: false,
+      pinnable: false
     },
     {
       field: 'created_at',
@@ -77,8 +77,8 @@ const Department = () => {
       filterable: false,
       sortable: false,
       disableColumnMenu: true,
-      pinnable: false,
-    },
+      pinnable: false
+    }
   ];
 
   return (
