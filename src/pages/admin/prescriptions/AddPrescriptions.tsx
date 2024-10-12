@@ -1,4 +1,4 @@
-import { ChevronRightIcon } from '@/components/icons';
+import { ChevronRightIcon, List } from '@/components/icons';
 import Input from '@/components/input';
 import Field from '@/components/field';
 import Label from '@/components/label';
@@ -74,13 +74,9 @@ const PrescriptionsPage = () => {
             <div>
               <Link
                 to={'/prescriptions'}
-                className="text-[18px] text-black font-medium flex gap-3 border-borderColor border p-3 rounded-lg bg-[#f3f4f7]"
+                className="text-[18px] text-black font-medium flex items-center gap-3 border-borderColor border p-3 rounded-lg bg-[#f3f4f7]"
               >
-                <img
-                  src="https://preclinic.dreamstechnologies.com/html/template/assets/img/icons/plus.svg"
-                  alt="Add Department"
-                  className="text-cyan-300"
-                />
+                <List className="text-[#4d54b1]" />
                 Danh sách đơn thuốc
               </Link>
             </div>
@@ -97,7 +93,6 @@ const PrescriptionsPage = () => {
                     placeholder="Nhập Số lượng ..."
                     control={control}
                   />
-                  <MessageForm error={errors.prescriptionName?.message} />
                 </Field>
                 <Field>
                   <Label htmlFor="dosage">Liều lượng ( Viên/Lần )</Label>
@@ -108,19 +103,16 @@ const PrescriptionsPage = () => {
                     placeholder="Nhập Liều lượng ..."
                     control={control}
                   />
-                  <MessageForm error={errors.prescriptionName?.message} />
                 </Field>
               </div>
               <div className="flex gap-7 mb-3">
                 <div className="min-w-[400px] w-1/2">
                   <Label htmlFor="prescriptionName">Tên đơn thuốc</Label>
                   <Select placeholder="Đơn thuốc chỉ định" data={tablets} className="" />
-                  <MessageForm error={errors.prescriptionName?.message} />
                 </div>
                 <div className="min-w-[400px] w-1/2">
                   <Label htmlFor="prescriptionName">Tên đơn thuốc</Label>
                   <Select placeholder="Bệnh nhân chỉ định" data={patients} className="" />
-                  <MessageForm error={errors.prescriptionName?.message} />
                 </div>
               </div>
 
@@ -132,13 +124,12 @@ const PrescriptionsPage = () => {
                   id="description"
                   placeholder="Nhập chi tiết đơn thuốc ..."
                 ></textarea>
-                <MessageForm error={errors.prescriptionName?.message} />
               </div>
 
               <div className="flex gap-7 w-1/4 justify-end float-end">
                 <Button
                   type="submit"
-                  className="bg-third rounded-md w-full mt-3 h-[40px] hover:scale-[1.02]"
+                  className="bg-primaryAdmin rounded-md w-full mt-3 h-[40px] hover:scale-[1.02]"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >
@@ -146,7 +137,7 @@ const PrescriptionsPage = () => {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-[#4c4d5a0d] hover:!text-white !text-black rounded-md w-full mt-3 h-[40px] hover:scale-[1.02]"
+                  className="bg-[#68697a1a] hover:!text-white !text-black rounded-md w-full mt-3 h-[40px] hover:scale-[1.02]"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >

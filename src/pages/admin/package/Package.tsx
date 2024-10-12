@@ -19,23 +19,7 @@ const PackagePage = () => {
       img: 'https://scontent.fdad2-1.fna.fbcdn.net/v/t39.30808-1/448305906_2750439318630832_7599719339820784833_n.jpg?stp=dst-jpg_s200x200&_nc_cat=101&ccb=1-7&_nc_sid=0ecb9b&_nc_ohc=DCiPSnU979IQ7kNvgEjo1YQ&_nc_ht=scontent.fdad2-1.fna&_nc_gid=AGvKKRPuZ6-ixT99Nak2zSr&oh=00_AYCYlGe4vJjXSfLER5fzHjte_HehjIbgomOnpwcMXfKrVg&oe=670D67BE',
     },
   ];
-  function SearchAdmin() {
-    const { control } = useForm({
-      mode: 'onChange',
-    });
-    return (
-      <form className="w-[300px]">
-        <Input
-          name="searchadmin"
-          className="text-current pl-10 border-none"
-          isGlass
-          colorGlass="text-primaryAdmin"
-          placeholder="Tìm kiếm thông tin ..."
-          control={control}
-        />
-      </form>
-    );
-  }
+
   return (
     <section className="package">
       <div className="text-primaryAdmin flex items-center text-base mb-11">
@@ -56,9 +40,7 @@ const PackagePage = () => {
           <h3 className="text-lg font-semibold mb-0">Danh sách gói khám</h3>
           <div className="flex items-center flex-wrap gap-7 ">
             <div className="top-nav-search table-search-blk">
-              <form>
-                <SearchAdmin></SearchAdmin>
-              </form>
+              <SearchAdmin></SearchAdmin>
             </div>
             <div className="transition-all w-12 h-12 rounded-[9px] border border-borderColor font-medium bg-[#f3f4f7] outline-none flex items-center justify-center">
               <Link to="/add-package" className="w-full h-full flex items-center justify-center">
@@ -80,12 +62,12 @@ const PackagePage = () => {
                 <th className="p-4 font-medium">Mô tả</th>
                 <th className="p-4 font-medium">Nội dung</th>
                 <th className="p-4 font-medium">Hình ảnh</th>
-                <th className="p-4 font-medium"></th> {/* Thêm cột Hành động */}
+                <th className="p-4 font-medium">Action</th>
               </tr>
             </thead>
             <tbody>
-              {DataPackage.map((item) => (
-                <tr className="odd">
+              {DataPackage.map((item, index) => (
+                <tr key={index} className="odd">
                   <td className="p-4 sorting_1">
                     <span>{item.id}</span>
                   </td>
@@ -110,25 +92,25 @@ const PackagePage = () => {
                         <button
                           type="button"
                           className="inline-flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
-                          onClick={toggleDropdown} // Gọi hàm toggleDropdown khi nhấn nút
+                          onClick={toggleDropdown}
                         >
                           <MoreVertIcon />
                         </button>
                       </div>
 
-                      {isOpen && ( // Chỉ hiển thị dropdown nếu isOpen là true
+                      {isOpen && (
                         <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white ">
                           <Link
                             to={'#'}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setIsOpen(false)} // Ẩn dropdown khi nhấn vào sửa
+                            onClick={() => setIsOpen(false)}
                           >
                             <i className="fa-solid fa-pen-to-square mr-2"></i> Sửa
                           </Link>
                           <Link
                             to={'#'}
                             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setIsOpen(false)} // Ẩn dropdown khi nhấn vào xóa
+                            onClick={() => setIsOpen(false)}
                           >
                             <i className="fa fa-trash-alt mr-2"></i> Xóa bỏ
                           </Link>
@@ -146,4 +128,23 @@ const PackagePage = () => {
     </section>
   );
 };
+
+function SearchAdmin() {
+  const { control } = useForm({
+    mode: 'onChange',
+  });
+  return (
+    <form className="w-[300px]">
+      <Input
+        name="searchadmin"
+        className="text-current pl-10 border-none"
+        isGlass
+        colorGlass="text-primaryAdmin"
+        placeholder="Tìm kiếm thông tin ..."
+        control={control}
+      />
+    </form>
+  );
+}
+
 export default PackagePage;
