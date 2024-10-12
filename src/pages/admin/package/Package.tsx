@@ -7,7 +7,7 @@ const PackagePage = () => {
   const [isOpen, setIsOpen] = useState(false); // Tạo state để quản lý dropdown
 
   const toggleDropdown = () => {
-    setIsOpen(prev => !prev); // Đảo ngược giá trị isOpen
+    setIsOpen((prev) => !prev); // Đảo ngược giá trị isOpen
   };
   const DataPackage = [
     {
@@ -84,8 +84,8 @@ const PackagePage = () => {
               </tr>
             </thead>
             <tbody>
-              {DataPackage.map(item => (
-                <tr className="odd">
+              {DataPackage.map((item, index) => (
+                <tr key={index} className="odd">
                   <td className="p-4 sorting_1">
                     <span>{item.id}</span>
                   </td>
