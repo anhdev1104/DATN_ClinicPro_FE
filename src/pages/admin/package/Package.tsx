@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Input from '@/components/input';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { MoreVertIcon } from '@/components/icons';
 const PackagePage = () => {
-  const [isOpen, setIsOpen] = useState(false); // Tạo state để quản lý dropdown
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
-    setIsOpen((prev) => !prev); // Đảo ngược giá trị isOpen
+    setIsOpen((prev) => !prev);
   };
   const DataPackage = [
     {
@@ -84,8 +84,8 @@ const PackagePage = () => {
               </tr>
             </thead>
             <tbody>
-              {DataPackage.map((item, index) => (
-                <tr key={index} className="odd">
+              {DataPackage.map((item) => (
+                <tr className="odd">
                   <td className="p-4 sorting_1">
                     <span>{item.id}</span>
                   </td>

@@ -15,7 +15,7 @@ const ModalHeaderUser = forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElemen
   };
   return (
     <div
-      className="min-w-[200px] shadow-[0px_8px_15px_1px_#00000038] absolute top-16 left-2/4 -translate-x-3/4 modal-header-user"
+      className="min-w-[200px] shadow-[0px_4px_10px_1px_#71717138] absolute top-16 left-2/4 -translate-x-3/4 modal-header-user"
       ref={ref}
       {...props}
     >

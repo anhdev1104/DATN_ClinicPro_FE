@@ -28,33 +28,33 @@ export interface IRouter {
 
 const clientRouter: IRouter[] = [
   {
-    path: '/',
-    element: HomePage,
-    title: 'ClinicPro',
-  },
-  {
-    path: '/goi-kham',
+    path: '/parcel',
     element: AdvisePage,
     title: 'Gói khám đa khoa',
   },
   {
-    path: '/thanh-tuu',
+    path: '/awards',
     element: AchievementPage,
     title: 'Thành tựu | Tập đoàn Y khoa Hoàn Mỹ',
   },
   {
-    path: '/ve-chung-toi',
+    path: '/about-us',
     element: AboutPage,
     title: 'Giới thiệu về chúng tôi | Tập đoàn y khoa Hoàn Mỹ',
   },
   {
-    path: '/mang-luoi',
+    path: '/clinic-network',
     element: BranchsPage,
     title: 'Hệ thồng 16 phòng khám Hoàn Mỹ trên cả nước',
   },
   {
     path: '/community',
     element: CommunityPage,
+    title: 'Cộng đồng',
+  },
+  {
+    path: '/',
+    element: HomePage,
     title: 'ClinicPro',
   },
 ];
@@ -63,7 +63,7 @@ const adminRouter: IRouter[] = [
   {
     path: '/dashboard',
     element: Dashboard,
-    title: 'Dashboard',
+    title: 'Trang quản lý',
   },
   {
     path: '/add-prescriptions',
@@ -76,19 +76,19 @@ const adminRouter: IRouter[] = [
     title: 'Danh sách đơn thuốc',
   },
   {
-    path: '/phong-ban',
+    path: '/departments',
     element: Department,
-    title: 'Phòng Ban',
+    title: 'Danh sách phòng ban',
   },
   {
     path: '/package',
     element: PackagePage,
-    title: 'Package',
+    title: 'Danh sách gói khám',
   },
   {
     path: '/add-package',
     element: AddPackage,
-    title: 'CreatePackage',
+    title: 'Tạo gói khám',
   },
 ];
 
@@ -114,8 +114,10 @@ export default function AppRouter() {
   const location = useLocation();
 
   useEffect(() => {
-    const route = clientRouter.find((route) => {
-      const routePath = route.path.replace(/:\w+/g, '');
+    const allRoutes = [...adminRouter, ...authRouter, ...clientRouter];
+
+    const route = allRoutes.find((route) => {
+      const routePath = route.path.replace(/:\w+/g, ''); // Loại bỏ tham số động
       return location.pathname.startsWith(routePath);
     });
     if (route && route.title) {
