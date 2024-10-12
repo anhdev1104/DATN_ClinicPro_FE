@@ -1,14 +1,11 @@
-import { useState } from 'react';
 import Input from '@/components/input';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { MoreVertIcon } from '@/components/icons';
+import useToggle from '@/hooks/useToggle';
 const PackagePage = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { show, handleToggle } = useToggle();
 
-  const toggleDropdown = () => {
-    setIsOpen((prev) => !prev);
-  };
   const DataPackage = [
     {
       id: 1,
@@ -22,7 +19,7 @@ const PackagePage = () => {
 
   return (
     <section className="package">
-      <div className="text-primaryAdmin flex items-center text-base mb-11">
+      <div className="text-primaryAdmin flex items-center text-base mb-10">
         <h2>Gói khám</h2>
         <svg
           className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall mx-2 css-18w7uxr-MuiSvgIcon-root"
@@ -40,7 +37,7 @@ const PackagePage = () => {
           <h3 className="text-lg font-semibold mb-0">Danh sách gói khám</h3>
           <div className="flex items-center flex-wrap gap-7 ">
             <div className="top-nav-search table-search-blk">
-              <SearchAdmin></SearchAdmin>
+              <SearchAdmin />
             </div>
             <div className="transition-all w-12 h-12 rounded-[9px] border border-borderColor font-medium bg-[#f3f4f7] outline-none flex items-center justify-center">
               <Link to="/add-package" className="w-full h-full flex items-center justify-center">
@@ -62,12 +59,11 @@ const PackagePage = () => {
                 <th className="p-4 font-medium">Mô tả</th>
                 <th className="p-4 font-medium">Nội dung</th>
                 <th className="p-4 font-medium">Hình ảnh</th>
-                <th className="p-4 font-medium">Action</th>
               </tr>
             </thead>
             <tbody>
-              {DataPackage.map((item, index) => (
-                <tr key={index} className="odd">
+              {DataPackage.map((item) => (
+                <tr className="odd" key={item.id}>
                   <td className="p-4 sorting_1">
                     <span>{item.id}</span>
                   </td>
@@ -92,25 +88,25 @@ const PackagePage = () => {
                         <button
                           type="button"
                           className="inline-flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
-                          onClick={toggleDropdown}
+                          onClick={handleToggle}
                         >
                           <MoreVertIcon />
                         </button>
                       </div>
 
-                      {isOpen && (
-                        <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white ">
+                      {show && (
+                        <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white overflow-hidden">
                           <Link
                             to={'#'}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setIsOpen(false)}
+                            onClick={handleToggle}
                           >
                             <i className="fa-solid fa-pen-to-square mr-2"></i> Sửa
                           </Link>
                           <Link
                             to={'#'}
                             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setIsOpen(false)}
+                            onClick={handleToggle}
                           >
                             <i className="fa fa-trash-alt mr-2"></i> Xóa bỏ
                           </Link>
@@ -120,7 +116,6 @@ const PackagePage = () => {
                   </td>
                 </tr>
               ))}
-              ;
             </tbody>
           </table>
         </div>

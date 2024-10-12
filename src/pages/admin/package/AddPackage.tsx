@@ -1,4 +1,13 @@
+import { useForm } from 'react-hook-form';
+
 const AddPackage = () => {
+  const {
+    control,
+    formState: { isDirty }
+  } = useForm({
+    mode: 'onChange'
+  });
+
   return (
     <section className="addpackage">
       <div className="text-primaryAdmin flex items-center text-base mb-11">

@@ -26,7 +26,7 @@ const Button: FC<IButton> = ({
   return (
     <button
       type={type}
-      className={`flex items-center justify-center outline-none text-base px-5 py-[5px] bg-primary rounded-[18px] text-white transition-all duration-300 ease-linear disabled:bg-gray-300/60 disabled:pointer-events-none hover:scale-105 hover:bg-primary ${
+      className={`select-none flex items-center justify-center outline-none text-base px-5 py-[5px] bg-primary rounded-[18px] text-white transition-all duration-300 ease-linear disabled:bg-gray-300/60 disabled:pointer-events-none hover:scale-105 hover:bg-primary ${
         disabled && 'opacity-50 pointer-events-none'
       } ${className}`}
       {...props}

@@ -17,6 +17,6 @@ createRoot(document.getElementById('root')!).render(
       </StyledEngineProvider>
       <ToastContainer position="bottom-right" theme="colored" autoClose={4000} pauseOnHover={false} />
     </PersistGate>
-  </Provider>,
+  </Provider>
   // </StrictMode>,
 );
