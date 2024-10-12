@@ -38,7 +38,7 @@ const dumpCategory = [
   {
     id: 4,
     categoryName: 'Phòng Ban',
-    path: '/phong-ban',
+    path: '/departments',
     icon: ApartmentIcon,
   },
   {
@@ -49,7 +49,7 @@ const dumpCategory = [
   },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ show }: { show: boolean }) => {
   const [categoryManagement, setCategoryManagement] = useState<ICategoryManagement[]>(dumpCategory);
   const [tabActive, setTabActive] = useState<number>(1);
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ const Sidebar = () => {
 
   return (
     <aside
-      className="w-[250px] bg-white h-screen fixed left-0 bottom-0 top-24 rounded-r-[26px] hidden md:block"
+      className={`bg-white h-screen fixed left-0 bottom-0 top-24 rounded-r-[26px] hidden md:block ${show ? '-translate-x-[250px] transition-all duration-300 ease-linear' : 'w-[250px] transition-all duration-300 ease-linear'}`}
       style={{ boxShadow: '5px 20px 14px rgba(46, 55, 164, 0.05)' }}
     >
       <div>
@@ -71,7 +71,7 @@ const Sidebar = () => {
         <div>
           <ul className="p-0">
             {categoryManagement.length > 0 &&
-              categoryManagement.map((category) => (
+              categoryManagement.map(category => (
                 <li
                   className={`px-5 py-2 flex  items-center cursor-pointer border-l-[3px] border-transparent hover:!border-l-primaryAdmin transition-all ease-linear hover:bg-primaryAdmin/5 group ${tabActive === category.id && 'border-primaryAdmin bg-primaryAdmin/5'}`}
                   key={category.id}
