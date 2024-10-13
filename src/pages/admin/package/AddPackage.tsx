@@ -1,7 +1,52 @@
+import { createPackage } from '@/services/package.service';
 import React, { useState } from 'react';
+import { IPackage } from '@/types/package.type';
 import { Link } from 'react-router-dom';
-
 const AddPackage = () => {
+  const [name, setName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [image, setImage] = useState<File | null>(null); // Lưu trữ file ảnh
+  const [loading, setLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>('');
+  const [responsePackage, setResponsePackage] = useState<IPackage | null>(null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setImage(e.target.files[0]); // Lưu file ảnh vào state
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (!image) {
+      setMessage('Vui lòng chọn hình ảnh.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const newPackage = await createPackage(
+        {
+          name,
+          description,
+          content,
+          image: '', // Image sẽ được xử lý qua formData
+        },
+        image,
+      );
+
+      setResponsePackage(newPackage);
+      setMessage(`Tạo gói khám thành công: ${newPackage.name}`);
+    } catch (error) {
+      setMessage('Lỗi khi tạo gói khám');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="createpackage">
       <div className="text-primaryAdmin flex items-center text-base mb-11">
@@ -21,7 +66,7 @@ const AddPackage = () => {
         <div className="doctor-table-blk mb-2 pt-4 px-5 flex items-center flex-wrap gap-7">
           <h3 className="text-lg font-semibold mb-0">Thêm gói khám</h3>
         </div>
-        <form className="space-y-6 p-6">
+        <form onSubmit={handleSubmit} className="space-y-6 p-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label className="text-sm font-medium mb-1">
@@ -29,6 +74,8 @@ const AddPackage = () => {
               </label>
               <input
                 type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 placeholder="Nhập tên "
                 className="border rounded-md p-2 focus:ring-2 focus:ring-indigo-500 outline-none"
                 required
@@ -39,7 +86,8 @@ const AddPackage = () => {
                 Mô tả <span className="text-red-500">*</span>
               </label>
               <input
-                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 placeholder="Nhập mô tả"
                 className="border rounded-md p-2 focus:ring-2 focus:ring-indigo-500 outline-none"
                 required
@@ -51,6 +99,8 @@ const AddPackage = () => {
               Nội dung gói khám <span className="text-red-500">*</span>
             </label>
             <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
               placeholder="Nhập nội dung gói"
               className="border rounded-md p-2 h-24 resize-none focus:ring-2 focus:ring-indigo-500 outline-none"
               required
@@ -63,7 +113,8 @@ const AddPackage = () => {
               </label>
               <input
                 type="file"
-                accept=""
+                accept="image/*"
+                onChange={handleImageChange}
                 className="border rounded-md p-2 focus:ring-2 focus:ring-indigo-500 outline-none"
               />
             </div>
@@ -73,6 +124,7 @@ const AddPackage = () => {
                 className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition duration-200"
               >
                 Tạo gói khám
+                {loading ? 'Đang tạo...' : 'Tạo gói khám'}
               </button>
               <button
                 type="button"
@@ -83,6 +135,22 @@ const AddPackage = () => {
             </div>
           </div>
         </form>
+        {message && <p>{message}</p>}
+
+        {responsePackage && (
+          <div>
+            <h2>Kết quả:</h2>
+            <p>
+              <strong>ID:</strong> {responsePackage.id}
+            </p>
+            <p>
+              <strong>Slug:</strong> {responsePackage.slug}
+            </p>
+            <p>
+              <strong>Ngày tạo:</strong> {responsePackage.created_at}
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );

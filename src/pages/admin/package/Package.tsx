@@ -1,24 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Input from '@/components/input';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { MoreVertIcon } from '@/components/icons';
+import { getAllPackages } from '@/services/package.service';
+import { IPackage } from '@/types/package.type';
 const PackagePage = () => {
-  const [isOpen, setIsOpen] = useState(false); // Tạo state để quản lý dropdown
-
+  const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => {
-    setIsOpen(prev => !prev); // Đảo ngược giá trị isOpen
+    setIsOpen((prev) => !prev);
   };
-  const DataPackage = [
-    {
-      id: 1,
-      namePackpage: 'Tim mạch',
-      description: 'Điều tra và xử lý các vấn đề...',
-      content:
-        'Hầu hết bệnh nhân gặp các vấn đề về tim mạch ở giai đoạn đầu đều thường bỏ qua các triệu chứng của bệnh.',
-      img: 'https://scontent.fdad2-1.fna.fbcdn.net/v/t39.30808-1/448305906_2750439318630832_7599719339820784833_n.jpg?stp=dst-jpg_s200x200&_nc_cat=101&ccb=1-7&_nc_sid=0ecb9b&_nc_ohc=DCiPSnU979IQ7kNvgEjo1YQ&_nc_ht=scontent.fdad2-1.fna&_nc_gid=AGvKKRPuZ6-ixT99Nak2zSr&oh=00_AYCYlGe4vJjXSfLER5fzHjte_HehjIbgomOnpwcMXfKrVg&oe=670D67BE',
-    },
-  ];
+  const [packages, setPackages] = useState<IPackage[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const data = await getAllPackages();
+        setPackages(data);
+      } catch (err) {
+        setError('Không thể lấy danh sách gói khám');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPackages();
+  }, []);
+
+  if (loading) return <p>Đang tải...</p>;
+  if (error) return <p>{error}</p>;
+
   function SearchAdmin() {
     const { control } = useForm({
       mode: 'onChange',
@@ -84,23 +97,17 @@ const PackagePage = () => {
               </tr>
             </thead>
             <tbody>
-              {DataPackage.map(item => (
-                <tr className="odd">
+              {packages.map((pkg, index) => (
+                <tr key={index} className="odd">
                   <td className="p-4 sorting_1">
-                    <span>{item.id}</span>
+                    <span>{pkg.id}</span>
                   </td>
-                  <td className="p-4 text-gray-800">{item.namePackpage}</td>
-                  <td className="p-4 text-gray-600">{item.description}</td>
-                  <td className="p-4 text-gray-600 max-h-24 overflow-y-auto whitespace-normal w-1/3">{item.content}</td>
+                  <td className="p-4 text-gray-800">{pkg.content}</td>
+                  <td className="p-4 text-gray-600">{pkg.description}</td>
+                  <td className="p-4 text-gray-600 max-h-24 overflow-y-auto whitespace-normal w-1/3"></td>
                   <td className="p-4 profile-image">
                     <Link to="profile.html" className="flex items-center">
-                      <img
-                        width={28}
-                        height={28}
-                        src={item.img}
-                        className="rounded-full mr-2"
-                        alt="Tiến sĩ Andrea Lalema"
-                      />
+                      <img width={28} height={28} src="" className="rounded-full mr-2" alt="Tiến sĩ Andrea Lalema" />
                       <span className="text-gray-800">Tiến sĩ Andrea Lalema</span>
                     </Link>
                   </td>
@@ -138,7 +145,6 @@ const PackagePage = () => {
                   </td>
                 </tr>
               ))}
-              ;
             </tbody>
           </table>
         </div>
