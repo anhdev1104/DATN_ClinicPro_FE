@@ -13,8 +13,16 @@ const PackagePage = () => {
       description: 'Điều tra và xử lý các vấn đề...',
       content:
         'Hầu hết bệnh nhân gặp các vấn đề về tim mạch ở giai đoạn đầu đều thường bỏ qua các triệu chứng của bệnh.',
-      img: 'https://scontent.fdad2-1.fna.fbcdn.net/v/t39.30808-1/448305906_2750439318630832_7599719339820784833_n.jpg?stp=dst-jpg_s200x200&_nc_cat=101&ccb=1-7&_nc_sid=0ecb9b&_nc_ohc=DCiPSnU979IQ7kNvgEjo1YQ&_nc_ht=scontent.fdad2-1.fna&_nc_gid=AGvKKRPuZ6-ixT99Nak2zSr&oh=00_AYCYlGe4vJjXSfLER5fzHjte_HehjIbgomOnpwcMXfKrVg&oe=670D67BE',
+      img: 'https://scontent.fdad2-1.fna.fbcdn.net/v/t39.30808-1/448305906_2750439318630832_7599719339820784833_n.jpg?stp=dst-jpg_s200x200&_nc_cat=101&ccb=1-7&_nc_sid=0ecb9b&_nc_ohc=DCiPSnU979IQ7kNvgEjo1YQ&_nc_ht=scontent.fdad2-1.fna&_nc_gid=AGvKKRPuZ6-ixT99Nak2zSr&oh=00_AYCYlGe4vJjXSfLER5fzHjte_HehjIbgomOnpwcMXfKrVg&oe=670D67BE'
     },
+    {
+      id: 2,
+      namePackpage: 'Tim mạch',
+      description: 'Điều tra và xử lý các vấn đề...',
+      content:
+        'Hầu hết bệnh nhân gặp các vấn đề về tim mạch ở giai đoạn đầu đều thường bỏ qua các triệu chứng của bệnh.',
+      img: 'https://scontent.fdad2-1.fna.fbcdn.net/v/t39.30808-1/448305906_2750439318630832_7599719339820784833_n.jpg?stp=dst-jpg_s200x200&_nc_cat=101&ccb=1-7&_nc_sid=0ecb9b&_nc_ohc=DCiPSnU979IQ7kNvgEjo1YQ&_nc_ht=scontent.fdad2-1.fna&_nc_gid=AGvKKRPuZ6-ixT99Nak2zSr&oh=00_AYCYlGe4vJjXSfLER5fzHjte_HehjIbgomOnpwcMXfKrVg&oe=670D67BE'
+    }
   ];
 
   return (
@@ -62,7 +70,7 @@ const PackagePage = () => {
               </tr>
             </thead>
             <tbody>
-              {DataPackage.map((item) => (
+              {DataPackage.map(item => (
                 <tr className="odd" key={item.id}>
                   <td className="p-4 sorting_1">
                     <span>{item.id}</span>
@@ -126,7 +134,7 @@ const PackagePage = () => {
 
 function SearchAdmin() {
   const { control } = useForm({
-    mode: 'onChange',
+    mode: 'onChange'
   });
   return (
     <form className="w-[300px]">

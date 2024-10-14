@@ -22,7 +22,7 @@ const tablets = [
   { name: 'Viên nhai Kremil-S United điều trị đau dạ dày, giảm nóng rát dạ dày, ợ nóng, ợ chua (10 vỉ x 10 viên)' },
   { name: 'Thuốc Telfast HD 180mg Sanofi điều trị viêm mũi dị ứng, mày đay (1 vỉ x 10 viên)' },
   { name: 'Thuốc Farzincol Pharmedic điều trị thiếu kẽm (10 vỉ x 10 viên)' },
-  { name: 'Kem Differin Galderma điều trị mụn trứng cá (30g)' },
+  { name: 'Kem Differin Galderma điều trị mụn trứng cá (30g)' }
 ];
 
 const patients = [
@@ -36,24 +36,24 @@ const patients = [
   { name: 'Nguyễn Văn H' },
   { name: 'Trần Thị I' },
   { name: 'Lê Văn J' },
-  { name: 'Phạm Thị K' },
+  { name: 'Phạm Thị K' }
 ];
 
 const schema = yup.object({
-  prescriptionName: yup.string().trim().required('Trường này là bắt buộc !'),
+  prescriptionName: yup.string().trim().required('Trường này là bắt buộc !')
 });
 
 const PrescriptionsPage = () => {
   const {
     handleSubmit,
     control,
-    formState: { isSubmitting, errors, isValid },
+    formState: { isSubmitting, errors, isValid }
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: 'onChange'
   });
 
-  const handleCreateTablet: SubmitHandler<{ prescriptionName: string }> = async (data) => {
+  const handleCreateTablet: SubmitHandler<{ prescriptionName: string }> = async data => {
     if (!isValid) return;
     console.log(data);
   };
@@ -85,19 +85,19 @@ const PrescriptionsPage = () => {
             <form className="mb-3 w-full relative" onSubmit={handleSubmit(handleCreateTablet)}>
               <div className="flex gap-7 mb-3">
                 <Field>
-                  <Label htmlFor="quantity">Số lượng</Label>
+                  <Label htmlFor="dosage">Liều lượng ( .../Lần )</Label>
                   <Input
-                    name="quantity"
+                    name="dosage"
                     type="text"
                     className="h-[48px] !font-normal !text-dark rounded-md bg-white focus:border-third"
-                    placeholder="Nhập Số lượng ..."
+                    placeholder="Nhập Liều lượng ..."
                     control={control}
                   />
                 </Field>
                 <Field>
-                  <Label htmlFor="dosage">Liều lượng ( Viên/Lần )</Label>
+                  <Label htmlFor="frequency"> Số ngày sử dụng </Label>
                   <Input
-                    name="dosage"
+                    name="frequency"
                     type="text"
                     className="h-[48px] !font-normal !text-dark rounded-md bg-white focus:border-third"
                     placeholder="Nhập Liều lượng ..."
@@ -137,7 +137,7 @@ const PrescriptionsPage = () => {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-[#68697a1a] hover:!text-white !text-black rounded-md w-full mt-3 h-[40px] hover:scale-[1.02]"
+                  className="bg-[#8e8e8e6b] hover:!text-white !text-black rounded-md w-full mt-3 h-[40px] hover:scale-[1.02]"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >
