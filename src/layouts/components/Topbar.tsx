@@ -34,13 +34,13 @@ const Topbar: FC<{ handleToggle: () => void }> = ({ handleToggle }) => {
 
 function SearchAdmin() {
   const { control } = useForm({
-    mode: 'onChange',
+    mode: 'onChange'
   });
   return (
     <form className="w-[300px]">
       <Input
         name="searchadmin"
-        className="text-current pl-10 border-none"
+        className="text-primaryAdmin border-none"
         isGlass
         colorGlass="text-primaryAdmin"
         placeholder="Tìm kiếm thông tin ..."

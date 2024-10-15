@@ -1,4 +1,4 @@
-import { ArrowLeft } from '@/components/icons';
+import { ArrowLeft, VisibilityIcon, VisibilityOffIcon } from '@/components/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '@/components/input';
 import { Button, ButtonSocial } from '@/components/button';
@@ -12,6 +12,7 @@ import MessageForm from '@/components/message';
 import { registerService } from '@/services/auth.service';
 import { toast } from 'react-toastify';
 import PosterAuth from './components/PosterAuth';
+import useToggle from '@/hooks/useToggle';
 
 const schema = yup.object({
   fullname: yup.string().trim().required('Vui lòng nhập vào họ và tên !'),
@@ -27,28 +28,30 @@ const schema = yup.object({
     .min(6, 'Mật khẩu ít nhất 6 ký tự trở lên !')
     .matches(
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
-      'Mật khẩu phải chứa ít nhất một số và một ký tự đặc biệt !',
+      'Mật khẩu phải chứa ít nhất một số và một ký tự đặc biệt !'
     ),
 
   password_confirm: yup
     .string()
     .trim()
-    .oneOf([yup.ref('password'), undefined], 'Mật khẩu xác nhận phải khớp với mật khẩu đã nhập !'),
+    .oneOf([yup.ref('password'), undefined], 'Mật khẩu xác nhận phải khớp với mật khẩu đã nhập !')
 });
 
 const RegisterPage = () => {
+  const { show, handleToggle } = useToggle();
+  const { show: showConfirm, handleToggle: handleToggleConfirm } = useToggle();
   const navigate = useNavigate();
   const {
     handleSubmit,
     formState: { isSubmitting, errors, isValid },
     control,
-    reset,
+    reset
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: 'onChange'
   });
 
-  const handleRegister: SubmitHandler<IAccount> = async (data) => {
+  const handleRegister: SubmitHandler<IAccount> = async data => {
     if (!isValid) return;
     const { password_confirm, ...dataRegister } = data;
     const res = await registerService(dataRegister);
@@ -110,26 +113,32 @@ const RegisterPage = () => {
                   />
                   <MessageForm error={errors.email?.message} />
                 </Field>
-                <Field>
+                <Field className="relative">
                   <Label htmlFor="password">Mật khẩu</Label>
                   <Input
                     name="password"
-                    type="password"
+                    type={show ? 'text' : 'password'}
                     className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
                     placeholder="Mật khẩu tối thiểu 6 kí tự ..."
                     control={control}
                   />
+                  <div className="text-gray-400 top-8 right-4 cursor-pointer absolute" onClick={handleToggle}>
+                    {!show ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  </div>
                   <MessageForm error={errors.password?.message} />
                 </Field>
-                <Field>
+                <Field className="relative">
                   <Label htmlFor="password_confirm">Xác nhận mật khẩu</Label>
                   <Input
                     name="password_confirm"
-                    type="password"
+                    type={showConfirm ? 'text' : 'password'}
                     className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
                     placeholder="Nhập lại mật khẩu ..."
                     control={control}
                   />
+                  <div className="text-gray-400 top-8 right-4 cursor-pointer absolute" onClick={handleToggleConfirm}>
+                    {!showConfirm ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  </div>
                   <MessageForm error={errors.password_confirm?.message} />
                 </Field>
                 <Button

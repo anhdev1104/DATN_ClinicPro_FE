@@ -4,7 +4,8 @@ import {
   LocalHospitalIcon,
   SpaceDashboardIcon,
   ApartmentIcon,
-  AssignmentIcon
+  AssignmentIcon,
+  Tablet
 } from '@/components/icons';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -37,12 +38,18 @@ const dumpCategory = [
   },
   {
     id: 4,
+    categoryName: 'Đơn thuốc',
+    path: '/prescriptions',
+    icon: Tablet
+  },
+  {
+    id: 5,
     categoryName: 'Phòng Ban',
     path: '/departments',
     icon: ApartmentIcon
   },
   {
-    id: 5,
+    id: 6,
     categoryName: 'Gói khám',
     path: '/package',
     icon: AssignmentIcon
