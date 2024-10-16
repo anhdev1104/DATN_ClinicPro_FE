@@ -34,17 +34,17 @@ const clientRouter: IRouter[] = [
   {
     path: '/awards',
     element: AchievementPage,
-    title: 'Thành tựu | Tập đoàn Y khoa Hoàn Mỹ'
+    title: 'Thành tựu'
   },
   {
     path: '/about-us',
     element: AboutPage,
-    title: 'Giới thiệu về chúng tôi | Tập đoàn y khoa Hoàn Mỹ'
+    title: 'Giới thiệu về chúng tôi'
   },
   {
     path: '/clinic-network',
     element: BranchsPage,
-    title: 'Hệ thồng 16 phòng khám Hoàn Mỹ trên cả nước'
+    title: 'Hệ thống 16 phòng khám trên cả nước'
   },
   {
     path: '/community',
