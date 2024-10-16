@@ -17,8 +17,7 @@ import HomePage from '@/pages/client/home/HomePage';
 import AddPackage from '@/pages/admin/package/AddPackage';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import AddPrescriptios from '@/pages/admin/prescriptions/AddPrescriptions';
-import Prescriptions from '@/pages/admin/prescriptions/Prescriptions';
+import Prescriptions from '@/pages/admin/prescriptions/Prescription';
 
 export interface IRouter {
   path: string;
@@ -30,84 +29,79 @@ const clientRouter: IRouter[] = [
   {
     path: '/parcel',
     element: AdvisePage,
-    title: 'Gói khám đa khoa',
+    title: 'Gói khám đa khoa'
   },
   {
     path: '/awards',
     element: AchievementPage,
-    title: 'Thành tựu | Tập đoàn Y khoa Hoàn Mỹ',
+    title: 'Thành tựu | Tập đoàn Y khoa Hoàn Mỹ'
   },
   {
     path: '/about-us',
     element: AboutPage,
-    title: 'Giới thiệu về chúng tôi | Tập đoàn y khoa Hoàn Mỹ',
+    title: 'Giới thiệu về chúng tôi | Tập đoàn y khoa Hoàn Mỹ'
   },
   {
     path: '/clinic-network',
     element: BranchsPage,
-    title: 'Hệ thồng 16 phòng khám Hoàn Mỹ trên cả nước',
+    title: 'Hệ thồng 16 phòng khám Hoàn Mỹ trên cả nước'
   },
   {
     path: '/community',
     element: CommunityPage,
-    title: 'Cộng đồng',
+    title: 'Cộng đồng'
   },
   {
     path: '/',
     element: HomePage,
-    title: 'ClinicPro',
-  },
+    title: 'ClinicPro'
+  }
 ];
 
 const adminRouter: IRouter[] = [
   {
     path: '/dashboard',
     element: Dashboard,
-    title: 'Trang quản lý',
-  },
-  {
-    path: '/add-prescriptions',
-    element: AddPrescriptios,
-    title: 'Thêm đơn thuốc',
+    title: 'Trang quản lý'
   },
   {
     path: '/prescriptions',
     element: Prescriptions,
-    title: 'Danh sách đơn thuốc',
+    title: 'Danh sách đơn thuốc'
   },
   {
     path: '/departments',
     element: Department,
-    title: 'Danh sách phòng ban',
+    title: 'Danh sách phòng ban'
   },
   {
     path: '/package',
     element: PackagePage,
-    title: 'Danh sách gói khám',
+    title: 'Danh sách gói khám'
   },
   {
     path: '/add-package',
     element: AddPackage,
-    title: 'Tạo gói khám',
-  },
+    title: 'Tạo gói khám'
+  }
 ];
 
 const authRouter: IRouter[] = [
   {
     path: '/register',
     element: RegisterPage,
-    title: 'Đăng ký tài khoản',
+    title: 'Đăng ký tài khoản'
   },
   {
     path: '/login',
     element: LoginPage,
-    title: 'Đăng nhập tài khoản',
+    title: 'Đăng nhập tài khoản'
   },
   {
     path: '/login-otp',
     element: LoginOTP,
-    title: 'Đăng nhập qua OTP',
-  },
+    title: 'Đăng nhập qua OTP'
+  }
 ];
 
 export default function AppRouter() {
@@ -116,7 +110,7 @@ export default function AppRouter() {
   useEffect(() => {
     const allRoutes = [...adminRouter, ...authRouter, ...clientRouter];
 
-    const route = allRoutes.find((route) => {
+    const route = allRoutes.find(route => {
       const routePath = route.path.replace(/:\w+/g, ''); // Loại bỏ tham số động
       return location.pathname.startsWith(routePath);
     });
@@ -131,14 +125,14 @@ export default function AppRouter() {
       <Routes>
         <Route element={<MainLayout />}>
           {clientRouter.length > 0 &&
-            clientRouter.map((route) => <Route key={route.path} path={route.path} element={<route.element />} />)}
+            clientRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
         </Route>
         <Route element={<AdminLayout />}>
           {adminRouter.length > 0 &&
-            adminRouter.map((route) => <Route key={route.path} path={route.path} element={<route.element />} />)}
+            adminRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
         </Route>
         {authRouter.length > 0 &&
-          authRouter.map((route) => <Route key={route.path} path={route.path} element={<route.element />}></Route>)}
+          authRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />}></Route>)}
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </>

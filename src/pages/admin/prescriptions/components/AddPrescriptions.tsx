@@ -6,7 +6,6 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@/components/button';
-import MessageForm from '@/components/message/MessageForm';
 import Select from '@/components/select';
 import { Link } from 'react-router-dom';
 
@@ -43,7 +42,11 @@ const schema = yup.object({
   prescriptionName: yup.string().trim().required('Trường này là bắt buộc !')
 });
 
-const PrescriptionsPage = () => {
+interface AddPrescripton {
+  navigate: () => void;
+}
+
+const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   const {
     handleSubmit,
     control,
@@ -64,6 +67,8 @@ const PrescriptionsPage = () => {
         <h2>Quản lý đơn thuốc</h2>
         <ChevronRightIcon fontSize="small" className="mx-2" />
         <span className="text-primaryAdmin">Đơn thuốc</span>
+        <ChevronRightIcon fontSize="small" className="mx-2" />
+        <span className="text-primaryAdmin/60">Thêm đơn thuốc</span>
       </div>
       <div className="flex bg-white size-full p-[20px] rounded-[26px]">
         <div className="flex-1">
@@ -72,13 +77,13 @@ const PrescriptionsPage = () => {
               <h1 className="text-[18px] text-black font-medium">Chi tiết đơn thuốc</h1>
             </div>
             <div>
-              <Link
-                to={'/prescriptions'}
+              <button
+                onClick={navigate}
                 className="text-[18px] text-black font-medium flex items-center gap-3 border-borderColor border p-3 rounded-lg bg-[#f3f4f7]"
               >
                 <List className="text-[#4d54b1]" />
                 Danh sách đơn thuốc
-              </Link>
+              </button>
             </div>
           </div>
           <div>
@@ -152,4 +157,4 @@ const PrescriptionsPage = () => {
   );
 };
 
-export default PrescriptionsPage;
+export default AddPrescriptions;
