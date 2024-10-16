@@ -121,12 +121,12 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
             <h1 className="text-[18px] text-black font-medium">Danh sách đơn thuốc</h1>
           </div>
           <PrescriptionSearch />
-          <Link
-            to={'/add-prescriptions'}
+          <button
+            onClick={navigate}
             className="text-[18px] font-medium gap-3 border-borderColor border p-2 rounded-lg bg-[#f3f4f7]"
           >
             <AddIcon className="text-primaryAdmin" />
-          </Link>
+          </button>
         </div>
 
         <div>

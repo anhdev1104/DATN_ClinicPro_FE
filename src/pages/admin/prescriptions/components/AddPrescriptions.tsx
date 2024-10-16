@@ -7,35 +7,103 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@/components/button';
 import Select from '@/components/select';
-import { Link } from 'react-router-dom';
 
-const tablets = [
-  { name: 'Thuốc Pymenospain Pymepharco chống co thắt dạ dày - ruột (200 viên)' },
-  { name: 'Viên sủi Efferalgan 500mg UPSA SAS giảm đau, hạ sốt (4 vỉ x 4 viên)' },
-  { name: 'Thuốc bột pha hỗn dịch uống Smecta vị cam điều trị tiêu chảy (30 gói x 3g)' },
-  { name: 'Viên sủi Berocca Bayer bổ sung vitamin và khoáng chất (10 viên)' },
-  { name: 'Men vi sinh Enterogermina 2 tỷ/5ml điều trị rối loạn tiêu hóa (2 vỉ x 10 ống)' },
-  { name: 'Thuốc Eugica MEGA We care điều trị ho đờm, cảm cúm, sổ mũi (10 vỉ x 10 viên)' },
-  { name: 'Thuốc Clorpheniramin 4 DHG điều trị viêm mũi dị ứng, chảy nước mũi (10 vỉ x 20 viên)' },
-  { name: 'Gel bôi da Klenzit MS điều trị mụn trứng cá (15g)' },
-  { name: 'Viên nhai Kremil-S United điều trị đau dạ dày, giảm nóng rát dạ dày, ợ nóng, ợ chua (10 vỉ x 10 viên)' },
-  { name: 'Thuốc Telfast HD 180mg Sanofi điều trị viêm mũi dị ứng, mày đay (1 vỉ x 10 viên)' },
-  { name: 'Thuốc Farzincol Pharmedic điều trị thiếu kẽm (10 vỉ x 10 viên)' },
-  { name: 'Kem Differin Galderma điều trị mụn trứng cá (30g)' }
+const TabletOptions = [
+  {
+    value: 'Thuốc Pymenospain Pymepharco chống co thắt dạ dày - ruột (200 viên)',
+    label: 'Thuốc Pymenospain Pymepharco chống co thắt dạ dày - ruột (200 viên)'
+  },
+  {
+    value: 'Viên sủi Efferalgan 500mg UPSA SAS giảm đau, hạ sốt (4 vỉ x 4 viên)',
+    label: 'Viên sủi Efferalgan 500mg UPSA SAS giảm đau, hạ sốt (4 vỉ x 4 viên)'
+  },
+  {
+    value: 'Thuốc bột pha hỗn dịch uống Smecta vị cam điều trị tiêu chảy (30 gói x 3g)',
+    label: 'Thuốc bột pha hỗn dịch uống Smecta vị cam điều trị tiêu chảy (30 gói x 3g)'
+  },
+  {
+    value: 'Viên sủi Berocca Bayer bổ sung vitamin và khoáng chất (10 viên)',
+    label: 'Viên sủi Berocca Bayer bổ sung vitamin và khoáng chất (10 viên)'
+  },
+  {
+    value: 'Men vi sinh Enterogermina 2 tỷ/5ml điều trị rối loạn tiêu hóa (2 vỉ x 10 ống)',
+    label: 'Men vi sinh Enterogermina 2 tỷ/5ml điều trị rối loạn tiêu hóa (2 vỉ x 10 ống)'
+  },
+  {
+    value: 'Thuốc Eugica MEGA We care điều trị ho đờm, cảm cúm, sổ mũi (10 vỉ x 10 viên)',
+    label: 'Thuốc Eugica MEGA We care điều trị ho đờm, cảm cúm, sổ mũi (10 vỉ x 10 viên)'
+  },
+  {
+    value: 'Thuốc Clorpheniramin 4 DHG điều trị viêm mũi dị ứng, chảy nước mũi (10 vỉ x 20 viên)',
+    label: 'Thuốc Clorpheniramin 4 DHG điều trị viêm mũi dị ứng, chảy nước mũi (10 vỉ x 20 viên)'
+  },
+  {
+    value: 'Gel bôi da Klenzit MS điều trị mụn trứng cá (15g)',
+    label: 'Gel bôi da Klenzit MS điều trị mụn trứng cá (15g)'
+  },
+  {
+    value: 'Viên nhai Kremil-S United điều trị đau dạ dày, giảm nóng rát dạ dày, ợ nóng, ợ chua (10 vỉ x 10 viên)',
+    label: 'Viên nhai Kremil-S United điều trị đau dạ dày, giảm nóng rát dạ dày, ợ nóng, ợ chua (10 vỉ x 10 viên)'
+  },
+  {
+    value: 'Thuốc Telfast HD 180mg Sanofi điều trị viêm mũi dị ứng, mày đay (1 vỉ x 10 viên)',
+    label: 'Thuốc Telfast HD 180mg Sanofi điều trị viêm mũi dị ứng, mày đay (1 vỉ x 10 viên)'
+  },
+  {
+    value: 'Thuốc Farzincol Pharmedic điều trị thiếu kẽm (10 vỉ x 10 viên)',
+    label: 'Thuốc Farzincol Pharmedic điều trị thiếu kẽm (10 vỉ x 10 viên)'
+  },
+  {
+    value: 'Kem Differin Galderma điều trị mụn trứng cá (30g)',
+    label: 'Kem Differin Galderma điều trị mụn trứng cá (30g)'
+  }
 ];
 
-const patients = [
-  { name: 'Nguyễn Văn A' },
-  { name: 'Trần Thị B' },
-  { name: 'Lê Văn C' },
-  { name: 'Phạm Thị D' },
-  { name: 'Nguyễn Văn E' },
-  { name: 'Trần Văn F' },
-  { name: 'Lê Thị G' },
-  { name: 'Nguyễn Văn H' },
-  { name: 'Trần Thị I' },
-  { name: 'Lê Văn J' },
-  { name: 'Phạm Thị K' }
+const PatientsOptions = [
+  {
+    value: 'Nguyễn Văn A',
+    label: 'Nguyễn Văn A'
+  },
+  {
+    value: 'Trần Thị B',
+    label: 'Trần Thị B'
+  },
+  {
+    value: 'Lê Văn C',
+    label: 'Lê Văn C'
+  },
+  {
+    value: 'Phạm Thị D',
+    label: 'Phạm Thị D'
+  },
+  {
+    value: 'Nguyễn Văn E',
+    label: 'Nguyễn Văn E'
+  },
+  {
+    value: 'Trần Văn F',
+    label: 'Trần Văn F'
+  },
+  {
+    value: 'Lê Thị G',
+    label: 'Lê Thị G'
+  },
+  {
+    value: 'Nguyễn Văn H',
+    label: 'Nguyễn Văn H'
+  },
+  {
+    value: 'Trần Thị I',
+    label: 'Trần Thị I'
+  },
+  {
+    value: 'Lê Văn J',
+    label: 'Lê Văn J'
+  },
+  {
+    value: 'Phạm Thị K',
+    label: 'Phạm Thị K'
+  }
 ];
 
 const schema = yup.object({
@@ -113,11 +181,21 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
               <div className="flex gap-7 mb-3">
                 <div className="min-w-[400px] w-1/2">
                   <Label htmlFor="prescriptionName">Tên đơn thuốc</Label>
-                  <Select placeholder="Đơn thuốc chỉ định" data={tablets} className="" />
+                  <Select
+                    name="selectTablets"
+                    placeholder="Đơn thuốc chỉ định"
+                    options={TabletOptions}
+                    control={control}
+                  />
                 </div>
                 <div className="min-w-[400px] w-1/2">
-                  <Label htmlFor="prescriptionName">Tên đơn thuốc</Label>
-                  <Select placeholder="Bệnh nhân chỉ định" data={patients} className="" />
+                  <Label htmlFor="selectDoctor">Tên đơn thuốc</Label>
+                  <Select
+                    name="searchPrescription"
+                    placeholder="Bệnh nhân chỉ định"
+                    options={PatientsOptions}
+                    control={control}
+                  />
                 </div>
               </div>
 

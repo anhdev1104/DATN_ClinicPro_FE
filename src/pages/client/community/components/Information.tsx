@@ -16,12 +16,12 @@ const InformationSection = () => {
             <div className="information__content pl-[65px] m-auto">
               <h2 className="text-3xl font-semibold text-primary mb-10">Viết Tiếp Câu Chuyện Trái Tim</h2>
               <p className="text-[13px] font-normal leading-[30px] text-[#5d5d5d]">
-                Năm 2007, Hoàn Mỹ đã khởi đầu hành trình giúp đỡ những người mắc bệnh tim – từ các tỉnh xa nhất miền Bắc
-                đến miền Nam. Nhờ có sự tài trợ của các tổ chức từ thiện như Quỹ Bảo trợ Trẻ em Việt Nam cũng như sự hỗ
-                trợ của đội ngũ nhân viên y tế Hoàn Mỹ, chúng tôi đã thực hiện khám sức khỏe cho hàng nghìn trẻ em.
-                Chúng tôi đã thành công trong việc chữa lành cho nhiều trẻ em bị dị tật tim bẩm sinh. Đã nhiều năm trôi
-                qua kể từ khi hành trình này bắt đầu, chúng tôi vẫn không ngừng cố gắng viết tiếp những câu chuyện về
-                trái tim cho người dân Việt Nam.
+                Năm 2007, ClinicPpro đã khởi đầu hành trình giúp đỡ những người mắc bệnh tim – từ các tỉnh xa nhất miền
+                Bắc đến miền Nam. Nhờ có sự tài trợ của các tổ chức từ thiện như Quỹ Bảo trợ Trẻ em Việt Nam cũng như sự
+                hỗ trợ của đội ngũ nhân viên y tế ClinicPpro, chúng tôi đã thực hiện khám sức khỏe cho hàng nghìn trẻ
+                em. Chúng tôi đã thành công trong việc chữa lành cho nhiều trẻ em bị dị tật tim bẩm sinh. Đã nhiều năm
+                trôi qua kể từ khi hành trình này bắt đầu, chúng tôi vẫn không ngừng cố gắng viết tiếp những câu chuyện
+                về trái tim cho người dân Việt Nam.
               </p>
             </div>
           </div>
@@ -35,7 +35,7 @@ const InformationSection = () => {
                 Chương Trình Đào Tạo Về Sơ Cứu Cho Cộng Đồng
               </h2>
               <p className="ext-[13px] font-normal leading-[30px] text-[#5d5d5d]">
-                Nằm trong chương trình tiếp cận cộng đồng của Tập đoàn, Hoàn Mỹ cung cấp hoạt động đào tạo về Cấp cứu
+                Nằm trong chương trình tiếp cận cộng đồng của Tập đoàn, ClinicPpro cung cấp hoạt động đào tạo về Cấp cứu
                 cho các Tổ chức phi chính phủ, công ty và trường học trên khắp Việt Nam. Khi ngày càng nhiều người trên
                 khắp đất nước được trang bị kiến thức về việc cần làm trong tình huống khẩn cấp, chúng ta có thể trợ
                 giúp đồng bào của mình khi tai nạn xảy ra. Hoạt động đào tạo hiệu quả về Sơ cứu giúp cứu sống nhiều sinh

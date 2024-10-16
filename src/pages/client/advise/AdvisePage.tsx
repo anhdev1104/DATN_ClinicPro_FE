@@ -2,46 +2,62 @@ import BannerImg from '/images/banner-goi-kham.webp';
 
 import Select from '@/components/select';
 import { AdvisePackage } from './components/AdvisePackage';
-const fakeData = [
+import { useForm } from 'react-hook-form';
+
+const transformedData = [
   {
-    name: 'Bệnh viện Hoàn Mỹ Sài Gòn',
+    label: 'Phòng khám ClinicPro Sài Gòn',
+    value: 'Phòng khám ClinicPro Sài Gòn'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Thủ Đức',
+    label: 'Phòng khám ClinicPro Thủ Đức',
+    value: 'Phòng khám ClinicPro Thủ Đức'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Đà Nẵng',
+    label: 'Phòng khám ClinicPro Đà Nẵng',
+    value: 'Phòng khám ClinicPro Đà Nẵng'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Cửu Long',
+    label: 'Phòng khám ClinicPro Cửu Long',
+    value: 'Phòng khám ClinicPro Cửu Long'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Sài Gòn',
+    label: 'Phòng khám ClinicPro Sài Gòn',
+    value: 'Phòng khám ClinicPro Sài Gòn'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Thủ Đức',
+    label: 'Phòng khám ClinicPro Thủ Đức',
+    value: 'Phòng khám ClinicPro Thủ Đức'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Đà Nẵng',
+    label: 'Phòng khám ClinicPro Đà Nẵng',
+    value: 'Phòng khám ClinicPro Đà Nẵng'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Cửu Long',
+    label: 'Phòng khám ClinicPro Cửu Long',
+    value: 'Phòng khám ClinicPro Cửu Long'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Sài Gòn',
+    label: 'Phòng khám ClinicPro Sài Gòn',
+    value: 'Phòng khám ClinicPro Sài Gòn'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Thủ Đức',
+    label: 'Phòng khám ClinicPro Thủ Đức',
+    value: 'Phòng khám ClinicPro Thủ Đức'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Đà Nẵng',
+    label: 'Phòng khám ClinicPro Đà Nẵng',
+    value: 'Phòng khám ClinicPro Đà Nẵng'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Cửu Long',
-  },
+    label: 'Phòng khám ClinicPro Cửu Long',
+    value: 'Phòng khám ClinicPro Cửu Long'
+  }
 ];
 
 const AdvisePage = () => {
+  const { control } = useForm({ mode: 'onChange' });
+
   return (
     <>
       <div className="relative">
@@ -53,10 +69,22 @@ const AdvisePage = () => {
       <div className="container-page">
         <div className="w-full flex gap-y-2 max-md:flex-col md:gap-x-2 rounded-3xl bg-white px-10 py-10 shadow-[0px_30px_40px_#00405315] -translate-y-1/4">
           <div className="min-w-[330px]">
-            <Select placeholder="Bệnh Viện hoặc Phòng Khám" data={fakeData} className="" />
+            <Select
+              name=""
+              control={control}
+              placeholder="Bệnh Viện hoặc Phòng Khám"
+              options={transformedData}
+              className=""
+            />
           </div>
           <div className="flex-1">
-            <Select placeholder="Bệnh Viện hoặc Phòng Khám" data={fakeData} className="" />
+            <Select
+              name=""
+              control={control}
+              placeholder="Bệnh Viện hoặc Phòng Khám"
+              options={transformedData}
+              className=""
+            />
           </div>
         </div>
       </div>
