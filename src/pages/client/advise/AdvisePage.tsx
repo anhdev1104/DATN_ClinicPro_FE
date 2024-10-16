@@ -3,60 +3,33 @@ import BannerImg from '/images/banner-goi-kham.webp';
 import Select from '@/components/select';
 import { AdvisePackage } from './components/AdvisePackage';
 import { useForm } from 'react-hook-form';
-
-const transformedData = [
+const packageData = [
   {
-    label: 'Phòng khám ClinicPro Sài Gòn',
-    value: 'Phòng khám ClinicPro Sài Gòn'
+    label: 'Thai sản',
+    value: 'Thai sản'
   },
   {
-    label: 'Phòng khám ClinicPro Thủ Đức',
-    value: 'Phòng khám ClinicPro Thủ Đức'
+    label: 'Khám sức khoẻ',
+    value: 'Khám sức khoẻ'
   },
   {
-    label: 'Phòng khám ClinicPro Đà Nẵng',
-    value: 'Phòng khám ClinicPro Đà Nẵng'
+    label: 'Khám cơ xương',
+    value: 'Khám cơ xương'
   },
   {
-    label: 'Phòng khám ClinicPro Cửu Long',
-    value: 'Phòng khám ClinicPro Cửu Long'
+    label: 'Nhãn khoa',
+    value: 'Nhãn khoa'
   },
   {
-    label: 'Phòng khám ClinicPro Sài Gòn',
-    value: 'Phòng khám ClinicPro Sài Gòn'
-  },
-  {
-    label: 'Phòng khám ClinicPro Thủ Đức',
-    value: 'Phòng khám ClinicPro Thủ Đức'
-  },
-  {
-    label: 'Phòng khám ClinicPro Đà Nẵng',
-    value: 'Phòng khám ClinicPro Đà Nẵng'
-  },
-  {
-    label: 'Phòng khám ClinicPro Cửu Long',
-    value: 'Phòng khám ClinicPro Cửu Long'
-  },
-  {
-    label: 'Phòng khám ClinicPro Sài Gòn',
-    value: 'Phòng khám ClinicPro Sài Gòn'
-  },
-  {
-    label: 'Phòng khám ClinicPro Thủ Đức',
-    value: 'Phòng khám ClinicPro Thủ Đức'
-  },
-  {
-    label: 'Phòng khám ClinicPro Đà Nẵng',
-    value: 'Phòng khám ClinicPro Đà Nẵng'
-  },
-  {
-    label: 'Phòng khám ClinicPro Cửu Long',
-    value: 'Phòng khám ClinicPro Cửu Long'
+    label: 'Tai mũi họng',
+    value: 'Tai mũi họng'
   }
 ];
 
 const AdvisePage = () => {
-  const { control } = useForm({ mode: 'onChange' });
+  const { control } = useForm({
+    mode: 'onChange'
+  });
 
   return (
     <>
@@ -68,23 +41,8 @@ const AdvisePage = () => {
       </div>
       <div className="container-page">
         <div className="w-full flex gap-y-2 max-md:flex-col md:gap-x-2 rounded-3xl bg-white px-10 py-10 shadow-[0px_30px_40px_#00405315] -translate-y-1/4">
-          <div className="min-w-[330px]">
-            <Select
-              name=""
-              control={control}
-              placeholder="Bệnh Viện hoặc Phòng Khám"
-              options={transformedData}
-              className=""
-            />
-          </div>
           <div className="flex-1">
-            <Select
-              name=""
-              control={control}
-              placeholder="Bệnh Viện hoặc Phòng Khám"
-              options={transformedData}
-              className=""
-            />
+            <Select placeholder="Gói khám" name="packageSearch" control={control} options={packageData} />
           </div>
         </div>
       </div>

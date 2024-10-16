@@ -8,101 +8,101 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@/components/button';
 import Select from '@/components/select';
 
-const TabletOptions = [
+const listMedicine = [
   {
-    value: 'Thuốc Pymenospain Pymepharco chống co thắt dạ dày - ruột (200 viên)',
-    label: 'Thuốc Pymenospain Pymepharco chống co thắt dạ dày - ruột (200 viên)'
+    label: 'Thuốc Pymenospain Pymepharco chống co thắt dạ dày - ruột (200 viên)',
+    value: 'Thuốc Pymenospain Pymepharco chống co thắt dạ dày - ruột (200 viên)'
   },
   {
-    value: 'Viên sủi Efferalgan 500mg UPSA SAS giảm đau, hạ sốt (4 vỉ x 4 viên)',
-    label: 'Viên sủi Efferalgan 500mg UPSA SAS giảm đau, hạ sốt (4 vỉ x 4 viên)'
+    label: 'Viên sủi Efferalgan 500mg UPSA SAS giảm đau, hạ sốt (4 vỉ x 4 viên)',
+    value: 'Viên sủi Efferalgan 500mg UPSA SAS giảm đau, hạ sốt (4 vỉ x 4 viên)'
   },
   {
-    value: 'Thuốc bột pha hỗn dịch uống Smecta vị cam điều trị tiêu chảy (30 gói x 3g)',
-    label: 'Thuốc bột pha hỗn dịch uống Smecta vị cam điều trị tiêu chảy (30 gói x 3g)'
+    label: 'Thuốc bột pha hỗn dịch uống Smecta vị cam điều trị tiêu chảy (30 gói x 3g)',
+    value: 'Thuốc bột pha hỗn dịch uống Smecta vị cam điều trị tiêu chảy (30 gói x 3g)'
   },
   {
-    value: 'Viên sủi Berocca Bayer bổ sung vitamin và khoáng chất (10 viên)',
-    label: 'Viên sủi Berocca Bayer bổ sung vitamin và khoáng chất (10 viên)'
+    label: 'Viên sủi Berocca Bayer bổ sung vitamin và khoáng chất (10 viên)',
+    value: 'Viên sủi Berocca Bayer bổ sung vitamin và khoáng chất (10 viên)'
   },
   {
-    value: 'Men vi sinh Enterogermina 2 tỷ/5ml điều trị rối loạn tiêu hóa (2 vỉ x 10 ống)',
-    label: 'Men vi sinh Enterogermina 2 tỷ/5ml điều trị rối loạn tiêu hóa (2 vỉ x 10 ống)'
+    label: 'Men vi sinh Enterogermina 2 tỷ/5ml điều trị rối loạn tiêu hóa (2 vỉ x 10 ống)',
+    value: 'Men vi sinh Enterogermina 2 tỷ/5ml điều trị rối loạn tiêu hóa (2 vỉ x 10 ống)'
   },
   {
-    value: 'Thuốc Eugica MEGA We care điều trị ho đờm, cảm cúm, sổ mũi (10 vỉ x 10 viên)',
-    label: 'Thuốc Eugica MEGA We care điều trị ho đờm, cảm cúm, sổ mũi (10 vỉ x 10 viên)'
+    label: 'Thuốc Eugica MEGA We care điều trị ho đờm, cảm cúm, sổ mũi (10 vỉ x 10 viên)',
+    value: 'Thuốc Eugica MEGA We care điều trị ho đờm, cảm cúm, sổ mũi (10 vỉ x 10 viên)'
   },
   {
-    value: 'Thuốc Clorpheniramin 4 DHG điều trị viêm mũi dị ứng, chảy nước mũi (10 vỉ x 20 viên)',
-    label: 'Thuốc Clorpheniramin 4 DHG điều trị viêm mũi dị ứng, chảy nước mũi (10 vỉ x 20 viên)'
+    label: 'Thuốc Clorpheniramin 4 DHG điều trị viêm mũi dị ứng, chảy nước mũi (10 vỉ x 20 viên)',
+    value: 'Thuốc Clorpheniramin 4 DHG điều trị viêm mũi dị ứng, chảy nước mũi (10 vỉ x 20 viên)'
   },
   {
-    value: 'Gel bôi da Klenzit MS điều trị mụn trứng cá (15g)',
-    label: 'Gel bôi da Klenzit MS điều trị mụn trứng cá (15g)'
+    label: 'Gel bôi da Klenzit MS điều trị mụn trứng cá (15g)',
+    value: 'Gel bôi da Klenzit MS điều trị mụn trứng cá (15g)'
   },
   {
-    value: 'Viên nhai Kremil-S United điều trị đau dạ dày, giảm nóng rát dạ dày, ợ nóng, ợ chua (10 vỉ x 10 viên)',
-    label: 'Viên nhai Kremil-S United điều trị đau dạ dày, giảm nóng rát dạ dày, ợ nóng, ợ chua (10 vỉ x 10 viên)'
+    label: 'Viên nhai Kremil-S United điều trị đau dạ dày, giảm nóng rát dạ dày, ợ nóng, ợ chua (10 vỉ x 10 viên)',
+    value: 'Viên nhai Kremil-S United điều trị đau dạ dày, giảm nóng rát dạ dày, ợ nóng, ợ chua (10 vỉ x 10 viên)'
   },
   {
-    value: 'Thuốc Telfast HD 180mg Sanofi điều trị viêm mũi dị ứng, mày đay (1 vỉ x 10 viên)',
-    label: 'Thuốc Telfast HD 180mg Sanofi điều trị viêm mũi dị ứng, mày đay (1 vỉ x 10 viên)'
+    label: 'Thuốc Telfast HD 180mg Sanofi điều trị viêm mũi dị ứng, mày đay (1 vỉ x 10 viên)',
+    value: 'Thuốc Telfast HD 180mg Sanofi điều trị viêm mũi dị ứng, mày đay (1 vỉ x 10 viên)'
   },
   {
-    value: 'Thuốc Farzincol Pharmedic điều trị thiếu kẽm (10 vỉ x 10 viên)',
-    label: 'Thuốc Farzincol Pharmedic điều trị thiếu kẽm (10 vỉ x 10 viên)'
+    label: 'Thuốc Farzincol Pharmedic điều trị thiếu kẽm (10 vỉ x 10 viên)',
+    value: 'Thuốc Farzincol Pharmedic điều trị thiếu kẽm (10 vỉ x 10 viên)'
   },
   {
-    value: 'Kem Differin Galderma điều trị mụn trứng cá (30g)',
-    label: 'Kem Differin Galderma điều trị mụn trứng cá (30g)'
+    label: 'Kem Differin Galderma điều trị mụn trứng cá (30g)',
+    value: 'Kem Differin Galderma điều trị mụn trứng cá (30g)'
   }
 ];
 
-const PatientsOptions = [
+const patientsOptions = [
   {
-    value: 'Nguyễn Văn A',
-    label: 'Nguyễn Văn A'
+    label: 'Nguyễn Văn A',
+    value: 'Nguyễn Văn A'
   },
   {
-    value: 'Trần Thị B',
-    label: 'Trần Thị B'
+    label: 'Trần Thị B',
+    value: 'Trần Thị B'
   },
   {
-    value: 'Lê Văn C',
-    label: 'Lê Văn C'
+    label: 'Lê Văn C',
+    value: 'Lê Văn C'
   },
   {
-    value: 'Phạm Thị D',
-    label: 'Phạm Thị D'
+    label: 'Phạm Thị D',
+    value: 'Phạm Thị D'
   },
   {
-    value: 'Nguyễn Văn E',
-    label: 'Nguyễn Văn E'
+    label: 'Nguyễn Văn E',
+    value: 'Nguyễn Văn E'
   },
   {
-    value: 'Trần Văn F',
-    label: 'Trần Văn F'
+    label: 'Trần Văn F',
+    value: 'Trần Văn F'
   },
   {
-    value: 'Lê Thị G',
-    label: 'Lê Thị G'
+    label: 'Lê Thị G',
+    value: 'Lê Thị G'
   },
   {
-    value: 'Nguyễn Văn H',
-    label: 'Nguyễn Văn H'
+    label: 'Nguyễn Văn H',
+    value: 'Nguyễn Văn H'
   },
   {
-    value: 'Trần Thị I',
-    label: 'Trần Thị I'
+    label: 'Trần Thị I',
+    value: 'Trần Thị I'
   },
   {
-    value: 'Lê Văn J',
-    label: 'Lê Văn J'
+    label: 'Lê Văn J',
+    value: 'Lê Văn J'
   },
   {
-    value: 'Phạm Thị K',
-    label: 'Phạm Thị K'
+    label: 'Phạm Thị K',
+    value: 'Phạm Thị K'
   }
 ];
 
@@ -141,15 +141,10 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
       <div className="flex bg-white size-full p-[20px] rounded-[26px]">
         <div className="flex-1">
           <div className="mb-6 flex justify-between">
-            <div>
-              <h1 className="text-[18px] text-black font-medium">Chi tiết đơn thuốc</h1>
-            </div>
-            <div>
-              <button
-                onClick={navigate}
-                className="text-[18px] text-black font-medium flex items-center gap-3 border-borderColor border p-3 rounded-lg bg-[#f3f4f7]"
-              >
-                <List className="text-[#4d54b1]" />
+            <h1 className="text-[18px] text-black font-medium">Thêm đơn thuốc</h1>
+            <div className="border-borderColor border p-3 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-white cursor-pointer">
+              <button onClick={navigate} className="text-dark font-medium flex items-center gap-3">
+                <List className="text-primaryAdmin" />
                 Danh sách đơn thuốc
               </button>
             </div>
@@ -182,19 +177,19 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                 <div className="min-w-[400px] w-1/2">
                   <Label htmlFor="prescriptionName">Tên đơn thuốc</Label>
                   <Select
-                    name="selectTablets"
                     placeholder="Đơn thuốc chỉ định"
-                    options={TabletOptions}
+                    name="prescriptionData"
                     control={control}
+                    options={listMedicine}
                   />
                 </div>
                 <div className="min-w-[400px] w-1/2">
-                  <Label htmlFor="selectDoctor">Tên đơn thuốc</Label>
+                  <Label htmlFor="prescriptionName">Tên bệnh nhân</Label>
                   <Select
-                    name="searchPrescription"
                     placeholder="Bệnh nhân chỉ định"
-                    options={PatientsOptions}
+                    name="partientSearch"
                     control={control}
+                    options={patientsOptions}
                   />
                 </div>
               </div>
@@ -209,22 +204,18 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                 ></textarea>
               </div>
 
-              <div className="flex gap-7 w-1/4 justify-end float-end">
+              <div className="flex items-center gap-7 w-1/4 justify-end ml-auto pt-3">
                 <Button
                   type="submit"
-                  className="bg-primaryAdmin rounded-md w-full mt-3 h-[40px] hover:scale-[1.02]"
+                  styled="normal"
+                  className="bg-primaryAdmin text-white"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >
                   Xác nhận
                 </Button>
-                <Button
-                  type="submit"
-                  className="bg-[#8e8e8e6b] hover:!text-white !text-black rounded-md w-full mt-3 h-[40px] hover:scale-[1.02]"
-                  isLoading={isSubmitting}
-                  disabled={isSubmitting}
-                >
-                  Nhập lại
+                <Button type="submit" styled="normal" isLoading={isSubmitting} disabled={isSubmitting}>
+                  Xác nhận
                 </Button>
               </div>
             </form>
