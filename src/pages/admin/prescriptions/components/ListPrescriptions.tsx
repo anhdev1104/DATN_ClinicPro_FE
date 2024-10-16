@@ -112,6 +112,7 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
   const handleClickOpen = (item: (typeof DataPackage)[0]) => {
     setOpen({ status: true, selectedItem: item });
   };
+
   return (
     <div>
       <DirectRoute nav="Quản lý đơn thuốc" subnav="Đơn thuốc" />
@@ -190,7 +191,7 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
                               handleClickOpen(item);
                             }}
                           >
-                            <i className="fa-solid fa-pen-to-square mr-2"></i> Chi tiết
+                            Chi tiết
                           </Link>
                           <Link
                             to={'#'}

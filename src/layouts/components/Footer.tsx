@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="container-page !px-[15px]">
         <div className="grid grid-cols-[1fr_400px_1fr] -mx-[10px]">
           <div className="px-[15px]">
-            <div className="w-20 block">
+            <div className="w-max block bg-white px-5 py-2 rounded-md">
               <Link to={'/'} className="w-20 flex flex-col items-center">
                 <img src="/images/logo.webp" alt="logo-clinicpro" className="w-full h-full object-cover" />
                 <h1 className="text-[#116aef] font-bold text-[18px]">ClinicPro</h1>
