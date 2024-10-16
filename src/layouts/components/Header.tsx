@@ -50,20 +50,16 @@ const Header = () => {
         <nav>
           <ul className="flex gap-10 items-center">
             {menuList.length > 0 &&
-              menuList.map(nav => {
-                console.log(nav.path);
-
-                return (
-                  <li key={nav.id}>
-                    <Link
-                      to={nav.path}
-                      className={`text-primary font-medium capitalize relative menu-item ${location.pathname === nav.path && 'before:w-full'}`}
-                    >
-                      {nav.title}
-                    </Link>
-                  </li>
-                );
-              })}
+              menuList.map(nav => (
+                <li key={nav.id}>
+                  <Link
+                    to={nav.path}
+                    className={`text-primary font-medium capitalize relative menu-item ${location.pathname === nav.path && 'before:w-full'}`}
+                  >
+                    {nav.title}
+                  </Link>
+                </li>
+              ))}
           </ul>
         </nav>
         <div className="flex gap-5 items-center">
