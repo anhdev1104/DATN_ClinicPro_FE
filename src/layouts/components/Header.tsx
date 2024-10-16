@@ -44,8 +44,9 @@ const Header = () => {
   return (
     <header className="py-5 fixed top-0 left-0 right-0 bg-white z-20">
       <div className="container-page flex justify-between items-center">
-        <Link to={'/'} className="w-20 block">
-          <img src="/images/logo-example.webp" alt="logo-clinicpro" className="w-full h-full object-cover" />
+        <Link to={'/'} className="w-20 flex flex-col items-center">
+          <img src="/images/logo.webp" alt="logo-clinicpro" className="w-full h-full object-cover" />
+          <h1 className="text-[#116aef] font-bold text-[18px]">ClinicPro</h1>
         </Link>
         <nav>
           <ul className="flex gap-10 items-center">

@@ -7,7 +7,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@/components/button';
 import Select from '@/components/select';
-import { Link } from 'react-router-dom';
 
 const listMedicine = [
   {
@@ -111,7 +110,11 @@ const schema = yup.object({
   prescriptionName: yup.string().trim().required('Trường này là bắt buộc !')
 });
 
-const PrescriptionsPage = () => {
+interface AddPrescripton {
+  navigate: () => void;
+}
+
+const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   const {
     handleSubmit,
     control,
@@ -132,16 +135,18 @@ const PrescriptionsPage = () => {
         <h2>Quản lý đơn thuốc</h2>
         <ChevronRightIcon fontSize="small" className="mx-2" />
         <span className="text-primaryAdmin">Đơn thuốc</span>
+        <ChevronRightIcon fontSize="small" className="mx-2" />
+        <span className="text-primaryAdmin/60">Thêm đơn thuốc</span>
       </div>
       <div className="flex bg-white size-full p-[20px] rounded-[26px]">
         <div className="flex-1">
           <div className="mb-6 flex justify-between">
             <h1 className="text-[18px] text-black font-medium">Thêm đơn thuốc</h1>
             <div className="border-borderColor border p-3 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-white cursor-pointer">
-              <Link to={'/prescriptions'} className="text-dark font-medium flex items-center gap-3">
+              <button onClick={navigate} className="text-dark font-medium flex items-center gap-3">
                 <List className="text-primaryAdmin" />
                 Danh sách đơn thuốc
-              </Link>
+              </button>
             </div>
           </div>
           <div>
@@ -221,4 +226,4 @@ const PrescriptionsPage = () => {
   );
 };
 
-export default PrescriptionsPage;
+export default AddPrescriptions;

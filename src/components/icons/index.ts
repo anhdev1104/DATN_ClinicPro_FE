@@ -15,6 +15,7 @@ export { default as ApartmentIcon } from '@mui/icons-material/Apartment';
 export { default as AssignmentIcon } from '@mui/icons-material/Assignment';
 export { default as MoreVertIcon } from '@mui/icons-material/MoreVert';
 export { default as List } from '@mui/icons-material/FormatListBulletedOutlined';
+export { default as CloseIcon } from '@mui/icons-material/Close';
 export { default as VisibilityIcon } from '@mui/icons-material/Visibility';
 export { default as VisibilityOffIcon } from '@mui/icons-material/VisibilityOff';
 export { default as AddIcon } from '@mui/icons-material/Add';

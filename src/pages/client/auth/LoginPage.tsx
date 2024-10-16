@@ -65,8 +65,9 @@ const LoginPage = () => {
         <div className="w-2/4 pt-2 px-20 justify-center flex flex-col">
           <div className="size-full flex flex-col max-w-full">
             <div className="py-1 px-2 flex justify-between ">
-              <Link to={'/'}>
-                <img className="h-[40px] object-cover" src="/images/logo-example.webp" alt="" />
+              <Link to={'/'} className="w-20 flex flex-col items-center">
+                <img src="/images/logo.webp" alt="logo-clinicpro" className="size-3/4 object-cover" />
+                <h1 className="text-[#116aef] font-bold text-[18px]">ClinicPro</h1>
               </Link>
               <div className="flex gap-2 items-center cursor-pointer" onClick={() => navigate(-1)}>
                 <ArrowLeft className="!size-[16px] !text-dark mt-[2px]" />

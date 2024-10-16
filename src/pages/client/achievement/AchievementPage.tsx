@@ -17,7 +17,7 @@ const AchievementPage = () => {
         <div className="container-page">
           <div className="flex flex-col my-10 space-y-10 items-center">
             <p className="text-center w-11/12 text-xl font-light">
-              Tập đoàn Y khoa Hoàn Mỹ đã 5 lần giành giải thưởng “Bệnh viện của năm tại Việt Nam” do Frost & Sullivan
+              Tập đoàn Y khoa ClinicPro đã 5 lần giành giải thưởng “Bệnh viện của năm tại Việt Nam” do Frost & Sullivan
               trao tặng từ năm 2016, 2017, 2018, 2019, 2023. Những giải thưởng này được trao cho các công ty, tập đoàn
               có đóng góp đáng kể cho ngành nghề mà họ đang kinh doanh.
             </p>
@@ -31,15 +31,15 @@ const AchievementPage = () => {
                 <img src="https://hoanmy.com/wp-content/themes/tot-bvhoanmy/assets/images/icons/ngoac-kep.svg" alt="" />
               </div>
               <p className="leading-6 font-light">
-                Bệnh viện thuộc hệ thống y khoa Hoàn Mỹ luôn nằm trong số những nơi có chất lượng hàng đầu cả nước và
+                Bệnh viện thuộc hệ thống y khoa ClinicPro luôn nằm trong số những nơi có chất lượng hàng đầu cả nước và
                 nhận được nhiều giải thưởng uy tín. Hơn 5.000 nhân viên lâm sàng và phi lâm sàng làm việc không ngừng
                 nghỉ để đảm bảo rằng tất cả bệnh nhân của chúng tôi đều nhận được sự chăm sóc tốt nhất. Tập đoàn Y khoa
-                Hoàn Mỹ tự hào về những nỗ lực không mệt mỏi và cam kết bền vững trong việc cung cấp các dịch vụ y tế
+                ClinicPro tự hào về những nỗ lực không mệt mỏi và cam kết bền vững trong việc cung cấp các dịch vụ y tế
                 chất lượng cao nhằm xây dựng một Việt Nam khoẻ mạnh hơn.
               </p>
               <div className="text-center md:text-start">
                 <h3 className="text-third text-base font-semibold">Dr. Dilshaad Ali Bin Abas Ali</h3>
-                <p>Tổng giám đốc Tập đoàn Y khoa Hoàn Mỹ</p>
+                <p>Tổng giám đốc Tập đoàn Y khoa ClinicPro</p>
               </div>
             </div>
             <div className="order-1 md:order-2">

@@ -17,8 +17,7 @@ import HomePage from '@/pages/client/home/HomePage';
 import AddPackage from '@/pages/admin/package/AddPackage';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import AddPrescriptios from '@/pages/admin/prescriptions/AddPrescriptions';
-import Prescriptions from '@/pages/admin/prescriptions/Prescriptions';
+import Prescription from '@/pages/admin/prescriptions/Prescription';
 
 export interface IRouter {
   path: string;
@@ -66,13 +65,8 @@ const adminRouter: IRouter[] = [
     title: 'Trang quản lý'
   },
   {
-    path: '/add-prescriptions',
-    element: AddPrescriptios,
-    title: 'Thêm đơn thuốc'
-  },
-  {
     path: '/prescriptions',
-    element: Prescriptions,
+    element: Prescription,
     title: 'Danh sách đơn thuốc'
   },
   {

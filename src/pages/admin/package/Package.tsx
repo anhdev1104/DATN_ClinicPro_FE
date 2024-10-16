@@ -2,6 +2,7 @@ import Input from '@/components/input';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { MoreVertIcon } from '@/components/icons';
+import { useState } from 'react';
 
 const DataPackage = [
   {
@@ -21,6 +22,11 @@ const DataPackage = [
 ];
 
 const PackagePage = () => {
+  const [showDropdown, setShowDropdown] = useState<number | null>(null);
+  const handleToggle = (id: number) => {
+    setShowDropdown(showDropdown === id ? null : id);
+  };
+
   return (
     <section className="package">
       <div className="text-primaryAdmin flex items-center text-base mb-10">
@@ -92,19 +98,30 @@ const PackagePage = () => {
                         <button
                           type="button"
                           className="inline-flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
+                          onClick={() => handleToggle(item.id)}
                         >
                           <MoreVertIcon />
                         </button>
                       </div>
 
-                      {
+                      {showDropdown === item.id && (
                         <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white overflow-hidden">
-                          <div className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sửa</div>
-                          <div className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          <Link
+                            to={'#'}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => handleToggle(item.id)}
+                          >
+                            Sửa
+                          </Link>
+                          <Link
+                            to={'#'}
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => handleToggle(item.id)}
+                          >
                             Xóa bỏ
-                          </div>
+                          </Link>
                         </div>
-                      }
+                      )}
                     </div>
                   </td>
                 </tr>
