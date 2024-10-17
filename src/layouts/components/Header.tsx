@@ -3,6 +3,7 @@ import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import HeaderInfo from './HeaderInfo';
+import { ModalAppointment } from '@/components/modal';
 
 const menuList = [
   {
@@ -42,35 +43,38 @@ const Header = () => {
   const location = useLocation();
 
   return (
-    <header className="py-5 fixed top-0 left-0 right-0 bg-white z-20">
-      <div className="container-page flex justify-between items-center">
-        <Link to={'/'} className="w-20 flex flex-col items-center">
-          <img src="/images/logo.webp" alt="logo-clinicpro" className="w-full h-full object-cover" />
-          <h1 className="text-[#116aef] font-bold text-[18px]">ClinicPro</h1>
-        </Link>
-        <nav>
-          <ul className="flex gap-10 items-center">
-            {menuList.length > 0 &&
-              menuList.map(nav => (
-                <li key={nav.id}>
-                  <Link
-                    to={nav.path}
-                    className={`text-primary font-medium capitalize relative menu-item ${location.pathname === nav.path && 'before:w-full'}`}
-                  >
-                    {nav.title}
-                  </Link>
-                </li>
-              ))}
-          </ul>
-        </nav>
-        <div className="flex gap-5 items-center">
-          <Button type="button" className="capitalize">
-            Đặt lịch khám
-          </Button>
-          {auth?.access_token ? <HeaderInfo /> : <Link to={'/login'}>Đăng nhập</Link>}
+    <>
+      <header className="py-4 fixed top-0 left-0 right-0 bg-white z-20">
+        <div className="container-page flex justify-between items-center">
+          <Link to={'/'} className="w-14 flex flex-col items-center">
+            <img src="/images/logo.webp" alt="logo-clinicpro" className="w-full h-full object-cover" />
+            <h1 className="text-primary font-bold text-[18px]">ClinicPro</h1>
+          </Link>
+          <nav>
+            <ul className="flex gap-10 items-center">
+              {menuList.length > 0 &&
+                menuList.map(nav => (
+                  <li key={nav.id}>
+                    <Link
+                      to={nav.path}
+                      className={`text-primary font-medium capitalize relative menu-item ${location.pathname === nav.path && 'before:w-full'}`}
+                    >
+                      {nav.title}
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+          </nav>
+          <div className="flex gap-5 items-center">
+            <Button type="button" className="capitalize">
+              Đặt lịch khám
+            </Button>
+            {auth?.access_token ? <HeaderInfo /> : <Link to={'/login'}>Đăng nhập</Link>}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+      <ModalAppointment />
+    </>
   );
 };
 
