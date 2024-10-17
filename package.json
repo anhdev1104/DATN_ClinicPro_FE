@@ -27,6 +27,7 @@
     "@types/yup": "^0.32.0",
     "axios": "^1.7.7",
     "clsx": "^2.1.1",
+    "datn-clinicpro-fe": "file:",
     "dayjs": "^1.11.13",
     "env": "^0.0.2",
     "js-cookie": "^3.0.5",

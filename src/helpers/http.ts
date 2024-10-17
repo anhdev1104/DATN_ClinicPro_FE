@@ -10,12 +10,12 @@ class Http {
       baseURL: import.meta.env.VITE_API_URL,
       timeout: 10000,
       headers: {
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json'
+      }
     });
 
     this.api.interceptors.request.use(
-      async (config) => {
+      async config => {
         const accessToken = store.getState().auth.data?.access_token;
         if (accessToken) {
           config.headers['Authorization'] = `Bearer ${accessToken}`;
@@ -24,12 +24,12 @@ class Http {
       },
       function (error) {
         return Promise.reject(error);
-      },
+      }
     );
 
     this.api.interceptors.response.use(
-      (response) => response,
-      async (error) => {
+      response => response,
+      async error => {
         const originalRequest = error.config;
         const errorResponse = error.response.data.message;
 
@@ -46,7 +46,7 @@ class Http {
           }
         }
         return Promise.reject(error);
-      },
+      }
     );
   }
 
@@ -62,6 +62,24 @@ class Http {
   async post(url: string, data?: any) {
     try {
       const response = await this.api.post(url, data);
+      return response.data;
+    } catch (error: any) {
+      return error.response.data;
+    }
+  }
+
+  async update(url: string, data: any) {
+    try {
+      const response = await this.api.put(url, data);
+      return response.data;
+    } catch (error: any) {
+      return error.response.data;
+    }
+  }
+
+  async delete(url: string, id: string) {
+    try {
+      const response = await this.api.delete(`${url}/${id}`);
       return response.data;
     } catch (error: any) {
       return error.response.data;
