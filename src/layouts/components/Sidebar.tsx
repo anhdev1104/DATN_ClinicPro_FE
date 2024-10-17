@@ -56,7 +56,7 @@ const Sidebar = () => {
       <div>
         <div className="text-base font-medium text-black px-5 py-[14px]">Main</div>
         <div>
-          <ul className='p-0'>
+          <ul className="p-0">
             {categoryManagement.length > 0 &&
               categoryManagement.map((category) => (
                 <li

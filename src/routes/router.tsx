@@ -3,6 +3,7 @@ import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import Dashboard from '@/pages/admin/dashboard/DashBoard';
 import Department from '@/pages/admin/department/Department';
+import DepartmentDetail from '@/pages/admin/department/DepartmentDetail';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
 import AchievementPage from '@/pages/client/achievement/AchievementPage';
@@ -65,6 +66,11 @@ const adminRouter: IRouter[] = [
   {
     path: '/phong-ban',
     element: Department,
+    title: 'Phòng Ban',
+  },
+  {
+    path: '/phong-ban/:id',
+    element: DepartmentDetail,
     title: 'Phòng Ban',
   },
 ];
