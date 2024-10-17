@@ -1,3 +1,4 @@
+import { Department } from '@/types/department.type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface InitialState {
