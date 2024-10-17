@@ -1,31 +1,31 @@
-import axios from 'axios';
 import { IPackage } from '@/types/package.type';
-const baseURL = import.meta.env.VITE_API_URL;
+import Http from '@/helpers/http';
 
-export const getAllPackages = async (): Promise<IPackage[]> => {
+const http = new Http();
+
+export const getAllPackages = async (): Promise<IPackage[] | null> => {
   try {
-    const response = await axios.get<IPackage[]>(`${baseURL}/packages`);
-    return response.data;
-  } catch (error) {
-    console.error('Lỗi khi lấy danh sách gói khám:', error);
-    throw error;
+    const response = await http.get('/packages');
+
+    if (!Array.isArray(response)) {
+      throw new Error('Dữ liệu trả về không hợp lệ');
+    }
+
+    return response as IPackage[];
+  } catch (error: any) {
+    console.error('Lỗi khi lấy danh sách gói khám:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'Đã xảy ra lỗi khi lấy danh sách gói khám');
   }
 };
-export const createPackage = async (
-  data: Omit<IPackage, 'id' | 'slug' | 'created_at'>,
-  image: File,
-): Promise<IPackage> => {
-  try {
-    const formData = new FormData();
-    formData.append('name', data.name);
-    formData.append('description', data.description);
-    formData.append('content', data.content);
-    formData.append('image', image);
-    const response = await axios.post<IPackage>(`${baseURL}/packages`, formData);
 
-    return response.data;
-  } catch (error) {
-    console.error('Lỗi khi tạo gói khám:', error);
-    throw error;
+export const createPackage = async (
+  newPackage: Omit<IPackage, 'id' | 'slug' | 'created_at'>
+): Promise<IPackage | null> => {
+  try {
+    const response = await http.post('/packages', newPackage);
+    return response as IPackage;
+  } catch (error: any) {
+    console.error('Lỗi khi tạo gói khám:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'Đã xảy ra lỗi khi tạo gói khám');
   }
 };

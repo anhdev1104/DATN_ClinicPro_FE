@@ -1,11 +1,13 @@
 import { LogoutIcon, MenuIcon, NotificationsIcon } from '@/components/icons';
 import Input from '@/components/input';
+import { FC } from 'react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 
 const hoverIcon: string =
   'p-2 transition-all duration-300 ease-linear rounded-full hover:bg-primaryAdmin/5 cursor-pointer';
 
-const Topbar = () => {
+const Topbar: FC<{ handleToggle: () => void }> = ({ handleToggle }) => {
   return (
     <header
       className="px-5 py-3 fixed top-0 left-0 right-0 bg-white z-50"
@@ -13,17 +15,12 @@ const Topbar = () => {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <div className="flex items-center gap-2">
-            <img
-              src="https://preclinic.dreamstechnologies.com/html/template/assets/img/logo.png"
-              alt="clinicpro-logo"
-              width={35}
-              height={35}
-            />
+          <Link to="/dashboard" className="flex items-center gap-2">
+            <img src="/images/logo.png" alt="clinicpro-logo" width={35} height={35} />
             <h1 className="text-primaryAdmin text-xl font-semibold">ClinicPro</h1>
-          </div>
+          </Link>
           <div className="flex items-center gap-7 ml-[55px]">
-            <div className={hoverIcon}>
+            <div className={hoverIcon} onClick={handleToggle}>
               <MenuIcon className="text-primaryAdmin " />
             </div>
             <SearchAdmin />

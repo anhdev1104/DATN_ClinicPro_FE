@@ -6,6 +6,8 @@ const config = {
   semi: true,
   singleQuote: true,
   printWidth: 120,
+  arrowParens: 'avoid',
+  trailingComma: 'none'
 };
 
 export default config;

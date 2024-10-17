@@ -3,7 +3,7 @@ export interface IPackage {
   name: string;
   description: string;
   content: string;
-  image: string;
+  image?: string; // Có thể hình ảnh không bắt buộc
   slug: string;
-  created_at: string; // Ngày tạo
+  created_at: string;
 }
