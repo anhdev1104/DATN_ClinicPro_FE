@@ -10,7 +10,7 @@ const Footer = () => {
             <div className="w-max block bg-white px-5 py-2 rounded-md">
               <Link to={'/'} className="w-20 flex flex-col items-center">
                 <img src="/images/logo.webp" alt="logo-clinicpro" className="w-full h-full object-cover" />
-                <h1 className="text-[#116aef] font-bold text-[18px]">ClinicPro</h1>
+                <h1 className="text-primary font-bold text-[18px]">ClinicPro</h1>
               </Link>
             </div>
             <div className="my-6 leading-7">
