@@ -21,7 +21,7 @@ const columns: GridColDef[] = [
     filterable: false,
     sortable: false,
     disableColumnMenu: true,
-    pinnable: false,
+    pinnable: false
   },
   {
     field: 'name',
@@ -32,7 +32,7 @@ const columns: GridColDef[] = [
     filterable: false,
     sortable: false,
     disableColumnMenu: true,
-    pinnable: false,
+    pinnable: false
   },
   {
     field: 'manager',
@@ -43,7 +43,7 @@ const columns: GridColDef[] = [
     filterable: false,
     sortable: false,
     disableColumnMenu: true,
-    pinnable: false,
+    pinnable: false
   },
   {
     field: 'description',
@@ -54,7 +54,7 @@ const columns: GridColDef[] = [
     filterable: false,
     sortable: false,
     disableColumnMenu: true,
-    pinnable: false,
+    pinnable: false
   },
   {
     field: 'created_at',
@@ -65,8 +65,8 @@ const columns: GridColDef[] = [
     filterable: false,
     sortable: false,
     disableColumnMenu: true,
-    pinnable: false,
-  },
+    pinnable: false
+  }
 ];
 
 const formatDepartmentData = (department: Department[]) => {
@@ -76,7 +76,7 @@ const formatDepartmentData = (department: Department[]) => {
     description,
     created_at: dayjs(created_at).format('MM-DD-YYYY'),
     manager: manager.email,
-    ...props,
+    ...props
   }));
 };
 const Department = () => {
@@ -86,7 +86,7 @@ const Department = () => {
   const navigate = useNavigate();
   const handleDepartmentDetail = ({ row }: GridRowParams<Department>) => {
     dispatch(PopupDepartmentDetail(true));
-    navigate(`/phong-ban/${row.id}`, { replace: true });
+    navigate(`/departments/${row.id}`, { replace: true });
     // window.history.replaceState(null, '', `/phong-ban/${row.id}`)
   };
 
@@ -106,7 +106,7 @@ const Department = () => {
                 onRowClick={handleDepartmentDetail}
                 slots={{ pagination: Paginations }}
                 initialState={{
-                  pagination: { paginationModel: { page: 0, pageSize: limit } },
+                  pagination: { paginationModel: { page: 0, pageSize: limit } }
                 }}
               />
             </>

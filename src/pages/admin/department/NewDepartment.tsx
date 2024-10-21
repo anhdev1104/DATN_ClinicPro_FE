@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from '@/hooks/redux';
 import { PopupNewDepartment } from '@/redux/department/departmentSlice';
 import { Drawer, Input, Button, Autocomplete } from '@mui/joy';
-import styled from '@emotion/styled';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -17,14 +16,14 @@ export const departmentSchema = yup
   .object({
     name: yup.string().required().trim(),
     description: yup.string().required(),
-    manager_id: yup.string().required(),
+    manager_id: yup.string().required()
   })
   .required();
 
 const NewDepartment: React.FC<NewDepartmentProps> = () => {
   const { data, isSuccess } = useGetAllUsersQuery(null);
   const [handleAddDepartment, { reset }] = useAddAnDepartmentMutation();
-  const open = useSelector((state) => state.departmentState.isOpenNewDepartment);
+  const open = useSelector(state => state.departmentState.isOpenNewDepartment);
   const dispatch = useDispatch();
   const users: any = useMemo(() => isSuccess && filterOutManagers(data.data), [data]);
   const { control, handleSubmit, setValue } = useForm({
@@ -32,8 +31,8 @@ const NewDepartment: React.FC<NewDepartmentProps> = () => {
     defaultValues: {
       name: '',
       description: '',
-      manager_id: '',
-    },
+      manager_id: ''
+    }
   });
 
   const handleHideNewDepartment = () => {
@@ -53,11 +52,11 @@ const NewDepartment: React.FC<NewDepartmentProps> = () => {
         onClose={handleHideNewDepartment}
         size="md"
         sx={{
-          '--Drawer-horizontalSize': 'clamp(300px, 40%, 100%)',
+          '--Drawer-horizontalSize': 'clamp(300px, 40%, 100%)'
         }}
       >
-        <DrawerContainer>
-          <DrawerTitle>Tạo mới phòng ban</DrawerTitle>
+        <div className="flex flex-col capitalize p-3 items-center">
+          <h2 className="text-2xl font-bold">Tạo mới phòng ban</h2>
           <form onSubmit={handleSubmit(handleAddNewDaprtment)}>
             <Controller
               name="name"
@@ -79,7 +78,7 @@ const NewDepartment: React.FC<NewDepartmentProps> = () => {
                   'manager_id',
                   value
                     ? users.find((user: any) => user.user_info.id.toString() === (value as string).split('-')[1]).id
-                    : '',
+                    : ''
                 );
               }}
               options={
@@ -88,20 +87,9 @@ const NewDepartment: React.FC<NewDepartmentProps> = () => {
             />
             <Button type="submit">Save</Button>
           </form>
-        </DrawerContainer>
+        </div>
       </Drawer>
     </>
   );
 };
-const DrawerContainer = styled('div')`
-  display: flex;
-  flex-direction: column;
-  text-transform: capitalize;
-  padding: 10px;
-  align-items: center;
-`;
-const DrawerTitle = styled('h2')`
-  font-size: 1.5rem;
-  font-weight: bold;
-`;
 export default NewDepartment;

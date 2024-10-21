@@ -71,12 +71,12 @@ const adminRouter: IRouter[] = [
     title: 'Danh sách đơn thuốc'
   },
   {
-    path: '/phong-ban/:id',
+    path: '/departments/:id',
     element: DepartmentDetail,
-    title: 'Phòng Ban',
+    title: 'Phòng Ban'
   },
   {
-    path: '/phong-ban',
+    path: '/departments',
     element: Department,
     title: 'Danh sách phòng ban'
   },
