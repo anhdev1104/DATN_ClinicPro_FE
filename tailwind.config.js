@@ -43,6 +43,5 @@ export default {
         }
       });
     }
-  ],
-  important: '#root'
+  ]
 };

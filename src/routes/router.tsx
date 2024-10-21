@@ -3,6 +3,7 @@ import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import Dashboard from '@/pages/admin/dashboard/DashBoard';
 import Department from '@/pages/admin/department/Department';
+import DepartmentDetail from '@/pages/admin/department/DepartmentDetail';
 import PackagePage from '@/pages/admin/package/Package';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
@@ -68,6 +69,11 @@ const adminRouter: IRouter[] = [
     path: '/prescriptions',
     element: Prescription,
     title: 'Danh sách đơn thuốc'
+  },
+  {
+    path: '/departments/:id',
+    element: DepartmentDetail,
+    title: 'Phòng Ban'
   },
   {
     path: '/departments',
