@@ -2,46 +2,51 @@ import React, { useState } from 'react';
 import { createPackage } from '@/services/package.service';
 import { IPackage } from '@/types/package.type';
 import { useNavigate } from 'react-router-dom';
-
+import { List } from '@mui/icons-material';
+import { toast } from 'react-toastify';
 const AddPackage = () => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [content, setContent] = useState('');
-  const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
   const [responsePackage, setResponsePackage] = useState<IPackage | null>(null);
   const navigate = useNavigate();
+  const [formData, setFormData] = useState<IPackage>({
+    name: '',
+    description: '',
+    content: '',
+    image: ''
+  });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setFormData({
+        ...formData,
+        image: imageUrl
+      });
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+    setResponsePackage(null);
     try {
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('description', description);
-      formData.append('content', content);
-      if (image) {
-        formData.append('image', image);
-      }
-
-      const response = await createPackage(formData as unknown as IPackage);
-      setResponsePackage(response);
-      console.log('Gói khám đã được tạo thành công!');
-      setLoading(false);
-
-      // Navigate to package list after creation (optional)
-      navigate('/package');
+      const createdPackage = await createPackage(formData);
+      console.log('Form data submitted:', formData);
+      setResponsePackage(createdPackage);
+      toast.success('Gói khám đã được tạo thành công!');
+      console.log('ID:', createdPackage.id);
+      console.log('Slug:', createdPackage.slug);
     } catch (error) {
-      console.log('Đã xảy ra lỗi khi tạo gói khám. Vui lòng thử lại.');
+      toast.error('Đã xảy ra lỗi khi tạo gói khám.');
+    } finally {
       setLoading(false);
-    }
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
     }
   };
 
@@ -61,10 +66,16 @@ const AddPackage = () => {
         <span className="text-primaryAdmin/60">Thêm gói khám</span>
       </div>
       <div className="bg-white rounded-2xl">
-        <div className="doctor-table-blk mb-2 pt-4 px-5 flex items-center flex-wrap gap-7">
+        <div className="doctor-table-blk mb-2 pt-4 px-5 flex items-center justify-between">
           <h3 className="text-lg font-semibold mb-0">Thêm gói khám</h3>
+          <div className="border-borderColor border p-3 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-white cursor-pointer">
+            <button className="text-dark font-medium flex items-center gap-3">
+              <List className="text-primaryAdmin" />
+              Danh sách đơn thuốc
+            </button>
+          </div>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-6 p-6">
+        <form onSubmit={handleSubmit} className="space-y-6 p-6" encType="multipart/form-data">
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label className="text-sm font-medium mb-1">
@@ -72,8 +83,9 @@ const AddPackage = () => {
               </label>
               <input
                 type="text"
-                value={name}
-                onChange={e => setName(e.target.value)}
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
                 placeholder="Nhập tên "
                 className="border rounded-md p-2 focus:ring-2 focus:ring-indigo-500 outline-none"
                 required
@@ -84,8 +96,10 @@ const AddPackage = () => {
                 Mô tả <span className="text-red-500">*</span>
               </label>
               <input
-                value={description}
-                onChange={e => setDescription(e.target.value)}
+                type="text"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
                 placeholder="Nhập mô tả"
                 className="border rounded-md p-2 focus:ring-2 focus:ring-indigo-500 outline-none"
                 required
@@ -97,8 +111,9 @@ const AddPackage = () => {
               Nội dung gói khám <span className="text-red-500">*</span>
             </label>
             <textarea
-              value={content}
-              onChange={e => setContent(e.target.value)}
+              name="content"
+              value={formData.content}
+              onChange={handleChange}
               placeholder="Nhập nội dung gói"
               className="border rounded-md p-2 h-24 resize-none focus:ring-2 focus:ring-indigo-500 outline-none"
               required
@@ -111,8 +126,9 @@ const AddPackage = () => {
               </label>
               <input
                 type="file"
-                accept="image/*"
-                onChange={handleImageChange}
+                id="image"
+                onChange={handleFileChange} // Gọi hàm xử lý file
+                required
                 className="border rounded-md p-2 focus:ring-2 focus:ring-indigo-500 outline-none"
               />
             </div>
@@ -126,29 +142,13 @@ const AddPackage = () => {
               <button
                 type="button"
                 className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition duration-200"
-                onClick={() => navigate('/packages')}
+                onClick={() => navigate('/package')}
               >
                 Hủy bỏ
               </button>
             </div>
           </div>
         </form>
-        {message && <p className="text-red-500">{message}</p>}
-
-        {responsePackage && (
-          <div className="mt-6 bg-gray-100 p-4 rounded-md">
-            <h2>Kết quả:</h2>
-            <p>
-              <strong>ID:</strong> {responsePackage.id}
-            </p>
-            <p>
-              <strong>Slug:</strong> {responsePackage.slug}
-            </p>
-            <p>
-              <strong>Ngày tạo:</strong> {responsePackage.created_at}
-            </p>
-          </div>
-        )}
       </div>
     </section>
   );

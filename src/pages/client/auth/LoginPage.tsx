@@ -1,4 +1,4 @@
-import { ArrowLeft } from '@/components/icons';
+import { ArrowLeft, VisibilityIcon, VisibilityOffIcon } from '@/components/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '@/components/input';
 import { Button, ButtonSocial } from '@/components/button';
@@ -14,6 +14,7 @@ import { loginAuth } from '@/redux/auth/authThunk';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import PosterAuth from './components/PosterAuth';
+import useToggle from '@/hooks/useToggle';
 
 const schema = yup.object({
   email: yup
@@ -28,24 +29,25 @@ const schema = yup.object({
     .min(6, 'Mật khẩu ít nhất 6 ký tự trở lên !')
     .matches(
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
-      'Mật khẩu phải chứa ít nhất một số và một ký tự đặc biệt !',
-    ),
+      'Mật khẩu phải chứa ít nhất một số và một ký tự đặc biệt !'
+    )
 });
 
 const LoginPage = () => {
+  const { show, handleToggle } = useToggle();
   const navigate = useNavigate();
   const {
     handleSubmit,
     control,
     formState: { errors, isSubmitting, isValid },
-    reset,
+    reset
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: 'onChange'
   });
 
   const dispatch = useDispatch<AppDispatch>();
-  const handleLogin: SubmitHandler<IAccount> = async (dataLogin) => {
+  const handleLogin: SubmitHandler<IAccount> = async dataLogin => {
     if (!isValid) return;
     const res = await dispatch(loginAuth(dataLogin));
     if (res.payload.access_token) {
@@ -63,8 +65,9 @@ const LoginPage = () => {
         <div className="w-2/4 pt-2 px-20 justify-center flex flex-col">
           <div className="size-full flex flex-col max-w-full">
             <div className="py-1 px-2 flex justify-between ">
-              <Link to={'/'}>
-                <img className="h-[40px] object-cover" src="/images/logo-example.webp" alt="" />
+              <Link to={'/'} className="w-20 flex flex-col items-center">
+                <img src="/images/logo.webp" alt="logo-clinicpro" className="size-3/4 object-cover" />
+                <h1 className="text-[#116aef] font-bold text-[18px]">ClinicPro</h1>
               </Link>
               <div className="flex gap-2 items-center cursor-pointer" onClick={() => navigate(-1)}>
                 <ArrowLeft className="!size-[16px] !text-dark mt-[2px]" />
@@ -97,15 +100,18 @@ const LoginPage = () => {
                   />
                   <MessageForm error={errors.email?.message} />
                 </Field>
-                <Field>
+                <Field className="relative">
                   <Label htmlFor="password">Mật khẩu</Label>
                   <Input
                     name="password"
-                    type="password"
+                    type={show ? 'text' : 'password'}
                     className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
                     placeholder="Mật khẩu tối thiểu 6 kí tự ..."
                     control={control}
                   />
+                  <div className="text-gray-400 top-8 right-4 cursor-pointer absolute" onClick={handleToggle}>
+                    {!show ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  </div>
                   <MessageForm error={errors.password?.message} />
                 </Field>
                 <Button

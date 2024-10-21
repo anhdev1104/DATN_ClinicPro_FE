@@ -5,6 +5,7 @@ import {
   SpaceDashboardIcon,
   ApartmentIcon,
   AssignmentIcon,
+  Tablet
 } from '@/components/icons';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,32 +22,38 @@ const dumpCategory = [
     id: 1,
     categoryName: 'Dashboard',
     path: '/dashboard',
-    icon: SpaceDashboardIcon,
+    icon: SpaceDashboardIcon
   },
   {
     id: 2,
     categoryName: 'Bác sĩ',
     path: '',
-    icon: LocalHospitalIcon,
+    icon: LocalHospitalIcon
   },
   {
     id: 3,
     categoryName: 'Bệnh nhân',
     path: '',
-    icon: GroupIcon,
+    icon: GroupIcon
   },
   {
     id: 4,
-    categoryName: 'Phòng Ban',
-    path: '/departments',
-    icon: ApartmentIcon,
+    categoryName: 'Đơn thuốc',
+    path: '/prescriptions',
+    icon: Tablet
   },
   {
     id: 5,
+    categoryName: 'Phòng Ban',
+    path: '/departments',
+    icon: ApartmentIcon
+  },
+  {
+    id: 6,
     categoryName: 'Gói khám',
     path: '/package',
-    icon: AssignmentIcon,
-  },
+    icon: AssignmentIcon
+  }
 ];
 
 const Sidebar = ({ show }: { show: boolean }) => {
@@ -73,7 +80,7 @@ const Sidebar = ({ show }: { show: boolean }) => {
             {categoryManagement.length > 0 &&
               categoryManagement.map(category => (
                 <li
-                  className={`px-5 py-2 flex  items-center cursor-pointer border-l-[3px] border-transparent hover:!border-l-primaryAdmin transition-all ease-linear hover:bg-primaryAdmin/5 group ${tabActive === category.id && 'border-primaryAdmin bg-primaryAdmin/5'}`}
+                  className={`px-5 py-2 flex  items-center cursor-pointer border-l-[3px] border-transparent hover:!border-l-primaryAdmin transition-all ease-linear hover:bg-primaryAdmin/5 group ${tabActive === category.id && 'border-l-primaryAdmin bg-primaryAdmin/5'}`}
                   key={category.id}
                   onClick={() => handleCategory(category.id, category.path)}
                 >

@@ -1,17 +1,17 @@
 const fakeData = [
   {
     name: 'Mục đích',
-    description: 'Vì mục tiêu nâng cao sức khỏe và hạnh phúc của mọi người dân Việt Nam.',
+    description: 'Vì mục tiêu nâng cao sức khỏe và hạnh phúc của mọi người dân Việt Nam.'
   },
   {
     name: 'Tầm nhìn',
     description:
-      'Trở thành đơn vị dẫn đầu toàn quốc về lĩnh vực chăm sóc sức khỏe và là thương hiệu chăm sóc sức khỏe đáng tin cậy nhất ở Việt Nam.',
+      'Trở thành đơn vị dẫn đầu toàn quốc về lĩnh vực chăm sóc sức khỏe và là thương hiệu chăm sóc sức khỏe đáng tin cậy nhất ở Việt Nam.'
   },
   {
     name: 'Sứ mệnh',
-    description: 'Vận hành mạng lưới tích hợp các thương hiệu chăm sóc sức khỏe tại các thành phố lớn.',
-  },
+    description: 'Vận hành mạng lưới tích hợp các thương hiệu chăm sóc sức khỏe tại các thành phố lớn.'
+  }
 ];
 
 const years = [
@@ -29,7 +29,7 @@ const years = [
   { year: 2018 },
   { year: 2021 },
   { year: 2022 },
-  { year: 2023 },
+  { year: 2023 }
 ];
 
 const Infomation = () => {
@@ -59,8 +59,8 @@ const Infomation = () => {
               <div>
                 <h3 className="text-[32px] font-semibold leading-[44px] text-third">Tên gọi của sự Hoàn Hảo</h3>
                 <span className="block m-auto text-[14px] leading-[30px] font-light text-dark ">
-                  Bạn có biết không? “Hoàn Mỹ” có nghĩa là “không tì vết”, “hoàn hảo” hay “đẹp”. Sự hoàn hảo là ngôi sao
-                  Bắc Đẩu định hướng mọi thứ chúng tôi làm tại bệnh viện và phòng khám cho bệnh nhân và cộng đồng mà
+                  Bạn có biết không? “ClinicPro” có nghĩa là “không tì vết”, “hoàn hảo” hay “đẹp”. Sự hoàn hảo là ngôi
+                  sao Bắc Đẩu định hướng mọi thứ chúng tôi làm tại bệnh viện và phòng khám cho bệnh nhân và cộng đồng mà
                   chúng tôi phục vụ.
                 </span>
               </div>
@@ -76,9 +76,11 @@ const Infomation = () => {
           <div className="container-page">
             <div className="flex flex-wrap ml-[-15px] mr-[-15px]">
               <div className="flex-[0_0_100%] max-w-full">
-                <h2 className="text-[32px] font-semibold leading-[54px] text-third text-center">Giá trị của Hoàn Mỹ</h2>
+                <h2 className="text-[32px] font-semibold leading-[54px] text-third text-center">
+                  Giá trị của ClinicPro
+                </h2>
                 <p className="my-4 text-center font-normal text-dark">
-                  Đây là kim chỉ nam dẫn lối Hoàn Mỹ trong sứ mệnh nâng cao sức khỏe và hạnh phúc đến tất cả người dân
+                  Đây là kim chỉ nam dẫn lối ClinicPro trong sứ mệnh nâng cao sức khỏe và hạnh phúc đến tất cả người dân
                   Việt Nam. Tận tâm chăm sóc.
                 </p>
               </div>
@@ -279,7 +281,7 @@ const Infomation = () => {
         <div className="pt-[60px]">
           <div className="flex flex-col">
             <div className="flex justify-center">
-              {years.map((item) => {
+              {years.map(item => {
                 return (
                   <div
                     key={item.year}

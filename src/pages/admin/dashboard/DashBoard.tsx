@@ -1,14 +1,9 @@
-import { ChevronRightIcon } from '@/components/icons';
-import React from 'react';
+import DirectRoute from '@/components/direct';
 
 const Dashboard = () => {
   return (
     <div>
-      <div className="text-primaryAdmin flex items-center text-base">
-        <h2>Dashboard</h2>
-        <ChevronRightIcon fontSize="small" className="mx-2" />
-        <span className="text-primaryAdmin/60">Admin dashboard</span>
-      </div>
+      <DirectRoute nav="Dashboard" subnav="Trang quản trị Admin" />
     </div>
   );
 };

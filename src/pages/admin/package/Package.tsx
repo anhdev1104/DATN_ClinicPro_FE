@@ -4,26 +4,37 @@ import { useForm } from 'react-hook-form';
 import Input from '@/components/input';
 import { MoreVertIcon } from '@/components/icons';
 import useToggle from '@/hooks/useToggle';
-import { getAllPackages } from '@/services/package.service';
+import { getPackages } from '@/services/package.service';
 import { IPackage } from '@/types/package.type';
 
 const PackagePage = () => {
   const [packages, setPackages] = useState<IPackage[]>([]);
   const { show, handleToggle } = useToggle();
-
-  // Fetch packages from API
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await getAllPackages();
-        setPackages(response);
+        const response = await getPackages();
+        console.log('Fetched packages:', response);
+        setPackages(Array.isArray(response) ? response : []);
       } catch (error) {
-        console.error('Error fetching packages:', error);
+        setError('Không thể tải danh sách gói khám. Vui lòng thử lại sau.');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchPackages();
   }, []);
+
+  if (loading) {
+    return <p className="text-center text-indigo-600">Đang tải danh sách gói khám...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center text-red-500">{error}</p>;
+  }
 
   return (
     <section className="package">
@@ -71,16 +82,14 @@ const PackagePage = () => {
               </tr>
             </thead>
             <tbody>
-              {packages.map((pkg, index) => (
-                <tr key={index} className="odd">
+              {packages.map(pkg => (
+                <tr key={pkg.id} className="odd">
                   <td className="p-4">{pkg.id}</td>
                   <td className="p-4 text-gray-800">{pkg.name}</td>
                   <td className="p-4 text-gray-600">{pkg.description}</td>
                   <td className="p-4 text-gray-600 max-h-24 overflow-y-auto whitespace-normal w-1/3">{pkg.content}</td>
                   <td className="p-4 profile-image">
-                    {pkg.image && (
-                      <img width={28} height={28} src={pkg.image} className="rounded-full mr-2" alt={pkg.name} />
-                    )}
+                    <img width={28} height={28} src={pkg.image} className="rounded-full mr-2" alt={pkg.name} />
                   </td>
                   <td className="p-4 text-end">
                     <div className="relative inline-block text-left">
@@ -94,18 +103,18 @@ const PackagePage = () => {
                       {show && (
                         <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white overflow-hidden">
                           <Link
-                            to={'#'}
+                            to={`/edit-package/${pkg.id}`} // Sửa theo ID của gói
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={handleToggle}
+                            onClick={() => handleToggle()}
                           >
-                            <i className="fa-solid fa-pen-to-square mr-2"></i> Sửa
+                            Sửa
                           </Link>
                           <Link
-                            to={'#'}
+                            to="#"
                             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={handleToggle}
+                            onClick={() => handleToggle()}
                           >
-                            <i className="fa fa-trash-alt mr-2"></i> Xóa bỏ
+                            Xóa bỏ
                           </Link>
                         </div>
                       )}

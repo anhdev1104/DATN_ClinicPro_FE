@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 const schema = yup.object({
-  search: yup.string().required('Chưa nhập vào từ khoá tìm kiếm !'),
+  search: yup.string().required('Chưa nhập vào từ khoá tìm kiếm !')
 });
 
 const FormSearchHome = () => {
@@ -15,13 +15,13 @@ const FormSearchHome = () => {
     handleSubmit,
     control,
     formState: { isDirty },
-    reset,
+    reset
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: 'onChange'
   });
 
-  const handleSearch: SubmitHandler<{ search: string }> = async (query) => {
+  const handleSearch: SubmitHandler<{ search: string }> = async query => {
     console.log(query);
     reset();
   };
@@ -64,8 +64,8 @@ const FormSearchHome = () => {
       </h2>
       <div className="pb-12">
         <p className="max-w-[700px] leading-7 text-center mx-auto">
-          Với mạng lưới 13 bệnh viện và 4 phòng khám trên toàn quốc, Hoàn Mỹ là đơn vị y tế tư nhân hàng đầu, định hình
-          văn hóa chăm sóc sức khỏe tại Việt Nam.
+          Với mạng lưới 13 bệnh viện và 4 phòng khám trên toàn quốc, ClinicPro là đơn vị y tế tư nhân hàng đầu, định
+          hình văn hóa chăm sóc sức khỏe tại Việt Nam.
         </p>
       </div>
     </section>

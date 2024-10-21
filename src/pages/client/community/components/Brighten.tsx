@@ -17,8 +17,8 @@ const Brighten = () => {
                 Bừng Sáng Cuộc Sống
               </h2>
               <span className="block text-[14px] leading-[28px] text-center px-12 mt-5">
-                “Bừng sáng cuộc sống” là một chiến dịch CSR quy mô lớn do Hoàn Mỹ bắt đầu triển khai vào năm 2018. Chiến
-                dịch này nhằm cung cấp thông tin hữu ích về sức khỏe cho cộng đồng theo cách thú vị và sinh động.
+                “Bừng sáng cuộc sống” là một chiến dịch CSR quy mô lớn do ClinicPro bắt đầu triển khai vào năm 2018.
+                Chiến dịch này nhằm cung cấp thông tin hữu ích về sức khỏe cho cộng đồng theo cách thú vị và sinh động.
               </span>
             </div>
           </div>
