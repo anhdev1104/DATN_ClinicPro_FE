@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import LoadingSpin from '../loading/LoadingSpin';
-import { cn } from '@/helpers/utils';
+import { cn } from '@/utils/utils';
 
 type ButtonType = 'submit' | 'button';
 

@@ -9,12 +9,12 @@ export interface QueryParams {
 export const usersApi = createApi({
   reducerPath: 'usersApi',
   baseQuery: axiosBaseQuery(),
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     getAllUsers: builder.query({
       query: () => ({
-        url: 'users',
-      }),
-    }),
-  }),
+        url: 'users'
+      })
+    })
+  })
 });
 export const { useGetAllUsersQuery } = usersApi;

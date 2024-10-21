@@ -20,8 +20,8 @@ interface queryKey {
 
 export const formatQueryParam = (endPoint: string, queryKey: queryKey) => {
   const query = Object.keys(queryKey)
-    .filter((key) => queryKey[key] && queryKey[key])
-    .map((key) => {
+    .filter(key => queryKey[key] && queryKey[key])
+    .map(key => {
       return `${encodeURIComponent(key)}=${encodeURIComponent(queryKey[key])}`;
     })
     .join('&');
@@ -29,5 +29,5 @@ export const formatQueryParam = (endPoint: string, queryKey: queryKey) => {
 };
 
 export const filterOutManagers = (data: Array<any>) => {
-  return data.filter((fil) => fil.role.id === 1);
+  return data.filter(fil => fil.role.id === 1);
 };

@@ -3,7 +3,7 @@ import {
   gridPageCountSelector,
   gridPaginationModelSelector,
   useGridApiContext,
-  useGridSelector,
+  useGridSelector
 } from '@mui/x-data-grid';
 
 const Paginations = () => {
