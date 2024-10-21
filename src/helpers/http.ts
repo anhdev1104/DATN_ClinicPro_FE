@@ -4,7 +4,7 @@ import axios, { AxiosInstance } from 'axios';
 import { toast } from 'react-toastify';
 
 class Http {
-  private api: AxiosInstance;
+  public api: AxiosInstance;
   constructor() {
     this.api = axios.create({
       baseURL: import.meta.env.VITE_API_URL,
@@ -86,5 +86,5 @@ class Http {
     }
   }
 }
-
+export const http = new Http();
 export default Http;
