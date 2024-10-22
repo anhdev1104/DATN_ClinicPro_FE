@@ -21,7 +21,7 @@ export const departmentSchema = yup
   .required();
 
 const NewDepartment: React.FC<NewDepartmentProps> = () => {
-  const { data, isSuccess } = useGetAllUsersQuery(null);
+  const { data, isSuccess } = useGetAllUsersQuery();
   const [handleAddDepartment, { reset }] = useAddAnDepartmentMutation();
   const open = useSelector(state => state.departmentState.isOpenNewDepartment);
   const dispatch = useDispatch();
