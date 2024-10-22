@@ -89,7 +89,6 @@ const Department = () => {
     navigate(`/departments/${row.id}`, { replace: true });
     // window.history.replaceState(null, '', `/phong-ban/${row.id}`)
   };
-
   return (
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl">

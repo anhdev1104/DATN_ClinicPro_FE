@@ -28,6 +28,6 @@ export const formatQueryParam = (endPoint: string, queryKey: queryKey) => {
   return query ? `${endPoint}?${query}` : endPoint;
 };
 
-export const filterOutManagers = (data: Array<any>) => {
+export const filterOutManagers = <T extends any[]>(data: T) => {
   return data.filter(fil => fil.role.id === 1);
 };

@@ -4,6 +4,7 @@ import { departmentSchema } from '@/pages/admin/department/NewDepartment';
 import { Department } from '@/types/department.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { InferType } from 'yup';
+import { departmentDetailSchema } from '@/pages/admin/department/DepartmentDetail';
 
 interface QueryParams {
   limit?: number | string;
@@ -14,7 +15,7 @@ interface QueryParams {
 export const departmentApi = createApi({
   reducerPath: 'departmentApi',
   baseQuery: axiosBaseQuery(),
-  tagTypes: ['Department'],
+  tagTypes: ['Department', 'Departments'],
   endpoints: builder => ({
     getAllDepartment: builder.query<ResponseTypes<Department[]>, QueryParams>({
       query: params => ({
@@ -33,16 +34,16 @@ export const departmentApi = createApi({
       }),
       invalidatesTags: ['Department']
     }),
-    updateAnDepartment: builder.mutation<unknown, any>({
-      query: data => {
-        const { id, ...props } = data;
+    updateAnDepartment: builder.mutation<unknown, InferType<typeof departmentDetailSchema> & { id: string | number }>({
+      query: query => {
+        const { id, ...data } = query;
         return {
           url: `departments/${id}`,
           method: 'PUT',
-          ...props
+          data
         };
       },
-      invalidatesTags: ['Department']
+      invalidatesTags: ['Department'],
     }),
     deleteAnDepartment: builder.mutation<unknown, number | string>({
       query: id => ({
@@ -57,5 +58,6 @@ export const {
   useGetAllDepartmentQuery,
   useGetDepartmentDetailQuery,
   useAddAnDepartmentMutation,
-  useDeleteAnDepartmentMutation
+  useDeleteAnDepartmentMutation,
+  useUpdateAnDepartmentMutation
 } = departmentApi;
