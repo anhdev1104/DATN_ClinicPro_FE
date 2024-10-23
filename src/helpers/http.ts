@@ -10,8 +10,8 @@ class Http {
       baseURL: import.meta.env.VITE_API_URL,
       timeout: 10000,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     this.api.interceptors.request.use(
@@ -24,7 +24,7 @@ class Http {
       },
       function (error) {
         return Promise.reject(error);
-      }
+      },
     );
 
     this.api.interceptors.response.use(
@@ -46,7 +46,7 @@ class Http {
           }
         }
         return Promise.reject(error);
-      }
+      },
     );
   }
 

@@ -16,7 +16,7 @@ export const departmentSchema = yup
   .object({
     name: yup.string().required().trim(),
     description: yup.string().required(),
-    manager_id: yup.string().required()
+    manager_id: yup.string().required(),
   })
   .required();
 
@@ -31,8 +31,8 @@ const NewDepartment: React.FC<NewDepartmentProps> = () => {
     defaultValues: {
       name: '',
       description: '',
-      manager_id: ''
-    }
+      manager_id: '',
+    },
   });
 
   const handleHideNewDepartment = () => {
@@ -52,7 +52,7 @@ const NewDepartment: React.FC<NewDepartmentProps> = () => {
         onClose={handleHideNewDepartment}
         size="md"
         sx={{
-          '--Drawer-horizontalSize': 'clamp(300px, 40%, 100%)'
+          '--Drawer-horizontalSize': 'clamp(300px, 40%, 100%)',
         }}
       >
         <div className="flex flex-col capitalize p-3 items-center">
@@ -78,7 +78,7 @@ const NewDepartment: React.FC<NewDepartmentProps> = () => {
                   'manager_id',
                   value
                     ? users.find((user: any) => user.user_info.id.toString() === (value as string).split('-')[1]).id
-                    : ''
+                    : '',
                 );
               }}
               options={

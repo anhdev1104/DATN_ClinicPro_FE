@@ -19,20 +19,20 @@ export const departmentApi = createApi({
   endpoints: builder => ({
     getAllDepartment: builder.query<ResponseTypes<Department[]>, QueryParams>({
       query: params => ({
-        url: formatQueryParam('departments', params)
+        url: formatQueryParam('departments', params),
       }),
-      providesTags: ['Department']
+      providesTags: ['Department'],
     }),
     getDepartmentDetail: builder.query<ResponseTypes<Department>, number | string>({
-      query: id => ({ url: `departments/${id}` })
+      query: id => ({ url: `departments/${id}` }),
     }),
     addAnDepartment: builder.mutation({
       query: (data: InferType<typeof departmentSchema>) => ({
         url: 'departments',
         method: 'POST',
-        data
+        data,
       }),
-      invalidatesTags: ['Department']
+      invalidatesTags: ['Department'],
     }),
     updateAnDepartment: builder.mutation<unknown, InferType<typeof departmentDetailSchema> & { id: string | number }>({
       query: query => {
@@ -40,24 +40,25 @@ export const departmentApi = createApi({
         return {
           url: `departments/${id}`,
           method: 'PUT',
-          data
+          data,
         };
       },
+      invalidatesTags: ['Department'],
       invalidatesTags: ['Department'],
     }),
     deleteAnDepartment: builder.mutation<unknown, number | string>({
       query: id => ({
         url: `departments/${id}`,
-        method: 'DELETE'
+        method: 'DELETE',
       }),
-      invalidatesTags: ['Department']
-    })
-  })
+      invalidatesTags: ['Department'],
+    }),
+  }),
 });
 export const {
   useGetAllDepartmentQuery,
   useGetDepartmentDetailQuery,
   useAddAnDepartmentMutation,
   useDeleteAnDepartmentMutation,
-  useUpdateAnDepartmentMutation
+  useUpdateAnDepartmentMutation,
 } = departmentApi;
