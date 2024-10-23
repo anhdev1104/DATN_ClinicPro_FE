@@ -47,8 +47,11 @@ const ModalAppointment = () => {
   };
 
   return (
+
+
+
     <Dialog
-      open={true}
+      open={show}
       onClose={handleToggle}
       PaperProps={{
         component: 'form',
