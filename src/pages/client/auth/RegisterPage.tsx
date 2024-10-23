@@ -52,11 +52,7 @@ const RegisterPage = () => {
     mode: 'onChange',
   });
 
-
-
-
-
-            const handleRegister: SubmitHandler<IAccount> = async data => {
+  const handleRegister: SubmitHandler<IAccount> = async data => {
     if (!isValid) return;
     const { password_confirm, ...dataRegister } = data;
     const res = await registerService(dataRegister);
