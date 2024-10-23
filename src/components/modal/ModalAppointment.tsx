@@ -47,9 +47,6 @@ const ModalAppointment = () => {
   };
 
   return (
-
-
-
     <Dialog
       open={show}
       onClose={handleToggle}
