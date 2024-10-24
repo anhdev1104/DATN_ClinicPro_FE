@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChevronRightIcon, List, SearchIcon } from '@/components/icons';
 import Input from '@/components/input';
 import Field from '@/components/field';
@@ -219,6 +218,10 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
         </div>
       </div>
 
+
+
+      
+      ssss
       <Dialog
         PaperProps={{
           style: {
