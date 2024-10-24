@@ -1,66 +1,113 @@
-import { ChevronRightIcon, List, SearchIcon } from '@/components/icons';
+import { ChevronRightIcon, List } from '@/components/icons';
 import Input from '@/components/input';
 import Field from '@/components/field';
 import Label from '@/components/label';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@/components/button';
 import Select from '@/components/select';
-import { IPrescription } from '@/types/prescription.type';
-import { getCategoriMedication, getMedication } from '@/services/prescriptions.service';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { Dialog, DialogTitle, DialogContent } from '@mui/material';
-import Medication from './Medication';
 
-export interface IMedication {
-  medication_id: number;
-  instructions: string;
-  quantity: number;
-  duration: number;
-}
+const listMedicine = [
+  {
+    label: 'Thuốc Pymenospain Pymepharco chống co thắt dạ dày - ruột (200 viên)',
+    value: 'Thuốc Pymenospain Pymepharco chống co thắt dạ dày - ruột (200 viên)'
+  },
+  {
+    label: 'Viên sủi Efferalgan 500mg UPSA SAS giảm đau, hạ sốt (4 vỉ x 4 viên)',
+    value: 'Viên sủi Efferalgan 500mg UPSA SAS giảm đau, hạ sốt (4 vỉ x 4 viên)'
+  },
+  {
+    label: 'Thuốc bột pha hỗn dịch uống Smecta vị cam điều trị tiêu chảy (30 gói x 3g)',
+    value: 'Thuốc bột pha hỗn dịch uống Smecta vị cam điều trị tiêu chảy (30 gói x 3g)'
+  },
+  {
+    label: 'Viên sủi Berocca Bayer bổ sung vitamin và khoáng chất (10 viên)',
+    value: 'Viên sủi Berocca Bayer bổ sung vitamin và khoáng chất (10 viên)'
+  },
+  {
+    label: 'Men vi sinh Enterogermina 2 tỷ/5ml điều trị rối loạn tiêu hóa (2 vỉ x 10 ống)',
+    value: 'Men vi sinh Enterogermina 2 tỷ/5ml điều trị rối loạn tiêu hóa (2 vỉ x 10 ống)'
+  },
+  {
+    label: 'Thuốc Eugica MEGA We care điều trị ho đờm, cảm cúm, sổ mũi (10 vỉ x 10 viên)',
+    value: 'Thuốc Eugica MEGA We care điều trị ho đờm, cảm cúm, sổ mũi (10 vỉ x 10 viên)'
+  },
+  {
+    label: 'Thuốc Clorpheniramin 4 DHG điều trị viêm mũi dị ứng, chảy nước mũi (10 vỉ x 20 viên)',
+    value: 'Thuốc Clorpheniramin 4 DHG điều trị viêm mũi dị ứng, chảy nước mũi (10 vỉ x 20 viên)'
+  },
+  {
+    label: 'Gel bôi da Klenzit MS điều trị mụn trứng cá (15g)',
+    value: 'Gel bôi da Klenzit MS điều trị mụn trứng cá (15g)'
+  },
+  {
+    label: 'Viên nhai Kremil-S United điều trị đau dạ dày, giảm nóng rát dạ dày, ợ nóng, ợ chua (10 vỉ x 10 viên)',
+    value: 'Viên nhai Kremil-S United điều trị đau dạ dày, giảm nóng rát dạ dày, ợ nóng, ợ chua (10 vỉ x 10 viên)'
+  },
+  {
+    label: 'Thuốc Telfast HD 180mg Sanofi điều trị viêm mũi dị ứng, mày đay (1 vỉ x 10 viên)',
+    value: 'Thuốc Telfast HD 180mg Sanofi điều trị viêm mũi dị ứng, mày đay (1 vỉ x 10 viên)'
+  },
+  {
+    label: 'Thuốc Farzincol Pharmedic điều trị thiếu kẽm (10 vỉ x 10 viên)',
+    value: 'Thuốc Farzincol Pharmedic điều trị thiếu kẽm (10 vỉ x 10 viên)'
+  },
+  {
+    label: 'Kem Differin Galderma điều trị mụn trứng cá (30g)',
+    value: 'Kem Differin Galderma điều trị mụn trứng cá (30g)'
+  }
+];
 
 const patientsOptions = [
   {
     label: 'Nguyễn Văn A',
-    value: 1,
+    value: 'Nguyễn Văn A'
   },
   {
     label: 'Trần Thị B',
-    value: 2,
+    value: 'Trần Thị B'
   },
   {
     label: 'Lê Văn C',
-    value: 3,
+    value: 'Lê Văn C'
   },
   {
-    id: '1',
     label: 'Phạm Thị D',
-    value: 4,
+    value: 'Phạm Thị D'
   },
   {
-    id: '1',
     label: 'Nguyễn Văn E',
-    value: 5,
+    value: 'Nguyễn Văn E'
   },
   {
-    id: '1',
     label: 'Trần Văn F',
-    value: 6,
+    value: 'Trần Văn F'
   },
   {
-    id: '1',
     label: 'Lê Thị G',
-    value: 7,
+    value: 'Lê Thị G'
   },
+  {
+    label: 'Nguyễn Văn H',
+    value: 'Nguyễn Văn H'
+  },
+  {
+    label: 'Trần Thị I',
+    value: 'Trần Thị I'
+  },
+  {
+    label: 'Lê Văn J',
+    value: 'Lê Văn J'
+  },
+  {
+    label: 'Phạm Thị K',
+    value: 'Phạm Thị K'
+  }
 ];
 
 const schema = yup.object({
-  patient_id: yup.string().trim().required('Trường này là bắt buộc !'),
-  name: yup.string().trim().required('Trường này là bắt buộc !'),
-  description: yup.string().trim(),
-  categoryId: yup.string().required('Chọn danh mục thuốc!'),
-  user_id: yup.string(),
+  prescriptionName: yup.string().trim().required('Trường này là bắt buộc !')
 });
 
 interface AddPrescripton {
@@ -68,94 +115,18 @@ interface AddPrescripton {
 }
 
 const AddPrescriptions = ({ navigate }: AddPrescripton) => {
-  const [medicationCategori, setMedicationCategori] = useState([]); // Lưu danh mục thuốc
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // Trạng thái của Dialog
-  const [medications, setMedications] = useState([]); // Lưu thông tin thuốc được fetch
-
-  const [medicationData, setMedication] = useState<IMedication[]>([]);
-  const [subMedication, setSubMedication] = useState<IMedication>({
-    medication_id: 0,
-    instructions: '',
-    quantity: 0,
-    duration: 0,
-  });
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log('change');
-
-    const subData = { ...subMedication, [e.target.name]: e.target.value };
-    const isDuplicate = medicationData.some(item => item.medication_id === subData.medication_id);
-
-    setMedication((prev: any) => {
-      if (isDuplicate) {
-        return [...prev].filter(item => item.medication_id !== subData.medication_id);
-      }
-      return [...prev, subData];
-    });
-  };
-
-  console.log('1111111subMedication', subMedication);
-  console.log('222222222medicationData', medicationData);
-
   const {
     handleSubmit,
     control,
-    formState: { isSubmitting, errors, isValid },
-    reset,
-    register,
+    formState: { isSubmitting, errors, isValid }
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: 'onChange'
   });
 
-  const selectedCategoryId = useWatch({
-    control,
-    name: 'categoryId',
-  });
-
-  const convertToOptions = (data: any) => {
-    return data.map((item: any) => ({
-      value: item.id,
-      label: item.name,
-    }));
-  };
-
-  // Fetch danh mục thuốc khi component mount
-  useEffect(() => {
-    const getCategori = async () => {
-      const res = await getCategoriMedication();
-      setMedicationCategori(convertToOptions(res.data));
-    };
-
-    getCategori();
-  }, []);
-
-  // Fetch thông tin thuốc khi thay đổi danh mục được chọn
-  useEffect(() => {
-    if (selectedCategoryId) {
-      const getMedications = async (selectedCategoryId: string) => {
-        const res = await getMedication(selectedCategoryId);
-
-        setMedications(res.data);
-        setIsDialogOpen(true);
-      };
-
-      getMedications(String(selectedCategoryId));
-    }
-  }, [selectedCategoryId]);
-
-  const handleCreateMedication: SubmitHandler<IPrescription> = async data => {
+  const handleCreateTablet: SubmitHandler<{ prescriptionName: string }> = async data => {
     if (!isValid) return;
-    // const { categoryId, ...formData } = data;
-
-    // console.log('Category ID:', categoryId);
-    // console.log('Form Data:', formData);
-  };
-
-  const handleReset = () => reset();
-
-  // Hàm để đóng dialog
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
+    console.log(data);
   };
 
   return (
@@ -179,46 +150,57 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
             </div>
           </div>
           <div>
-            <form className="mb-3 w-full relative" onSubmit={handleSubmit(handleCreateMedication)}>
+            <form className="mb-3 w-full relative" onSubmit={handleSubmit(handleCreateTablet)}>
               <div className="flex gap-7 mb-3">
                 <Field>
-                  <Label htmlFor="name">Tên đơn thuốc</Label>
+                  <Label htmlFor="dosage">Liều lượng ( .../Lần )</Label>
                   <Input
-                    name="name"
+                    name="dosage"
                     type="text"
-                    className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
-                    placeholder="Nhập tên đơn thuốc ..."
+                    className="h-[48px] !font-normal !text-dark rounded-md bg-white focus:border-third"
+                    placeholder="Nhập Liều lượng ..."
                     control={control}
                   />
                 </Field>
+                <Field>
+                  <Label htmlFor="frequency"> Số ngày sử dụng </Label>
+                  <Input
+                    name="frequency"
+                    type="text"
+                    className="h-[48px] !font-normal !text-dark rounded-md bg-white focus:border-third"
+                    placeholder="Nhập Liều lượng ..."
+                    control={control}
+                  />
+                </Field>
+              </div>
+              <div className="flex gap-7 mb-3">
                 <div className="min-w-[400px] w-1/2">
-                  <Label htmlFor="patient_id">Tên bệnh nhân</Label>
+                  <Label htmlFor="prescriptionName">Tên đơn thuốc</Label>
+                  <Select
+                    placeholder="Đơn thuốc chỉ định"
+                    name="prescriptionData"
+                    control={control}
+                    options={listMedicine}
+                  />
+                </div>
+                <div className="min-w-[400px] w-1/2">
+                  <Label htmlFor="prescriptionName">Tên bệnh nhân</Label>
                   <Select
                     placeholder="Bệnh nhân chỉ định"
-                    name="patient_id"
+                    name="partientSearch"
                     control={control}
                     options={patientsOptions}
                   />
                 </div>
-                <div className="min-w-[400px] w-1/2">
-                  <Label htmlFor="categoryId">Danh mục thuốc</Label>
-                  <Select
-                    placeholder="Đơn thuốc chỉ định"
-                    name="categoryId"
-                    control={control}
-                    options={medicationCategori}
-                  />
-                </div>
               </div>
 
-              <div className="flex flex-col mb-7">
-                <Label htmlFor="description">Lời dặn</Label>
+              <div className="flex flex-col mb-3">
+                <Label htmlFor="description">Chi tiêt đơn thuốc</Label>
                 <textarea
-                  {...register('description')}
                   className="p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
                   name="description"
-                  placeholder="Nhập lời dặn ..."
-                  id="advice"
+                  id="description"
+                  placeholder="Nhập chi tiết đơn thuốc ..."
                 ></textarea>
               </div>
 
@@ -232,78 +214,14 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                 >
                   Xác nhận
                 </Button>
-                <Button
-                  type="submit"
-                  styled="normal"
-                  isLoading={isSubmitting}
-                  disabled={isSubmitting}
-                  onClick={handleReset}
-                >
-                  Nhập lại
+                <Button type="submit" styled="normal" isLoading={isSubmitting} disabled={isSubmitting}>
+                  Xác nhận
                 </Button>
               </div>
             </form>
           </div>
         </div>
       </div>
-
-      <Dialog
-        PaperProps={{
-          style: {
-            backgroundColor: '#fff',
-            padding: '20px', // Giảm padding để có thêm không gian
-            width: '1000px',
-            height: '800px',
-            borderRadius: '8px',
-            display: 'flex',
-            flexDirection: 'column',
-            maxWidth: 'none',
-          },
-        }}
-        open={isDialogOpen}
-        onClose={handleCloseDialog}
-      >
-        <div className="flex justify-between items-end mb-6">
-          <div className="flex justify-center items-start flex-col gap-2">
-            <Label htmlFor="categoryId">Danh mục thuốc</Label>
-            <Select placeholder="Đơn thuốc chỉ định" name="categoryId" control={control} options={medicationCategori} />
-          </div>
-          <div className="flex-[0_0_50%] flex justify-end items-center gap-3">
-            <Input
-              colorGlass="text-primaryAdmin"
-              className="placeholder:text-[14px] text-[14px] text-primaryAdmin h-[40px]"
-              control={control}
-              name="search"
-              placeholder="Tìm thuốc ..."
-              isGlass
-            />
-            <button
-              type="submit"
-              className={`w-[53px] h-[40px] flex items-center justify-center bg-primaryAdmin rounded-[9px] transition-all duration-300 ease-linear`}
-            >
-              <SearchIcon className="text-white" />
-            </button>
-          </div>
-        </div>
-
-        <div>
-          {medications.length > 0 ? (
-            <ul className="space-y-2">
-              {medications.map((medication: any) => (
-                <Medication
-                  key={medication.id}
-                  name={medication.name}
-                  id={medication.id}
-                  setMedication={setMedication}
-                  handleChange={handleChange}
-                />
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-500 text-center">Không có thuốc nào cho danh mục này.</p>
-          )}
-        </div>
-      </Dialog>
     </div>
   );
 };

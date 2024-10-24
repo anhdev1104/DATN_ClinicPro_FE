@@ -1,7 +1,9 @@
 export interface IPrescription {
-  patient_id: string;
-  user_id: string;
+  patient_id: number;
+  doctor_id: number;
   name: string;
-  description: string;
-  // medications: Array<Itablet>;
+  instructions: string;
+  frequency: string;
+  dosage: string;
+  duration: number;
 }
