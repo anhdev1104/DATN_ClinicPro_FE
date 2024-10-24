@@ -62,3 +62,21 @@ export const getPrescriptionById = async (id: string) => {
     return error;
   }
 };
+
+export const getCategoriMedication = async () => {
+  try {
+    const response = await http.get('/categories');
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getMedication = async (id: string) => {
+  try {
+    const response = http.get(`medications?category_id=${id}`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

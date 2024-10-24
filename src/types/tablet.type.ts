@@ -1,7 +1,6 @@
-export interface ITablet {
+export interface Itablet {
   name: string;
-  instructions: string;
-  quantity: number;
-  unit: string;
-  categoryId: number;
+  category_id: string;
+  created_at: string;
+  updated_at: string;
 }

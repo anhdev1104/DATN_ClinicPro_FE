@@ -1,46 +1,18 @@
-import { ChevronRightIcon, List } from '@/components/icons';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ChevronRightIcon, List, SearchIcon } from '@/components/icons';
 import Input from '@/components/input';
 import Field from '@/components/field';
 import Label from '@/components/label';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { SubmitHandler, useWatch, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import { Button } from '@/components/button';
 import Select from '@/components/select';
 import { IPrescription } from '@/types/prescription.type';
-import { createPrescription } from '@/services/prescriptions.service';
-import { useState } from 'react';
-import Tablet from './Tablet';
-
-const categories = [
-  { value: 1, label: 'Stomach Medicine' },
-  { value: 2, label: 'Cold Medicine' },
-  { value: 3, label: 'Pain Relief' },
-  { value: 4, label: 'Antibiotics' }
-];
-
-const medicines = [
-  { id: 1, name: 'Omeprazole', instructions: '', quantity: 10, unit: 'Viên', categoryId: 1 },
-  { id: 2, name: 'Ranitidine', instructions: '', quantity: 10, unit: 'Viên', categoryId: 1 },
-  { id: 3, name: 'Esomeprazole', instructions: '', quantity: 10, unit: 'Viên', categoryId: 1 },
-  { id: 4, name: 'Lansoprazole', instructions: '', quantity: 10, unit: 'Viên', categoryId: 1 },
-  { id: 5, name: 'Pantoprazole', instructions: '', quantity: 10, unit: 'Viên', categoryId: 1 },
-  { id: 6, name: 'Paracetamol', instructions: '', quantity: 10, unit: 'Viên', categoryId: 2 },
-  { id: 7, name: 'Ibuprofen', instructions: '', quantity: 10, unit: 'Viên', categoryId: 2 },
-  { id: 8, name: 'Cough Syrup', instructions: '', quantity: 10, unit: 'Viên', categoryId: 2 },
-  { id: 9, name: 'Pseudoephedrine', instructions: '', quantity: 10, unit: 'Viên', categoryId: 2 },
-  { id: 10, name: 'Phenylephrine', instructions: '', quantity: 10, unit: 'Viên', categoryId: 2 },
-  { id: 11, name: 'Aspirin', instructions: '', quantity: 10, unit: 'Viên', categoryId: 3 },
-  { id: 12, name: 'Acetaminophen', instructions: '', quantity: 10, unit: 'Viên', categoryId: 3 },
-  { id: 13, name: 'Morphine', instructions: '', quantity: 10, unit: 'Viên', categoryId: 3 },
-  { id: 14, name: 'Ibuprofen', instructions: '', quantity: 10, unit: 'Viên', categoryId: 3 },
-  { id: 15, name: 'Naproxen', instructions: '', quantity: 10, unit: 'Viên', categoryId: 3 },
-  { id: 16, name: 'Amoxicillin', instructions: '', quantity: 10, unit: 'Viên', categoryId: 4 },
-  { id: 17, name: 'Azithromycin', instructions: '', quantity: 10, unit: 'Viên', categoryId: 4 },
-  { id: 18, name: 'Ciprofloxacin', instructions: '', quantity: 10, unit: 'Viên', categoryId: 4 },
-  { id: 19, name: 'Doxycycline', instructions: '', quantity: 10, unit: 'Viên', categoryId: 4 },
-  { id: 20, name: 'Cephalexin', instructions: '', quantity: 10, unit: 'Viên', categoryId: 4 }
-];
+import { getCategoriMedication, getMedication } from '@/services/prescriptions.service';
+import { useEffect, useState } from 'react';
+import { Dialog, DialogTitle, DialogContent } from '@mui/material';
+import Medication from './Medication';
 
 const patientsOptions = [
   {
@@ -78,11 +50,11 @@ const patientsOptions = [
 ];
 
 const schema = yup.object({
-  patient_id: yup.number().required('Trường này là bắt buộc !'),
-  categoryId: yup.number().required('Trường này là bắt buộc !'),
-  duration: yup.number().required('Trường này là bắt buộc !'),
+  patient_id: yup.string().trim().required('Trường này là bắt buộc !'),
   name: yup.string().trim().required('Trường này là bắt buộc !'),
-  advice: yup.string().trim()
+  description: yup.string().trim(),
+  categoryId: yup.string().required('Chọn danh mục thuốc!'),
+  user_id: yup.string()
 });
 
 interface AddPrescripton {
@@ -90,7 +62,9 @@ interface AddPrescripton {
 }
 
 const AddPrescriptions = ({ navigate }: AddPrescripton) => {
-  const [selectedMedicines, setSelectedMedicines] = useState<number[]>([]);
+  const [medicationCategori, setMedicationCategori] = useState([]); // Lưu danh mục thuốc
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // Trạng thái của Dialog
+  const [medications, setMedications] = useState([]); // Lưu thông tin thuốc được fetch
 
   const {
     handleSubmit,
@@ -103,34 +77,58 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
     mode: 'onChange'
   });
 
-  const selectedCategory = useWatch({
+  const selectedCategoryId = useWatch({
     control,
     name: 'categoryId'
   });
 
-  const filteredMedicines = medicines.filter(med => med.categoryId === Number(selectedCategory));
-
-  const handleMedicineSelect = (id: number) => {
-    setSelectedMedicines(prev => (prev.includes(id) ? prev.filter(medId => medId !== id) : [...prev, id]));
+  const convertToOptions = (data: any) => {
+    return data.map((item: any) => ({
+      value: item.id,
+      label: item.name
+    }));
   };
 
-  const handleCreateTablet: SubmitHandler<IPrescription> = async data => {
-    if (!isValid) return;
-    const { categoryId, ...dataPrescription } = data;
-
-    const prescriptionData: IPrescription = {
-      ...dataPrescription,
-      user_id: 1, // Hoặc lấy từ thông tin người dùng thực tế
-      medicines: selectedMedicines, // Mảng thuốc đã chọn
-      categoryId // Duy trì categoryId để gửi đi
+  // Fetch danh mục thuốc khi component mount
+  useEffect(() => {
+    const getCategori = async () => {
+      const res = await getCategoriMedication();
+      setMedicationCategori(convertToOptions(res.data));
     };
 
-    console.log(prescriptionData);
+    getCategori();
+  }, []);
 
-    // await createPrescription(prescriptionData);
+  // Fetch thông tin thuốc khi thay đổi danh mục được chọn
+  useEffect(() => {
+    if (selectedCategoryId) {
+      console.log('Selected category ID:', selectedCategoryId);
+      const getMedications = async (selectedCategoryId: string) => {
+        const res = await getMedication(selectedCategoryId);
+        console.log(res);
+
+        setMedications(res.data); // Cập nhật thông tin thuốc
+        setIsDialogOpen(true); // Mở dialog sau khi fetch xong
+      };
+
+      getMedications(String(selectedCategoryId));
+    }
+  }, [selectedCategoryId]);
+
+  const handleCreateMedication: SubmitHandler<IPrescription> = async data => {
+    if (!isValid) return;
+    const { categoryId, ...formData } = data;
+
+    console.log('Category ID:', categoryId);
+    console.log('Form Data:', formData);
   };
 
   const handleReset = () => reset();
+
+  // Hàm để đóng dialog
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
 
   return (
     <div>
@@ -153,34 +151,18 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
             </div>
           </div>
           <div>
-            <form className="mb-3 w-full relative" onSubmit={handleSubmit(handleCreateTablet)}>
+            <form className="mb-3 w-full relative" onSubmit={handleSubmit(handleCreateMedication)}>
               <div className="flex gap-7 mb-3">
                 <Field>
-                  <Label htmlFor="name"> Tên đơn thuốc </Label>
+                  <Label htmlFor="name">Tên đơn thuốc</Label>
                   <Input
                     name="name"
                     type="text"
-                    className="h-[48px] !font-normal !text-dark rounded-md bg-white focus:border-third"
+                    className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
                     placeholder="Nhập tên đơn thuốc ..."
                     control={control}
                   />
                 </Field>
-                <Field>
-                  <Label htmlFor="duration"> Số ngày sử dụng</Label>
-                  <Input
-                    name="duration"
-                    type="text"
-                    className="h-[48px] !font-normal !text-dark rounded-md bg-white focus:border-third"
-                    placeholder="Nhập số lượng ..."
-                    control={control}
-                  />
-                </Field>
-              </div>
-              <div className="flex gap-7 mb-7">
-                <div className="min-w-[400px] w-1/2">
-                  <Label htmlFor="categoryId">Danh mục thuốc</Label>
-                  <Select placeholder="Đơn thuốc chỉ định" name="categoryId" control={control} options={categories} />
-                </div>
                 <div className="min-w-[400px] w-1/2">
                   <Label htmlFor="patient_id">Tên bệnh nhân</Label>
                   <Select
@@ -190,32 +172,23 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                     options={patientsOptions}
                   />
                 </div>
-              </div>
-              <div className="flex gap-7 mb-7 flex-col">
-                <Label htmlFor="name">Danh mục thuốc</Label>
-                {filteredMedicines.length > 0 ? (
-                  <div className="grid grid-cols-2 gap-4">
-                    {filteredMedicines.map(med => (
-                      <Tablet
-                        key={med.id}
-                        checked={selectedMedicines.includes(med.id)}
-                        onChange={() => handleMedicineSelect(med.id)}
-                        tablet={med}
-                        value={med.id}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center">Vui lòng chọn danh mục thuốc</div>
-                )}
+                <div className="min-w-[400px] w-1/2">
+                  <Label htmlFor="categoryId">Danh mục thuốc</Label>
+                  <Select
+                    placeholder="Đơn thuốc chỉ định"
+                    name="categoryId"
+                    control={control}
+                    options={medicationCategori}
+                  />
+                </div>
               </div>
 
               <div className="flex flex-col mb-7">
-                <Label htmlFor="advice">Lời dặn</Label>
+                <Label htmlFor="description">Lời dặn</Label>
                 <textarea
-                  {...register('advice')}
+                  {...register('description')}
                   className="p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
-                  name="advice"
+                  name="description"
                   placeholder="Nhập lời dặn ..."
                   id="advice"
                 ></textarea>
@@ -245,6 +218,58 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
           </div>
         </div>
       </div>
+
+      <Dialog
+        PaperProps={{
+          style: {
+            backgroundColor: '#fff',
+            padding: '20px', // Giảm padding để có thêm không gian
+            width: '1000px',
+            height: '800px',
+            borderRadius: '8px',
+            display: 'flex',
+            flexDirection: 'column',
+            maxWidth: 'none'
+          }
+        }}
+        open={isDialogOpen}
+        onClose={handleCloseDialog}
+      >
+        <div className="flex justify-between items-end mb-6">
+          <div className="flex justify-center items-start flex-col gap-2">
+            <Label htmlFor="categoryId">Danh mục thuốc</Label>
+            <Select placeholder="Đơn thuốc chỉ định" name="categoryId" control={control} options={medicationCategori} />
+          </div>
+          <div className="flex-[0_0_50%] flex justify-end items-center gap-3">
+            <Input
+              colorGlass="text-primaryAdmin"
+              className="placeholder:text-[14px] text-[14px] text-primaryAdmin h-[40px]"
+              control={control}
+              name="search"
+              placeholder="Tìm thuốc ..."
+              isGlass
+            />
+            <button
+              type="submit"
+              className={`w-[53px] h-[40px] flex items-center justify-center bg-primaryAdmin rounded-[9px] transition-all duration-300 ease-linear`}
+            >
+              <SearchIcon className="text-white" />
+            </button>
+          </div>
+        </div>
+
+        <div>
+          {medications.length > 0 ? (
+            <ul className="space-y-2">
+              {medications.map((medication: any) => (
+                <Medication key={medication.id} name={medication.name} id={medication.id} />
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500 text-center">Không có thuốc nào cho danh mục này.</p>
+          )}
+        </div>
+      </Dialog>
     </div>
   );
 };
