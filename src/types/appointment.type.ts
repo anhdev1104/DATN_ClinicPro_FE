@@ -5,6 +5,6 @@ export interface IAppointment {
   address: string;
   gender: string;
   dob: string;
-  appointment_date: string;
+  appointment_date: string | null;
   specialty_id: string;
 }

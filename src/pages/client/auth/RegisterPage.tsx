@@ -28,27 +28,28 @@ const schema = yup.object({
     .min(6, 'Mật khẩu ít nhất 6 ký tự trở lên !')
     .matches(
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
-      'Mật khẩu phải chứa ít nhất một số và một ký tự đặc biệt !'
+      'Mật khẩu phải chứa ít nhất một số và một ký tự đặc biệt !',
     ),
 
   password_confirm: yup
     .string()
     .trim()
-    .oneOf([yup.ref('password'), undefined], 'Mật khẩu xác nhận phải khớp với mật khẩu đã nhập !')
+    .oneOf([yup.ref('password'), undefined], 'Mật khẩu xác nhận phải khớp với mật khẩu đã nhập !'),
 });
 
 const RegisterPage = () => {
   const { show, handleToggle } = useToggle();
   const { show: showConfirm, handleToggle: handleToggleConfirm } = useToggle();
   const navigate = useNavigate();
+
   const {
     handleSubmit,
     formState: { isSubmitting, errors, isValid },
     control,
-    reset
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   const handleRegister: SubmitHandler<IAccount> = async data => {
