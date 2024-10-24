@@ -2,18 +2,17 @@ import { http } from '@/helpers/http';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import type { AxiosRequestConfig, AxiosError } from 'axios';
 
-interface BaseQueryInstance
-  extends BaseQueryFn<
-    {
-      url: string;
-      method?: AxiosRequestConfig['method'];
-      data?: AxiosRequestConfig['data'];
-      params?: AxiosRequestConfig['params'];
-      headers?: AxiosRequestConfig['headers'];
-    },
-    unknown,
-    unknown
-  > {}
+type BaseQueryInstance = BaseQueryFn<
+  {
+    url: string;
+    method?: AxiosRequestConfig['method'];
+    data?: AxiosRequestConfig['data'];
+    params?: AxiosRequestConfig['params'];
+    headers?: AxiosRequestConfig['headers'];
+  },
+  unknown,
+  unknown
+>;
 
 export const axiosBaseQuery = (): BaseQueryInstance => async props => {
   try {
@@ -24,8 +23,8 @@ export const axiosBaseQuery = (): BaseQueryInstance => async props => {
     return {
       error: {
         status: axiosError.response?.status,
-        data: axiosError.response?.data || axiosError.message
-      }
+        data: axiosError.response?.data || axiosError.message,
+      },
     };
   }
 };

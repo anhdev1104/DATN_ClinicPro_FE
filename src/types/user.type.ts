@@ -15,15 +15,12 @@ interface IUserProfile {
   updated_at?: string;
 }
 
-interface IUserInfo {
+export interface IUserInfo {
   id: number;
   email: string;
   status: keyof typeof STATUS;
   role: IRole;
-  user_info: {
-    avatar: string;
-    fullname: string;
-  };
+  user_info: IUserProfile;
 }
 
 export interface IUser {

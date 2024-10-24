@@ -9,33 +9,33 @@ const menuList = [
   {
     id: 1,
     title: 'Về chúng tôi',
-    path: '/about-us'
+    path: '/about-us',
   },
   {
     id: 2,
     title: 'Mạng lưới',
-    path: '/clinic-network'
+    path: '/clinic-network',
   },
   {
     id: 3,
     title: 'Chuyên khoa',
-    path: ''
+    path: '',
   },
   {
     id: 4,
     title: 'Gói khám',
-    path: '/parcel'
+    path: '/parcel',
   },
   {
     id: 5,
     title: 'Thành tựu',
-    path: '/awards'
+    path: '/awards',
   },
   {
     id: 6,
     title: 'Cộng đồng',
-    path: '/community'
-  }
+    path: '/community',
+  },
 ];
 
 const Header = () => {

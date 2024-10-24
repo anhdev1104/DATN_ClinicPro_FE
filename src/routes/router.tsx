@@ -30,45 +30,45 @@ const clientRouter: IRouter[] = [
   {
     path: '/parcel',
     element: AdvisePage,
-    title: 'Gói khám đa khoa'
+    title: 'Gói khám đa khoa',
   },
   {
     path: '/awards',
     element: AchievementPage,
-    title: 'Thành tựu'
+    title: 'Thành tựu',
   },
   {
     path: '/about-us',
     element: AboutPage,
-    title: 'Giới thiệu về chúng tôi'
+    title: 'Giới thiệu về chúng tôi',
   },
   {
     path: '/clinic-network',
     element: BranchsPage,
-    title: 'Hệ thống 16 phòng khám trên cả nước'
+    title: 'Hệ thống 16 phòng khám trên cả nước',
   },
   {
     path: '/community',
     element: CommunityPage,
-    title: 'Cộng đồng'
+    title: 'Cộng đồng',
   },
   {
     path: '/',
     element: HomePage,
-    title: 'ClinicPro'
-  }
+    title: 'ClinicPro',
+  },
 ];
 
 const adminRouter: IRouter[] = [
   {
     path: '/dashboard',
     element: Dashboard,
-    title: 'Trang quản lý'
+    title: 'Trang quản lý',
   },
   {
     path: '/prescriptions',
     element: Prescription,
-    title: 'Danh sách đơn thuốc'
+    title: 'Danh sách đơn thuốc',
   },
   {
     path: '/departments/:id',
@@ -78,36 +78,36 @@ const adminRouter: IRouter[] = [
   {
     path: '/departments',
     element: Department,
-    title: 'Danh sách phòng ban'
+    title: 'Danh sách phòng ban',
   },
   {
     path: '/package',
     element: PackagePage,
-    title: 'Danh sách gói khám'
+    title: 'Danh sách gói khám',
   },
   {
     path: '/add-package',
     element: AddPackage,
-    title: 'Tạo gói khám'
-  }
+    title: 'Tạo gói khám',
+  },
 ];
 
 const authRouter: IRouter[] = [
   {
     path: '/register',
     element: RegisterPage,
-    title: 'Đăng ký tài khoản'
+    title: 'Đăng ký tài khoản',
   },
   {
     path: '/login',
     element: LoginPage,
-    title: 'Đăng nhập tài khoản'
+    title: 'Đăng nhập tài khoản',
   },
   {
     path: '/login-otp',
     element: LoginOTP,
-    title: 'Đăng nhập qua OTP'
-  }
+    title: 'Đăng nhập qua OTP',
+  },
 ];
 
 export default function AppRouter() {
