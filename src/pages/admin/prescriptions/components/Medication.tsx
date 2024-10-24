@@ -1,17 +1,25 @@
 import Input from '@/components/input';
 import Label from '@/components/label';
-import { useState } from 'react';
+import { Checkbox } from '@mui/material';
+import { ChangeEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { IMedication } from './AddPrescriptions';
 
-interface Medication {
+const Medication = ({
+  name,
+  id,
+  setMedication,
+  handleChange,
+}: {
   name: string;
-  id: string;
-}
-
-const Medication = ({ name, id }: Medication) => {
+  id: number;
+  setMedication: React.Dispatch<React.SetStateAction<IMedication[]>>;
+  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}) => {
   const [active, setActives] = useState(false);
+
   const { control } = useForm({
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   const handleActive = () => {
@@ -22,7 +30,8 @@ const Medication = ({ name, id }: Medication) => {
     <div>
       <div onClick={handleActive}>
         <div className="py-3 gap-2 px-2 rounded-lg flex items-center border border-borderColor hover:bg-slate-300 cursor-pointer">
-          <input type="checkbox" value={id} name={name} id={name} />
+          {/* <input type="checkbox" value={id} name={name} id={name} /> */}
+          <Checkbox name="medication_id" id={name} value={id} onChange={handleChange} />
           <Label className="!mb-0" htmlFor={name} children={name} />
         </div>
         <div></div>
@@ -30,7 +39,9 @@ const Medication = ({ name, id }: Medication) => {
       <div>
         {active && (
           <div>
-            <Input control={control} placeholder="Nhập liều lượng ..." type="text" name="" />
+            <input placeholder="Liều lượng ..." name="quantity" value={} onChange={handleChange} />
+            <input placeholder="Số ngày ..." name="duration" onChange={handleChange} />
+            <input placeholder="Hướng dẫn ..." name="instructions" onChange={handleChange} />
           </div>
         )}
       </div>

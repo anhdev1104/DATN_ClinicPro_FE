@@ -9,43 +9,50 @@ import { Button } from '@/components/button';
 import Select from '@/components/select';
 import { IPrescription } from '@/types/prescription.type';
 import { getCategoriMedication, getMedication } from '@/services/prescriptions.service';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent } from '@mui/material';
 import Medication from './Medication';
+
+export interface IMedication {
+  medication_id: number;
+  instructions: string;
+  quantity: number;
+  duration: number;
+}
 
 const patientsOptions = [
   {
     label: 'Nguyễn Văn A',
-    value: 1
+    value: 1,
   },
   {
     label: 'Trần Thị B',
-    value: 2
+    value: 2,
   },
   {
     label: 'Lê Văn C',
-    value: 3
+    value: 3,
   },
   {
     id: '1',
     label: 'Phạm Thị D',
-    value: 4
+    value: 4,
   },
   {
     id: '1',
     label: 'Nguyễn Văn E',
-    value: 5
+    value: 5,
   },
   {
     id: '1',
     label: 'Trần Văn F',
-    value: 6
+    value: 6,
   },
   {
     id: '1',
     label: 'Lê Thị G',
-    value: 7
-  }
+    value: 7,
+  },
 ];
 
 const schema = yup.object({
@@ -53,7 +60,7 @@ const schema = yup.object({
   name: yup.string().trim().required('Trường này là bắt buộc !'),
   description: yup.string().trim(),
   categoryId: yup.string().required('Chọn danh mục thuốc!'),
-  user_id: yup.string()
+  user_id: yup.string(),
 });
 
 interface AddPrescripton {
@@ -65,26 +72,50 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false); // Trạng thái của Dialog
   const [medications, setMedications] = useState([]); // Lưu thông tin thuốc được fetch
 
+  const [medicationData, setMedication] = useState<IMedication[]>([]);
+  const [subMedication, setSubMedication] = useState<IMedication>({
+    medication_id: 0,
+    instructions: '',
+    quantity: 0,
+    duration: 0,
+  });
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log('change');
+
+    const subData = { ...subMedication, [e.target.name]: e.target.value };
+    const isDuplicate = medicationData.some(item => item.medication_id === subData.medication_id);
+
+    setMedication((prev: any) => {
+      if (isDuplicate) {
+        return [...prev].filter(item => item.medication_id !== subData.medication_id);
+      }
+      return [...prev, subData];
+    });
+  };
+
+  console.log('1111111subMedication', subMedication);
+  console.log('222222222medicationData', medicationData);
+
   const {
     handleSubmit,
     control,
     formState: { isSubmitting, errors, isValid },
     reset,
-    register
+    register,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   const selectedCategoryId = useWatch({
     control,
-    name: 'categoryId'
+    name: 'categoryId',
   });
 
   const convertToOptions = (data: any) => {
     return data.map((item: any) => ({
       value: item.id,
-      label: item.name
+      label: item.name,
     }));
   };
 
@@ -101,13 +132,11 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   // Fetch thông tin thuốc khi thay đổi danh mục được chọn
   useEffect(() => {
     if (selectedCategoryId) {
-      console.log('Selected category ID:', selectedCategoryId);
       const getMedications = async (selectedCategoryId: string) => {
         const res = await getMedication(selectedCategoryId);
-        console.log(res);
 
-        setMedications(res.data); // Cập nhật thông tin thuốc
-        setIsDialogOpen(true); // Mở dialog sau khi fetch xong
+        setMedications(res.data);
+        setIsDialogOpen(true);
       };
 
       getMedications(String(selectedCategoryId));
@@ -116,10 +145,10 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
 
   const handleCreateMedication: SubmitHandler<IPrescription> = async data => {
     if (!isValid) return;
-    const { categoryId, ...formData } = data;
+    // const { categoryId, ...formData } = data;
 
-    console.log('Category ID:', categoryId);
-    console.log('Form Data:', formData);
+    // console.log('Category ID:', categoryId);
+    // console.log('Form Data:', formData);
   };
 
   const handleReset = () => reset();
@@ -218,10 +247,6 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
         </div>
       </div>
 
-
-
-      
-      ssss
       <Dialog
         PaperProps={{
           style: {
@@ -232,8 +257,8 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
             borderRadius: '8px',
             display: 'flex',
             flexDirection: 'column',
-            maxWidth: 'none'
-          }
+            maxWidth: 'none',
+          },
         }}
         open={isDialogOpen}
         onClose={handleCloseDialog}
@@ -265,7 +290,13 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
           {medications.length > 0 ? (
             <ul className="space-y-2">
               {medications.map((medication: any) => (
-                <Medication key={medication.id} name={medication.name} id={medication.id} />
+                <Medication
+                  key={medication.id}
+                  name={medication.name}
+                  id={medication.id}
+                  setMedication={setMedication}
+                  handleChange={handleChange}
+                />
               ))}
             </ul>
           ) : (

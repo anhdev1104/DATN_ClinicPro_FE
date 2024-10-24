@@ -1,5 +1,3 @@
-import { Itablet } from './tablet.type';
-
 export interface IPrescription {
   patient_id: string;
   user_id: string;
