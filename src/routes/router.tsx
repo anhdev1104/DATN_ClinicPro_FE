@@ -19,6 +19,7 @@ import AddPackage from '@/pages/admin/package/AddPackage';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Prescription from '@/pages/admin/prescriptions/Prescription';
+import EditPackage from '@/pages/admin/package/EditPackage';
 
 export interface IRouter {
   path: string;
@@ -89,6 +90,11 @@ const adminRouter: IRouter[] = [
     path: '/add-package',
     element: AddPackage,
     title: 'Tạo gói khám'
+  },
+  {
+    path: '/edit-package/:id',
+    element: EditPackage,
+    title: 'Chỉnh sửa gói khám'
   }
 ];
 

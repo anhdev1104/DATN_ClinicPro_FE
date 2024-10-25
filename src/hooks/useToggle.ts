@@ -12,3 +12,20 @@ export default function useToggle() {
     handleToggle
   };
 }
+// import { useState } from 'react';
+
+// export default function useToggle() {
+//   const [selectedId, setSelectedId] = useState<number | null>(null);
+
+//   const handleToggle = (id: number) => {
+//     setSelectedId(prevId => (prevId === id ? null : id));
+//   };
+
+//   const isOpen = (id: number) => selectedId === id;
+
+//   return {
+//     selectedId,
+//     handleToggle,
+//     isOpen
+//   };
+// }

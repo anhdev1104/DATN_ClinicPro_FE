@@ -5,7 +5,6 @@ import storage from 'redux-persist/lib/storage';
 import { departmentApi } from './api/department';
 import departmentReducer from './department/departmentSlice';
 import { usersApi } from './api/users';
-
 const persistConfig = {
   key: 'root',
   version: 1,

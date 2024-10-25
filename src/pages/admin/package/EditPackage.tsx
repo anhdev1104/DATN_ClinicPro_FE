@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { List } from '@mui/icons-material';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { createPackage } from '@/services/package.service';
+import { updatePackage, getPackages } from '@/services/package.service';
 import { IPackage } from '@/types/package.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Input from '@/components/input';
 import Field from '@/components/field';
 import Label from '@/components/label';
 import MessageForm from '@/components/message';
+import { List } from '@mui/icons-material';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -16,12 +16,15 @@ const schema = yup.object().shape({
   name: yup.string().trim().required('Không được để trống'),
   description: yup.string().required('Không được để trống'),
   content: yup.string().trim().required('Không được để trống'),
-  image: yup.mixed().required('Vui lòng chọn 1 file')
+  image: yup.mixed().notRequired()
 });
 
-const AddPackage = () => {
+const EditPackage = () => {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(false);
+  const [packageData, setPackageData] = useState<IPackage | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const {
     handleSubmit,
     formState: { errors, isValid },
@@ -32,15 +35,40 @@ const AddPackage = () => {
     resolver: yupResolver(schema),
     mode: 'onChange'
   });
+  useEffect(() => {
+    const fetchPackage = async () => {
+      try {
+        const response = await getPackages();
+        const selectedPackage = response.data.find((pkg: IPackage) => pkg.id === Number(id));
+        if (selectedPackage) {
+          setPackageData(selectedPackage);
+          setValue('name', selectedPackage.name);
+          setValue('description', selectedPackage.description);
+          setValue('content', selectedPackage.content);
+          if (selectedPackage.image) {
+            setSelectedImage(selectedPackage.image);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error('Không thể tải dữ liệu gói khám');
+      }
+    };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
+    fetchPackage();
+  }, [id, setValue]);
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files?.[0];
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
       setValue('image', file);
+    } else {
+      setSelectedImage(null);
+      setValue('image', undefined);
     }
   };
-
-  const handleCreate: SubmitHandler<IPackage> = async data => {
+  const handleUpdate: SubmitHandler<IPackage> = async data => {
     if (!isValid) return;
     setLoading(true);
     const formData = new FormData();
@@ -48,7 +76,7 @@ const AddPackage = () => {
     formData.append('description', data.description);
     formData.append('content', data.content);
     formData.append('image', data.image);
-    const res = await createPackage(formData);
+    const res = await updatePackage(Number(id), formData);
     if (res.errors) {
       toast.error('Thêm gói khám bị thất bại');
       console.log(res.message);
@@ -61,7 +89,7 @@ const AddPackage = () => {
   };
 
   return (
-    <section className="createpackage">
+    <section className="editpackage">
       <div className="text-primaryAdmin flex items-center text-base mb-11">
         <h2>Gói khám</h2>
         <svg
@@ -73,11 +101,11 @@ const AddPackage = () => {
         >
           <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
         </svg>
-        <span className="text-primaryAdmin/60">Thêm gói khám</span>
+        <span className="text-primaryAdmin/60">Chỉnh sửa gói khám</span>
       </div>
       <div className="bg-white rounded-2xl">
         <div className="doctor-table-blk mb-2 pt-4 px-5 flex items-center justify-between">
-          <h3 className="text-lg font-semibold mb-0">Thêm gói khám</h3>
+          <h3 className="text-lg font-semibold mb-0">Chỉnh sửa gói khám</h3>
           <div className="border-borderColor border p-3 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-white cursor-pointer">
             <button className="text-dark font-medium flex items-center gap-3">
               <List className="text-primaryAdmin" />
@@ -85,7 +113,7 @@ const AddPackage = () => {
             </button>
           </div>
         </div>
-        <form className="space-y-6 p-6" encType="multipart/form-data" onSubmit={handleSubmit(handleCreate)}>
+        <form className="space-y-6 p-6" onSubmit={handleSubmit(handleUpdate)} encType="multipart/form-data">
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col">
               <Field>
@@ -95,7 +123,7 @@ const AddPackage = () => {
                 <Input
                   name="name"
                   type="text"
-                  className="border rounded-md p-2 focus:ring-2  outline-none !font-normal !text-dark bg-white focus:border-third"
+                  className="border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third"
                   placeholder="Nhập tên gói khám"
                   control={control}
                 />
@@ -110,7 +138,7 @@ const AddPackage = () => {
                 <Input
                   name="description"
                   type="text"
-                  className="border rounded-md p-2 focus:ring-2  outline-none !font-normal !text-dark  bg-white focus:border-third"
+                  className="border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third"
                   placeholder="Nhập mô tả"
                   control={control}
                 />
@@ -126,8 +154,8 @@ const AddPackage = () => {
               <Input
                 name="content"
                 type="text"
-                className="border rounded-md p-2 focus:ring-2  outline-none !font-normal !text-dark  bg-white focus:border-third min-h-[100px]"
-                placeholder="Nhập nội dung"
+                className="border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third min-h-[100px]"
+                placeholder="Nhập nội dung ..... "
                 control={control}
               />
             </Field>
@@ -138,11 +166,12 @@ const AddPackage = () => {
               <Label htmlFor="image" className="text-sm font-medium mb-1">
                 Hình ảnh <span className="text-red-500">*</span>
               </Label>
+              {selectedImage && <img src={selectedImage} alt="Selected" className="w-32 h-32 object-cover mb-4" />}
               <input
-                name="image"
                 type="file"
-                className="border rounded-md p-2 focus:ring-2  outline-none !font-normal !text-dark  bg-white focus:border-third"
-                onChange={handleFileChange}
+                name="image"
+                onChange={handleImageChange}
+                className="border rounded-md p-2 focus:ring-2 outline-none bg-white"
               />
               <MessageForm error={errors.image?.message} />
             </div>
@@ -151,7 +180,7 @@ const AddPackage = () => {
                 type="submit"
                 className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition duration-200"
               >
-                {loading ? 'Đang tạo...' : 'Tạo gói khám'}
+                {loading ? 'Đang cập nhật...' : 'Cập nhật gói khám'}
               </button>
               <button
                 type="button"
@@ -168,4 +197,4 @@ const AddPackage = () => {
   );
 };
 
-export default AddPackage;
+export default EditPackage;

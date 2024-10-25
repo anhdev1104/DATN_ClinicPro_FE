@@ -9,15 +9,18 @@ import { IPackage } from '@/types/package.type';
 
 const PackagePage = () => {
   const [packages, setPackages] = useState<IPackage[]>([]);
-  const { show, handleToggle } = useToggle();
+  const { handleToggle, isOpen } = useToggle();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   useEffect(() => {
     const fetchPackages = async () => {
       try {
         const response = await getPackages();
-        console.log('Fetched packages:', response);
-        setPackages(Array.isArray(response) ? response : []);
+        if (Array.isArray(response.data)) {
+          setPackages(response.data);
+        } else {
+          setPackages([]);
+        }
       } catch (error) {
         setError('Không thể tải danh sách gói khám. Vui lòng thử lại sau.');
       } finally {
@@ -76,43 +79,47 @@ const PackagePage = () => {
                 <th className="p-4 font-medium">ID</th>
                 <th className="p-4 font-medium">Gói khám</th>
                 <th className="p-4 font-medium">Mô tả</th>
-                <th className="p-4 font-medium">Nội dung</th>
                 <th className="p-4 font-medium">Hình ảnh</th>
+                <th className="p-4 font-medium">Nội dung</th>
                 <th className="p-4 font-medium">Hành động</th>
               </tr>
             </thead>
             <tbody>
               {packages.map(pkg => (
                 <tr key={pkg.id} className="odd">
-                  <td className="p-4">{pkg.id}</td>
-                  <td className="p-4 text-gray-800">{pkg.name}</td>
-                  <td className="p-4 text-gray-600">{pkg.description}</td>
-                  <td className="p-4 text-gray-600 max-h-24 overflow-y-auto whitespace-normal w-1/3">{pkg.content}</td>
-                  <td className="p-4 profile-image">
-                    <img width={28} height={28} src={pkg.image} className="rounded-full mr-2" alt={pkg.name} />
+                  <td className="p-4 w-1/12">{pkg.id}</td>
+                  <td className="p-4 text-gray-800 w-2/12">{pkg.name}</td>
+                  <td className="p-4 text-gray-600 w-2/12">{pkg.description}</td>
+                  <td className="p-4 profile-image w-2/12 h-32">
+                    <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover" />
                   </td>
-                  <td className="p-4 text-end">
+                  <td className="p-4 text-gray-600 w-[30%]">
+                    <textarea name="" id="" cols="25" rows="6" disabled className="w-full">
+                      {pkg.content}
+                    </textarea>
+                  </td>
+                  <td className="p-4 w-4/12 flex items-center">
                     <div className="relative inline-block text-left">
                       <button
                         type="button"
-                        className="inline-flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                        onClick={handleToggle}
+                        className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-2 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                        onClick={() => handleToggle(pkg.id)}
                       >
                         <MoreVertIcon />
                       </button>
-                      {show && (
+                      {isOpen(pkg.id) && (
                         <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white overflow-hidden">
                           <Link
-                            to={`/edit-package/${pkg.id}`} // Sửa theo ID của gói
+                            to={`/edit-package/${pkg.id}`}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => handleToggle()}
+                            onClick={() => handleToggle(pkg.id)}
                           >
                             Sửa
                           </Link>
                           <Link
                             to="#"
                             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => handleToggle()}
+                            onClick={() => handleToggle(pkg.id)}
                           >
                             Xóa bỏ
                           </Link>

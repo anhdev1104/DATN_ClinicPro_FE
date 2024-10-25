@@ -10,9 +10,25 @@ export const getPackages = async () => {
     return error;
   }
 };
-export const createPackage = async (formData: IPackage) => {
+export const createPackage = async (formData: FormData) => {
   try {
-    const response = await http.post('/packages', formData);
+    const response = await http.post('/packages', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+export const updatePackage = async (id: number, data: FormData) => {
+  try {
+    const response = await http.update(`/packages/${id}`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
     return response;
   } catch (error) {
     return error;

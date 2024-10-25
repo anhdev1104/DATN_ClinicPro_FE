@@ -1,9 +1,9 @@
 export interface IPackage {
-  id?: number;
+  id: number;
   name: string;
   description: string;
   content: string;
   image: string;
   slug?: string;
-  created_at?: string;
+  created_at?: Date;
 }
