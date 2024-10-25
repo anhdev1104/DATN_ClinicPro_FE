@@ -7,7 +7,7 @@ const config = {
   singleQuote: true,
   printWidth: 120,
   arrowParens: 'avoid',
-  // trailingComma: 'none'
+  endOfLine: 'lf',
 };
 
 export default config;
