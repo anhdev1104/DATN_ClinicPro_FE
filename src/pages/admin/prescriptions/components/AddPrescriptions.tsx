@@ -119,38 +119,25 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
             <form className="mb-3 w-full relative" onSubmit={handleSubmit(handleCreateMedication)}>
               <div className="flex gap-7 mb-3">
                 <Field>
-                  <Label htmlFor="dosage">Liều lượng ( .../Lần )</Label>
+                  <Label htmlFor="name">Tên đơn thuốc</Label>
                   <Input
-                    name="dosage"
-                    type="text"
-                    className="h-[48px] !font-normal !text-dark rounded-md bg-white focus:border-third"
-                    placeholder="Nhập Liều lượng ..."
+                    name="name"
+                    className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
+                    placeholder="Nhập tên đơn thuốc ..."
                     control={control}
                   />
                 </Field>
-                <Field>
-                  <Label htmlFor="frequency"> Số ngày sử dụng </Label>
-                  <Input
-                    name="frequency"
-                    type="text"
-                    className="h-[48px] !font-normal !text-dark rounded-md bg-white focus:border-third"
-                    placeholder="Nhập Liều lượng ..."
-                    control={control}
-                  />
-                </Field>
-              </div>
-              <div className="flex gap-7 mb-3">
                 <div className="min-w-[400px] w-1/2">
                   <Label>Tên bệnh nhân</Label>
                   <Select
-                    placeholder="Bệnh nhân chỉ định chỉ định"
-                    name="prescriptionData"
+                    placeholder="Bệnh nhân chỉ định"
+                    name="patient_id"
                     control={control}
                     options={patientsOptions}
                   />
                 </div>
                 <div className="min-w-[400px] w-1/2">
-                  <Label htmlFor="prescriptionName">Tên bệnh nhân</Label>
+                  <Label htmlFor="categoryId">Danh mục thuốc</Label>
                   <Select
                     placeholder="Đơn thuốc chỉ định"
                     name="isCategory"
