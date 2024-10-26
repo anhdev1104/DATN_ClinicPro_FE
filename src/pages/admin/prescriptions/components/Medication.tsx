@@ -1,51 +1,87 @@
-import Input from '@/components/input';
 import Label from '@/components/label';
+import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
 import { Checkbox } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { IMedication } from './AddPrescriptions';
+import { Controller, useWatch } from 'react-hook-form';
 
-const Medication = ({
-  name,
-  id,
-  setMedication,
-  handleChange,
-}: {
-  name: string;
+type TMedication = {
   id: number;
-  setMedication: React.Dispatch<React.SetStateAction<IMedication[]>>;
-  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-}) => {
-  const [active, setActives] = useState(false);
+  name: string;
+  index: number;
+};
 
-  const { control } = useForm({
-    mode: 'onChange',
-  });
+const Medication: React.FC<TMedication> = ({ id, name, index }) => {
+  const {
+    form: { control, getValues, setValue },
+  } = usePrescriptionContextForm();
+  console.log(getValues());
 
-  const handleActive = () => {
-    setActives(!active);
+  const medications = useWatch({ control, name: 'medications' }) || [];
+  const quantity = getValues(`medications.${index}.quantity`) || '';
+  const duration = getValues(`medications.${index}.duration`) || '';
+  const instructions = getValues(`medications.${index}.instructions`) || '';
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isSelected = event.target.checked;
+    const currentMedications = getValues('medications') || [];
+
+    if (isSelected) {
+      const isCheckedArr = currentMedications.filter(med => med.medication_id !== undefined);
+      setValue('medications', [
+        ...isCheckedArr,
+        {
+          medication_id: id,
+          quantity: quantity as number,
+          duration: duration as number,
+          instructions,
+        },
+      ]);
+    } else {
+      setValue(
+        'medications',
+        currentMedications.filter((med: any) => med.medication_id !== id),
+      );
+    }
   };
 
   return (
-    <div>
-      <div onClick={handleActive}>
-        <div className="py-3 gap-2 px-2 rounded-lg flex items-center border border-borderColor hover:bg-slate-300 cursor-pointer">
-          {/* <input type="checkbox" value={id} name={name} id={name} /> */}
-          <Checkbox name="medication_id" id={name} value={id} onChange={handleChange} />
-          <Label className="!mb-0" htmlFor={name} children={name} />
+    <>
+      <Label className="!mb-0 !block" htmlFor={name}>
+        <div className="py-3 px-2 gap-2 flex items-center rounded-lg border border-borderColor hover:bg-slate-300 cursor-pointer">
+          <Controller
+            control={control}
+            name={`medications.${index}.medication_id`}
+            render={() => (
+              <Checkbox
+                id={name}
+                checked={!!medications.find((med: { medication_id: number }) => med.medication_id === id)}
+                onChange={e => {
+                  handleCheckboxChange(e);
+                }}
+              />
+            )}
+          />
+          <span>{name}</span>
         </div>
-        <div></div>
-      </div>
+      </Label>
+
       <div>
-        {active && (
-          <div>
-            <input placeholder="Liều lượng ..." name="quantity" value={} onChange={handleChange} />
-            <input placeholder="Số ngày ..." name="duration" onChange={handleChange} />
-            <input placeholder="Hướng dẫn ..." name="instructions" onChange={handleChange} />
-          </div>
-        )}
+        <Controller
+          name={`medications.${index}.quantity`}
+          control={control}
+          render={({ field }) => <input placeholder="Liều lượng..." className="border" {...field} />}
+        />
+        <Controller
+          name={`medications.${index}.duration`}
+          control={control}
+          render={({ field }) => <input placeholder="Thời gian sử dụng..." className="border" {...field} />}
+        />
+        <Controller
+          name={`medications.${index}.instructions`}
+          control={control}
+          render={({ field }) => <input placeholder="Hướng dẫn sử dụng..." className="border" {...field} />}
+        />
       </div>
-    </div>
+    </>
   );
 };
 

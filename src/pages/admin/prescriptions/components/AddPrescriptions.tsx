@@ -1,24 +1,17 @@
-import { ChevronRightIcon, List, SearchIcon } from '@/components/icons';
+import { List } from '@/components/icons';
 import Input from '@/components/input';
 import Field from '@/components/field';
 import Label from '@/components/label';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { SubmitHandler, useWatch } from 'react-hook-form';
 import { Button } from '@/components/button';
 import Select from '@/components/select';
-import { IPrescription } from '@/types/prescription.type';
 import { getCategoriMedication, getMedication } from '@/services/prescriptions.service';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { Dialog, DialogTitle, DialogContent } from '@mui/material';
-import Medication from './Medication';
-
-export interface IMedication {
-  medication_id: number;
-  instructions: string;
-  quantity: number;
-  duration: number;
-}
+import { useEffect, useState } from 'react';
+import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
+import { IMedications, IPrescription } from '@/types/prescription.type';
+import ModalMedication from '@/components/modal/ModalMedication';
+import convertToOptions from '@/helpers/convertToOptions';
+import DirectRoute from '@/components/direct';
 
 const patientsOptions = [
   {
@@ -55,123 +48,67 @@ const patientsOptions = [
   },
 ];
 
-const schema = yup.object({
-  patient_id: yup.string().trim().required('Trường này là bắt buộc !'),
-  name: yup.string().trim().required('Trường này là bắt buộc !'),
-  description: yup.string().trim(),
-  categoryId: yup.string().required('Chọn danh mục thuốc!'),
-  user_id: yup.string(),
-});
-
 interface AddPrescripton {
   navigate: () => void;
 }
 
 const AddPrescriptions = ({ navigate }: AddPrescripton) => {
-  const [medicationCategori, setMedicationCategori] = useState([]); // Lưu danh mục thuốc
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // Trạng thái của Dialog
-  const [medications, setMedications] = useState([]); // Lưu thông tin thuốc được fetch
+  const [medicationCategory, setMedicationCategory] = useState([]);
+  const [medications, setMedications] = useState<IMedications[]>([]);
 
-  const [medicationData, setMedication] = useState<IMedication[]>([]);
-  const [subMedication, setSubMedication] = useState<IMedication>({
-    medication_id: 0,
-    instructions: '',
-    quantity: 0,
-    duration: 0,
-  });
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log('change');
-
-    const subData = { ...subMedication, [e.target.name]: e.target.value };
-    const isDuplicate = medicationData.some(item => item.medication_id === subData.medication_id);
-
-    setMedication((prev: any) => {
-      if (isDuplicate) {
-        return [...prev].filter(item => item.medication_id !== subData.medication_id);
-      }
-      return [...prev, subData];
-    });
-  };
-
-  console.log('1111111subMedication', subMedication);
-  console.log('222222222medicationData', medicationData);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const {
-    handleSubmit,
-    control,
-    formState: { isSubmitting, errors, isValid },
-    reset,
-    register,
-  } = useForm({
-    resolver: yupResolver(schema),
-    mode: 'onChange',
-  });
+    form: {
+      control,
+      reset,
+      formState: { isSubmitting, isValid },
+      handleSubmit,
+      // getValues,
+    },
+  } = usePrescriptionContextForm();
 
   const selectedCategoryId = useWatch({
     control,
-    name: 'categoryId',
+    name: 'isCategory',
   });
 
-  const convertToOptions = (data: any) => {
-    return data.map((item: any) => ({
-      value: item.id,
-      label: item.name,
-    }));
-  };
-
-  // Fetch danh mục thuốc khi component mount
   useEffect(() => {
-    const getCategori = async () => {
+    (async () => {
       const res = await getCategoriMedication();
-      setMedicationCategori(convertToOptions(res.data));
-    };
-
-    getCategori();
+      const data = convertToOptions(res.data);
+      setMedicationCategory(data);
+    })();
   }, []);
 
-  // Fetch thông tin thuốc khi thay đổi danh mục được chọn
   useEffect(() => {
     if (selectedCategoryId) {
-      const getMedications = async (selectedCategoryId: string) => {
+      (async () => {
         const res = await getMedication(selectedCategoryId);
-
         setMedications(res.data);
-        setIsDialogOpen(true);
-      };
-
-      getMedications(String(selectedCategoryId));
+      })();
     }
   }, [selectedCategoryId]);
 
   const handleCreateMedication: SubmitHandler<IPrescription> = async data => {
     if (!isValid) return;
-    // const { categoryId, ...formData } = data;
-
-    // console.log('Category ID:', categoryId);
-    // console.log('Form Data:', formData);
+    console.log(data);
   };
 
-  const handleReset = () => reset();
+  const handleResetForm = () => reset();
 
-  // Hàm để đóng dialog
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
   };
 
   return (
     <div>
-      <div className="text-primaryAdmin flex items-center text-base mb-10">
-        <h2>Quản lý đơn thuốc</h2>
-        <ChevronRightIcon fontSize="small" className="mx-2" />
-        <span className="text-primaryAdmin">Đơn thuốc</span>
-        <ChevronRightIcon fontSize="small" className="mx-2" />
-        <span className="text-primaryAdmin/60">Thêm đơn thuốc</span>
-      </div>
+      <DirectRoute nav="Quản lý đơn thuốc" subnav="Đơn thuốc" targetnav="Tạo đơn thuốc" />
       <div className="flex bg-white size-full p-[20px] rounded-[26px]">
         <div className="flex-1">
-          <div className="mb-6 flex justify-between">
-            <h1 className="text-[18px] text-black font-medium">Thêm đơn thuốc</h1>
-            <div className="border-borderColor border p-3 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-white cursor-pointer">
+          <div className="mb-6 flex justify-between items-center">
+            <h1 className="text-[18px] text-black font-medium">Tạo đơn thuốc</h1>
+            <div className="border-borderColor border px-3 py-2 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-white cursor-pointer">
               <button onClick={navigate} className="text-dark font-medium flex items-center gap-3">
                 <List className="text-primaryAdmin" />
                 Danh sách đơn thuốc
@@ -192,7 +129,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                   />
                 </Field>
                 <div className="min-w-[400px] w-1/2">
-                  <Label htmlFor="patient_id">Tên bệnh nhân</Label>
+                  <Label>Tên bệnh nhân</Label>
                   <Select
                     placeholder="Bệnh nhân chỉ định"
                     name="patient_id"
@@ -204,21 +141,22 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                   <Label htmlFor="categoryId">Danh mục thuốc</Label>
                   <Select
                     placeholder="Đơn thuốc chỉ định"
-                    name="categoryId"
+                    name="isCategory"
                     control={control}
-                    options={medicationCategori}
+                    options={medicationCategory}
+                    setIsDialogOpen={setIsDialogOpen}
                   />
                 </div>
               </div>
 
-              <div className="flex flex-col mb-7">
+              <div className="mb-7">
                 <Label htmlFor="description">Lời dặn</Label>
                 <textarea
-                  {...register('description')}
-                  className="p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                  dirName="description"
+                  className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
                   name="description"
                   placeholder="Nhập lời dặn ..."
-                  id="advice"
+                  id="description"
                 ></textarea>
               </div>
 
@@ -226,9 +164,9 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                 <Button
                   type="submit"
                   styled="normal"
-                  className="bg-primaryAdmin text-white"
+                  className="bg-primaryAdmin text-white disabled:bg-primaryAdmin/50"
                   isLoading={isSubmitting}
-                  disabled={isSubmitting}
+                  disabled={!isValid || isSubmitting}
                 >
                   Xác nhận
                 </Button>
@@ -237,7 +175,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                   styled="normal"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
-                  onClick={handleReset}
+                  onClick={handleResetForm}
                 >
                   Nhập lại
                 </Button>
@@ -247,63 +185,12 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
         </div>
       </div>
 
-      <Dialog
-        PaperProps={{
-          style: {
-            backgroundColor: '#fff',
-            padding: '20px', // Giảm padding để có thêm không gian
-            width: '1000px',
-            height: '800px',
-            borderRadius: '8px',
-            display: 'flex',
-            flexDirection: 'column',
-            maxWidth: 'none',
-          },
-        }}
-        open={isDialogOpen}
-        onClose={handleCloseDialog}
-      >
-        <div className="flex justify-between items-end mb-6">
-          <div className="flex justify-center items-start flex-col gap-2">
-            <Label htmlFor="categoryId">Danh mục thuốc</Label>
-            <Select placeholder="Đơn thuốc chỉ định" name="categoryId" control={control} options={medicationCategori} />
-          </div>
-          <div className="flex-[0_0_50%] flex justify-end items-center gap-3">
-            <Input
-              colorGlass="text-primaryAdmin"
-              className="placeholder:text-[14px] text-[14px] text-primaryAdmin h-[40px]"
-              control={control}
-              name="search"
-              placeholder="Tìm thuốc ..."
-              isGlass
-            />
-            <button
-              type="submit"
-              className={`w-[53px] h-[40px] flex items-center justify-center bg-primaryAdmin rounded-[9px] transition-all duration-300 ease-linear`}
-            >
-              <SearchIcon className="text-white" />
-            </button>
-          </div>
-        </div>
-
-        <div>
-          {medications.length > 0 ? (
-            <ul className="space-y-2">
-              {medications.map((medication: any) => (
-                <Medication
-                  key={medication.id}
-                  name={medication.name}
-                  id={medication.id}
-                  setMedication={setMedication}
-                  handleChange={handleChange}
-                />
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-500 text-center">Không có thuốc nào cho danh mục này.</p>
-          )}
-        </div>
-      </Dialog>
+      <ModalMedication
+        isDialogOpen={isDialogOpen}
+        handleCloseDialog={handleCloseDialog}
+        medications={medications}
+        medicationCategory={medicationCategory}
+      />
     </div>
   );
 };

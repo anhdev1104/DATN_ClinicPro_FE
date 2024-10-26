@@ -7,7 +7,7 @@ export const createPrescription = async (prescription: IPrescription) => {
     const newPrescription = {
       ...prescription,
       patient_id: 20,
-      user_id: 35
+      user_id: 35,
     };
 
     const response = await http.post('/prescriptions', newPrescription);
@@ -72,9 +72,9 @@ export const getCategoriMedication = async () => {
   }
 };
 
-export const getMedication = async (id: string) => {
+export const getMedication = async (id: number | undefined) => {
   try {
-    const response = http.get(`medications?category_id=${id}`);
+    const response = http.get('medications', { category_id: id });
     return response;
   } catch (error) {
     return error;
