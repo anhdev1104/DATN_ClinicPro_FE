@@ -625,9 +625,9 @@
     prop-types "^15.8.1"
 
 "@mui/material@^6.1.0":
-  version "6.1.5"
-  resolved "https://registry.yarnpkg.com/@mui/material/-/material-6.1.5.tgz#1ba8deda18564b277f37d957d523a9d2624b4b9a"
-  integrity sha512-rhaxC7LnlOG8zIVYv7BycNbWkC5dlm9A/tcDUp0CuwA7Zf9B9JP6M3rr50cNKxI7Z0GIUesAT86ceVm44quwnQ==
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/@mui/material/-/material-6.1.0.tgz"
+  integrity sha512-4MJ46vmy1xbm8x+ZdRcWm8jEMMowdS8pYlhKQzg/qoKhOcLhImZvf2Jn6z9Dj6gl+lY+C/0MxaHF/avAAGys3Q==
   dependencies:
     "@babel/runtime" "^7.25.7"
     "@mui/core-downloads-tracker" "^6.1.5"
@@ -696,24 +696,24 @@
     csstype "^3.1.3"
     prop-types "^15.8.1"
 
-"@mui/system@^6.1.5":
-  version "6.1.5"
-  resolved "https://registry.yarnpkg.com/@mui/system/-/system-6.1.5.tgz#2124f43be98a7393e08edf89ae0fbc8678607e11"
-  integrity sha512-vPM9ocQ8qquRDByTG3XF/wfYTL7IWL/20EiiKqByLDps8wOmbrDG9rVznSE3ZbcjFCFfMRMhtxvN92bwe/63SA==
+"@mui/system@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/@mui/system/-/system-6.1.0.tgz"
+  integrity sha512-NumkGDqT6EdXfcoFLYQ+M4XlTW5hH3+aK48xAbRqKPXJfxl36CBt4DLduw/Voa5dcayGus9T6jm1AwU2hoJ5hQ==
   dependencies:
-    "@babel/runtime" "^7.25.7"
-    "@mui/private-theming" "^6.1.5"
-    "@mui/styled-engine" "^6.1.5"
-    "@mui/types" "^7.2.18"
-    "@mui/utils" "^6.1.5"
+    "@babel/runtime" "^7.25.6"
+    "@mui/private-theming" "^6.1.0"
+    "@mui/styled-engine" "^6.1.0"
+    "@mui/types" "^7.2.16"
+    "@mui/utils" "^6.1.0"
     clsx "^2.1.1"
     csstype "^3.1.3"
     prop-types "^15.8.1"
 
-"@mui/types@^7.2.14", "@mui/types@^7.2.15", "@mui/types@^7.2.18":
-  version "7.2.18"
-  resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.18.tgz#4b6385ed2f7828ef344113cdc339d6fdf8e4bc23"
-  integrity sha512-uvK9dWeyCJl/3ocVnTOS6nlji/Knj8/tVqVX03UVTpdmTJYu/s4jtDd9Kvv0nRGE0CUSNW1UYAci7PYypjealg==
+"@mui/types@^7.2.14", "@mui/types@^7.2.15", "@mui/types@^7.2.16":
+  version "7.2.16"
+  resolved "https://registry.npmjs.org/@mui/types/-/types-7.2.16.tgz"
+  integrity sha512-qI8TV3M7ShITEEc8Ih15A2vLzZGLhD+/UPNwck/hcls2gwg7dyRjNGXcQYHKLB5Q7PuTRfrTkAoPa2VV1s67Ag==
 
 "@mui/utils@^5.15.14", "@mui/utils@^5.16.1", "@mui/utils@^5.16.6":
   version "5.16.6"
@@ -1497,7 +1497,7 @@ csstype@^3.0.2, csstype@^3.1.3:
     "@types/yup" "^0.32.0"
     axios "^1.7.7"
     clsx "^2.1.1"
-    datn-clinicpro-fe "file:C:/Users/anhbh/AppData/Local/Yarn/Cache/v6/npm-datn-clinicpro-fe-0.0.0-dd324661-61a7-428b-85f8-b5fa7d6491f2-1729708338792/node_modules/datn-clinicpro-fe"
+    datn-clinicpro-fe "file:C:/Users/anhbh/AppData/Local/Yarn/Cache/v6/npm-datn-clinicpro-fe-0.0.0-abb56f3c-e52a-4343-9da8-d3ef3af80e3c-1729869238927/node_modules/datn-clinicpro-fe"
     dayjs "^1.11.13"
     env "^0.0.2"
     js-cookie "^3.0.5"
@@ -2551,7 +2551,7 @@ queue-microtask@^1.2.2:
   resolved "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-react-dom@^18.3.1:
+"react-dom@^17.0.0 || ^18.0.0":
   version "18.3.1"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz"
   integrity sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==
@@ -2619,7 +2619,7 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@^18.3.1:
+"react@^17.0.0 || ^18.0.0":
   version "18.3.1"
   resolved "https://registry.npmjs.org/react/-/react-18.3.1.tgz"
   integrity sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==

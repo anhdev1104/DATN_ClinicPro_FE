@@ -73,7 +73,7 @@ const adminRouter: IRouter[] = [
   {
     path: '/departments/:id',
     element: DepartmentDetail,
-    title: 'Phòng Ban'
+    title: 'Phòng Ban',
   },
   {
     path: '/departments',
