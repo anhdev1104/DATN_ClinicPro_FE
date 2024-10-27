@@ -1,10 +1,12 @@
 export interface Manager {
   id: number;
-  status: string;
+  address: string;
+  fullname: string;
+  avatar: string;
+  dob: string;
+  phone_number: string;
+  gender: string;
   email: string;
-  role_id: number;
-  created_at: Date;
-  updated_at: Date;
 }
 
 export interface Department {

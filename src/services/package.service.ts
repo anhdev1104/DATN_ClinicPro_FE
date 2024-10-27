@@ -10,12 +10,20 @@ export const getPackages = async () => {
     return error;
   }
 };
+export const getPackageById = async (id: number) => {
+  try {
+    const response = await http.get(`/packages/${id}`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
 export const createPackage = async (formData: FormData) => {
   try {
     const response = await http.post('/packages', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        'Content-Type': 'multipart/form-data',
+      },
     });
     return response;
   } catch (error) {
@@ -24,11 +32,15 @@ export const createPackage = async (formData: FormData) => {
 };
 export const updatePackage = async (id: number, data: FormData) => {
   try {
-    const response = await http.update(`/packages/${id}`, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
+    const response = await http.update(`/packages/${id}`, data);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+export const DeletePackage = async (id: string) => {
+  try {
+    const response = await http.delete(`/packages`, id);
     return response;
   } catch (error) {
     return error;

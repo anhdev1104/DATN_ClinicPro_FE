@@ -13,6 +13,7 @@ interface IInput {
 
 const Input: FC<IInput> = ({ name = '', type = 'text', className = '', isGlass = false, control, ...props }) => {
   const { field } = useController({ control, name, defaultValue: '' });
+
   return (
     <div className="relative flex-1">
       {isGlass && <SearchIcon className="text-primary absolute top-[12.5px] left-[12.5px]" />}

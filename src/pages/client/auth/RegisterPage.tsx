@@ -41,6 +41,7 @@ const RegisterPage = () => {
   const { show, handleToggle } = useToggle();
   const { show: showConfirm, handleToggle: handleToggleConfirm } = useToggle();
   const navigate = useNavigate();
+
   const {
     handleSubmit,
     formState: { isSubmitting, errors, isValid },
