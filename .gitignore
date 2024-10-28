@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+yarn.lock
+package*.json
 
 # Editor directories and files
 .vscode/*
@@ -31,4 +33,3 @@ dist-ssr
 # test
 *.http
 *.rest
-test.txt

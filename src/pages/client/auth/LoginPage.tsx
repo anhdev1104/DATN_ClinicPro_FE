@@ -84,7 +84,7 @@ const LoginPage = () => {
                 <h3 className="text-dark opacity-70">or</h3>
                 <div className="h-[1px] w-full bg-gray-200"></div>
               </div>
-              <form className="w-full mb-3" onSubmit={handleSubmit(handleLogin)}>
+              <form className="w-full mb-3 flex flex-col" onSubmit={handleSubmit(handleLogin)}>
                 <Field>
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -110,6 +110,9 @@ const LoginPage = () => {
                   </div>
                   <MessageForm error={errors.password?.message} />
                 </Field>
+                <Link to="/forgot-password" className="text-end hover:text-blue-600 hover:underline">
+                  quên mật khẩu
+                </Link>
                 <Button
                   type="submit"
                   className="bg-third rounded-md w-full mt-3 h-[40px]"
