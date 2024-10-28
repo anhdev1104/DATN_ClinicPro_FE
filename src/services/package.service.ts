@@ -10,7 +10,7 @@ export const getPackages = async () => {
     return error;
   }
 };
-export const getPackageById = async (id: number) => {
+export const getPackageById = async (id: string) => {
   try {
     const response = await http.get(`/packages/${id}`);
     return response;
@@ -30,9 +30,13 @@ export const createPackage = async (formData: FormData) => {
     return error;
   }
 };
-export const updatePackage = async (id: number, data: FormData) => {
+export const updatePackage = async (id: string, data: FormData) => {
   try {
-    const response = await http.update(`/packages/${id}`, data);
+    const response = await http.update(`/packages/${id}`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response;
   } catch (error) {
     return error;

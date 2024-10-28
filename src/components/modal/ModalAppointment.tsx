@@ -1,5 +1,4 @@
 import { Box, Dialog, DialogContent, DialogTitle, Stack, Typography } from '@mui/material';
-import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -34,7 +33,7 @@ const ModalAppointment = () => {
 
   const {
     control,
-    formState: { isValid, isSubmitting, errors },
+    formState: { isValid },
     handleSubmit,
   } = useForm({
     resolver: yupResolver(schema),

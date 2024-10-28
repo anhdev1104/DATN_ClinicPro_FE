@@ -57,6 +57,7 @@ const AddPackage = ({ navigate }: ListPackage) => {
       console.log(res.message);
     } else {
       toast.success('Thêm gói khám thành công');
+      navigate('/packages');
     }
     setLoading(false);
     reset();

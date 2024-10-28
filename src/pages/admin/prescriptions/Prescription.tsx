@@ -1,3 +1,4 @@
+import PrescriptionProvider from '@/providers/PrescriptionProvider';
 import AddPrescriptions from './components/AddPrescriptions';
 import ListPrescriptions from './components/ListPrescriptions';
 import { useState } from 'react';
@@ -10,9 +11,9 @@ const Prescription = () => {
   };
 
   return (
-    <div>
+    <PrescriptionProvider>
       {!navigate ? <ListPrescriptions navigate={handleNavigate} /> : <AddPrescriptions navigate={handleNavigate} />}
-    </div>
+    </PrescriptionProvider>
   );
 };
 

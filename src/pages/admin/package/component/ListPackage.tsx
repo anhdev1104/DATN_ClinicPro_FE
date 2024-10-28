@@ -15,13 +15,13 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
   const [packages, setPackages] = useState<IPackage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const handleToggle = (id: number) => {
+  const handleToggle = (id: string) => {
     setSelectedId(prevId => (prevId === id ? null : id));
   };
 
-  const isOpen = (id: number) => selectedId === id;
+  const isOpen = (id: string) => selectedId === id;
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -42,23 +42,11 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
     fetchPackages();
   }, []);
 
-  const handleDelete = async (id: number) => {
-    const result = await DeletePackage(id.toString());
-    if (result && result.success) {
-      toast.success('Xóa gói thành công!');
-      setPackages(prevPackages => prevPackages.filter(pkg => pkg.id !== id));
-    } else {
-      toast.error('Xóa gói thất bại!');
-    }
+  const handleDelete = async (id: string) => {
+    await DeletePackage(id);
+    setPackages(prevPackages => prevPackages.filter(pkg => pkg.id !== id));
+    toast.success('Xóa gói thành công!');
   };
-
-  if (loading) {
-    return <p className="text-center text-indigo-600">Đang tải danh sách gói khám...</p>;
-  }
-
-  if (error) {
-    return <p className="text-center text-red-500">{error}</p>;
-  }
 
   return (
     <section className="package">
@@ -71,10 +59,7 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
               <SearchAdmin />
             </div>
             <div className="transition-all w-12 h-12 rounded-[9px] border border-borderColor font-medium bg-[#f3f4f7] outline-none flex items-center justify-center">
-              <button
-                onClick={navigate}
-                className="text-[18px] font-medium gap-3 border-borderColor border p-2 rounded-lg bg-[#f3f4f7]"
-              >
+              <button onClick={navigate}>
                 <AddIcon className="text-primaryAdmin" />
               </button>
             </div>
@@ -93,9 +78,9 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
               </tr>
             </thead>
             <tbody>
-              {packages.map(pkg => (
-                <tr key={pkg.id} className="odd">
-                  <td className="p-4 w-1/12">{pkg.id}</td>
+              {packages.map((pkg, index) => (
+                <tr key={index} className="odd">
+                  <td className="p-4 w-1/12">{index + 1}</td>
                   <td className="p-4 text-gray-800 w-2/12">{pkg.name}</td>
                   <td className="p-4 text-gray-600 w-2/12">{pkg.description}</td>
                   <td className="p-4 profile-image w-2/12 h-32">

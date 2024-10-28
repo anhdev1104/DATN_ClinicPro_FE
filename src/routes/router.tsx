@@ -15,7 +15,7 @@ import RegisterPage from '@/pages/client/auth/RegisterPage';
 import BranchsPage from '@/pages/client/branchs/BranchsPage';
 import CommunityPage from '@/pages/client/community/CommunityPage';
 import HomePage from '@/pages/client/home/HomePage';
-import AddPackage from '@/pages/admin/package/component/AddPackage';
+import PackageDetail from '@/pages/admin/package/component/PackageDetail';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Prescription from '@/pages/admin/prescriptions/Prescription';
@@ -84,6 +84,11 @@ const adminRouter: IRouter[] = [
   {
     path: '/package',
     element: ListPackage,
+    title: 'Danh sách gói khám',
+  },
+  {
+    path: '/package/:id',
+    element: PackageDetail,
     title: 'Danh sách gói khám',
   },
   {

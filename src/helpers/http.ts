@@ -41,6 +41,8 @@ class Http {
             originalRequest.headers['Authorization'] = `Bearer ${response.data.access_token}`;
             return this.api(originalRequest);
           } catch (error) {
+            // eslint-disable-next-line no-console
+            console.log(error);
             store.dispatch(authLogout());
             toast.info('Tài khoản của bạn đã hết phiên đăng nhập !');
           }

@@ -41,7 +41,7 @@ const EditPackage = () => {
     const fetchPackage = async () => {
       try {
         const response = await getPackages();
-        const selectedPackage = response.data.find((pkg: IPackage) => pkg.id === Number(id));
+        const selectedPackage = response.data.find((pkg: IPackage) => pkg.id === id);
         if (selectedPackage) {
           setPackageData(selectedPackage);
           setValue('name', selectedPackage.name);
@@ -83,7 +83,7 @@ const EditPackage = () => {
       console.log(key, value);
     }
     try {
-      const res = await updatePackage(Number(id), formData);
+      const res = await updatePackage(String(id), formData);
       if (res.errors) {
         toast.error('Cập nhật gói khám thất bại');
         console.error(res.message);
