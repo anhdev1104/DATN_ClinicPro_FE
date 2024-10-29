@@ -4,7 +4,7 @@ import axios, { AxiosInstance } from 'axios';
 import { toast } from 'react-toastify';
 
 class Http {
-  private api: AxiosInstance;
+  public api: AxiosInstance;
   constructor() {
     this.api = axios.create({
       baseURL: import.meta.env.VITE_API_URL,
@@ -41,6 +41,8 @@ class Http {
             originalRequest.headers['Authorization'] = `Bearer ${response.data.access_token}`;
             return this.api(originalRequest);
           } catch (error) {
+            // eslint-disable-next-line no-console
+            console.log(error);
             store.dispatch(authLogout());
             toast.info('Tài khoản của bạn đã hết phiên đăng nhập !');
           }
@@ -67,6 +69,24 @@ class Http {
       return error.response.data;
     }
   }
-}
 
+  async update(url: string, data: any) {
+    try {
+      const response = await this.api.put(url, data);
+      return response.data;
+    } catch (error: any) {
+      return error.response.data;
+    }
+  }
+
+  async delete(url: string, id: string) {
+    try {
+      const response = await this.api.delete(`${url}/${id}`);
+      return response.data;
+    } catch (error: any) {
+      return error.response.data;
+    }
+  }
+}
+export const http = new Http();
 export default Http;

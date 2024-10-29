@@ -1,40 +1,40 @@
 const arrBranch = [
   {
-    nameBranch: 'Bệnh viện Hoàn Mỹ Sài Gòn',
+    nameBranch: 'Phòng khám ClinicPro Sài Gòn',
     location: '60-60A Phan Xích Long, Phường 1, Phú Nhuận, Thành phố Hồ Chí Minh',
     tel: '028 3990 2468',
-    img: '/images/branchs/branch-1.webp',
+    img: '/images/branchs/branch-1.webp'
   },
   {
-    nameBranch: 'Bệnh viện Hoàn Mỹ Thủ Đức',
+    nameBranch: 'Phòng khám ClinicPro Thủ Đức',
     location: '241 Quốc lộ 1K, P. Linh Xuân, TP. Thủ Đức, TP. Hồ Chí Minh',
     tel: '028 7306 2062',
-    img: '/images/branchs/branch-2.webp',
+    img: '/images/branchs/branch-2.webp'
   },
   {
-    nameBranch: 'Bệnh viện Hoàn Mỹ Đà Nẵng',
+    nameBranch: 'Phòng khám ClinicPro Đà Nẵng',
     location: '291 Nguyễn Văn Linh, P. Thạc Gián, Q. Thanh Khê, TP. Đà Nẵng',
     tel: '0236 3650 676',
-    img: '/images/branchs/branch-3.webp',
+    img: '/images/branchs/branch-3.webp'
   },
   {
-    nameBranch: 'Bệnh viện Hoàn Mỹ Cửu Long',
+    nameBranch: 'Phòng khám ClinicPro Cửu Long',
     location: 'Lô 20 Võ Nguyên Giáp, Phú Thứ, Cái Răng, Cần Thơ',
     tel: '02923 917 355',
-    img: '/images/branchs/branch-4.webp',
+    img: '/images/branchs/branch-4.webp'
   },
   {
-    nameBranch: 'Bệnh viện Hoàn Mỹ Đà Lạt',
+    nameBranch: 'Phòng khám ClinicPro Đà Lạt',
     location: 'Đồi Long Thọ, Đường Mimoza, Phường 10, TP. Đà Lạt, Lâm Đồng',
     tel: '0263 3577 633',
-    img: '/images/branchs/branch-5.webp',
+    img: '/images/branchs/branch-5.webp'
   },
   {
-    nameBranch: 'Bệnh viện Hoàn Mỹ Đồng Nai',
+    nameBranch: 'Phòng khám ClinicPro Đồng Nai',
     location: '1048A Phạm Văn Thuận, KP.2, P. Tân Mai, TP. Biên Hoà, Đồng Nai',
     tel: '0251 3955 955',
-    img: '/images/branchs/branch-6.jpg',
-  },
+    img: '/images/branchs/branch-6.jpg'
+  }
 ];
 
 const BranchsPage = () => {

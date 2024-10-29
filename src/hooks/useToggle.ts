@@ -9,6 +9,6 @@ export default function useToggle() {
 
   return {
     show,
-    handleToggle,
+    handleToggle
   };
 }

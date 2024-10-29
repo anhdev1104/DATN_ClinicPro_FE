@@ -1,7 +1,10 @@
 import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
-import DashBoard from '@/pages/admin/dashboard/DashBoard';
+import Dashboard from '@/pages/admin/dashboard/DashBoard';
+import Department from '@/pages/admin/department/Department';
+import DepartmentDetail from '@/pages/admin/department/DepartmentDetail';
+import PackagePage from '@/pages/admin/package/Package';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
 import AchievementPage from '@/pages/client/achievement/AchievementPage';
@@ -12,9 +15,10 @@ import RegisterPage from '@/pages/client/auth/RegisterPage';
 import BranchsPage from '@/pages/client/branchs/BranchsPage';
 import CommunityPage from '@/pages/client/community/CommunityPage';
 import HomePage from '@/pages/client/home/HomePage';
-
+import AddPackage from '@/pages/admin/package/AddPackage';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import Prescription from '@/pages/admin/prescriptions/Prescription';
 
 export interface IRouter {
   path: string;
@@ -24,33 +28,33 @@ export interface IRouter {
 
 const clientRouter: IRouter[] = [
   {
-    path: '/',
-    element: HomePage,
-    title: 'ClinicPro',
-  },
-  {
-    path: '/goi-kham',
+    path: '/parcel',
     element: AdvisePage,
     title: 'Gói khám đa khoa',
   },
   {
-    path: '/thanh-tuu',
+    path: '/awards',
     element: AchievementPage,
-    title: 'Thành tựu | Tập đoàn Y khoa Hoàn Mỹ',
+    title: 'Thành tựu',
   },
   {
-    path: '/ve-chung-toi',
+    path: '/about-us',
     element: AboutPage,
-    title: 'Giới thiệu về chúng tôi | Tập đoàn y khoa Hoàn Mỹ',
+    title: 'Giới thiệu về chúng tôi',
   },
   {
-    path: '/mang-luoi',
+    path: '/clinic-network',
     element: BranchsPage,
-    title: 'Hệ thồng 16 phòng khám Hoàn Mỹ trên cả nước',
+    title: 'Hệ thống 16 phòng khám trên cả nước',
   },
   {
     path: '/community',
     element: CommunityPage,
+    title: 'Cộng đồng',
+  },
+  {
+    path: '/',
+    element: HomePage,
     title: 'ClinicPro',
   },
 ];
@@ -58,8 +62,33 @@ const clientRouter: IRouter[] = [
 const adminRouter: IRouter[] = [
   {
     path: '/dashboard',
-    element: DashBoard,
-    title: 'Dashboard',
+    element: Dashboard,
+    title: 'Trang quản lý',
+  },
+  {
+    path: '/prescriptions',
+    element: Prescription,
+    title: 'Danh sách đơn thuốc',
+  },
+  {
+    path: '/departments/:id',
+    element: DepartmentDetail,
+    title: 'Phòng Ban',
+  },
+  {
+    path: '/departments',
+    element: Department,
+    title: 'Danh sách phòng ban',
+  },
+  {
+    path: '/package',
+    element: PackagePage,
+    title: 'Danh sách gói khám',
+  },
+  {
+    path: '/add-package',
+    element: AddPackage,
+    title: 'Tạo gói khám',
   },
 ];
 
@@ -84,10 +113,11 @@ const authRouter: IRouter[] = [
 export default function AppRouter() {
   const location = useLocation();
 
-  // hàm xử lý hiển thị document title
   useEffect(() => {
-    const route = clientRouter.find(route => {
-      const routePath = route.path.replace(/:\w+/g, '');
+    const allRoutes = [...adminRouter, ...authRouter, ...clientRouter];
+
+    const route = allRoutes.find(route => {
+      const routePath = route.path.replace(/:\w+/g, ''); // Loại bỏ tham số động
       return location.pathname.startsWith(routePath);
     });
     if (route && route.title) {

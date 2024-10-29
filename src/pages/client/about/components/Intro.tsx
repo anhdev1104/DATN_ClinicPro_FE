@@ -19,7 +19,7 @@ const Intro = () => {
             </div>
             <div className="">
               <h2 className="text-[32px] max-w-[450px] leading-[52px] font-semibold text-third">
-                Chào mừng bạn đến với Hoàn Mỹ.
+                Chào mừng bạn đến với ClinicPro.
                 <br />
                 Chúng tôi là mạng lưới chăm sóc sức khỏe tư nhân hàng đầu tại Việt Nam.
               </h2>
@@ -28,12 +28,12 @@ const Intro = () => {
           <div className="flex-[0_0_50%] px-[15px]">
             <div className="pt-[30px]">
               <span className="text-[13px] font-light  leading-7 text-dark block whitespace-pre-line">
-                Hoàn Mỹ cam kết hướng tới sự xuất sắc trong hoạt động thăm khám lâm sàng, đào tạo và nghiên cứu nhằm
+                ClinicPro cam kết hướng tới sự xuất sắc trong hoạt động thăm khám lâm sàng, đào tạo và nghiên cứu nhằm
                 cung cấp dịch vụ chăm sóc tốt nhất. Mạng lưới chăm sóc sức khỏe của chúng tôi bao gồm hơn 2.900 giường
-                bệnh hoạt động trên khắp 13 bệnh viện và 4 phòng khám. Trải qua 27 năm hoạt động, Hoàn Mỹ đã tạo dựng
+                bệnh hoạt động trên khắp 13 bệnh viện và 4 phòng khám. Trải qua 27 năm hoạt động, ClinicPro đã tạo dựng
                 được uy tín vững chắc trong việc cung cấp dịch vụ chăm sóc sức khỏe lấy bệnh nhân làm trung tâm, với chi
                 phí hợp lý và chất lượng cao. Chúng tôi tự hào trong việc nỗ lực cải thiện chất lượng dịch vụ chăm sóc
-                sức khỏe ở Việt Nam, góp phần vào sự phồn vinh và an sinh của đất nước. Hoàn Mỹ hiện có hơn 5.500 nhân
+                sức khỏe ở Việt Nam, góp phần vào sự phồn vinh và an sinh của đất nước. ClinicPro hiện có hơn 5.500 nhân
                 viên và đã phục vụ hơn 5 triệu lượt bệnh nhân khám ngoại trú vào năm ngoái.
               </span>
             </div>

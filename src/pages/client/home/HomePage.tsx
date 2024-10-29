@@ -15,7 +15,7 @@ const HomePage = () => {
             <div className="px-[15px] flex flex-col justify-between mb-[30px]">
               <h2 className="leading-[42px] text-[32px] text-primary font-semibold">Chuyên khoa</h2>
               <p className="font-medium leading-[26px] text-dark my-3 block">
-                Hoàn Mỹ cung cấp một loạt các dịch vụ và chuyên khoa lâm sàng toàn diện, kết hợp chuyên môn y khoa với
+                ClinicPro cung cấp một loạt các dịch vụ và chuyên khoa lâm sàng toàn diện, kết hợp chuyên môn y khoa với
                 công nghệ tiên tiến để mang lại dịch vụ chăm sóc chất lượng cao nhất cho bệnh nhân.
               </p>
               <Link to={''} className="text-sm leading-[27px] font-semibold text-primary flex gap-2">

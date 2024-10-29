@@ -2,46 +2,35 @@ import BannerImg from '/images/banner-goi-kham.webp';
 
 import Select from '@/components/select';
 import { AdvisePackage } from './components/AdvisePackage';
-const fakeData = [
+import { useForm } from 'react-hook-form';
+const packageData = [
   {
-    name: 'Bệnh viện Hoàn Mỹ Sài Gòn',
+    label: 'Thai sản',
+    value: 'Thai sản'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Thủ Đức',
+    label: 'Khám sức khoẻ',
+    value: 'Khám sức khoẻ'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Đà Nẵng',
+    label: 'Khám cơ xương',
+    value: 'Khám cơ xương'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Cửu Long',
+    label: 'Nhãn khoa',
+    value: 'Nhãn khoa'
   },
   {
-    name: 'Bệnh viện Hoàn Mỹ Sài Gòn',
-  },
-  {
-    name: 'Bệnh viện Hoàn Mỹ Thủ Đức',
-  },
-  {
-    name: 'Bệnh viện Hoàn Mỹ Đà Nẵng',
-  },
-  {
-    name: 'Bệnh viện Hoàn Mỹ Cửu Long',
-  },
-  {
-    name: 'Bệnh viện Hoàn Mỹ Sài Gòn',
-  },
-  {
-    name: 'Bệnh viện Hoàn Mỹ Thủ Đức',
-  },
-  {
-    name: 'Bệnh viện Hoàn Mỹ Đà Nẵng',
-  },
-  {
-    name: 'Bệnh viện Hoàn Mỹ Cửu Long',
-  },
+    label: 'Tai mũi họng',
+    value: 'Tai mũi họng'
+  }
 ];
 
 const AdvisePage = () => {
+  const { control } = useForm({
+    mode: 'onChange'
+  });
+
   return (
     <>
       <div className="relative">
@@ -52,11 +41,8 @@ const AdvisePage = () => {
       </div>
       <div className="container-page">
         <div className="w-full flex gap-y-2 max-md:flex-col md:gap-x-2 rounded-3xl bg-white px-10 py-10 shadow-[0px_30px_40px_#00405315] -translate-y-1/4">
-          <div className="min-w-[330px]">
-            <Select placeholder="Bệnh Viện hoặc Phòng Khám" data={fakeData} className="" />
-          </div>
           <div className="flex-1">
-            <Select placeholder="Bệnh Viện hoặc Phòng Khám" data={fakeData} className="" />
+            <Select placeholder="Gói khám" name="packageSearch" control={control} options={packageData} />
           </div>
         </div>
       </div>

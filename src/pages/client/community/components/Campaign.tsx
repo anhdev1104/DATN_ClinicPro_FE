@@ -19,10 +19,10 @@ const Campaign = () => {
             <div className="lg:w-2/3 pl-0 lg:pl-5">
               <div className="campaign__content">
                 <span className="text-[14px] leading-[28px] block mb-6 whitespace-pre-line py-4">
-                  2019 là năm thứ 4 liên tiếp Hoàn Mỹ tổ chức các chương trình cung cấp dịch vụ chăm sóc tiền sản miễn
+                  2019 là năm thứ 4 liên tiếp ClinicPro tổ chức các chương trình cung cấp dịch vụ chăm sóc tiền sản miễn
                   phí cho các bà mẹ đang mang thai trên khắp Việt Nam. Chiến dịch “Mẹ đã sẵn sàng!” là một chuỗi các sự
                   kiện cung cấp kiến thức và trải nghiệm đào tạo thực tế. Nhận thấy rằng một số phụ nữ mang thai không
-                  thể tham dự các sự kiện hoặc e ngại nên không tham dự, Hoàn Mỹ cũng đã tổ chức 10 buổi hội thảo trực
+                  thể tham dự các sự kiện hoặc e ngại nên không tham dự, ClinicPro cũng đã tổ chức 10 buổi hội thảo trực
                   tuyến trên cả nước.”.
                 </span>
                 <span className="text-[14px] leading-[28px] block mb-6 whitespace-pre-line py-4">
@@ -33,9 +33,9 @@ const Campaign = () => {
                   kinh nghiệm của chính họ, các lớp học đã trở thành một câu chuyện gia đình thực sự.
                 </span>
                 <span className="text-[14px] leading-[28px] block mb-6 whitespace-pre-line py-4">
-                  Giờ đây, các bệnh viện Hoàn Mỹ sử dụng các mạng xã hội như Facebook để liên hệ với những người mới làm
-                  mẹ. Chúng tôi muốn những người mới làm mẹ được hỗ trợ tốt nhất có thể và những lớp học tiền sản này có
-                  tác động lan tỏa – người đã tham gia học cũng sẵn sàng trợ giúp những người mới học khác.
+                  Giờ đây, các bệnh viện ClinicPro sử dụng các mạng xã hội như Facebook để liên hệ với những người mới
+                  làm mẹ. Chúng tôi muốn những người mới làm mẹ được hỗ trợ tốt nhất có thể và những lớp học tiền sản
+                  này có tác động lan tỏa – người đã tham gia học cũng sẵn sàng trợ giúp những người mới học khác.
                 </span>
               </div>
             </div>

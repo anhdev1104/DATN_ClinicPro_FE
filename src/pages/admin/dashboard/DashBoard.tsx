@@ -1,7 +1,11 @@
-import React from 'react';
+import DirectRoute from '@/components/direct';
 
-const DashBoard = () => {
-  return <div>Dashboard Page</div>;
+const Dashboard = () => {
+  return (
+    <div>
+      <DirectRoute nav="Dashboard" subnav="Trang quản trị Admin" />
+    </div>
+  );
 };
 
-export default DashBoard;
+export default Dashboard;

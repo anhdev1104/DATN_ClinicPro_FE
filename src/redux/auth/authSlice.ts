@@ -11,7 +11,7 @@ type authState = {
 const initialState: authState = {
   data: null,
   isLoading: false,
-  error: null,
+  error: null
 };
 
 export const authSlice = createSlice({
@@ -22,7 +22,7 @@ export const authSlice = createSlice({
       state.data = null;
     },
     refreshToken: (state, action) => {
-      state.data = action.payload
+      state.data = action.payload;
     }
   },
   extraReducers: builder => {
@@ -40,7 +40,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message;
       });
-  },
+  }
 });
 
 export const { authLogout, refreshToken } = authSlice.actions;
