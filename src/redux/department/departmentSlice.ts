@@ -13,7 +13,7 @@ const initialState: InitialState = {
 };
 
 export const departmentSlice = createSlice({
-  name: 'departmentState',
+  name: 'department',
   initialState,
   reducers: {
     PopupNewDepartment: (state, action: PayloadAction<boolean>) => {
@@ -26,5 +26,3 @@ export const departmentSlice = createSlice({
 });
 
 export const { PopupNewDepartment, PopupDepartmentDetail } = departmentSlice.actions;
-
-export default departmentSlice.reducer;

@@ -2,7 +2,7 @@ import { useSelector } from '@/hooks/redux';
 import {
   useDeleteAnDepartmentMutation,
   useGetDepartmentDetailQuery,
-  useUpdateAnDepartmentMutation,
+  useUpdateAnDepartmentMutation
 } from '@/redux/api/department';
 import { PopupDepartmentDetail } from '@/redux/department/departmentSlice';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -23,7 +23,7 @@ import { IUserInfo } from '@/types/user.type';
 export const departmentDetailSchema = yup.object({
   name: yup.string(),
   description: yup.string(),
-  manager_id: yup.string(),
+  manager_id: yup.string()
 });
 interface Options {
   label: string;
@@ -35,19 +35,18 @@ const DepartmentDetail = () => {
   const navigate = useNavigate();
   const open = useSelector(state => state.departmentState.isOpenDepartmentDetail);
   const { data: department, isSuccess } = useGetDepartmentDetailQuery(id as string, {
-    refetchOnMountOrArgChange: true,
+    refetchOnMountOrArgChange: true
   });
   const [handleDelete] = useDeleteAnDepartmentMutation();
   const [handleUpdate] = useUpdateAnDepartmentMutation();
   const { currentData } = usersApi.endpoints.getAllUsers.useQuery();
   const { isFetching } = usersApi.endpoints.getAllUsers.useQueryState();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const users = useMemo(() => (currentData ? filterOutManagers<IUserInfo[]>(currentData.data) : []), [isFetching]);
   const options: Options[] = users.map((user: any) => ({ label: user.user_info.fullname, id: user.id }));
 
   const { handleSubmit, control, setValue } = useForm({
-    resolver: yupResolver(departmentDetailSchema),
+    resolver: yupResolver(departmentDetailSchema)
   });
   const handleHideDrawer = () => {
     dispatch(PopupDepartmentDetail(false));
