@@ -102,4 +102,5 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default former(ResetPassword, resetPasswordSchema);

@@ -19,6 +19,7 @@ import { filterOutManagers } from '@/utils/utils';
 import { useMemo } from 'react';
 import { IUserInfo } from '@/types/user.type';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const departmentDetailSchema = yup.object({
   name: yup.string(),
   description: yup.string(),
@@ -41,6 +42,7 @@ const DepartmentDetail = () => {
   const { currentData } = usersApi.endpoints.getAllUsers.useQuery();
   const { isFetching } = usersApi.endpoints.getAllUsers.useQueryState();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const users = useMemo(() => (currentData ? filterOutManagers<IUserInfo[]>(currentData.data) : []), [isFetching]);
   const options: Options[] = users.map((user: any) => ({ label: user.user_info.fullname, id: user.id }));
 

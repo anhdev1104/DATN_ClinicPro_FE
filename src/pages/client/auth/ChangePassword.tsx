@@ -36,6 +36,7 @@ const ChangePassword = () => {
       return;
     }
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmNewPassword, ...formData } = yup.object().snakeCase().cast(data) as PasswordProps;
       const response = await changePassword<ChangePasswordResponse>(formData);
       toast.success(response.message);

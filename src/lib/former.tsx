@@ -5,7 +5,6 @@ import React, { ComponentType } from 'react';
 import { FormProvider, useForm, UseFormProps } from 'react-hook-form';
 
 /**
- * @author: https://github.com/seaesa
  * @description: this is HOCS for form, serves logic reuse, this partern use react hook form combine with yup validation
  * @recomented : I highly recommented use yup at second parameter to handling error
  * @warning :second parameter is yup object schema, each field of schema must have .default('') or .ensure() to ensure the correctness of the data

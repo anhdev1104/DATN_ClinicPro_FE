@@ -53,7 +53,6 @@ const RegisterPage = () => {
   });
   const handleRegister: SubmitHandler<IAccount> = async data => {
     if (!isValid) return;
-    // eslint-disable-line @typescript-eslint/no-unused-vars
     const { password_confirm, ...dataRegister } = data;
     const res = await registerService(dataRegister);
     if (res.errors) {

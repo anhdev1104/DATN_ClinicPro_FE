@@ -16,6 +16,7 @@ import former, { OptionsWithForm } from '@/lib/former';
 
 const forgotPasswordSchema = yup.object({
   email: yup.string().required().ensure().matches(isEmailRegex, { message: 'Trường này phải là email' }),
+  email: yup.string().required().ensure().matches(isEmailRegex, { message: 'Trường này phải là email' }),
 });
 export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 
@@ -60,6 +61,7 @@ const ForgotPassword = () => {
               initial={{ scale: 0.8, opacity: 0.7 }}
               animate={{
                 scale: 1,
+                opacity: 1,
                 opacity: 1,
               }}
               className="my-10"
