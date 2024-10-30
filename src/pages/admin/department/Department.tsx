@@ -80,7 +80,7 @@ const formatDepartmentData = (department: Department[]) => {
   }));
 };
 const Department = () => {
-  const [limit, _] = useState(10);
+  const [limit] = useState(10);
   const { data: departments, isSuccess } = useGetAllDepartmentQuery({});
   const dispatch = useDispatch();
   const navigate = useNavigate();

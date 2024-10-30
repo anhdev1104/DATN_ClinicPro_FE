@@ -20,10 +20,10 @@ export default [
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-explicit-any': 'off',
+      'no-unused-vars': ['off', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      'no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
       'no-console': 'warn',
       'no-debugger': 'error',
       'no-var': 'error',

@@ -4,7 +4,7 @@ import { Checkbox } from '@mui/material';
 import { Controller, useWatch } from 'react-hook-form';
 
 type TMedication = {
-  id: number;
+  id: string;
   name: string;
   index: number;
 };
@@ -13,12 +13,8 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
   const {
     form: { control, getValues, setValue },
   } = usePrescriptionContextForm();
-  console.log(getValues());
 
   const medications = useWatch({ control, name: 'medications' }) || [];
-  const quantity = getValues(`medications.${index}.quantity`) || '';
-  const duration = getValues(`medications.${index}.duration`) || '';
-  const instructions = getValues(`medications.${index}.instructions`) || '';
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isSelected = event.target.checked;
@@ -30,10 +26,7 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
         ...isCheckedArr,
         {
           medication_id: id,
-          quantity: quantity as number,
-          duration: duration as number,
-          instructions,
-        },
+        } as any,
       ]);
     } else {
       setValue(
@@ -50,12 +43,13 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
           <Controller
             control={control}
             name={`medications.${index}.medication_id`}
-            render={() => (
+            render={({ field }) => (
               <Checkbox
                 id={name}
-                checked={!!medications.find((med: { medication_id: number }) => med.medication_id === id)}
+                checked={!!medications.find((med: { medication_id: string }) => med?.medication_id === id)}
                 onChange={e => {
                   handleCheckboxChange(e);
+                  field.onChange(e.target.value ? id : undefined);
                 }}
               />
             )}
@@ -68,17 +62,33 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
         <Controller
           name={`medications.${index}.quantity`}
           control={control}
-          render={({ field }) => <input placeholder="Liều lượng..." className="border" {...field} />}
+          render={({ field }) => (
+            <input placeholder="Liều lượng..." className="border" value={field.value || ''} onChange={field.onChange} />
+          )}
         />
         <Controller
           name={`medications.${index}.duration`}
           control={control}
-          render={({ field }) => <input placeholder="Thời gian sử dụng..." className="border" {...field} />}
+          render={({ field }) => (
+            <input
+              placeholder="Thời gian sử dụng..."
+              className="border"
+              value={field.value || ''}
+              onChange={field.onChange}
+            />
+          )}
         />
         <Controller
           name={`medications.${index}.instructions`}
           control={control}
-          render={({ field }) => <input placeholder="Hướng dẫn sử dụng..." className="border" {...field} />}
+          render={({ field }) => (
+            <input
+              placeholder="Hướng dẫn sử dụng..."
+              className="border"
+              value={field.value || ''}
+              onChange={field.onChange}
+            />
+          )}
         />
       </div>
     </>
