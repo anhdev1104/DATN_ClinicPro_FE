@@ -1,22 +1,13 @@
 import { STATUS } from '@/constants/define';
 import { IRole } from './role.type';
+import { IInfo } from './auth.type';
 
-interface IUserProfile {
-  id: number;
-  fullname: string;
-  address?: string | null;
-  avatar?: string;
-  phone_number?: string | null;
-  gender?: string;
-  dob?: string | null;
-  identity_card_id?: number | null;
+interface IUserProfile extends IInfo {
   department_id?: number | null;
-  created_at?: string;
-  updated_at?: string;
 }
 
 export interface IUserInfo {
-  id: number;
+  id: string;
   email: string;
   status: keyof typeof STATUS;
   role: IRole;

@@ -6,10 +6,11 @@ interface InitialState {
   isOpenDepartmentDetail: boolean;
   departmentDetail: Department | null;
 }
+
 const initialState: InitialState = {
   isOpenNewDepartment: false,
   isOpenDepartmentDetail: false,
-  departmentDetail: null
+  departmentDetail: null,
 };
 
 export const departmentSlice = createSlice({
@@ -21,8 +22,8 @@ export const departmentSlice = createSlice({
     },
     PopupDepartmentDetail: (state, action: PayloadAction<boolean>) => {
       state.isOpenDepartmentDetail = action.payload;
-    }
-  }
+    },
+  },
 });
 
 export const { PopupNewDepartment, PopupDepartmentDetail } = departmentSlice.actions;

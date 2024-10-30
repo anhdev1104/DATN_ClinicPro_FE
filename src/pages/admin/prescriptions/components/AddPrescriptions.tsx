@@ -151,7 +151,6 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
               <div className="mb-7">
                 <Label htmlFor="description">Lời dặn</Label>
                 <textarea
-                  dirName="description"
                   className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
                   name="description"
                   placeholder="Nhập lời dặn ..."

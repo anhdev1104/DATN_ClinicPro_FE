@@ -19,6 +19,7 @@ import AddPackage from '@/pages/admin/package/AddPackage';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Prescription from '@/pages/admin/prescriptions/Prescription';
+import ProfilePage from '@/pages/client/profile/ProfilePage';
 
 export interface IRouter {
   path: string;
@@ -51,6 +52,11 @@ const clientRouter: IRouter[] = [
     path: '/community',
     element: CommunityPage,
     title: 'Cộng đồng',
+  },
+  {
+    path: '/profile',
+    element: ProfilePage,
+    title: 'Thông tin cá nhân',
   },
   {
     path: '/',

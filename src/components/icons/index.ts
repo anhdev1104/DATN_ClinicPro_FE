@@ -21,3 +21,4 @@ export { default as VisibilityOffIcon } from '@mui/icons-material/VisibilityOff'
 export { default as AddIcon } from '@mui/icons-material/Add';
 export { default as ArrowDropDownIcon } from '@mui/icons-material/ArrowDropDown';
 export { default as ArrowDropUpIcon } from '@mui/icons-material/ArrowDropUp';
+export { default as EmailIcon } from '@mui/icons-material/Email';
