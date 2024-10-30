@@ -2,7 +2,7 @@ import { STATUS } from '@/constants/define';
 import { IRole } from './role.type';
 
 interface IUserProfile {
-  id: number;
+  id: string;
   fullname: string;
   address?: string | null;
   avatar?: string;
@@ -16,7 +16,7 @@ interface IUserProfile {
 }
 
 export interface IUserInfo {
-  id: number;
+  id: string;
   email: string;
   status: keyof typeof STATUS;
   role: IRole;

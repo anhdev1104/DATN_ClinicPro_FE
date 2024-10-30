@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 const medicationSchema = yup.object().shape({
-  medication_id: yup.number().required('ID thuốc là bắt buộc'),
+  medication_id: yup.string().required('ID thuốc là bắt buộc'),
   instructions: yup.string().required('Hướng dẫn sử dụng là bắt buộc'),
   quantity: yup
     .number()
@@ -25,7 +25,7 @@ const prescriptionSchema = yup.object().shape({
   name: yup.string().required('Tên đơn thuốc là bắt buộc'),
   description: yup.string(),
   medications: yup.array().of(medicationSchema).required('Danh sách thuốc là bắt buộc'),
-  isCategory: yup.number(),
+  isCategory: yup.string(),
 });
 
 type Schema = yup.InferType<typeof prescriptionSchema>;

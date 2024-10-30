@@ -1,12 +1,12 @@
 export interface IMedications {
-  id: number;
+  id: string;
   name: string;
   created_at?: string;
   updated_at?: string;
 }
 
 export interface IMedication {
-  medication_id: number;
+  medication_id: string;
   instructions: string;
   quantity: number;
   duration: number;
