@@ -13,7 +13,7 @@ import former, { HocFormProps } from '@/lib/former';
 
 const resetPasswordSchema = yup.object({
   otp: yup.string().length(6).default('').required(),
-  password: yup.string().ensure().required().min(8)
+  password: yup.string().ensure().required().min(8),
 });
 
 export type ResetPassword = yup.InferType<typeof resetPasswordSchema>;
@@ -28,10 +28,9 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
   control,
   handleSubmit,
   reset,
-  loading
+  loading,
 }) => {
   const navigate = useNavigate();
-
   const handleSendRequest = async (data: ResetPassword) => {
     try {
       const response = await resetPassword<IResetPassword>(data);
@@ -53,7 +52,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
         initial={{ scale: 0.8, opacity: 0.7 }}
         animate={{
           scale: 1,
-          opacity: 1
+          opacity: 1,
         }}
         onSubmit={handleSubmit(handleSendRequest)}
         className="w-3/4 flex flex-col mx-auto space-y-2"

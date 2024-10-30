@@ -23,39 +23,34 @@ import ChangePassword from '@/pages/client/auth/ChangePassword';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ForgotPassword from '@/pages/client/auth/ForgotPassword';
 
-export interface IRouter {
-  path: string;
-  element: () => JSX.Element;
-  title: string;
-}
-type TRouter = RouteProps & {
+type IRouter = RouteProps & {
   title: string;
 };
-const clientRouter: TRouter[] = [
+const clientRouter: IRouter[] = [
   {
     path: '/parcel',
     element: <AdvisePage />,
-    title: 'Gói khám đa khoa'
+    title: 'Gói khám đa khoa',
   },
   {
     path: '/awards',
     element: <AchievementPage />,
-    title: 'Thành tựu'
+    title: 'Thành tựu',
   },
   {
     path: '/about-us',
     element: <AboutPage />,
-    title: 'Giới thiệu về chúng tôi'
+    title: 'Giới thiệu về chúng tôi',
   },
   {
     path: '/clinic-network',
     element: <BranchsPage />,
-    title: 'Hệ thống 16 phòng khám trên cả nước'
+    title: 'Hệ thống 16 phòng khám trên cả nước',
   },
   {
     path: '/community',
     element: <CommunityPage />,
-    title: 'Cộng đồng'
+    title: 'Cộng đồng',
   },
   {
     path: '/change-password',
@@ -64,69 +59,69 @@ const clientRouter: TRouter[] = [
         <ChangePassword />
       </ProtectedRoute>
     ),
-    title: 'Thay đổi mật khẩu'
+    title: 'Thay đổi mật khẩu',
   },
   {
     path: '/',
     element: <HomePage />,
-    title: 'ClinicPro'
-  }
+    title: 'ClinicPro',
+  },
 ];
 
 const adminRouter: IRouter[] = [
   {
     path: '/dashboard',
-    element: Dashboard,
-    title: 'Trang quản lý'
+    element: <Dashboard />,
+    title: 'Trang quản lý',
   },
   {
     path: '/prescriptions',
-    element: Prescription,
-    title: 'Danh sách đơn thuốc'
+    element: <Prescription />,
+    title: 'Danh sách đơn thuốc',
   },
   {
     path: '/departments/:id',
-    element: DepartmentDetail,
-    title: 'Phòng Ban'
+    element: <DepartmentDetail />,
+    title: 'Phòng Ban',
   },
   {
     path: '/departments',
-    element: Department,
-    title: 'Danh sách phòng ban'
+    element: <Department />,
+    title: 'Danh sách phòng ban',
   },
   {
     path: '/package',
-    element: PackagePage,
-    title: 'Danh sách gói khám'
+    element: <PackagePage />,
+    title: 'Danh sách gói khám',
   },
   {
     path: '/add-package',
-    element: AddPackage,
-    title: 'Tạo gói khám'
-  }
+    element: <AddPackage />,
+    title: 'Tạo gói khám',
+  },
 ];
 
 const authRouter: IRouter[] = [
   {
     path: '/register',
-    element: RegisterPage,
-    title: 'Đăng ký tài khoản'
+    element: <RegisterPage />,
+    title: 'Đăng ký tài khoản',
   },
   {
     path: '/login',
-    element: LoginPage,
-    title: 'Đăng nhập tài khoản'
+    element: <LoginPage />,
+    title: 'Đăng nhập tài khoản',
   },
   {
     path: '/login-otp',
-    element: LoginOTP,
-    title: 'Đăng nhập qua OTP'
+    element: <LoginOTP />,
+    title: 'Đăng nhập qua OTP',
   },
   {
     path: '/forgot-password',
-    element: ForgotPassword,
-    title: 'Quên mật khẩu'
-  }
+    element: <ForgotPassword />,
+    title: 'Quên mật khẩu',
+  },
 ];
 
 export default function AppRouter() {
@@ -154,10 +149,10 @@ export default function AppRouter() {
         </Route>
         <Route element={<AdminLayout />}>
           {adminRouter.length > 0 &&
-            adminRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
+            adminRouter.map(route => <Route key={route.path} path={route.path} element={route.element} />)}
         </Route>
         {authRouter.length > 0 &&
-          authRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />}></Route>)}
+          authRouter.map(route => <Route key={route.path} path={route.path} element={route.element}></Route>)}
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </>

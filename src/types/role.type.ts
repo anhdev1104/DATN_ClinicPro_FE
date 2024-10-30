@@ -1,7 +1,7 @@
 import { ROLE } from '@/constants/define';
 
 interface IAction {
-  id: number;
+  id: string;
   name: 'CREATE' | 'UPDATE' | 'DELETE' | 'READ';
 }
 
@@ -13,7 +13,7 @@ export interface IPermission {
 }
 
 export interface IRole {
-  id: number;
+  id: string;
   name: keyof typeof ROLE;
   description: string;
   permissions?: IPermission[];

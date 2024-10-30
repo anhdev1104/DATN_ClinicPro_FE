@@ -1,13 +1,9 @@
-import { cn, convertStringToASCII } from '@/utils/utils';
-import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-import { forwardRef, useState } from 'react';
-import { v4 } from 'uuid';
 import useToggle from '@/hooks/useToggle';
 import { FC } from 'react';
 import { useController, Control } from 'react-hook-form';
 import { ArrowDropDownIcon, ArrowDropUpIcon } from '../icons';
 
-interface Option {
+export interface Option {
   label: string;
   value: string | number;
 }
@@ -17,9 +13,10 @@ interface CustomSelectProps {
   options: Option[];
   name: string;
   placeholder: string;
+  setIsDialogOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CustomSelect: FC<CustomSelectProps> = ({ control, options, name, placeholder }) => {
+const CustomSelect: FC<CustomSelectProps> = ({ control, options, name, placeholder, setIsDialogOpen }) => {
   const { field } = useController({ name, control, defaultValue: '' });
   const { show, handleToggle } = useToggle();
   const selectedOption = options.find(option => option.value === field.value);
@@ -27,6 +24,7 @@ const CustomSelect: FC<CustomSelectProps> = ({ control, options, name, placehold
   const handleSelect = (value: string | number) => {
     field.onChange(value);
     handleToggle();
+    setIsDialogOpen && setIsDialogOpen(true);
   };
 
   return (
@@ -46,7 +44,9 @@ const CustomSelect: FC<CustomSelectProps> = ({ control, options, name, placehold
               <li
                 key={option.value}
                 className={`py-2 px-3 cursor-pointer hover:bg-gray-200/70 ${field.value === option.value ? 'bg-gray-100/80' : ''}`}
-                onClick={() => handleSelect(option.value)}
+                onClick={() => {
+                  handleSelect(option.value);
+                }}
               >
                 {option.label}
               </li>

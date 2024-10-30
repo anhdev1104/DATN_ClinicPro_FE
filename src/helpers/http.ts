@@ -11,8 +11,8 @@ class Http {
       baseURL: import.meta.env.VITE_API_URL,
       timeout: 10000,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     this.api.interceptors.request.use(
@@ -27,7 +27,7 @@ class Http {
       function (error) {
         store.dispatch(setGlobalState({ loading: false }));
         return Promise.reject(error);
-      }
+      },
     );
 
     this.api.interceptors.response.use(
@@ -48,12 +48,14 @@ class Http {
             originalRequest.headers['Authorization'] = `Bearer ${response.data.access_token}`;
             return this.api(originalRequest);
           } catch (error) {
+            // eslint-disable-next-line no-console
+            console.log(error);
             store.dispatch(authLogout());
             toast.info('Tài khoản của bạn đã hết phiên đăng nhập !');
           }
         }
         return Promise.reject(error);
-      }
+      },
     );
   }
 
