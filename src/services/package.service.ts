@@ -32,7 +32,7 @@ export const createPackage = async (formData: FormData) => {
 };
 export const updatePackage = async (id: string, data: FormData) => {
   try {
-    const response = await http.update(`/packages/${id}`, data, {
+    const response = await http.post(`/packages/${id}`, data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

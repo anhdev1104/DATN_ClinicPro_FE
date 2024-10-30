@@ -80,7 +80,9 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
             <tbody>
               {packages.map((pkg, index) => (
                 <tr key={index} className="odd">
-                  <td className="p-4 w-1/12">{index + 1}</td>
+                  <Link to={`/package/${pkg.id}`}>
+                    <td className="p-4 w-1/12">{index + 1}</td>
+                  </Link>
                   <td className="p-4 text-gray-800 w-2/12">{pkg.name}</td>
                   <td className="p-4 text-gray-600 w-2/12">{pkg.description}</td>
                   <td className="p-4 profile-image w-2/12 h-32">

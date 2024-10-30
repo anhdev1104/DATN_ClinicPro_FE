@@ -19,7 +19,6 @@ const PackageDetail = () => {
         setLoading(false);
         return;
       }
-
       setLoading(true);
       setError(null);
       console.log(`Fetching package with ID: ${id}`);
@@ -45,11 +44,6 @@ const PackageDetail = () => {
   if (loading) {
     return <div>Đang tải dữ liệu...</div>;
   }
-
-  if (error) {
-    return <div style={{ color: 'red' }}>{error}</div>;
-  }
-
   return (
     <section className="package">
       <DirectRoute nav="Quản lý gói khám" subnav="Chi tiết gói khám" />

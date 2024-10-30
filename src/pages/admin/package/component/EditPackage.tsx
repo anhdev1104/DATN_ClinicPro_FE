@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import DirectRoute from '@/components/direct';
-import { updatePackage, getPackages } from '@/services/package.service';
+import { updatePackage, getPackageById } from '@/services/package.service';
 import { IPackage } from '@/types/package.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Input from '@/components/input';
@@ -12,15 +12,12 @@ import MessageForm from '@/components/message';
 import { List } from '@/components/icons';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-
-// Validation Schema
 const schema = yup.object().shape({
   name: yup.string().trim().required('Không được để trống'),
   description: yup.string().required('Không được để trống'),
   content: yup.string().trim().required('Không được để trống'),
   image: yup.mixed().notRequired(),
 });
-
 const EditPackage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -40,8 +37,13 @@ const EditPackage = () => {
   useEffect(() => {
     const fetchPackage = async () => {
       try {
-        const response = await getPackages();
-        const selectedPackage = response.data.find((pkg: IPackage) => pkg.id === id);
+        if (!id) {
+          setLoading(false);
+          return;
+        }
+        setLoading(true);
+        const response = await getPackageById(id);
+        const selectedPackage = response.data;
         if (selectedPackage) {
           setPackageData(selectedPackage);
           setValue('name', selectedPackage.name);
