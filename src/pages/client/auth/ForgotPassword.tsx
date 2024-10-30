@@ -16,10 +16,10 @@ import former, { OptionsWithForm } from '@/lib/former';
 
 const forgotPasswordSchema = yup.object({
   email: yup.string().required().ensure().matches(isEmailRegex, { message: 'Trường này phải là email' }),
-  email: yup.string().required().ensure().matches(isEmailRegex, { message: 'Trường này phải là email' }),
 });
 export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 
+// eslint-disable-next-line react-refresh/only-export-components
 const ForgotPassword = () => {
   const {
     control,
@@ -61,7 +61,6 @@ const ForgotPassword = () => {
               initial={{ scale: 0.8, opacity: 0.7 }}
               animate={{
                 scale: 1,
-                opacity: 1,
                 opacity: 1,
               }}
               className="my-10"
@@ -118,4 +117,5 @@ const optionsWithForm: OptionsWithForm = {
   mode: 'onChange',
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default former(ForgotPassword, forgotPasswordSchema, optionsWithForm);
