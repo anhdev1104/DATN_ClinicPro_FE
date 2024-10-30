@@ -1,3 +1,4 @@
+ 
 import { ArrowLeft, VisibilityIcon, VisibilityOffIcon } from '@/components/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '@/components/input';
@@ -51,7 +52,6 @@ const RegisterPage = () => {
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
-
   const handleRegister: SubmitHandler<IAccount> = async data => {
     if (!isValid) return;
     const { password_confirm, ...dataRegister } = data;

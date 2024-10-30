@@ -22,6 +22,7 @@ interface ResetPasswordProps extends HocFormProps {
   email: string;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 const ResetPassword: React.FC<ResetPasswordProps> = ({
   handleSendEmail,
   email,
@@ -31,7 +32,6 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
   loading,
 }) => {
   const navigate = useNavigate();
-
   const handleSendRequest = async (data: ResetPassword) => {
     try {
       const response = await resetPassword<IResetPassword>(data);
@@ -104,4 +104,5 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default former(ResetPassword, resetPasswordSchema);
