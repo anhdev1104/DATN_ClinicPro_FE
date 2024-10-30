@@ -5,7 +5,7 @@ import Label from '@/components/label';
 import { SubmitHandler, useWatch } from 'react-hook-form';
 import { Button } from '@/components/button';
 import Select from '@/components/select';
-import { getCategoriMedication, getMedication } from '@/services/prescriptions.service';
+import { getCategoryMedication, getMedication } from '@/services/prescriptions.service';
 import { useEffect, useState } from 'react';
 import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
 import { IMedications, IPrescription } from '@/types/prescription.type';
@@ -16,35 +16,35 @@ import DirectRoute from '@/components/direct';
 const patientsOptions = [
   {
     label: 'Nguyễn Văn A',
-    value: 1,
+    value: '1',
   },
   {
     label: 'Trần Thị B',
-    value: 2,
+    value: '2',
   },
   {
     label: 'Lê Văn C',
-    value: 3,
+    value: '3',
   },
   {
     id: '1',
     label: 'Phạm Thị D',
-    value: 4,
+    value: '4',
   },
   {
     id: '1',
     label: 'Nguyễn Văn E',
-    value: 5,
+    value: '5',
   },
   {
     id: '1',
     label: 'Trần Văn F',
-    value: 6,
+    value: '6',
   },
   {
     id: '1',
     label: 'Lê Thị G',
-    value: 7,
+    value: '7',
   },
 ];
 
@@ -54,6 +54,7 @@ interface AddPrescripton {
 
 const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   const [medicationCategory, setMedicationCategory] = useState([]);
+
   const [medications, setMedications] = useState<IMedications[]>([]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -64,9 +65,11 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
       reset,
       formState: { isSubmitting, isValid },
       handleSubmit,
-      // getValues,
+      getValues,
     },
   } = usePrescriptionContextForm();
+  const medicationsForm = getValues();
+  console.log(medicationsForm.medications.filter((item: any) => item !== null || item.medication_id !== undefined));
 
   const selectedCategoryId = useWatch({
     control,
@@ -75,7 +78,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
 
   useEffect(() => {
     (async () => {
-      const res = await getCategoriMedication();
+      const res = await getCategoryMedication();
       const data = convertToOptions(res.data);
       setMedicationCategory(data);
     })();
@@ -168,13 +171,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                 >
                   Xác nhận
                 </Button>
-                <Button
-                  type="submit"
-                  styled="normal"
-                  isLoading={isSubmitting}
-                  disabled={isSubmitting}
-                  onClick={handleResetForm}
-                >
+                <Button type="button" styled="normal" onClick={handleResetForm}>
                   Nhập lại
                 </Button>
               </div>

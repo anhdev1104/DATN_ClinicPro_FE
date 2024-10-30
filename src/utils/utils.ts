@@ -31,3 +31,10 @@ export const formatQueryParam = (endPoint: string, queryKey: queryKey) => {
 export const filterOutManagers = <T extends any[]>(data: T) => {
   return data.filter(fil => fil.role.id === 1);
 };
+
+export const regexAllowTypeNumber = /^[0-9]*$/;
+export const isEmailRegex =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+export const validateEmail = (email: string) => {
+  return String(email).toLowerCase().match(isEmailRegex);
+};

@@ -1,7 +1,7 @@
 export enum STATUS {
   ACTIVE = 'active',
   INACTIVE = 'inactive',
-  DISABLED = 'disabled'
+  DISABLED = 'disabled',
 }
 
 export enum ROLE {
@@ -10,5 +10,5 @@ export enum ROLE {
   NURSE = 'nurse',
   MANAGER = 'manager',
   DOCTOR = 'doctor',
-  DIRECTOR = 'director'
+  DIRECTOR = 'director',
 }

@@ -51,7 +51,6 @@ const RegisterPage = () => {
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
-
   const handleRegister: SubmitHandler<IAccount> = async data => {
     if (!isValid) return;
     const { password_confirm, ...dataRegister } = data;

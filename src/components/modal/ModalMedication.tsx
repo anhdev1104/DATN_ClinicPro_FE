@@ -31,7 +31,7 @@ const ModalMedication: FC<IModalMedication> = ({
       PaperProps={{
         style: {
           backgroundColor: '#fff',
-          padding: '20px', // Giảm padding để có thêm không gian
+          padding: '20px',
           width: '1000px',
           height: '800px',
           borderRadius: '8px',

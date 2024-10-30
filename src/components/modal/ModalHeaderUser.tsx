@@ -37,6 +37,12 @@ const ModalHeaderUser = forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElemen
       >
         Lịch sử khám bệnh
       </Link>
+      <Link
+        to="/change-password"
+        className="bg-white px-3 py-2 text-xs cursor-pointer block transition-all ease-linear hover:bg-gray-100"
+      >
+        Thay đổi mật khẩu
+      </Link>
       <div
         className="bg-white px-3 py-2 text-xs cursor-pointer block transition-all ease-linear hover:bg-gray-100"
         onClick={handleLogoutUser}
