@@ -1,4 +1,5 @@
 import { authLogout, refreshToken } from '@/redux/auth/authSlice';
+import { setGlobalState } from '@/redux/globalStore';
 import { store } from '@/redux/store';
 import axios, { AxiosInstance } from 'axios';
 import { toast } from 'react-toastify';
@@ -16,6 +17,7 @@ class Http {
 
     this.api.interceptors.request.use(
       async config => {
+        store.dispatch(setGlobalState({ loading: true }));
         const accessToken = store.getState().auth.data?.access_token;
         if (accessToken) {
           config.headers['Authorization'] = `Bearer ${accessToken}`;
@@ -23,13 +25,18 @@ class Http {
         return config;
       },
       function (error) {
+        store.dispatch(setGlobalState({ loading: false }));
         return Promise.reject(error);
       },
     );
 
     this.api.interceptors.response.use(
-      response => response,
+      response => {
+        store.dispatch(setGlobalState({ loading: false }));
+        return response;
+      },
       async error => {
+        store.dispatch(setGlobalState({ loading: false }));
         const originalRequest = error.config;
         const errorResponse = error.response.data.message;
 

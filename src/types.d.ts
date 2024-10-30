@@ -1,7 +1,3 @@
-interface Enviroment {
-  baseUrl: string;
-}
-
 interface ResponseTypes<T> {
   data: T;
   next_page_url: string;

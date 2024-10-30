@@ -33,7 +33,7 @@ const DepartmentDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const open = useSelector(state => state.departmentState.isOpenDepartmentDetail);
+  const open = useSelector(state => state.department.isOpenDepartmentDetail);
   const { data: department, isSuccess } = useGetDepartmentDetailQuery(id as string, {
     refetchOnMountOrArgChange: true,
   });
@@ -42,7 +42,6 @@ const DepartmentDetail = () => {
   const { currentData } = usersApi.endpoints.getAllUsers.useQuery();
   const { isFetching } = usersApi.endpoints.getAllUsers.useQueryState();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const users = useMemo(() => (currentData ? filterOutManagers<IUserInfo[]>(currentData.data) : []), [isFetching]);
   const options: Options[] = users.map((user: any) => ({ label: user.user_info.fullname, id: user.id }));
 
