@@ -23,15 +23,10 @@ import ChangePassword from '@/pages/client/auth/ChangePassword';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ForgotPassword from '@/pages/client/auth/ForgotPassword';
 
-export interface IRouter {
-  path: string;
-  element: () => JSX.Element;
-  title: string;
-}
-type TRouter = RouteProps & {
+type IRouter = RouteProps & {
   title: string;
 };
-const clientRouter: TRouter[] = [
+const clientRouter: IRouter[] = [
   {
     path: '/parcel',
     element: <AdvisePage />,
@@ -76,32 +71,32 @@ const clientRouter: TRouter[] = [
 const adminRouter: IRouter[] = [
   {
     path: '/dashboard',
-    element: Dashboard,
+    element: <Dashboard />,
     title: 'Trang quản lý',
   },
   {
     path: '/prescriptions',
-    element: Prescription,
+    element: <Prescription />,
     title: 'Danh sách đơn thuốc',
   },
   {
     path: '/departments/:id',
-    element: DepartmentDetail,
+    element: <DepartmentDetail />,
     title: 'Phòng Ban',
   },
   {
     path: '/departments',
-    element: Department,
+    element: <Department />,
     title: 'Danh sách phòng ban',
   },
   {
     path: '/package',
-    element: PackagePage,
+    element: <PackagePage />,
     title: 'Danh sách gói khám',
   },
   {
     path: '/add-package',
-    element: AddPackage,
+    element: <AddPackage />,
     title: 'Tạo gói khám',
   },
 ];
@@ -109,22 +104,22 @@ const adminRouter: IRouter[] = [
 const authRouter: IRouter[] = [
   {
     path: '/register',
-    element: RegisterPage,
+    element: <RegisterPage />,
     title: 'Đăng ký tài khoản',
   },
   {
     path: '/login',
-    element: LoginPage,
+    element: <LoginPage />,
     title: 'Đăng nhập tài khoản',
   },
   {
     path: '/login-otp',
-    element: LoginOTP,
+    element: <LoginOTP />,
     title: 'Đăng nhập qua OTP',
   },
   {
     path: '/forgot-password',
-    element: ForgotPassword,
+    element: <ForgotPassword />,
     title: 'Quên mật khẩu',
   },
 ];
@@ -154,10 +149,10 @@ export default function AppRouter() {
         </Route>
         <Route element={<AdminLayout />}>
           {adminRouter.length > 0 &&
-            adminRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />} />)}
+            adminRouter.map(route => <Route key={route.path} path={route.path} element={route.element} />)}
         </Route>
         {authRouter.length > 0 &&
-          authRouter.map(route => <Route key={route.path} path={route.path} element={<route.element />}></Route>)}
+          authRouter.map(route => <Route key={route.path} path={route.path} element={route.element}></Route>)}
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </>
