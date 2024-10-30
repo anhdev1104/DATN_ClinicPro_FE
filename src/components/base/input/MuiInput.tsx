@@ -54,16 +54,16 @@ const MuiInput = forwardRef<HTMLInputElement, MuiInputProps>(
                   </IconButton>
                 </InputAdornment>
               ),
-              ...slotProps?.input
+              ...slotProps?.input,
             },
-            ...slotProps
+            ...slotProps,
           }}
           {...props}
           ref={ref}
         />
       </>
     );
-  }
+  },
 );
 
 const StylesInput = styled(TextField)`

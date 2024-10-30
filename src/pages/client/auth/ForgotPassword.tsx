@@ -3,7 +3,7 @@ import PosterAuth from './components/PosterAuth';
 import { motion } from 'framer-motion';
 import BaseInput from '@/components/base/input';
 import { Button } from '@mantine/core';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import yup from '@/utils/locate';
 import { isEmailRegex } from '@/utils/utils';
 import { forgotPassword } from '@/services/auth.service';
@@ -12,24 +12,23 @@ import { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { IForgotPassWord, IForgotPassWordError } from '@/types/auth.type';
 import ResetPassword from './ResetPassword';
-import former, { HocFormProps } from '@/lib/former';
+import former, { OptionsWithForm } from '@/lib/former';
 
 const forgotPasswordSchema = yup.object({
-  email: yup.string().required().ensure().matches(isEmailRegex, { message: 'Trường này phải là email' })
+  email: yup.string().required().ensure().matches(isEmailRegex, { message: 'Trường này phải là email' }),
 });
 export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 
-const ForgotPassword: React.FC<HocFormProps> = ({
-  loading,
-  control,
-  handleSubmit,
-  setError,
-  getValues,
-  formState: { isValid, errors }
-}) => {
+const ForgotPassword = () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid, errors, disabled },
+    setError,
+    getValues,
+  } = useFormContext<ForgotPassword>();
   const [isSend, setIsSend] = useState(false);
   const navigate = useNavigate();
-
   const handleSendEmail = async (data: ForgotPassword) => {
     if (!isValid) {
       const message = errors.email?.message;
@@ -61,7 +60,7 @@ const ForgotPassword: React.FC<HocFormProps> = ({
               initial={{ scale: 0.8, opacity: 0.7 }}
               animate={{
                 scale: 1,
-                opacity: 1
+                opacity: 1,
               }}
               className="my-10"
             >
@@ -97,7 +96,7 @@ const ForgotPassword: React.FC<HocFormProps> = ({
                       );
                     }}
                   />
-                  <Button disabled={loading} loading={loading} type="submit">
+                  <Button disabled={disabled} loading={disabled} type="submit">
                     Gửi
                   </Button>
                 </form>
@@ -112,4 +111,9 @@ const ForgotPassword: React.FC<HocFormProps> = ({
     </>
   );
 };
-export default former(ForgotPassword, forgotPasswordSchema);
+
+const optionsWithForm: OptionsWithForm = {
+  mode: 'onChange',
+};
+
+export default former(ForgotPassword, forgotPasswordSchema, optionsWithForm);

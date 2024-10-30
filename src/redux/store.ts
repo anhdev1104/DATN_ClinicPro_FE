@@ -10,7 +10,7 @@ import { usersApi } from './api/users';
 const persistConfig = {
   key: 'root',
   version: 1,
-  storage
+  storage,
 };
 
 const rootReducer = combineReducers({
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
   [departmentSlice.name]: departmentSlice.reducer,
   [departmentApi.reducerPath]: departmentApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
-  [globalSlice.name]: globalSlice.reducer
+  [globalSlice.name]: globalSlice.reducer,
 });
 
 export const store = configureStore({
@@ -26,9 +26,9 @@ export const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
-      }
-    }).concat(departmentApi.middleware, usersApi.middleware)
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(departmentApi.middleware, usersApi.middleware),
 });
 
 const persistor = persistStore(store);

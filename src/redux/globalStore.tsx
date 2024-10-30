@@ -4,7 +4,7 @@ export interface State {
   loading: boolean;
 }
 const initialState: State = {
-  loading: false
+  loading: false,
 };
 
 export const globalSlice = createSlice({
@@ -13,8 +13,8 @@ export const globalSlice = createSlice({
   reducers: {
     setGlobalState(state, action: PayloadAction<Partial<State>>) {
       Object.assign(state, action.payload);
-    }
-  }
+    },
+  },
 });
 
 export const { setGlobalState } = globalSlice.actions;

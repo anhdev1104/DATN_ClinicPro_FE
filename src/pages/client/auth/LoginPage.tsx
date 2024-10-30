@@ -22,7 +22,7 @@ const schema = yup.object({
     .trim()
     .required('Trường này là bắt buộc !')
     .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'Email không dúng định dạng !' }),
-  password: yup.string().trim().required('Mật khẩu không được để trống !').min(6, 'Mật khẩu ít nhất 6 ký tự trở lên !')
+  password: yup.string().trim().required('Mật khẩu không được để trống !').min(6, 'Mật khẩu ít nhất 6 ký tự trở lên !'),
   // .matches(
   //   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
   //   'Mật khẩu phải chứa ít nhất một số và một ký tự đặc biệt !'
@@ -36,10 +36,10 @@ const LoginPage = () => {
     handleSubmit,
     control,
     formState: { errors, isSubmitting, isValid },
-    reset
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   const dispatch = useDispatch<AppDispatch>();

@@ -23,7 +23,7 @@ import {
   Slider,
   Switch,
   Textarea,
-  TextInput
+  TextInput,
 } from '@mantine/core';
 import { FileInput } from 'lucide-react';
 
