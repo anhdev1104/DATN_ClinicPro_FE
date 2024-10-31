@@ -1,12 +1,10 @@
 import BaseInput from '@/components/base/input';
-import { useSelector } from '@/hooks/redux';
+import former, { OptionsWithForm } from '@/lib/former';
 import { changePassword } from '@/services/auth.service';
 import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
 import yup from '@/utils/locate';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Container, Paper, Stack, Title } from '@mantine/core';
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 export const passwordSchema = yup
@@ -17,30 +15,28 @@ export const passwordSchema = yup
       .string()
       .oneOf([yup.ref('newPassword')], 'mật khẩu không khớp!')
       .default('')
-      .required()
+      .required(),
   })
   .required();
 export type PasswordProps = yup.InferType<typeof passwordSchema>;
 
-export default function ChangePassword() {
-  const [isLoading, setIsLoading] = useState(false);
-  const { loading } = useSelector(state => state.global);
-  const { control, handleSubmit, setError, reset, formState } = useForm({
-    resolver: yupResolver(passwordSchema),
-    mode: 'onChange',
-    disabled: loading,
-    defaultValues: passwordSchema.cast({})
-  });
+const ChangePassword = () => {
+  const {
+    control,
+    formState: { isValid, errors, disabled },
+    reset,
+    setError,
+    handleSubmit,
+  } = useFormContext<PasswordProps>();
 
   const handleChangePassword = async <T extends Array<keyof PasswordProps>>(data: PasswordProps) => {
-    const listName = Object.keys(data);
-    const errorName = Object.keys(formState.errors) as T;
-    if (listName.includes(errorName[0])) {
-      setError(errorName[0], { message: formState.errors[errorName[0]]?.message });
+    if (!isValid) {
+      const errorName = Object.keys(errors) as T;
+      setError(errorName[0], { message: errors[errorName[0]]?.message });
       return;
     }
     try {
-      setIsLoading(true);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmNewPassword, ...formData } = yup.object().snakeCase().cast(data) as PasswordProps;
       const response = await changePassword<ChangePasswordResponse>(formData);
       toast.success(response.message);
@@ -51,13 +47,14 @@ export default function ChangePassword() {
         const errorName = Object.keys(yup.object().camelCase().cast(errors)) as T;
         const errorPure = Object.keys(errors) as Array<keyof typeof errors>;
         setError(errorName[0], { message: errors[errorPure[0]][0] });
-      } else {
+      } else if (message) {
         toast.error(message);
+      } else {
+        toast.error('lỗi server vui lòng đợi trong giây lát');
       }
-    } finally {
-      setIsLoading(false);
     }
   };
+
   return (
     <>
       <Container className="min-h-dvh flex justify-center">
@@ -118,7 +115,7 @@ export default function ChangePassword() {
                   />
                 )}
               />
-              <Button fullWidth loading={isLoading} disabled={isLoading} className="my-4" type="submit">
+              <Button fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
                 Gửi
               </Button>
             </Stack>
@@ -127,4 +124,9 @@ export default function ChangePassword() {
       </Container>
     </>
   );
-}
+};
+
+const optionsWithForm: OptionsWithForm = {
+  mode: 'onChange',
+};
+export default former(ChangePassword, passwordSchema, optionsWithForm);

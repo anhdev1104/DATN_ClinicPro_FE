@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 const schema = yup.object({
-  search: yup.string().required('Chưa nhập vào từ khoá tìm kiếm !')
+  search: yup.string().required('Chưa nhập vào từ khoá tìm kiếm !'),
 });
 
 const FormSearchHome = () => {
@@ -15,10 +15,10 @@ const FormSearchHome = () => {
     handleSubmit,
     control,
     formState: { isDirty },
-    reset
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   const handleSearch: SubmitHandler<{ search: string }> = async query => {

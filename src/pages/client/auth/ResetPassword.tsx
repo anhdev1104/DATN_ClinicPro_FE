@@ -1,9 +1,6 @@
-import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useSelector } from '@/hooks/redux';
 import { useNavigate } from 'react-router-dom';
-import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { Controller, useFormContext } from 'react-hook-form';
 import { ForgotPassword } from './ForgotPassword';
 import yup from '@/utils/locate';
 import { resetPassword } from '@/services/auth.service';
@@ -12,10 +9,11 @@ import { regexAllowTypeNumber } from '@/utils/utils';
 import { Button, Text } from '@mantine/core';
 import { toast } from 'react-toastify';
 import { IResetPassword, IResetPasswordError } from '@/types/auth.type';
+import former from '@/lib/former';
 
 const resetPasswordSchema = yup.object({
-  otp: yup.string().min(6).max(6).length(6).default('').required(),
-  password: yup.string().ensure().required().min(8)
+  otp: yup.string().length(6).default('').required(),
+  password: yup.string().ensure().required().min(8),
 });
 
 export type ResetPassword = yup.InferType<typeof resetPasswordSchema>;
@@ -25,17 +23,15 @@ interface ResetPasswordProps {
 }
 
 const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { loading } = useSelector(state => state.global);
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { disabled },
+  } = useFormContext<ResetPassword>();
   const navigate = useNavigate();
-  const { control, handleSubmit, reset } = useForm({
-    resolver: yupResolver(resetPasswordSchema),
-    disabled: loading,
-    defaultValues: resetPasswordSchema.cast({})
-  });
   const handleSendRequest = async (data: ResetPassword) => {
     try {
-      setIsLoading(true);
       const response = await resetPassword<IResetPassword>(data);
       toast.success(response.message);
       navigate('/login');
@@ -43,20 +39,19 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
     } catch (error) {
       const axiosError = error as IResetPasswordError;
       toast.error(axiosError.error);
-    } finally {
-      setIsLoading(false);
     }
   };
   const handleResendOtp = async () => {
-    if (!loading) handleSendEmail({ email });
+    if (!disabled) handleSendEmail({ email });
   };
+
   return (
     <>
       <motion.form
         initial={{ scale: 0.8, opacity: 0.7 }}
         animate={{
           scale: 1,
-          opacity: 1
+          opacity: 1,
         }}
         onSubmit={handleSubmit(handleSendRequest)}
         className="w-3/4 flex flex-col mx-auto space-y-2"
@@ -93,7 +88,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
             );
           }}
         />
-        <Button disabled={isLoading} loading={isLoading} type="submit">
+        <Button disabled={disabled} loading={disabled} type="submit">
           Gửi
         </Button>
         <Text size="sm" className="text-center select-none">
@@ -107,4 +102,5 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
   );
 };
 
-export default memo(ResetPassword);
+// eslint-disable-next-line react-refresh/only-export-components
+export default former(ResetPassword, resetPasswordSchema);

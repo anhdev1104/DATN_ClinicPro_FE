@@ -3,48 +3,50 @@ import PosterAuth from './components/PosterAuth';
 import { motion } from 'framer-motion';
 import BaseInput from '@/components/base/input';
 import { Button } from '@mantine/core';
-import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { Controller, useFormContext } from 'react-hook-form';
 import yup from '@/utils/locate';
-import { useSelector } from '@/hooks/redux';
 import { isEmailRegex } from '@/utils/utils';
 import { forgotPassword } from '@/services/auth.service';
 import { toast } from 'react-toastify';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { IForgotPassWord, IForgotPassWordError } from '@/types/auth.type';
 import ResetPassword from './ResetPassword';
+import former, { OptionsWithForm } from '@/lib/former';
 
 const forgotPasswordSchema = yup.object({
-  email: yup.string().required().ensure().matches(isEmailRegex, { message: 'Trường này phải là email' })
+  email: yup.string().required().ensure().matches(isEmailRegex, { message: 'Trường này phải là email' }),
 });
 export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 
+// eslint-disable-next-line react-refresh/only-export-components
 const ForgotPassword = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { loading } = useSelector(state => state.global);
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid, errors, disabled },
+    setError,
+    getValues,
+  } = useFormContext<ForgotPassword>();
   const [isSend, setIsSend] = useState(false);
   const navigate = useNavigate();
-  const { control, handleSubmit, setError, getValues } = useForm({
-    resolver: yupResolver(forgotPasswordSchema),
-    mode: 'onChange',
-    disabled: loading,
-    defaultValues: forgotPasswordSchema.cast({})
-  });
-
-  const handleSendEmail = useCallback(async (data: ForgotPassword) => {
+  const handleSendEmail = async (data: ForgotPassword) => {
+    if (!isValid) {
+      const message = errors.email?.message;
+      if (message) setError('email', { message: errors.email?.message as string });
+      else toast.error('lỗi không xác định');
+      return;
+    }
     try {
-      setIsLoading(true);
       const response = await forgotPassword<IForgotPassWord>(data);
       toast.success(response.message);
       setIsSend(true);
     } catch (error) {
       const axiosError = error as IForgotPassWordError;
-      setError('email', { message: axiosError.error });
-    } finally {
-      setIsLoading(false);
+      if (!isSend) setError('email', { message: axiosError.error });
+      else toast.error(axiosError.error);
     }
-  }, []);
+  };
 
   return (
     <>
@@ -59,14 +61,14 @@ const ForgotPassword = () => {
               initial={{ scale: 0.8, opacity: 0.7 }}
               animate={{
                 scale: 1,
-                opacity: 1
+                opacity: 1,
               }}
               className="my-10"
             >
               <div className="relative flex justify-center items-center gap-2 mb-2">
                 <div
                   onClick={() => {
-                    isSend === true ? setIsSend(false) : navigate(-1);
+                    isSend === true ? setIsSend(false) : navigate('/login');
                   }}
                   className="absolute left-20 cursor-pointer"
                 >
@@ -95,7 +97,7 @@ const ForgotPassword = () => {
                       );
                     }}
                   />
-                  <Button disabled={isLoading} loading={isLoading} type="submit">
+                  <Button disabled={disabled} loading={disabled} type="submit">
                     Gửi
                   </Button>
                 </form>
@@ -110,4 +112,10 @@ const ForgotPassword = () => {
     </>
   );
 };
-export default ForgotPassword;
+
+const optionsWithForm: OptionsWithForm = {
+  mode: 'onChange',
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+export default former(ForgotPassword, forgotPasswordSchema, optionsWithForm);

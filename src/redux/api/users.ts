@@ -13,9 +13,9 @@ export const usersApi = createApi({
   endpoints: builder => ({
     getAllUsers: builder.query<ResponseTypes<IUserInfo[]>, void>({
       query: () => ({
-        url: 'users'
-      })
-    })
-  })
+        url: 'users',
+      }),
+    }),
+  }),
 });
 export const { useGetAllUsersQuery } = usersApi;

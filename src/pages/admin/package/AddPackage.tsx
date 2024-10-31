@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form';
 const AddPackage = () => {
   const {
     control,
-    formState: { isDirty }
+    formState: { isDirty },
   } = useForm({
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   return (

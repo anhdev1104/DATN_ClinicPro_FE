@@ -23,7 +23,7 @@ export const departmentSchema = yup
 const NewDepartment: React.FC<NewDepartmentProps> = () => {
   const { data, isSuccess } = useGetAllUsersQuery();
   const [handleAddDepartment, { reset }] = useAddAnDepartmentMutation();
-  const open = useSelector(state => state.departmentState.isOpenNewDepartment);
+  const open = useSelector(state => state.department.isOpenNewDepartment);
   const dispatch = useDispatch();
   const users: any = useMemo(() => isSuccess && filterOutManagers(data.data), [data]);
   const { control, handleSubmit, setValue } = useForm({

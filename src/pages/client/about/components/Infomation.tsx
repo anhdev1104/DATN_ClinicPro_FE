@@ -1,17 +1,17 @@
 const fakeData = [
   {
     name: 'Mục đích',
-    description: 'Vì mục tiêu nâng cao sức khỏe và hạnh phúc của mọi người dân Việt Nam.'
+    description: 'Vì mục tiêu nâng cao sức khỏe và hạnh phúc của mọi người dân Việt Nam.',
   },
   {
     name: 'Tầm nhìn',
     description:
-      'Trở thành đơn vị dẫn đầu toàn quốc về lĩnh vực chăm sóc sức khỏe và là thương hiệu chăm sóc sức khỏe đáng tin cậy nhất ở Việt Nam.'
+      'Trở thành đơn vị dẫn đầu toàn quốc về lĩnh vực chăm sóc sức khỏe và là thương hiệu chăm sóc sức khỏe đáng tin cậy nhất ở Việt Nam.',
   },
   {
     name: 'Sứ mệnh',
-    description: 'Vận hành mạng lưới tích hợp các thương hiệu chăm sóc sức khỏe tại các thành phố lớn.'
-  }
+    description: 'Vận hành mạng lưới tích hợp các thương hiệu chăm sóc sức khỏe tại các thành phố lớn.',
+  },
 ];
 
 const years = [
@@ -29,7 +29,7 @@ const years = [
   { year: 2018 },
   { year: 2021 },
   { year: 2022 },
-  { year: 2023 }
+  { year: 2023 },
 ];
 
 const Infomation = () => {

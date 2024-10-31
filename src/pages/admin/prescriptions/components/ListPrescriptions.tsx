@@ -15,13 +15,13 @@ const DataPackage = [
     days: '7',
     patient: {
       name: 'Trần Minh Khôi',
-      img: 'https://randomuser.me/api/portraits/men/1.jpg'
+      img: 'https://randomuser.me/api/portraits/men/1.jpg',
     },
     doctor: {
       name: 'Dr. Nguyễn Thị Hoa',
-      img: 'https://randomuser.me/api/portraits/women/1.jpg'
+      img: 'https://randomuser.me/api/portraits/women/1.jpg',
     },
-    instructions: 'Uống 1 viên mỗi ngày sau bữa ăn sáng với nhiều nước. Không nên uống khi bụng đói.'
+    instructions: 'Uống 1 viên mỗi ngày sau bữa ăn sáng với nhiều nước. Không nên uống khi bụng đói.',
   },
   {
     id: 2,
@@ -30,14 +30,14 @@ const DataPackage = [
     days: '5',
     patient: {
       name: 'Lê Thị Bích',
-      img: 'https://randomuser.me/api/portraits/women/2.jpg'
+      img: 'https://randomuser.me/api/portraits/women/2.jpg',
     },
     doctor: {
       name: 'Dr. Phạm Văn Thành',
-      img: 'https://randomuser.me/api/portraits/men/2.jpg'
+      img: 'https://randomuser.me/api/portraits/men/2.jpg',
     },
     instructions:
-      'Uống 1 viên mỗi 6 giờ nếu cần. Không vượt quá 4 viên trong 24 giờ. Có thể uống trước hoặc sau khi ăn.'
+      'Uống 1 viên mỗi 6 giờ nếu cần. Không vượt quá 4 viên trong 24 giờ. Có thể uống trước hoặc sau khi ăn.',
   },
   {
     id: 3,
@@ -46,14 +46,14 @@ const DataPackage = [
     days: '10',
     patient: {
       name: 'Nguyễn Hữu Tài',
-      img: 'https://randomuser.me/api/portraits/men/3.jpg'
+      img: 'https://randomuser.me/api/portraits/men/3.jpg',
     },
     doctor: {
       name: 'Dr. Lê Thị Thu Hằng',
-      img: 'https://randomuser.me/api/portraits/women/3.jpg'
+      img: 'https://randomuser.me/api/portraits/women/3.jpg',
     },
     instructions:
-      'Uống 1-2 viên mỗi 4-6 giờ khi cần. Uống thuốc cùng thức ăn hoặc sữa để giảm kích ứng dạ dày. Không vượt quá 6 viên trong 24 giờ.'
+      'Uống 1-2 viên mỗi 4-6 giờ khi cần. Uống thuốc cùng thức ăn hoặc sữa để giảm kích ứng dạ dày. Không vượt quá 6 viên trong 24 giờ.',
   },
   {
     id: 4,
@@ -62,25 +62,25 @@ const DataPackage = [
     days: '7',
     patient: {
       name: 'Phạm Hoàng Anh',
-      img: 'https://randomuser.me/api/portraits/men/4.jpg'
+      img: 'https://randomuser.me/api/portraits/men/4.jpg',
     },
     doctor: {
       name: 'Dr. Trần Văn Dũng',
-      img: 'https://randomuser.me/api/portraits/men/4.jpg'
+      img: 'https://randomuser.me/api/portraits/men/4.jpg',
     },
     instructions:
-      'Uống 1 viên mỗi 8 giờ (3 lần mỗi ngày) với hoặc không với thức ăn. Hoàn thành toàn bộ liệu trình điều trị, ngay cả khi các triệu chứng đã biến mất sau vài ngày.'
-  }
+      'Uống 1 viên mỗi 8 giờ (3 lần mỗi ngày) với hoặc không với thức ăn. Hoàn thành toàn bộ liệu trình điều trị, ngay cả khi các triệu chứng đã biến mất sau vài ngày.',
+  },
 ];
 const SearchOptions = [
   {
     label: 'Theo mã đơn thuốc',
-    value: 'Theo mã đơn thuốc'
+    value: 'Theo mã đơn thuốc',
   },
   {
     label: 'Theo mã người bệnh',
-    value: 'Theo mã người bệnh'
-  }
+    value: 'Theo mã người bệnh',
+  },
 ];
 
 interface DetailPrescriptionsProps {
@@ -106,7 +106,7 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
 
   const [open, setOpen] = useState<{ status: boolean; selectedItem: (typeof DataPackage)[0] | null }>({
     status: false,
-    selectedItem: null
+    selectedItem: null,
   });
 
   const handleClickOpen = (item: (typeof DataPackage)[0]) => {
@@ -226,7 +226,7 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
 
 function PrescriptionSearch() {
   const { control } = useForm({
-    mode: 'onChange'
+    mode: 'onChange',
   });
   return (
     <form className="relative flex gap-5 items-center">
@@ -256,8 +256,8 @@ function DetailPrescriptions({ close, statusLog, selectedItem }: DetailPrescript
           padding: '40px',
           width: '600px',
           borderRadius: '8px',
-          gap: '20px'
-        }
+          gap: '20px',
+        },
       }}
     >
       <div style={{ padding: '15px' }}>
@@ -287,7 +287,7 @@ function DetailPrescriptions({ close, statusLog, selectedItem }: DetailPrescript
               height: '30px',
               objectFit: 'cover',
               borderRadius: '9999px',
-              marginRight: '8px'
+              marginRight: '8px',
             }}
             alt={selectedItem.patient.name}
           />
@@ -305,7 +305,7 @@ function DetailPrescriptions({ close, statusLog, selectedItem }: DetailPrescript
                 height: '30px',
                 objectFit: 'cover',
                 borderRadius: '9999px',
-                marginRight: '8px'
+                marginRight: '8px',
               }}
               alt={selectedItem.doctor.name}
             />
