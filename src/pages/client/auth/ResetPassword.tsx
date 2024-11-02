@@ -5,11 +5,11 @@ import { ForgotPassword } from './ForgotPassword';
 import yup from '@/utils/locate';
 import { resetPassword } from '@/services/auth.service';
 import BaseInput from '@/components/base/input';
-import { regexAllowTypeNumber } from '@/utils/utils';
+import { numberRegex } from '@/utils/regex';
 import { Button, Text } from '@mantine/core';
 import { toast } from 'react-toastify';
 import { IResetPassword, IResetPasswordError } from '@/types/auth.type';
-import former from '@/lib/former';
+import former from '@/hocs/former';
 
 const resetPasswordSchema = yup.object({
   otp: yup.string().length(6).default('').required(),
@@ -64,7 +64,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
               <BaseInput.Pin
                 length={6}
                 error={fieldState.invalid}
-                type={regexAllowTypeNumber}
+                type={numberRegex}
                 inputType="tel"
                 inputMode="numeric"
                 oneTimeCode

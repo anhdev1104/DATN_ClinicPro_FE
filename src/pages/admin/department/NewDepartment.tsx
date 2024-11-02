@@ -16,7 +16,7 @@ export const departmentSchema = yup
   .object({
     name: yup.string().required().trim(),
     description: yup.string().required(),
-    manager_id: yup.string().required(),
+    manager_id: yup.string().required().optional(),
   })
   .required();
 
@@ -73,17 +73,10 @@ const NewDepartment: React.FC<NewDepartmentProps> = () => {
               )}
             />
             <Autocomplete
-              onChange={(_, value) => {
-                setValue(
-                  'manager_id',
-                  value
-                    ? users.find((user: any) => user.user_info.id.toString() === (value as string).split('-')[1]).id
-                    : '',
-                );
+              onChange={() => {
+                setValue('manager_id', users[0].id);
               }}
-              options={
-                isSuccess ? users.map((user: any) => `${user.user_info.fullname}-${user.user_info.id}`) : ['Not Found']
-              }
+              options={isSuccess ? users.map((user: any) => user.user_info.fullname) : ['Not Found']}
             />
             <Button type="submit">Save</Button>
           </form>

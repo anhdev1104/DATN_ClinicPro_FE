@@ -9,13 +9,11 @@ const theme = createTheme({
 
 function App() {
   return (
-    <>
-      <MantineProvider theme={theme} defaultColorScheme="light">
-        <BrowserRouter>
-          <AppRouter />
-        </BrowserRouter>
-      </MantineProvider>
-    </>
+    <MantineProvider theme={theme} defaultColorScheme="light">
+      <BrowserRouter>
+        <AppRouter />
+      </BrowserRouter>
+    </MantineProvider>
   );
 }
 

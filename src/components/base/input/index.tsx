@@ -4,6 +4,7 @@ import {
   ColorInput,
   ColorPicker,
   Fieldset,
+  FileInput,
   Input,
   InputDescription,
   InputError,
@@ -25,7 +26,6 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
-import { FileInput } from 'lucide-react';
 
 interface InputProps extends InputFactory {
   staticComponents: {
@@ -54,9 +54,11 @@ interface InputProps extends InputFactory {
     Textarea: typeof Textarea;
   };
 }
+
 const BaseInput = polymorphicFactory<InputProps>(({ ...props }, ref) => {
   return <Input {...props} ref={ref} />;
 });
+
 BaseInput.Password = PasswordInput;
 BaseInput.Group = TextInput;
 BaseInput.Pin = PinInput;

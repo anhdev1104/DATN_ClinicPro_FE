@@ -1,21 +1,6 @@
-export interface Manager {
-  id: number;
-  address: string;
-  fullname: string;
-  avatar: string;
-  dob: string;
-  phone_number: string;
-  gender: string;
-  email: string;
-}
+import { departmentDetailSchema, departmentSchema, managerSchema } from '@/schema/department.schema';
+import yup from '@/utils/locate';
 
-export interface Department {
-  id: number;
-  name: string;
-  description?: string;
-  manager_id?: number;
-  created_at: Date;
-  updated_at?: Date;
-  users_count?: number;
-  manager: Manager;
-}
+export type Department = yup.InferType<typeof departmentSchema>;
+export type Manager = yup.InferType<typeof managerSchema>;
+export type DepartmentDetail = yup.InferType<typeof departmentDetailSchema>;

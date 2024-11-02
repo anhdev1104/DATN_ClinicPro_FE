@@ -5,17 +5,17 @@ import BaseInput from '@/components/base/input';
 import { Button } from '@mantine/core';
 import { Controller, useFormContext } from 'react-hook-form';
 import yup from '@/utils/locate';
-import { isEmailRegex } from '@/utils/utils';
+import { emailRegex } from '@/utils/regex';
 import { forgotPassword } from '@/services/auth.service';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
 import { IForgotPassWord, IForgotPassWordError } from '@/types/auth.type';
 import ResetPassword from './ResetPassword';
-import former, { OptionsWithForm } from '@/lib/former';
+import former, { OptionsWithForm } from '@/hocs/former';
+import BaseIcon from '@/components/base/BaseIcon';
 
 const forgotPasswordSchema = yup.object({
-  email: yup.string().required().ensure().matches(isEmailRegex, { message: 'Trường này phải là email' }),
+  email: yup.string().required().ensure().matches(emailRegex, { message: 'Trường này phải là email' }),
 });
 export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 
@@ -72,7 +72,7 @@ const ForgotPassword = () => {
                   }}
                   className="absolute left-20 cursor-pointer"
                 >
-                  <ArrowLeft />
+                  <BaseIcon name="arrow-left" />
                 </div>
                 <div>
                   <h1 className="text-third text-[25px] uppercase font-bold">Quên mật khẩu</h1>

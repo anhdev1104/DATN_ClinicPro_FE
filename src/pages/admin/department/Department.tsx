@@ -1,116 +1,75 @@
 import HeaderDepartment from './components/Header';
-import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
-import { Divider } from '@mui/material';
-import dayjs from 'dayjs';
+import { Divider, Flex, Text } from '@mantine/core';
 import { useGetAllDepartmentQuery } from '@/redux/api/department';
 import NewDepartment from './NewDepartment';
-import { useDispatch } from '@/hooks/redux';
-import { PopupDepartmentDetail } from '@/redux/department/departmentSlice';
+// import { useDispatch } from '@/hooks/redux';
+// import { PopupDepartmentDetail } from '@/redux/department/departmentSlice';
 import { useNavigate } from 'react-router-dom';
-import Paginations from './components/Pagination';
-import { useState } from 'react';
-import type { Department } from '@/types/department.type';
-
-const columns: GridColDef[] = [
+import type { Department, Manager } from '@/types/department.type';
+import { ColumnDef } from '@tanstack/react-table';
+import Table from '@/components/table/Table';
+import { Avatar } from '@mantine/core';
+import { Badge } from '@mantine/core';
+import HeaderTable from '@/components/table/HeaderTable';
+import ActionWithRow from '@/components/table/ActionWithRow';
+const columns: ColumnDef<Department>[] = [
   {
-    field: 'id',
-    headerName: 'ID',
-    flex: 1,
-    editable: false,
-    hideable: true,
-    filterable: false,
-    sortable: false,
-    disableColumnMenu: true,
-    pinnable: false,
+    accessorKey: 'name',
+    header: ({ column }) => <HeaderTable column={column} title="Tên Phòng Ban" />,
+    cell: ({ row }) => <Text size="sm">{row.getValue('name') as string}</Text>,
   },
   {
-    field: 'name',
-    headerName: 'Name',
-    flex: 1,
-    editable: false,
-    hideable: true,
-    filterable: false,
-    sortable: false,
-    disableColumnMenu: true,
-    pinnable: false,
+    accessorKey: 'manager',
+    header: ({ column }) => <HeaderTable column={column} title="Quản Lý" />,
+    cell: ({ row }) => {
+      const value = row.getValue<Manager>('manager');
+      return value ? (
+        <Flex gap={8} align="center">
+          <Avatar size="sm" src={value.avatar} />
+          <Flex direction="column">
+            <Text size="sm">{value.fullname}</Text>
+            <Text size="xs" c="dimmed">
+              {value.email}
+            </Text>
+          </Flex>
+        </Flex>
+      ) : (
+        <Text size="sm">Không Sao tôi lo được</Text>
+      );
+    },
+    enableSorting: false,
   },
   {
-    field: 'manager',
-    headerName: 'Manager',
-    flex: 1,
-    editable: false,
-    hideable: true,
-    filterable: false,
-    sortable: false,
-    disableColumnMenu: true,
-    pinnable: false,
+    accessorKey: 'users_count',
+    header: ({ column }) => <HeaderTable column={column} title="số người trong phòng ban" />,
+    cell: ({ row }) => <Badge size="sm">{row.getValue('users_count')}</Badge>,
   },
   {
-    field: 'description',
-    headerName: 'Mô tả',
-    flex: 1,
-    editable: false,
-    hideable: true,
-    filterable: false,
-    sortable: false,
-    disableColumnMenu: true,
-    pinnable: false,
-  },
-  {
-    field: 'created_at',
-    headerName: 'Date',
-    flex: 1,
-    editable: false,
-    hideable: true,
-    filterable: false,
-    sortable: false,
-    disableColumnMenu: true,
-    pinnable: false,
+    id: 'actions',
+    cell: () => <ActionWithRow />,
   },
 ];
 
-const formatDepartmentData = (department: Department[]) => {
-  return department.map(({ id, description, manager, name, created_at, ...props }) => ({
-    id,
-    name,
-    description,
-    created_at: dayjs(created_at).format('MM-DD-YYYY'),
-    manager: manager.email,
-    ...props,
-  }));
-};
 const Department = () => {
-  const [limit] = useState(10);
-  const { data: departments, isSuccess } = useGetAllDepartmentQuery({});
-  const dispatch = useDispatch();
+  const { data, isSuccess, isFetching } = useGetAllDepartmentQuery({});
+
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleDepartmentDetail = ({ row }: GridRowParams<Department>) => {
-    dispatch(PopupDepartmentDetail(true));
-    navigate(`/departments/${row.id}`, { replace: true });
-    // window.history.replaceState(null, '', `/phong-ban/${row.id}`)
+
+  // const handleDepartmentDetail = ({ row }: GridRowParams<Department>) => {
+  //   dispatch(PopupDepartmentDetail(true));
+  //   navigate(`/departments/${row.id}`, { replace: true });
+  //   // window.history.replaceState(null, '', `/phong-ban/${row.id}`)
+  // };
+  const handleRowClick = (data: Department) => {
+    navigate(data.id);
   };
   return (
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl">
         <HeaderDepartment />
         <Divider />
-        <div className="flex flex-col p-2 items-center space-y-6 overflow-hidden">
-          {isSuccess && (
-            <>
-              <DataGrid
-                rows={formatDepartmentData(departments.data)}
-                columns={columns}
-                columnHeaderHeight={36}
-                className="cursor-pointer border-none w-full max-w-full"
-                onRowClick={handleDepartmentDetail}
-                slots={{ pagination: Paginations }}
-                initialState={{
-                  pagination: { paginationModel: { page: 0, pageSize: limit } },
-                }}
-              />
-            </>
-          )}
-        </div>
+        <Table onRowClick={handleRowClick} loading={isFetching} data={isSuccess ? data?.data : []} columns={columns} />
       </div>
       <NewDepartment />
     </>

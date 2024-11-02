@@ -32,7 +32,6 @@ const former = <T extends object>(
     const form = useForm({
       ...options,
       resolver: Schema && yupResolver(Schema),
-      mode: options?.mode,
       disabled: loading,
       defaultValues: Schema ? Schema.getDefault() : options?.defaultValues,
     });

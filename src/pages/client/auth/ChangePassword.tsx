@@ -1,5 +1,5 @@
 import BaseInput from '@/components/base/input';
-import former, { OptionsWithForm } from '@/lib/former';
+import former, { OptionsWithForm } from '@/hocs/former';
 import { changePassword } from '@/services/auth.service';
 import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
 import yup from '@/utils/locate';
