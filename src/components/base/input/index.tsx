@@ -1,3 +1,4 @@
+import inputer from '@/hocs/inputer';
 import {
   Checkbox,
   Chip,
@@ -6,12 +7,7 @@ import {
   Fieldset,
   FileInput,
   Input,
-  InputDescription,
-  InputError,
   InputFactory,
-  InputLabel,
-  InputPlaceholder,
-  InputWrapper,
   JsonInput,
   NativeSelect,
   NumberInput,
@@ -26,14 +22,10 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
+import { useController } from 'react-hook-form';
 
 interface InputProps extends InputFactory {
-  staticComponents: {
-    Label: typeof InputLabel;
-    Error: typeof InputError;
-    Description: typeof InputDescription;
-    Placeholder: typeof InputPlaceholder;
-    Wrapper: typeof InputWrapper;
+  staticComponents: InputFactory['staticComponents'] & {
     Password: typeof PasswordInput;
     Group: typeof TextInput;
     Pin: typeof PinInput;
@@ -53,28 +45,37 @@ interface InputProps extends InputFactory {
     Switch: typeof Switch;
     Textarea: typeof Textarea;
   };
+  props: InputFactory['props'] & {
+    name: string;
+    'aria-controls': string;
+  };
 }
 
-const BaseInput = polymorphicFactory<InputProps>(({ ...props }, ref) => {
+const BaseInput = polymorphicFactory<InputProps>(({ name, ...props }, ref) => {
+  if (typeof props['aria-controls'] === 'string') {
+    if (!name) throw 'field name is Required!';
+    const { field, fieldState } = useController({ name });
+    return <Input error={fieldState.error?.message || fieldState.invalid} {...field} {...props} />;
+  }
   return <Input {...props} ref={ref} />;
 });
 
-BaseInput.Password = PasswordInput;
-BaseInput.Group = TextInput;
-BaseInput.Pin = PinInput;
-BaseInput.Checkbox = Checkbox;
-BaseInput.Chip = Chip;
-BaseInput.Color = ColorInput;
-BaseInput.ColorPicker = ColorPicker;
-BaseInput.Form = Fieldset;
-BaseInput.Json = JsonInput;
-BaseInput.Select = NativeSelect;
-BaseInput.Radio = Radio;
-BaseInput.Rating = Rating;
-BaseInput.Tab = SegmentedControl;
-BaseInput.Slider = Slider;
-BaseInput.Switch = Switch;
-BaseInput.Textarea = Textarea;
+BaseInput.Password = inputer(PasswordInput);
+BaseInput.Group = inputer(TextInput);
+BaseInput.Pin = inputer(PinInput);
+BaseInput.Checkbox = inputer(Checkbox);
+BaseInput.Chip = inputer(Chip);
+BaseInput.Color = inputer(ColorInput);
+BaseInput.ColorPicker = inputer(ColorPicker);
+BaseInput.Form = inputer(Fieldset);
+BaseInput.Json = inputer(JsonInput);
+BaseInput.Select = inputer(NativeSelect);
+BaseInput.Radio = inputer(Radio);
+BaseInput.Rating = inputer(Rating);
+BaseInput.Tab = inputer(SegmentedControl);
+BaseInput.Slider = inputer(Slider);
+BaseInput.Switch = inputer(Switch);
+BaseInput.Textarea = inputer(Textarea);
 BaseInput.displayName = 'Input';
 
 export default BaseInput;

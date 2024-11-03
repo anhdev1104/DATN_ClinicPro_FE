@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { ForgotPassword } from './ForgotPassword';
 import yup from '@/utils/locate';
 import { resetPassword } from '@/services/auth.service';
@@ -24,7 +24,6 @@ interface ResetPasswordProps {
 
 const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
   const {
-    control,
     handleSubmit,
     reset,
     formState: { disabled },
@@ -56,38 +55,17 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
         onSubmit={handleSubmit(handleSendRequest)}
         className="w-3/4 flex flex-col mx-auto space-y-2"
       >
-        <Controller
+        <BaseInput.Pin
+          aria-controls=""
           name="otp"
-          control={control}
-          render={({ field, fieldState }) => {
-            return (
-              <BaseInput.Pin
-                length={6}
-                error={fieldState.invalid}
-                type={numberRegex}
-                inputType="tel"
-                inputMode="numeric"
-                oneTimeCode
-                className="my-2 justify-center"
-                {...field}
-              />
-            );
-          }}
+          length={6}
+          type={numberRegex}
+          inputType="tel"
+          inputMode="numeric"
+          oneTimeCode
+          className="my-2 justify-center"
         />
-        <Controller
-          name="password"
-          control={control}
-          render={({ field, fieldState }) => {
-            return (
-              <BaseInput.Password
-                error={fieldState.error?.message}
-                placeholder="nhập mật khẩu mới"
-                className="my-2"
-                {...field}
-              />
-            );
-          }}
-        />
+        <BaseInput.Password aria-controls="" name="password" placeholder="nhập mật khẩu mới" className="my-2" />
         <Button disabled={disabled} loading={disabled} type="submit">
           Gửi
         </Button>

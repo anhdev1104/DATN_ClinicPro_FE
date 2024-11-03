@@ -4,7 +4,7 @@ import { changePassword } from '@/services/auth.service';
 import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
 import yup from '@/utils/locate';
 import { Box, Button, Container, Paper, Stack, Title } from '@mantine/core';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 export const passwordSchema = yup
@@ -20,9 +20,23 @@ export const passwordSchema = yup
   .required();
 export type PasswordProps = yup.InferType<typeof passwordSchema>;
 
+const formData = [
+  {
+    label: 'mật khẩu hiện tại',
+    name: 'password',
+  },
+  {
+    label: 'mật khẩu mới',
+    name: 'newPassword',
+  },
+  {
+    label: 'xác nhận mật khẩu mới',
+    name: 'confirmNewPassword',
+  },
+];
+
 const ChangePassword = () => {
   const {
-    control,
     formState: { isValid, errors, disabled },
     reset,
     setError,
@@ -68,53 +82,18 @@ const ChangePassword = () => {
             className="space-y-2 flex flex-col my-10 justify-center items-center"
           >
             <Stack gap="md" justify="center" align="center" className="w-full lg:w-3/4">
-              <Controller
-                name="password"
-                control={control}
-                render={({ field, fieldState }) => {
-                  return (
-                    <BaseInput.Password
-                      radius="md"
-                      className="w-full"
-                      label="mật khẩu hiện tại"
-                      error={fieldState.error?.message}
-                      type="password"
-                      autoComplete="password"
-                      {...field}
-                    />
-                  );
-                }}
-              />
-              <Controller
-                name="newPassword"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <BaseInput.Password
-                    radius="md"
-                    className="w-full"
-                    label="mật khẩu mới"
-                    error={fieldState.error?.message}
-                    type="password"
-                    autoComplete="newPassword"
-                    {...field}
-                  />
-                )}
-              />
-              <Controller
-                name="confirmNewPassword"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <BaseInput.Password
-                    radius="md"
-                    className="w-full"
-                    label="xác nhận mật khẩu mới"
-                    error={fieldState.error?.message}
-                    type="password"
-                    autoComplete="confirmNewPassword"
-                    {...field}
-                  />
-                )}
-              />
+              {formData.map(form => (
+                <BaseInput.Password
+                  key={form.name}
+                  aria-controls={form.name}
+                  name={form.name}
+                  radius="md"
+                  className="w-full"
+                  label={form.label}
+                  type="password"
+                  autoComplete={form.name}
+                />
+              ))}
               <Button fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
                 Gửi
               </Button>

@@ -20,8 +20,8 @@ export interface ButtonProps extends ButtonFactory {
     Unstyled: typeof UnstyledButton;
   };
 }
-const BaseButton = polymorphicFactory<ButtonProps>(({}, ref) => {
-  return <Button ref={ref} />;
+const BaseButton = polymorphicFactory<ButtonProps>((props, ref) => {
+  return <Button {...props} ref={ref} />;
 });
 
 BaseButton.Icon = ActionIcon;

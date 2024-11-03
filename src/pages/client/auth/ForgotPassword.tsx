@@ -3,7 +3,7 @@ import PosterAuth from './components/PosterAuth';
 import { motion } from 'framer-motion';
 import BaseInput from '@/components/base/input';
 import { Button } from '@mantine/core';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import yup from '@/utils/locate';
 import { emailRegex } from '@/utils/regex';
 import { forgotPassword } from '@/services/auth.service';
@@ -22,7 +22,6 @@ export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 // eslint-disable-next-line react-refresh/only-export-components
 const ForgotPassword = () => {
   const {
-    control,
     handleSubmit,
     formState: { isValid, errors, disabled },
     setError,
@@ -81,21 +80,13 @@ const ForgotPassword = () => {
               </div>
               {!isSend ? (
                 <form onSubmit={handleSubmit(handleSendEmail)} className="w-3/4 flex flex-col mx-auto space-y-2">
-                  <Controller
+                  <BaseInput.Group
+                    aria-controls=""
                     name="email"
-                    control={control}
-                    render={({ field, fieldState }) => {
-                      return (
-                        <BaseInput.Group
-                          error={fieldState.error?.message}
-                          className="my-2"
-                          label="Email"
-                          type="email"
-                          placeholder="Nhập địa chỉ email ..."
-                          {...field}
-                        />
-                      );
-                    }}
+                    className="my-2"
+                    label="Email"
+                    type="email"
+                    placeholder="Nhập địa chỉ email ..."
                   />
                   <Button disabled={disabled} loading={disabled} type="submit">
                     Gửi
