@@ -2,16 +2,17 @@ import { List } from '@/components/icons';
 import Input from '@/components/input';
 import Field from '@/components/field';
 import Label from '@/components/label';
-import { SubmitHandler, useWatch } from 'react-hook-form';
+import { Controller, SubmitHandler, useWatch } from 'react-hook-form';
 import { Button } from '@/components/button';
 import Select from '@/components/select';
-import { getCategoryMedication, getMedication } from '@/services/prescriptions.service';
+import { createPrescription, getCategoryMedication, getMedication } from '@/services/prescriptions.service';
 import { useEffect, useState } from 'react';
 import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
-import { IMedications, IPrescription } from '@/types/prescription.type';
+import { IMedications } from '@/types/prescription.type';
 import ModalMedication from '@/components/modal/ModalMedication';
 import convertToOptions from '@/helpers/convertToOptions';
 import DirectRoute from '@/components/direct';
+import { toast } from 'react-toastify';
 
 const patientsOptions = [
   {
@@ -27,22 +28,18 @@ const patientsOptions = [
     value: '3',
   },
   {
-    id: '1',
     label: 'Phạm Thị D',
     value: '4',
   },
   {
-    id: '1',
     label: 'Nguyễn Văn E',
     value: '5',
   },
   {
-    id: '1',
     label: 'Trần Văn F',
     value: '6',
   },
   {
-    id: '1',
     label: 'Lê Thị G',
     value: '7',
   },
@@ -54,27 +51,22 @@ interface AddPrescripton {
 
 const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   const [medicationCategory, setMedicationCategory] = useState([]);
-
   const [medications, setMedications] = useState<IMedications[]>([]);
-
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const {
     form: {
       control,
       reset,
-      formState: { isSubmitting, isValid },
+      formState: { isSubmitting },
       handleSubmit,
-      getValues,
     },
   } = usePrescriptionContextForm();
-  const medicationsForm = getValues();
-  console.log(medicationsForm.medications.filter((item: any) => item !== null || item.medication_id !== undefined));
 
   const selectedCategoryId = useWatch({
     control,
     name: 'isCategory',
-  });
+  }) as string;
 
   useEffect(() => {
     (async () => {
@@ -85,17 +77,24 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   }, []);
 
   useEffect(() => {
-    if (selectedCategoryId) {
-      (async () => {
-        const res = await getMedication(selectedCategoryId);
-        setMedications(res.data);
-      })();
-    }
+    if (!selectedCategoryId) return;
+    (async () => {
+      const res = await getMedication(selectedCategoryId);
+      setMedications(res.data);
+    })();
   }, [selectedCategoryId]);
 
-  const handleCreateMedication: SubmitHandler<IPrescription> = async data => {
-    if (!isValid) return;
-    console.log(data);
+  const handleCreateMedication: SubmitHandler<any> = async data => {
+    // if (!isValid) return;
+    const newPrescription = {
+      patient_id: data.patient_id,
+      user_id: 'c3456789-e89b-12d3-a456-426614174002',
+      name: data.name,
+      description: data.description,
+      medications: data.medications,
+    };
+    await createPrescription(newPrescription);
+    toast.success('Tạo đơn thuốc thành công !');
   };
 
   const handleResetForm = () => reset();
@@ -153,12 +152,20 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
 
               <div className="mb-7">
                 <Label htmlFor="description">Lời dặn</Label>
-                <textarea
-                  className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                <Controller
                   name="description"
-                  placeholder="Nhập lời dặn ..."
-                  id="description"
-                ></textarea>
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <textarea
+                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                        placeholder="Nhập lời dặn ..."
+                        id="description"
+                        {...field}
+                      ></textarea>
+                    );
+                  }}
+                />
               </div>
 
               <div className="flex items-center gap-7 w-1/4 justify-end ml-auto pt-3">
@@ -167,7 +174,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                   styled="normal"
                   className="bg-primaryAdmin text-white disabled:bg-primaryAdmin/50"
                   isLoading={isSubmitting}
-                  disabled={!isValid || isSubmitting}
+                  disabled={isSubmitting}
                 >
                   Xác nhận
                 </Button>
