@@ -75,15 +75,11 @@ const EditPackage = () => {
     if (!isValid) return;
     setLoading(true);
     const formData = new FormData();
-    formData.append('name', data.name);
-    formData.append('description', data.description);
-    formData.append('content', data.content);
-    if (data.image) {
-      formData.append('image', data.image);
-    }
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
+    formData.append('name', data.name || packageData?.name || '');
+    formData.append('description', data.description || packageData?.description || '');
+    formData.append('content', data.content || packageData?.content || '');
+    formData.append('image', data.image || packageData?.image || '');
+
     try {
       const res = await updatePackage(String(id), formData);
       if (res.errors) {
@@ -91,10 +87,9 @@ const EditPackage = () => {
         console.error(res.message);
       } else {
         toast.success('Cập nhật gói khám thành công');
-        navigate('/package');
+        navigate('/packages');
       }
     } catch (error) {
-      0;
       toast.error('Lỗi xảy ra trong quá trình cập nhật');
       console.error(error);
     } finally {
@@ -102,6 +97,7 @@ const EditPackage = () => {
       reset();
     }
   };
+
   return (
     <section className="editpackage">
       <DirectRoute nav="Quản lý gói khám" subnav="Chỉnh sửa gói khám" />
@@ -191,7 +187,7 @@ const EditPackage = () => {
               <button
                 type="button"
                 className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition duration-200"
-                onClick={() => navigate('/package')}
+                onClick={() => navigate('/packages')}
               >
                 Hủy bỏ
               </button>

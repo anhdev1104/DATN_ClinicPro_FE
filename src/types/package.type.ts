@@ -6,10 +6,10 @@ export interface IPackage {
   image: string;
   slug?: string;
   created_at?: Date;
+  category_id: string;
 }
-export interface IUpPackage {
+export interface Category {
+  id: string;
   name: string;
   description: string;
-  content: string;
-  image?: File;
 }

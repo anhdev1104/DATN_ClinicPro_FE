@@ -45,8 +45,11 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
   const handleDelete = async (id: string) => {
     await DeletePackage(id);
     setPackages(prevPackages => prevPackages.filter(pkg => pkg.id !== id));
-    toast.success('Xóa gói thành công!');
+    toast.success('Xóa gói khám thành công!');
   };
+  if (loading || error) {
+    return <div>{loading ? 'Đang tải dữ liệu...' : 'Không thể lấy dữ liệu'}</div>;
+  }
 
   return (
     <section className="package">
@@ -71,6 +74,7 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
               <tr className="text-left text-gray-700">
                 <th className="p-4 font-medium">ID</th>
                 <th className="p-4 font-medium">Gói khám</th>
+                <th className="p-4 font-medium">Danh mục</th>
                 <th className="p-4 font-medium">Mô tả</th>
                 <th className="p-4 font-medium">Hình ảnh</th>
                 <th className="p-4 font-medium">Nội dung</th>
@@ -84,6 +88,7 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
                     <td className="p-4 w-1/12">{index + 1}</td>
                   </Link>
                   <td className="p-4 text-gray-800 w-2/12">{pkg.name}</td>
+                  <td className="p-4 text-gray-600 w-2/12"></td>
                   <td className="p-4 text-gray-600 w-2/12">{pkg.description}</td>
                   <td className="p-4 profile-image w-2/12 h-32">
                     <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover" />

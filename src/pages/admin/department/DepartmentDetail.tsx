@@ -33,7 +33,7 @@ const DepartmentDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const open = useSelector(state => state.departmentState.isOpenDepartmentDetail);
+  const open = useSelector(state => state.department.isOpenDepartmentDetail);
   const { data: department, isSuccess } = useGetDepartmentDetailQuery(id as string, {
     refetchOnMountOrArgChange: true,
   });

@@ -21,7 +21,7 @@ export default [
     rules: {
       ...reactHooks.configs.recommended.rules,
       'no-unused-vars': ['off', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': ['off', { argsIgnorePattern: '^_' }],
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       '@typescript-eslint/no-explicit-any': 'off',
       'no-console': 'warn',

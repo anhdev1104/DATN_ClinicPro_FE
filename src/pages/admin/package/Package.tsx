@@ -2,7 +2,7 @@ import AddPackage from './component/AddPackage';
 import ListPackage from './component/ListPackage';
 import { useState } from 'react';
 
-const Prescription = () => {
+const Package = () => {
   const [navigate, setNavigate] = useState(false);
 
   const handleNavigate = () => {
@@ -12,4 +12,4 @@ const Prescription = () => {
   return <div>{!navigate ? <ListPackage navigate={handleNavigate} /> : <AddPackage navigate={handleNavigate} />}</div>;
 };
 
-export default Prescription;
+export default Package;

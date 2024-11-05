@@ -1,4 +1,4 @@
-import { IPackage } from '@/types/package.type';
+import { useNavigation } from 'react-router-dom';
 import Http from '@/helpers/http';
 
 const http = new Http();
@@ -13,6 +13,22 @@ export const getPackages = async () => {
 export const getPackageById = async (id: string) => {
   try {
     const response = await http.get(`/packages/${id}`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+export const getCategory = async () => {
+  try {
+    const response = await http.get('/package-categories');
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+export const getCategorybyId = async (id: string) => {
+  try {
+    const response = await http.get(`/package-categories/${id}`);
     return response;
   } catch (error) {
     return error;
