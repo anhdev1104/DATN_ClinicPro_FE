@@ -1,10 +1,11 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { useController } from 'react-hook-form';
+
 /**
  * @author https://github.com/seaesa
  * @warning during testing phase, avoid!!
- * @description this is component remove Controller component, usage with former hocs
- * @important name of each input field must have required or aria-required to be work
+ * @description this is lib remove Controller component in your code, usage with former hocs
+ * @important name of each input field must have [autoComplete and name] with the same value to be work
  * @example instead this: 
  *  <Controller
       name="password"
@@ -25,7 +26,7 @@ import { useController } from 'react-hook-form';
     />
   to this: 
     <BaseInput.Password
-    required
+    autoComplete='password'
     name="password"
     radius="md"
     className="w-full"
@@ -34,7 +35,6 @@ import { useController } from 'react-hook-form';
     autoComplete="password" 
   /> 
  */
-
 const InputWithController = ({
   child,
 }: {
