@@ -65,17 +65,15 @@ const ModalMedication: FC<IModalMedication> = ({
         </div>
       </div>
 
-      <div>
-        {medications.length > 0 ? (
-          <ul className="space-y-2">
-            {medications.map((medication: any, index: number) => (
-              <Medication key={medication.id} name={medication.name} id={medication.id} index={index} />
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500 text-center">Không có thuốc nào cho danh mục này.</p>
-        )}
-      </div>
+      {medications.length > 0 ? (
+        <div className="space-y-2">
+          {medications.map((medication: any, index: number) => (
+            <Medication key={medication.id} name={medication.name} id={medication.id} index={index} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500 text-center">Không có thuốc nào cho danh mục này.</p>
+      )}
     </Dialog>
   );
 };

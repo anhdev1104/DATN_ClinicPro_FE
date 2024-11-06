@@ -1,6 +1,7 @@
 import Label from '@/components/label';
 import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
-import { Checkbox } from '@mui/material';
+import { IMedication } from '@/types/prescription.type';
+import { Checkbox, TextField } from '@mui/material';
 import { Controller, useWatch } from 'react-hook-form';
 
 type TMedication = {
@@ -11,30 +12,41 @@ type TMedication = {
 
 const Medication: React.FC<TMedication> = ({ id, name, index }) => {
   const {
-    form: { control, getValues, setValue },
+    form: { control, setValue },
   } = usePrescriptionContextForm();
-
   const medications = useWatch({ control, name: 'medications' }) || [];
+  console.log('🚀 ~ medications:', medications);
+  const flatMedications = new Map<string | undefined, any>();
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isSelected = event.target.checked;
-    const currentMedications = getValues('medications') || [];
+    medications.forEach(med => {
+      flatMedications.set(med.medication_id, med as IMedication);
+    });
+    flatMedications.delete(undefined);
+    const isCheckedArr = Array.from(flatMedications.values());
 
     if (isSelected) {
-      const isCheckedArr = currentMedications.filter(med => med.medication_id !== undefined);
       setValue('medications', [
         ...isCheckedArr,
         {
           medication_id: id,
+          quantity: '',
+          duration: '',
+          instructions: '',
         } as any,
       ]);
     } else {
       setValue(
         'medications',
-        currentMedications.filter((med: any) => med.medication_id !== id),
+        medications.filter((med: any) => med.medication_id !== id),
       );
     }
   };
+
+  const indexMedication = medications.findIndex(item => item?.medication_id === id);
+  const idMedication = medications.find(item => item?.medication_id === id);
+  const isChecked = medications.some((med: { medication_id: string }) => med.medication_id === id);
 
   return (
     <>
@@ -43,54 +55,60 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
           <Controller
             control={control}
             name={`medications.${index}.medication_id`}
-            render={({ field }) => (
-              <Checkbox
-                id={name}
-                checked={!!medications.find((med: { medication_id: string }) => med?.medication_id === id)}
-                onChange={e => {
-                  handleCheckboxChange(e);
-                  field.onChange(e.target.value ? id : undefined);
-                }}
-              />
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            render={({ field: { onChange, ...props } }) => (
+              <Checkbox id={name} checked={isChecked} onChange={handleCheckboxChange} {...props} />
             )}
           />
           <span>{name}</span>
         </div>
       </Label>
 
-      <div>
-        <Controller
-          name={`medications.${index}.quantity`}
-          control={control}
-          render={({ field }) => (
-            <input placeholder="Liều lượng..." className="border" value={field.value || ''} onChange={field.onChange} />
-          )}
-        />
-        <Controller
-          name={`medications.${index}.duration`}
-          control={control}
-          render={({ field }) => (
-            <input
-              placeholder="Thời gian sử dụng..."
-              className="border"
-              value={field.value || ''}
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <Controller
-          name={`medications.${index}.instructions`}
-          control={control}
-          render={({ field }) => (
-            <input
-              placeholder="Hướng dẫn sử dụng..."
-              className="border"
-              value={field.value || ''}
-              onChange={field.onChange}
-            />
-          )}
-        />
-      </div>
+      {isChecked && (
+        <div>
+          <Controller
+            name={`medications.${indexMedication}.quantity`}
+            control={control}
+            render={({ field }) => (
+              <TextField
+                placeholder="Liều lượng..."
+                value={
+                  !!idMedication ? medications.find(item => item?.medication_id === id && item.quantity)?.quantity : ''
+                }
+                onChange={field.onChange}
+              />
+            )}
+          />
+          <Controller
+            name={`medications.${indexMedication}.duration`}
+            control={control}
+            render={({ field }) => (
+              <TextField
+                placeholder="Thời gian ..."
+                value={
+                  !!idMedication ? medications.find(item => item?.medication_id === id && item.duration)?.duration : ''
+                }
+                onChange={field.onChange}
+              />
+            )}
+          />
+          <Controller
+            name={`medications.${indexMedication}.instructions`}
+            control={control}
+            render={({ field }) => (
+              <TextField
+                placeholder="Hướng dẫn sử dụng..."
+                value={
+                  !!idMedication
+                    ? medications.find(item => item?.medication_id === id && item.instructions)?.instructions
+                    : ''
+                }
+                onChange={field.onChange}
+              />
+            )}
+          />
+        </div>
+      )}
     </>
   );
 };
