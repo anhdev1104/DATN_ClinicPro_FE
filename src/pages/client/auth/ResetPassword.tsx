@@ -6,10 +6,12 @@ import yup from '@/utils/locate';
 import { resetPassword } from '@/services/auth.service';
 import BaseInput from '@/components/base/input';
 import { numberRegex } from '@/utils/regex';
-import { Button, Text } from '@mantine/core';
 import { toast } from 'react-toastify';
 import { IResetPassword, IResetPasswordError } from '@/types/auth.type';
 import former from '@/hocs/former';
+import Form from '@/lib/Form';
+import BaseButton from '@/components/base/button';
+import { Text } from '@mantine/core';
 
 const resetPasswordSchema = yup.object({
   otp: yup.string().length(6).default('').required(),
@@ -46,36 +48,41 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
 
   return (
     <>
-      <motion.form
+      <motion.div
         initial={{ scale: 0.8, opacity: 0.7 }}
         animate={{
           scale: 1,
           opacity: 1,
         }}
-        onSubmit={handleSubmit(handleSendRequest)}
-        className="w-3/4 flex flex-col mx-auto space-y-2"
       >
-        <BaseInput.Pin
-          aria-controls=""
-          name="otp"
-          length={6}
-          type={numberRegex}
-          inputType="tel"
-          inputMode="numeric"
-          oneTimeCode
-          className="my-2 justify-center"
-        />
-        <BaseInput.Password aria-controls="" name="password" placeholder="nhập mật khẩu mới" className="my-2" />
-        <Button disabled={disabled} loading={disabled} type="submit">
-          Gửi
-        </Button>
-        <Text size="sm" className="text-center select-none">
-          tôi chưa nhận được mã
-          <span onClick={handleResendOtp} className="text-blue-600 hover:underline cursor-pointer mx-1">
-            gửi lại
-          </span>
-        </Text>
-      </motion.form>
+        <Form onSubmit={handleSubmit(handleSendRequest)} className="w-3/4 flex flex-col mx-auto space-y-2">
+          <BaseInput.Pin
+            name="otp"
+            autoComplete="otp"
+            length={6}
+            type={numberRegex}
+            inputType="tel"
+            inputMode="numeric"
+            oneTimeCode
+            className="my-2 justify-center"
+          />
+          <BaseInput.Password
+            autoComplete="password"
+            name="password"
+            placeholder="nhập mật khẩu mới"
+            className="my-2"
+          />
+          <BaseButton disabled={disabled} loading={disabled} type="submit">
+            Gửi
+          </BaseButton>
+          <Text size="sm" className="text-center select-none">
+            tôi chưa nhận được mã
+            <span onClick={handleResendOtp} className="text-blue-600 hover:underline cursor-pointer mx-1">
+              gửi lại
+            </span>
+          </Text>
+        </Form>
+      </motion.div>
     </>
   );
 };

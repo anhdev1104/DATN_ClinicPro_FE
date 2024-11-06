@@ -1,4 +1,15 @@
-import { factory, Table, TableFactory, TableTbody, TableTd, TableTfoot, TableThead, TableTr } from '@mantine/core';
+import {
+  factory,
+  Table,
+  TableCaption,
+  TableFactory,
+  TableScrollContainer,
+  TableTbody,
+  TableTd,
+  TableTfoot,
+  TableThead,
+  TableTr,
+} from '@mantine/core';
 import { TableTh } from './Table';
 
 interface StaticComponents {
@@ -30,7 +41,9 @@ BaseTable.Footer = TableTfoot;
 BaseTable.Cell = TableTd;
 BaseTable.Head = TableTh;
 BaseTable.Row = TableTr;
+BaseTable.ScrollContainer = TableScrollContainer;
+BaseTable.Caption = TableCaption;
+BaseTable.DataRenderer = Table.DataRenderer;
 
 BaseTable.displayName = 'Table';
-
 export default BaseTable;

@@ -30,6 +30,7 @@ const DataTable = <T, D>({ data, columns, loading, onRowClick, ...props }: BaseT
       sorting,
     },
   });
+
   return (
     <div className="flex flex-col items-center">
       <BaseTable highlightOnHover {...props}>

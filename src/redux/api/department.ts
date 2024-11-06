@@ -1,10 +1,7 @@
 import { axiosBaseQuery } from '@/config/axiosBaseQuery';
 import { formatQueryParam } from '@/utils/utils';
-import { departmentSchema } from '@/pages/admin/department/NewDepartment';
-import { Department } from '@/types/department.type';
+import { Department, DepartmentDetail, NewDepartmentProps, NewDepartmentResponseProps } from '@/types/department.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { InferType } from 'yup';
-import { departmentDetailSchema } from '@/pages/admin/department/DepartmentDetail';
 
 interface QueryParams {
   limit?: number | string;
@@ -23,18 +20,18 @@ export const departmentApi = createApi({
       }),
       providesTags: ['Department'],
     }),
-    getDepartmentDetail: builder.query<ResponseTypes<Department>, number | string>({
+    getDepartmentDetail: builder.query<ResponseTypes<DepartmentDetail>, number | string>({
       query: id => ({ url: `departments/${id}` }),
     }),
-    addAnDepartment: builder.mutation({
-      query: (data: InferType<typeof departmentSchema>) => ({
+    addAnDepartment: builder.mutation<NewDepartmentResponseProps, NewDepartmentProps>({
+      query: data => ({
         url: 'departments',
         method: 'POST',
         data,
       }),
       invalidatesTags: ['Department'],
     }),
-    updateAnDepartment: builder.mutation<unknown, InferType<typeof departmentDetailSchema> & { id: string | number }>({
+    updateAnDepartment: builder.mutation<unknown, any & { id: string | number }>({
       query: query => {
         const { id, ...data } = query;
         return {
@@ -43,9 +40,11 @@ export const departmentApi = createApi({
           data,
         };
       },
-      invalidatesTags: ['Department'],
+      invalidatesTags: result => {
+        return result ? ['Department'] : [];
+      },
     }),
-    deleteAnDepartment: builder.mutation<unknown, number | string>({
+    deleteAnDepartment: builder.mutation<unknown, string>({
       query: id => ({
         url: `departments/${id}`,
         method: 'DELETE',

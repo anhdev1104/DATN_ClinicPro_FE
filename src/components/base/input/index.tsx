@@ -1,5 +1,5 @@
-import inputer from '@/hocs/inputer';
 import {
+  Autocomplete,
   Checkbox,
   Chip,
   ColorInput,
@@ -9,26 +9,29 @@ import {
   Input,
   InputFactory,
   JsonInput,
+  MultiSelect,
   NativeSelect,
   NumberInput,
   PasswordInput,
-  PinInput,
+  PillsInput,
   polymorphicFactory,
   Radio,
   Rating,
   SegmentedControl,
+  Select,
   Slider,
   Switch,
+  TagsInput,
   Textarea,
   TextInput,
 } from '@mantine/core';
-import { useController } from 'react-hook-form';
+import { BasePinInput } from './Input';
 
 interface InputProps extends InputFactory {
   staticComponents: InputFactory['staticComponents'] & {
     Password: typeof PasswordInput;
     Group: typeof TextInput;
-    Pin: typeof PinInput;
+    Pin: typeof BasePinInput;
     Checkbox: typeof Checkbox;
     Chip: typeof Chip;
     Color: typeof ColorInput;
@@ -36,7 +39,8 @@ interface InputProps extends InputFactory {
     Form: typeof Fieldset;
     File: typeof FileInput;
     Json: typeof JsonInput;
-    Select: typeof NativeSelect;
+    NativeSelect: typeof NativeSelect;
+    Select: typeof Select;
     Number: typeof NumberInput;
     Radio: typeof Radio;
     Rating: typeof Rating;
@@ -44,38 +48,38 @@ interface InputProps extends InputFactory {
     Slider: typeof Slider;
     Switch: typeof Switch;
     Textarea: typeof Textarea;
-  };
-  props: InputFactory['props'] & {
-    name: string;
-    'aria-controls': string;
+    AutoComplete: typeof Autocomplete;
+    MultiSelect: typeof MultiSelect;
+    Tag: typeof TagsInput;
+    Pill: typeof PillsInput;
   };
 }
 
-const BaseInput = polymorphicFactory<InputProps>(({ name, ...props }, ref) => {
-  if (typeof props['aria-controls'] === 'string') {
-    if (!name) throw 'field name is Required!';
-    const { field, fieldState } = useController({ name });
-    return <Input error={fieldState.error?.message || fieldState.invalid} {...field} {...props} />;
-  }
+const BaseInput = polymorphicFactory<InputProps>(({ ...props }, ref) => {
   return <Input {...props} ref={ref} />;
 });
 
-BaseInput.Password = inputer(PasswordInput);
-BaseInput.Group = inputer(TextInput);
-BaseInput.Pin = inputer(PinInput);
-BaseInput.Checkbox = inputer(Checkbox);
-BaseInput.Chip = inputer(Chip);
-BaseInput.Color = inputer(ColorInput);
-BaseInput.ColorPicker = inputer(ColorPicker);
-BaseInput.Form = inputer(Fieldset);
-BaseInput.Json = inputer(JsonInput);
-BaseInput.Select = inputer(NativeSelect);
-BaseInput.Radio = inputer(Radio);
-BaseInput.Rating = inputer(Rating);
-BaseInput.Tab = inputer(SegmentedControl);
-BaseInput.Slider = inputer(Slider);
-BaseInput.Switch = inputer(Switch);
-BaseInput.Textarea = inputer(Textarea);
+BaseInput.Password = PasswordInput;
+BaseInput.Group = TextInput;
+BaseInput.Pin = BasePinInput;
+BaseInput.Checkbox = Checkbox;
+BaseInput.Chip = Chip;
+BaseInput.Color = ColorInput;
+BaseInput.ColorPicker = ColorPicker;
+BaseInput.Form = Fieldset;
+BaseInput.Json = JsonInput;
+BaseInput.NativeSelect = NativeSelect;
+BaseInput.Select = Select;
+BaseInput.Radio = Radio;
+BaseInput.Rating = Rating;
+BaseInput.Tab = SegmentedControl;
+BaseInput.Slider = Slider;
+BaseInput.Switch = Switch;
+BaseInput.Textarea = Textarea;
+BaseInput.AutoComplete = Autocomplete;
+BaseInput.MultiSelect = MultiSelect;
+BaseInput.Tag = TagsInput;
+BaseInput.Pill = PillsInput;
 BaseInput.displayName = 'Input';
 
 export default BaseInput;

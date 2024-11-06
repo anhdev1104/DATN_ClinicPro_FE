@@ -1,28 +1,20 @@
-import { Department } from '@/types/department.type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface InitialState {
-  isOpenNewDepartment: boolean;
-  isOpenDepartmentDetail: boolean;
-  departmentDetail: Department | null;
+  openUpdateDepartment: boolean;
 }
 const initialState: InitialState = {
-  isOpenNewDepartment: false,
-  isOpenDepartmentDetail: false,
-  departmentDetail: null,
+  openUpdateDepartment: false,
 };
 
 export const departmentSlice = createSlice({
   name: 'department',
   initialState,
   reducers: {
-    PopupNewDepartment: (state, action: PayloadAction<boolean>) => {
-      state.isOpenNewDepartment = action.payload;
-    },
-    PopupDepartmentDetail: (state, action: PayloadAction<boolean>) => {
-      state.isOpenDepartmentDetail = action.payload;
+    setOpenUpdateDepartment: (state, action: PayloadAction<boolean>) => {
+      state.openUpdateDepartment = action.payload;
     },
   },
 });
 
-export const { PopupNewDepartment, PopupDepartmentDetail } = departmentSlice.actions;
+export const { setOpenUpdateDepartment } = departmentSlice.actions;

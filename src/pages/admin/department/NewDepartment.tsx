@@ -1,88 +1,91 @@
-import { useDispatch, useSelector } from '@/hooks/redux';
-import { PopupNewDepartment } from '@/redux/department/departmentSlice';
-import { Drawer, Input, Button, Autocomplete } from '@mui/joy';
-import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { useGetAllUsersQuery } from '@/redux/api/users';
+import BaseIcon from '@/components/base/BaseIcon';
+import BaseButton from '@/components/base/button';
+import BaseInput from '@/components/base/input';
+import { AxiosBaseQueryError } from '@/config/axiosBaseQuery';
+import former, { OptionsWithForm } from '@/hocs/former';
+import Form from '@/lib/Form';
 import { useAddAnDepartmentMutation } from '@/redux/api/department';
-import { useMemo } from 'react';
+import { useGetAllUsersQuery } from '@/redux/api/users';
+import { newDepartmentSchema } from '@/schema/department.schema';
+import { NewDepartmentProps } from '@/types/department.type';
+import { IUserInfo } from '@/types/user.type';
 import { filterOutManagers } from '@/utils/utils';
-interface NewDepartmentProps {
-  open?: boolean;
+import { Avatar, Group, Stack } from '@mantine/core';
+import { useMemo } from 'react';
+import { SubmitHandler, useFormContext } from 'react-hook-form';
+import { toast } from 'react-toastify';
+
+interface Options {
+  value: string;
+  label: string;
+  avatar?: string;
 }
-
-export const departmentSchema = yup
-  .object({
-    name: yup.string().required().trim(),
-    description: yup.string().required(),
-    manager_id: yup.string().required().optional(),
-  })
-  .required();
-
-const NewDepartment: React.FC<NewDepartmentProps> = () => {
+const NewDepartment = ({ handleClose }: { handleClose: () => void }) => {
+  const {
+    handleSubmit,
+    setValue,
+    formState: { disabled },
+    setError,
+  } = useFormContext<NewDepartmentProps>();
   const { data, isSuccess } = useGetAllUsersQuery();
-  const [handleAddDepartment, { reset }] = useAddAnDepartmentMutation();
-  const open = useSelector(state => state.department.isOpenNewDepartment);
-  const dispatch = useDispatch();
-  const users: any = useMemo(() => isSuccess && filterOutManagers(data.data), [data]);
-  const { control, handleSubmit, setValue } = useForm({
-    resolver: yupResolver(departmentSchema),
-    defaultValues: {
-      name: '',
-      description: '',
-      manager_id: '',
-    },
-  });
+  const [addDepartment] = useAddAnDepartmentMutation();
+  const department: IUserInfo[] = useMemo(() => (isSuccess ? filterOutManagers(data?.data) : []), [data]);
+  const formatData: Options[] = useMemo(
+    () =>
+      department.map(item => ({
+        value: item.id,
+        label: item.user_info.fullname,
+        avatar: item.user_info.avatar,
+      })),
+    [department],
+  );
 
-  const handleHideNewDepartment = () => {
-    dispatch(PopupNewDepartment(false));
+  const handleAddNewDepartment: SubmitHandler<NewDepartmentProps> = async data => {
+    try {
+      const result = await addDepartment(data);
+      if (result.error) {
+        const errors = result.error as AxiosBaseQueryError<{ message: string; errors: any[] }>;
+        setError('name', { message: errors.data.message });
+      } else {
+        toast.success(result.data?.message);
+        handleClose();
+      }
+    } catch (error) {
+      throw error;
+    }
   };
 
-  const handleAddNewDaprtment = (data: yup.InferType<typeof departmentSchema>) => {
-    handleAddDepartment(data);
-    handleHideNewDepartment();
-    reset();
-  };
   return (
-    <>
-      <Drawer
-        open={open}
-        anchor="right"
-        onClose={handleHideNewDepartment}
-        size="md"
-        sx={{
-          '--Drawer-horizontalSize': 'clamp(300px, 40%, 100%)',
-        }}
-      >
-        <div className="flex flex-col capitalize p-3 items-center">
-          <h2 className="text-2xl font-bold">Tạo mới phòng ban</h2>
-          <form onSubmit={handleSubmit(handleAddNewDaprtment)}>
-            <Controller
-              name="name"
-              control={control}
-              render={({ field }) => (
-                <Input color="neutral" size="sm" variant="outlined" placeholder="Tên Phòng Ban" {...field} />
-              )}
-            />
-            <Controller
-              name="description"
-              control={control}
-              render={({ field }) => (
-                <Input color="neutral" size="sm" variant="outlined" placeholder="Mô Tả" {...field} />
-              )}
-            />
-            <Autocomplete
-              onChange={() => {
-                setValue('manager_id', users[0].id);
-              }}
-              options={isSuccess ? users.map((user: any) => user.user_info.fullname) : ['Not Found']}
-            />
-            <Button type="submit">Save</Button>
-          </form>
-        </div>
-      </Drawer>
-    </>
+    <Form onSubmit={handleSubmit(handleAddNewDepartment)}>
+      <Stack>
+        <BaseInput.Group autoComplete="name" name="name" label="Tên phòng ban" placeholder="Phòng IT..." />
+        <BaseInput.Textarea autoComplete="description" name="description" label="Mô tả" />
+        <BaseInput.Select
+          autoComplete="manager_id"
+          name="manager_id"
+          label="Chọn Quản lý"
+          data={formatData}
+          onChange={value => setValue('manager_id', value)}
+          renderOption={({ option, checked }) => (
+            <Group flex="1" gap="xs">
+              <Avatar size="sm" src={(option as Options).avatar} />
+              {option.label}
+              {checked && <BaseIcon name="check" style={{ marginInlineStart: 'auto' }} />}
+            </Group>
+          )}
+          clearable
+          searchable
+          nothingFoundMessage="không tìm thấy quản lý"
+        />
+        <BaseButton loading={disabled} disabled={disabled} type="submit">
+          Lưu
+        </BaseButton>
+      </Stack>
+    </Form>
   );
 };
-export default NewDepartment;
+
+const optionsWithForm: OptionsWithForm = {
+  mode: 'onChange',
+};
+export default former(NewDepartment, newDepartmentSchema, optionsWithForm);

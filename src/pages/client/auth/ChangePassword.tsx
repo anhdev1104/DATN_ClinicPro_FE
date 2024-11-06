@@ -1,9 +1,11 @@
+import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
 import former, { OptionsWithForm } from '@/hocs/former';
+import Form from '@/lib/Form';
 import { changePassword } from '@/services/auth.service';
 import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
 import yup from '@/utils/locate';
-import { Box, Button, Container, Paper, Stack, Title } from '@mantine/core';
+import { Container, Paper, Stack, Title } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -20,7 +22,7 @@ export const passwordSchema = yup
   .required();
 export type PasswordProps = yup.InferType<typeof passwordSchema>;
 
-const formData = [
+const formElement = [
   {
     label: 'mật khẩu hiện tại',
     name: 'password',
@@ -76,29 +78,27 @@ const ChangePassword = () => {
           <Title order={1} lineClamp={1} className="capitalize text-center">
             thay đổi mật khẩu
           </Title>
-          <Box
+          <Form
             onSubmit={handleSubmit(handleChangePassword)}
-            component="form"
             className="space-y-2 flex flex-col my-10 justify-center items-center"
           >
             <Stack gap="md" justify="center" align="center" className="w-full lg:w-3/4">
-              {formData.map(form => (
+              {formElement.map(element => (
                 <BaseInput.Password
-                  key={form.name}
-                  aria-controls={form.name}
-                  name={form.name}
+                  key={element.name}
+                  name={element.name}
                   radius="md"
                   className="w-full"
-                  label={form.label}
+                  label={element.label}
                   type="password"
-                  autoComplete={form.name}
+                  autoComplete={element.name}
                 />
               ))}
-              <Button fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
+              <BaseButton fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
                 Gửi
-              </Button>
+              </BaseButton>
             </Stack>
-          </Box>
+          </Form>
         </Paper>
       </Container>
     </>

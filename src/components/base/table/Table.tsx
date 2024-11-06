@@ -1,5 +1,5 @@
-import { cn } from '@/utils/utils';
 import { factory, Factory, TableThProps, TableTh as Th } from '@mantine/core';
+import { cn } from '@/utils/utils';
 
 export type TableThFactory = Factory<{
   props: TableThProps;

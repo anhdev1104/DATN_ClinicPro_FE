@@ -1,162 +1,178 @@
-// import { useSelector } from '@/hooks/redux';
-// import {
-//   useDeleteAnDepartmentMutation,
-//   useGetDepartmentDetailQuery,
-//   useUpdateAnDepartmentMutation,
-// } from '@/redux/api/department';
-// import { PopupDepartmentDetail } from '@/redux/department/departmentSlice';
-// import { yupResolver } from '@hookform/resolvers/yup';
-// import { AutocompleteOption, Button, FormControl, FormLabel, Input, ListItemContent } from '@mui/joy';
-// import Autocomplete from '@mui/joy/Autocomplete';
-// import Drawer from '@mui/joy/Drawer';
-// import { Stack } from '@mui/material';
-// import { Controller, useForm } from 'react-hook-form';
-// import { useDispatch } from 'react-redux';
-// import { useNavigate, useParams } from 'react-router-dom';
-// import { usersApi } from '@/redux/api/users';
-// import { filterOutManagers } from '@/utils/utils';
-// import { useMemo } from 'react';
-// import { IUserInfo } from '@/types/user.type';
-import { Paper } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-// eslint-disable-next-line react-refresh/only-export-components
+import { useDeleteAnDepartmentMutation, useGetDepartmentDetailQuery } from '@/redux/api/department';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Badge, Box, Paper, Stack, Title } from '@mantine/core';
 import { Avatar, Text, Group } from '@mantine/core';
 import BaseIcon from '@/components/base/BaseIcon';
 import yup from '@/utils/locate';
-import BaseTable from '@/components/base/table';
-
-export const departmentDetailSchema = yup.object({
-  name: yup.string(),
-  description: yup.string(),
-  manager_id: yup.string(),
-});
-interface Options {
-  label: string;
-  id: string | number;
-}
-const DepartmentDetail = () => {
-  const [opened, { close }] = useDisclosure(false);
-  // const { id } = useParams();
-  // const dispatch = useDispatch();
-  // const navigate = useNavigate();
-  // const open = useSelector(state => state.department.isOpenDepartmentDetail);
-  // const { data: department, isSuccess } = useGetDepartmentDetailQuery(id as string, {
-  //   refetchOnMountOrArgChange: true,
-  // });
-  // const [handleDelete] = useDeleteAnDepartmentMutation();
-  // const [handleUpdate] = useUpdateAnDepartmentMutation();
-  // const { currentData } = usersApi.endpoints.getAllUsers.useQuery();
-  // const { isFetching } = usersApi.endpoints.getAllUsers.useQueryState();
-
-  // const users = useMemo(() => (currentData ? filterOutManagers<IUserInfo[]>(currentData.data) : []), [isFetching]);
-  // const options: Options[] = users.map((user: any) => ({ label: user.user_info.fullname, id: user.id }));
-
-  // const { handleSubmit, control, setValue } = useForm({
-  //   resolver: yupResolver(departmentDetailSchema),
-  // });
-  // const handleHideDrawer = () => {
-  //   dispatch(PopupDepartmentDetail(false));
-  //   navigate('/departments');
-  // };
-  // const handleDeleteDepartment = () => {
-  //   if (isSuccess) {
-  //     handleDelete(department.data.id as number);
-  //     dispatch(PopupDepartmentDetail(false));
-  //     navigate('/departments');
-  //   }
-  // };
-  // const handleUpdateDepartment = (data: yup.InferType<typeof departmentDetailSchema>) => {
-  //   if (isSuccess) {
-  //     handleUpdate({ id: department?.data.id, ...data });
-  //     handleHideDrawer();
-  //   }
-  // };
-  return (
-    <Paper>
-      <div className="flex flex-col space-y-10">
+import DataTable from '@/components/table/Table';
+import { ColumnDef } from '@tanstack/react-table';
+import HeaderTable from '@/components/table/HeaderTable';
+import { userDepartmentSchema } from '@/schema/department.schema';
+import BaseInput from '@/components/base/input';
+import { IMaskInput } from 'react-imask';
+import ActionWithRow from '@/components/table/ActionWithRow';
+import { useMemo } from 'react';
+import BaseButton from '@/components/base/button';
+import { Modal } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { toast } from 'react-toastify';
+import NotFound from '@/pages/404';
+type UserDepartment = yup.InferType<typeof userDepartmentSchema>;
+const columns: ColumnDef<UserDepartment>[] = [
+  {
+    accessorKey: 'fullname',
+    header: ({ column }) => <HeaderTable title="Nhân Viên" column={column} />,
+    cell: ({ row }) => (
+      <Group gap="sm">
+        <Avatar size={40} src={row.getValue('avatar') as string} radius={40} />
         <div>
-          <Group wrap="nowrap">
-            <Avatar
-              src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png"
-              size={94}
-              radius="md"
-            />
-            <div>
-              <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-                Software engineer
-              </Text>
-
-              <Text fz="lg" fw={500}>
-                Robert Glassbreaker
-              </Text>
-
-              <Group wrap="nowrap" gap={10} mt={3}>
-                <BaseIcon name="at-sign" strokeWidth={1.5} className="" />
-                <Text fz="xs" c="dimmed">
-                  robert@glassbreaker.io
-                </Text>
-              </Group>
-
-              <Group wrap="nowrap" gap={10} mt={5}>
-                <BaseIcon name="phone-call" strokeWidth={1.5} className="" />
-                <Text fz="xs" c="dimmed">
-                  +11 (876) 890 56 23
-                </Text>
-              </Group>
-            </div>
-          </Group>
+          <Text fz="sm" fw={500}>
+            {row.getValue('fullname') as string}
+          </Text>
         </div>
-        <BaseTable.ScrollContainer minWidth={800}>
-          <BaseTable verticalSpacing="sm">
-            <BaseTable.Header>
-              <BaseTable.Row>
-                <BaseTable.Head>Employee</BaseTable.Head>
-                <BaseTable.Head>Role</BaseTable.Head>
-                <BaseTable.Head>Last active</BaseTable.Head>
-                <BaseTable.Head>Status</BaseTable.Head>
-              </BaseTable.Row>
-            </BaseTable.Header>
-            <BaseTable.Body>
-              <BaseTable.Row>
-                <BaseTable.Cell>
-                  <Group gap="sm">
-                    <Avatar size={40} src={''} radius={40} />
-                    <div>
-                      <Text fz="sm" fw={500}>
-                        'fwefwef'
-                      </Text>
-                      <Text fz="xs" c="dimmed">
-                        'wewefwef'
-                      </Text>
-                    </div>
-                  </Group>
-                </BaseTable.Cell>
+      </Group>
+    ),
+    enableSorting: false,
+  },
+  {
+    accessorKey: 'email',
+    header: ({ column }) => <HeaderTable title="Email" column={column} />,
+    cell: ({ row }) => (
+      <Text fz="xs" c="dimmed">
+        {row.getValue('email') as string}
+      </Text>
+    ),
+  },
+  {
+    accessorKey: 'status',
+    header: ({ column }) => <HeaderTable title="Trạng Thái" column={column} />,
+    cell: ({ row }) => <Badge>{row.getValue('status')}</Badge>,
+  },
+  {
+    accessorKey: 'phone_number',
+    header: ({ column }) => <HeaderTable title="Trạng Thái" column={column} />,
+    cell: ({ row }) => (
+      <BaseInput
+        value={row.getValue('phone_number') as string}
+        component={IMaskInput}
+        mask="+84 (000) 000-00-00"
+        name="phone"
+        placeholder="Your phone"
+      />
+    ),
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      return <ActionWithRow row={row} />;
+    },
+  },
+];
+const DepartmentDetail = () => {
+  const [opened, { open, close }] = useDisclosure(false);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { data, isSuccess, isFetching, isError } = useGetDepartmentDetailQuery(id as string);
+  const manager = useMemo(() => data?.data.manager, [data]);
+  const [handleDelete, { isLoading }] = useDeleteAnDepartmentMutation();
+  const handleDeleteDepartment = () => {
+    if (isSuccess) {
+      handleDelete(data?.data.id);
+      navigate('/departments');
+    } else {
+      toast.error('phòng ban không tồn tại');
+    }
+  };
+  return (
+    <Paper className="p-2 rounded-3xl">
+      {!isError ? (
+        <>
+          <Box component="div" className="text-center space-y-4">
+            <div className="relative flex justify-center items-center">
+              <BaseButton.Icon
+                onClick={() => navigate(-1)}
+                variant="subtle"
+                c="dimmed"
+                radius="lg"
+                className="absolute left-0"
+              >
+                <BaseIcon name="arrow-left" size="xl" />
+              </BaseButton.Icon>
+              <Title order={2} className="mt-0">
+                {data?.data.name}
+              </Title>
+            </div>
+            <Text fz="xs" c="dimmed" fw={500} className="text-left">
+              {data?.data.description}
+            </Text>
+          </Box>
+          <div className="flex flex-col space-y-10">
+            <div className="space-y-2">
+              <Title order={4}>Quản Lý</Title>
+              {manager ? (
+                <Group wrap="nowrap">
+                  <Avatar src={manager?.avatar} size={94} radius="md" />
+                  <div>
+                    <Text fz="lg" fw={500}>
+                      {manager?.fullname}
+                    </Text>
+                    <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
+                      {manager?.address}
+                    </Text>
 
-                <BaseTable.Cell>
-                  {/* <Select
-          data={rolesData}
-          defaultValue={item.role}
-          variant="unstyled"
-          allowDeselect={false}
-        /> */}
-                </BaseTable.Cell>
-                <BaseTable.Cell> </BaseTable.Cell>
-                <BaseTable.Cell>
-                  {/* {item.active ? (
-          <Badge fullWidth variant="light">
-            Active
-          </Badge>
-        ) : (
-          <Badge color="gray" fullWidth variant="light">
-            Disabled
-          </Badge>
-        )} */}
-                </BaseTable.Cell>
-              </BaseTable.Row>
-            </BaseTable.Body>
-          </BaseTable>
-        </BaseTable.ScrollContainer>
-      </div>
+                    <Group wrap="nowrap" gap={10} mt={3}>
+                      <BaseIcon name="at-sign" strokeWidth={1.5} className="" />
+                      <Text fz="xs" c="dimmed">
+                        {manager?.email}
+                      </Text>
+                    </Group>
+
+                    <Group wrap="nowrap" gap={10} mt={5}>
+                      <BaseIcon name="phone-call" strokeWidth={1.5} className="" />
+                      <Text fz="xs" c="dimmed">
+                        {manager?.phone_number}
+                      </Text>
+                    </Group>
+                  </div>
+                </Group>
+              ) : (
+                <Title order={5} c="dimmed" fw={600}>
+                  Chưa có Người Quản Lý
+                </Title>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Title order={4} className="capitalize">
+                Nhân viên phòng ban
+              </Title>
+              <DataTable columns={columns} data={isSuccess ? data.data?.users : []} loading={isFetching} />
+            </div>
+            <div className="flex justify-between items-center">
+              <BaseButton onClick={open} color="red" className="ml-auto my-4">
+                Xóa Phòng Ban
+              </BaseButton>
+            </div>
+          </div>
+          <Modal opened={opened} onClose={close} title="Bạn có chắc muốn xóa phòng ban này" centered>
+            <Stack gap={10}>
+              <Text fz="sm" fw={500}>
+                xóa phòng ban bạn không thể khôi phục được nữa
+              </Text>
+              <BaseButton
+                onClick={handleDeleteDepartment}
+                loading={isLoading}
+                disabled={isLoading}
+                color="red"
+                className="flex ml-auto"
+              >
+                Xóa
+              </BaseButton>
+            </Stack>
+          </Modal>
+        </>
+      ) : (
+        <NotFound title="không có phòng ban hiển thị" />
+      )}
     </Paper>
   );
 };

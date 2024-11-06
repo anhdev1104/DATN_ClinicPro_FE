@@ -1,9 +1,6 @@
 import HeaderDepartment from './components/Header';
 import { Divider, Flex, Text } from '@mantine/core';
 import { useGetAllDepartmentQuery } from '@/redux/api/department';
-import NewDepartment from './NewDepartment';
-// import { useDispatch } from '@/hooks/redux';
-// import { PopupDepartmentDetail } from '@/redux/department/departmentSlice';
 import { useNavigate } from 'react-router-dom';
 import type { Department, Manager } from '@/types/department.type';
 import { ColumnDef } from '@tanstack/react-table';
@@ -12,6 +9,7 @@ import { Avatar } from '@mantine/core';
 import { Badge } from '@mantine/core';
 import HeaderTable from '@/components/table/HeaderTable';
 import ActionWithRow from '@/components/table/ActionWithRow';
+
 const columns: ColumnDef<Department>[] = [
   {
     accessorKey: 'name',
@@ -46,21 +44,13 @@ const columns: ColumnDef<Department>[] = [
   },
   {
     id: 'actions',
-    cell: () => <ActionWithRow />,
+    cell: ({ row }) => <ActionWithRow row={row as any} />,
   },
 ];
 
 const Department = () => {
   const { data, isSuccess, isFetching } = useGetAllDepartmentQuery({});
-
-  // const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // const handleDepartmentDetail = ({ row }: GridRowParams<Department>) => {
-  //   dispatch(PopupDepartmentDetail(true));
-  //   navigate(`/departments/${row.id}`, { replace: true });
-  //   // window.history.replaceState(null, '', `/phong-ban/${row.id}`)
-  // };
   const handleRowClick = (data: Department) => {
     navigate(data.id);
   };
@@ -69,9 +59,8 @@ const Department = () => {
       <div className="bg-white rounded-3xl w-full shadow-xl">
         <HeaderDepartment />
         <Divider />
-        <Table onRowClick={handleRowClick} loading={isFetching} data={isSuccess ? data?.data : []} columns={columns} />
+        <Table onRowClick={handleRowClick} loading={isFetching} data={isSuccess ? data.data : []} columns={columns} />
       </div>
-      <NewDepartment />
     </>
   );
 };

@@ -13,6 +13,8 @@ import { IForgotPassWord, IForgotPassWordError } from '@/types/auth.type';
 import ResetPassword from './ResetPassword';
 import former, { OptionsWithForm } from '@/hocs/former';
 import BaseIcon from '@/components/base/BaseIcon';
+import BaseButton from '@/components/base/button';
+import Form from '@/lib/Form';
 
 const forgotPasswordSchema = yup.object({
   email: yup.string().required().ensure().matches(emailRegex, { message: 'Trường này phải là email' }),
@@ -65,13 +67,16 @@ const ForgotPassword = () => {
               className="my-10"
             >
               <div className="relative flex justify-center items-center gap-2 mb-2">
-                <div
-                  onClick={() => {
-                    isSend === true ? setIsSend(false) : navigate('/login');
-                  }}
-                  className="absolute left-20 cursor-pointer"
-                >
-                  <BaseIcon name="arrow-left" />
+                <div className="absolute left-20 cursor-pointer">
+                  <BaseButton.Icon
+                    onClick={() => {
+                      isSend === true ? setIsSend(false) : navigate('/login');
+                    }}
+                    variant="subtle"
+                    radius="lg"
+                  >
+                    <BaseIcon size="lg" name="arrow-left" />
+                  </BaseButton.Icon>
                 </div>
                 <div>
                   <h1 className="text-third text-[25px] uppercase font-bold">Quên mật khẩu</h1>
@@ -79,9 +84,9 @@ const ForgotPassword = () => {
                 </div>
               </div>
               {!isSend ? (
-                <form onSubmit={handleSubmit(handleSendEmail)} className="w-3/4 flex flex-col mx-auto space-y-2">
+                <Form onSubmit={handleSubmit(handleSendEmail)} className="w-3/4 flex flex-col mx-auto space-y-2">
                   <BaseInput.Group
-                    aria-controls=""
+                    autoComplete="email"
                     name="email"
                     className="my-2"
                     label="Email"
@@ -91,7 +96,7 @@ const ForgotPassword = () => {
                   <Button disabled={disabled} loading={disabled} type="submit">
                     Gửi
                   </Button>
-                </form>
+                </Form>
               ) : (
                 <ResetPassword handleSendEmail={handleSendEmail} email={getValues('email')} />
               )}
