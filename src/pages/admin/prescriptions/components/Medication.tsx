@@ -1,7 +1,7 @@
 import Label from '@/components/label';
 import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
 import { IMedication } from '@/types/prescription.type';
-import { Checkbox, TextField } from '@mui/material';
+import { Box, Checkbox, Stack, styled, TextField } from '@mui/material';
 import { Controller, useWatch } from 'react-hook-form';
 
 type TMedication = {
@@ -10,12 +10,19 @@ type TMedication = {
   index: number;
 };
 
+const CustomeInput = styled(TextField)(() => ({
+  '& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input': {
+    width: '23px',
+    padding: '4px 10px',
+    fontSize: '14px',
+  },
+}));
+
 const Medication: React.FC<TMedication> = ({ id, name, index }) => {
   const {
     form: { control, setValue },
   } = usePrescriptionContextForm();
   const medications = useWatch({ control, name: 'medications' }) || [];
-  console.log('🚀 ~ medications:', medications);
   const flatMedications = new Map<string | undefined, any>();
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +58,7 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
   return (
     <>
       <Label className="!mb-0 !block" htmlFor={name}>
-        <div className="py-3 px-2 gap-2 flex items-center rounded-lg border border-borderColor hover:bg-slate-300 cursor-pointer">
+        <div className="py-1 px-2 gap-2 flex items-center rounded-lg border border-borderColor hover:bg-slate-200 cursor-pointer">
           <Controller
             control={control}
             name={`medications.${index}.medication_id`}
@@ -65,48 +72,80 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
       </Label>
 
       {isChecked && (
-        <div>
-          <Controller
-            name={`medications.${indexMedication}.quantity`}
-            control={control}
-            render={({ field }) => (
-              <TextField
-                placeholder="Liều lượng..."
-                value={
-                  !!idMedication ? medications.find(item => item?.medication_id === id && item.quantity)?.quantity : ''
-                }
-                onChange={field.onChange}
-              />
-            )}
-          />
-          <Controller
-            name={`medications.${indexMedication}.duration`}
-            control={control}
-            render={({ field }) => (
-              <TextField
-                placeholder="Thời gian ..."
-                value={
-                  !!idMedication ? medications.find(item => item?.medication_id === id && item.duration)?.duration : ''
-                }
-                onChange={field.onChange}
-              />
-            )}
-          />
-          <Controller
-            name={`medications.${indexMedication}.instructions`}
-            control={control}
-            render={({ field }) => (
-              <TextField
-                placeholder="Hướng dẫn sử dụng..."
-                value={
-                  !!idMedication
-                    ? medications.find(item => item?.medication_id === id && item.instructions)?.instructions
-                    : ''
-                }
-                onChange={field.onChange}
-              />
-            )}
-          />
+        <div className="px-5 flex items-center">
+          <Stack flexDirection={'row'} alignItems={'center'} gap={'10px'}>
+            <Controller
+              name={`medications.${indexMedication}.quantity`}
+              control={control}
+              render={({ field }) => (
+                <CustomeInput
+                  value={
+                    !!idMedication
+                      ? medications.find(item => item?.medication_id === id && item.quantity)?.quantity
+                      : ''
+                  }
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <Box sx={{ margin: '0px !important', fontSize: 12 }}>Số lượng</Box>
+          </Stack>
+          <Box
+            sx={{
+              width: '1px',
+              height: '20px',
+              border: '1px solid #dbdbdbcd',
+              mx: '50px',
+            }}
+          ></Box>
+          <Stack flexDirection={'row'} alignItems={'center'} gap={'10px'}>
+            <Controller
+              name={`medications.${indexMedication}.duration`}
+              control={control}
+              render={({ field }) => (
+                <CustomeInput
+                  value={
+                    !!idMedication
+                      ? medications.find(item => item?.medication_id === id && item.duration)?.duration
+                      : ''
+                  }
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <Box sx={{ margin: '0px !important', fontSize: 12 }}>Ngày</Box>
+          </Stack>
+          <Box
+            sx={{
+              width: '1px',
+              height: '20px',
+              border: '1px solid #dbdbdbcd',
+              mx: '50px',
+            }}
+          ></Box>
+          <Stack flexDirection={'row'} alignItems={'center'} gap={'10px'}>
+            <Controller
+              name={`medications.${indexMedication}.instructions`}
+              control={control}
+              render={({ field }) => (
+                <CustomeInput
+                  value={
+                    !!idMedication
+                      ? medications.find(item => item?.medication_id === id && item.instructions)?.instructions
+                      : ''
+                  }
+                  onChange={field.onChange}
+                  sx={{
+                    width: '300px',
+                    '& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input': {
+                      width: '100%',
+                    },
+                  }}
+                />
+              )}
+            />
+            <Box sx={{ margin: '0px !important', fontSize: 12 }}>Hướng dẫn dùng thuốc</Box>
+          </Stack>
         </div>
       )}
     </>
