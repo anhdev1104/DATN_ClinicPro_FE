@@ -12,3 +12,9 @@ export enum ROLE {
   DOCTOR = 'doctor',
   DIRECTOR = 'director',
 }
+
+export enum GENDER {
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other',
+}

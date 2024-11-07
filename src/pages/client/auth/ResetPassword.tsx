@@ -1,15 +1,17 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { ForgotPassword } from './ForgotPassword';
 import yup from '@/utils/locate';
 import { resetPassword } from '@/services/auth.service';
 import BaseInput from '@/components/base/input';
-import { regexAllowTypeNumber } from '@/utils/utils';
-import { Button, Text } from '@mantine/core';
+import { numberRegex } from '@/utils/regex';
 import { toast } from 'react-toastify';
 import { IResetPassword, IResetPasswordError } from '@/types/auth.type';
-import former from '@/lib/former';
+import former from '@/hocs/former';
+import Form from '@/lib/Form';
+import BaseButton from '@/components/base/button';
+import { Text } from '@mantine/core';
 
 const resetPasswordSchema = yup.object({
   otp: yup.string().length(6).default('').required(),
@@ -24,7 +26,6 @@ interface ResetPasswordProps {
 
 const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
   const {
-    control,
     handleSubmit,
     reset,
     formState: { disabled },
@@ -47,57 +48,41 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
 
   return (
     <>
-      <motion.form
+      <motion.div
         initial={{ scale: 0.8, opacity: 0.7 }}
         animate={{
           scale: 1,
           opacity: 1,
         }}
-        onSubmit={handleSubmit(handleSendRequest)}
-        className="w-3/4 flex flex-col mx-auto space-y-2"
       >
-        <Controller
-          name="otp"
-          control={control}
-          render={({ field, fieldState }) => {
-            return (
-              <BaseInput.Pin
-                length={6}
-                error={fieldState.invalid}
-                type={regexAllowTypeNumber}
-                inputType="tel"
-                inputMode="numeric"
-                oneTimeCode
-                className="my-2 justify-center"
-                {...field}
-              />
-            );
-          }}
-        />
-        <Controller
-          name="password"
-          control={control}
-          render={({ field, fieldState }) => {
-            return (
-              <BaseInput.Password
-                error={fieldState.error?.message}
-                placeholder="nhập mật khẩu mới"
-                className="my-2"
-                {...field}
-              />
-            );
-          }}
-        />
-        <Button disabled={disabled} loading={disabled} type="submit">
-          Gửi
-        </Button>
-        <Text size="sm" className="text-center select-none">
-          tôi chưa nhận được mã
-          <span onClick={handleResendOtp} className="text-blue-600 hover:underline cursor-pointer mx-1">
-            gửi lại
-          </span>
-        </Text>
-      </motion.form>
+        <Form onSubmit={handleSubmit(handleSendRequest)} className="w-3/4 flex flex-col mx-auto space-y-2">
+          <BaseInput.Pin
+            name="otp"
+            autoComplete="otp"
+            length={6}
+            type={numberRegex}
+            inputType="tel"
+            inputMode="numeric"
+            oneTimeCode
+            className="my-2 justify-center"
+          />
+          <BaseInput.Password
+            autoComplete="password"
+            name="password"
+            placeholder="nhập mật khẩu mới"
+            className="my-2"
+          />
+          <BaseButton disabled={disabled} loading={disabled} type="submit">
+            Gửi
+          </BaseButton>
+          <Text size="sm" className="text-center select-none">
+            tôi chưa nhận được mã
+            <span onClick={handleResendOtp} className="text-blue-600 hover:underline cursor-pointer mx-1">
+              gửi lại
+            </span>
+          </Text>
+        </Form>
+      </motion.div>
     </>
   );
 };
