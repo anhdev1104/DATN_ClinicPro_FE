@@ -22,3 +22,5 @@ export { default as AddIcon } from '@mui/icons-material/Add';
 export { default as ArrowDropDownIcon } from '@mui/icons-material/ArrowDropDown';
 export { default as ArrowDropUpIcon } from '@mui/icons-material/ArrowDropUp';
 export { default as EmailIcon } from '@mui/icons-material/Email';
+export { default as CachedIcon } from '@mui/icons-material/Cached';
+export { default as CompareArrows } from '@mui/icons-material/CompareArrows';

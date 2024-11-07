@@ -23,6 +23,7 @@ import ProfilePage from '@/pages/client/profile/ProfilePage';
 import ChangePassword from '@/pages/client/auth/ChangePassword';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ForgotPassword from '@/pages/client/auth/ForgotPassword';
+import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistoriesPage';
 
 type IRouter = RouteProps & {
   title: string;
@@ -57,6 +58,11 @@ const clientRouter: IRouter[] = [
     path: '/profile',
     element: <ProfilePage />,
     title: 'Thông tin cá nhân',
+  },
+  {
+    path: '/medical-histories',
+    element: <MedicalHistoriesPage />,
+    title: 'Xem bệnh án',
   },
   {
     path: '/change-password',
