@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ChevronRightIcon,
   GroupIcon,
@@ -60,9 +59,9 @@ const dumpCategory = [
   {
     id: 6,
     categoryName: 'Gói khám',
-    path: '/package',
+    path: '/packages',
     icon: AssignmentIcon,
-    pathActive: ['/package'],
+    pathActive: ['/packages'],
   },
 ];
 

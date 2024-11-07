@@ -4,7 +4,6 @@ import MainLayout from '@/layouts/MainLayout';
 import Dashboard from '@/pages/admin/dashboard/DashBoard';
 import Department from '@/pages/admin/department/Department';
 import DepartmentDetail from '@/pages/admin/department/DepartmentDetail';
-import PackagePage from '@/pages/admin/package/Package';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
 import AchievementPage from '@/pages/client/achievement/AchievementPage';
@@ -15,7 +14,7 @@ import RegisterPage from '@/pages/client/auth/RegisterPage';
 import BranchsPage from '@/pages/client/branchs/BranchsPage';
 import CommunityPage from '@/pages/client/community/CommunityPage';
 import HomePage from '@/pages/client/home/HomePage';
-import AddPackage from '@/pages/admin/package/AddPackage';
+import PackageDetail from '@/pages/admin/package/component/PackageDetail';
 import { useEffect } from 'react';
 import { Route, RouteProps, Routes, useLocation } from 'react-router-dom';
 import Prescription from '@/pages/admin/prescriptions/Prescription';
@@ -24,7 +23,8 @@ import ChangePassword from '@/pages/client/auth/ChangePassword';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ForgotPassword from '@/pages/client/auth/ForgotPassword';
 import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistoriesPage';
-
+import EditPackage from '@/pages/admin/package/component/EditPackage';
+import Package from '@/pages/admin/package/Package';
 type IRouter = RouteProps & {
   title: string;
 };
@@ -102,14 +102,19 @@ const adminRouter: IRouter[] = [
     title: 'Danh sách phòng ban',
   },
   {
-    path: '/package',
-    element: <PackagePage />,
+    path: '/packages',
+    element: <Package />,
     title: 'Danh sách gói khám',
   },
   {
-    path: '/add-package',
-    element: <AddPackage />,
-    title: 'Tạo gói khám',
+    path: '/package/:id',
+    element: <PackageDetail />,
+    title: 'Danh sách gói khám',
+  },
+  {
+    path: '/edit-package/:id',
+    element: <EditPackage />,
+    title: 'Chỉnh sửa gói khám',
   },
 ];
 
@@ -164,8 +169,8 @@ export default function AppRouter() {
             adminRouter.map(route => <Route key={route.path} path={route.path} element={route.element} />)}
         </Route>
         {authRouter.length > 0 &&
-          authRouter.map(route => <Route key={route.path} path={route.path} element={route.element}></Route>)}
-        <Route path="*" element={<NotFoundPage />}></Route>
+          authRouter.map(route => <Route key={route.path} path={route.path} element={route.element} />)}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );
