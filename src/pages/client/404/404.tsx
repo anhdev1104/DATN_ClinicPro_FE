@@ -1,4 +1,4 @@
-import EmojiNotFound from '@/assets/icons/emoji-404.svg?react';
+import EmojiNotFound from '/public/icons/emoji-404.svg?react';
 import BaseButton from '@/components/base/button';
 import { useNavigate } from 'react-router-dom';
 

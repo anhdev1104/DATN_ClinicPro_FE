@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, Box, Paper, Stack, Title } from '@mantine/core';
 import { Avatar, Text, Group } from '@mantine/core';
 import BaseIcon from '@/components/base/BaseIcon';
-import yup from '@/utils/locate';
+import yup from '@/helpers/locate';
 import DataTable from '@/components/table/Table';
 import { ColumnDef } from '@tanstack/react-table';
 import HeaderTable from '@/components/table/HeaderTable';
@@ -16,7 +16,7 @@ import BaseButton from '@/components/base/button';
 import { Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
-import NotFound from '@/pages/404';
+import NotFound from '@/pages/client/404/404';
 type UserDepartment = yup.InferType<typeof userDepartmentSchema>;
 const columns: ColumnDef<UserDepartment>[] = [
   {
@@ -64,7 +64,7 @@ const columns: ColumnDef<UserDepartment>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      return <ActionWithRow row={row} />;
+      return <ActionWithRow row={row as any} />;
     },
   },
 ];

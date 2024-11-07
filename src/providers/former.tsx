@@ -1,4 +1,4 @@
-import yup from '@/utils/locate';
+import yup from '@/helpers/locate';
 import { useSelector } from '@/hooks/redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { ComponentType } from 'react';

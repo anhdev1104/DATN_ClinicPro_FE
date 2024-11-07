@@ -1,5 +1,5 @@
 import { GENDER, STATUS } from '@/constants/define';
-import yup from '@/utils/locate';
+import yup from '@/helpers/locate';
 
 export const managerSchema = yup
   .object({

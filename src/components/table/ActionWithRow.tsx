@@ -6,7 +6,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { Row } from '@tanstack/react-table';
 import { useDispatch, useSelector } from '@/hooks/redux';
 import { toast } from 'react-toastify';
-import { AxiosBaseQueryError } from '@/config/axiosBaseQuery';
+import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import { DepartmentDetail } from '@/types/department.type';
 import UpdateDepartment from '@/pages/admin/department/UpdateDepartment';
 import { memo } from 'react';

@@ -80,6 +80,6 @@ BaseInput.AutoComplete = Autocomplete;
 BaseInput.MultiSelect = MultiSelect;
 BaseInput.Tag = TagsInput;
 BaseInput.Pill = PillsInput;
-BaseInput.displayName = 'Input';
+BaseInput.displayName = '@mantine/core/Input';
 
 export default BaseInput;
