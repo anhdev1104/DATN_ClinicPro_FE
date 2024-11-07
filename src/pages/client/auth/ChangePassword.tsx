@@ -1,10 +1,10 @@
 import BaseInput from '@/components/base/input';
-import former, { HocFormProps } from '@/lib/former';
+import former, { OptionsWithForm } from '@/lib/former';
 import { changePassword } from '@/services/auth.service';
 import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
 import yup from '@/utils/locate';
 import { Box, Button, Container, Paper, Stack, Title } from '@mantine/core';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 export const passwordSchema = yup
@@ -20,22 +20,22 @@ export const passwordSchema = yup
   .required();
 export type PasswordProps = yup.InferType<typeof passwordSchema>;
 
-const ChangePassword: React.FC<HocFormProps> = ({
-  control,
-  handleSubmit,
-  setError,
-  reset,
-  formState: { isValid, errors },
-  loading,
-}) => {
+const ChangePassword = () => {
+  const {
+    control,
+    formState: { isValid, errors, disabled },
+    reset,
+    setError,
+    handleSubmit,
+  } = useFormContext<PasswordProps>();
+
   const handleChangePassword = async <T extends Array<keyof PasswordProps>>(data: PasswordProps) => {
     if (!isValid) {
       const errorName = Object.keys(errors) as T;
-      setError(errorName[0], { message: errors[errorName[0]]?.message as string });
+      setError(errorName[0], { message: errors[errorName[0]]?.message });
       return;
     }
     try {
-       
       const { confirmNewPassword, ...formData } = yup.object().snakeCase().cast(data) as PasswordProps;
       const response = await changePassword<ChangePasswordResponse>(formData);
       toast.success(response.message);
@@ -46,8 +46,10 @@ const ChangePassword: React.FC<HocFormProps> = ({
         const errorName = Object.keys(yup.object().camelCase().cast(errors)) as T;
         const errorPure = Object.keys(errors) as Array<keyof typeof errors>;
         setError(errorName[0], { message: errors[errorPure[0]][0] });
-      } else {
+      } else if (message) {
         toast.error(message);
+      } else {
+        toast.error('lỗi server vui lòng đợi trong giây lát');
       }
     }
   };
@@ -112,7 +114,7 @@ const ChangePassword: React.FC<HocFormProps> = ({
                   />
                 )}
               />
-              <Button fullWidth loading={loading} disabled={loading} className="my-4" type="submit">
+              <Button fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
                 Gửi
               </Button>
             </Stack>
@@ -122,4 +124,8 @@ const ChangePassword: React.FC<HocFormProps> = ({
     </>
   );
 };
-export default former(ChangePassword, passwordSchema);
+
+const optionsWithForm: OptionsWithForm = {
+  mode: 'onChange',
+};
+export default former(ChangePassword, passwordSchema, optionsWithForm);

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { List } from '@/components/icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
 import { createPackage, getCategory } from '@/services/package.service';
-import { IPackage, Category } from '@/types/package.type';
+import { IPackage } from '@/types/package.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Input from '@/components/input';
 import Field from '@/components/field';
@@ -28,7 +27,6 @@ interface ListPackage {
 const AddPackage = ({ navigate }: ListPackage) => {
   const [loading, setLoading] = useState(false);
   const [packageCategory, setPackageCategory] = useState([]);
-  const nav = useNavigate();
   const {
     handleSubmit,
     formState: { errors, isValid },
@@ -55,25 +53,24 @@ const AddPackage = ({ navigate }: ListPackage) => {
     }
   };
 
-  const handleCreate: SubmitHandler<IPackage> = async data => {
-    if (!isValid) return;
+  const handleCreate: SubmitHandler<any> = async data => {
+    // if (!isValid) return;
     setLoading(true);
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('description', data.description);
     formData.append('content', data.content);
     formData.append('image', data.image);
-    formData.append('category', data.category_id);
+    formData.append('category_id', data.category_id);
     const res = await createPackage(formData);
     if (res.errors) {
       toast.error('Thêm gói khám bị thất bại');
       console.log(res.message);
     } else {
       toast.success('Thêm gói khám thành công');
-      nav('/packages');
+      reset();
     }
     setLoading(false);
-    reset();
   };
 
   return (
@@ -108,7 +105,8 @@ const AddPackage = ({ navigate }: ListPackage) => {
             </div>
             <div className="min-w-[400px] w-1/2">
               <Label htmlFor="categoryId">Danh mục gói khám</Label>
-              <Select placeholder="Danh mục gói khám" name="category" control={control} options={packageCategory} />
+              <Select placeholder="Danh mục gói khám" name="category_id" control={control} options={packageCategory} />
+
               <MessageForm error={errors.category_id?.message} />
             </div>
           </div>
@@ -169,7 +167,7 @@ const AddPackage = ({ navigate }: ListPackage) => {
                 className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition duration-200"
                 onClick={navigate}
               >
-                Hủy bỏ
+                Thoát
               </button>
             </div>
           </div>

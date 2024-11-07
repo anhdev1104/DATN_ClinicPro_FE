@@ -7,7 +7,6 @@ import DirectRoute from '@/components/direct';
 import { getPackages, DeletePackage } from '@/services/package.service';
 import { IPackage } from '@/types/package.type';
 import { toast } from 'react-toastify';
-
 interface ListPackageProps {
   navigate: () => void;
 }
@@ -27,8 +26,9 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
     const fetchPackages = async () => {
       try {
         const response = await getPackages();
-        if (Array.isArray(response.data)) {
-          setPackages(response.data);
+        if (response) {
+          const data = response.data;
+          setPackages(data);
         } else {
           setPackages([]);
         }
@@ -84,11 +84,9 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
             <tbody>
               {packages.map((pkg, index) => (
                 <tr key={index} className="odd">
-                  <Link to={`/package/${pkg.id}`}>
-                    <td className="p-4 w-1/12">{index + 1}</td>
-                  </Link>
+                  <td className="p-4 w-1/12">{index + 1}</td>
                   <td className="p-4 text-gray-800 w-2/12">{pkg.name}</td>
-                  <td className="p-4 text-gray-600 w-2/12"></td>
+                  <td className="p-4 text-gray-600 w-2/12">{pkg.category_id}</td>
                   <td className="p-4 text-gray-600 w-2/12">{pkg.description}</td>
                   <td className="p-4 profile-image w-2/12 h-32">
                     <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover" />

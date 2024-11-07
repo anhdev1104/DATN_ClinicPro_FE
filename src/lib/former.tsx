@@ -1,52 +1,47 @@
 import yup from '@/utils/locate';
 import { useSelector } from '@/hooks/redux';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ComponentType, FormEventHandler, useEffect, useState } from 'react';
-import { FieldValues, SubmitErrorHandler, SubmitHandler, useForm, UseFormProps, UseFormReturn } from 'react-hook-form';
+import React, { ComponentType } from 'react';
+import { FormProvider, useForm, UseFormProps } from 'react-hook-form';
 
 /**
  * @description: this is HOCS for form, serves logic reuse, this partern use react hook form combine with yup validation
- * @warning :second parameter is yup object schema and each field must have .default('') or .ensure() to ensure the correctness of the data
- * if you dont want use recommented below you can custom form defaultValues with three parameter
+ * @recomented : I highly recommented use yup at second parameter to handling error
+ * @warning :second parameter is yup object schema, each field of schema must have .default('') or .ensure() to ensure the correctness of the data
+ * if you dont want use recommented below you can custom defaultValues of useForm in three parameter
  * @note : don't wrap memo outside former, to use memo wrap it inside former like: former(memo(Component),schema,ontions)
- * @author: https://github.com/seaesa
+ * @package: using useFormContext provide by react-hook-form to recived data
+ * @example:
+ * function App() {
+ *  const {handleSubmit} = useFormContext<Types>()
+ * return <form onSubmit(handleSubmit(YourlogicFunc))>
+ *  </form>
+ * }
+ * export default former(App,SChema?,config?)
  */
 
-export interface HocFormProps extends Omit<UseFormReturn, 'handleSubmit'>, OptionsWithForm {
-  loading: boolean;
-  handleSubmit: <T extends FieldValues>(
-    onvalid: SubmitHandler<T>,
-    onInvalid?: SubmitErrorHandler<T>,
-  ) => FormEventHandler<HTMLFormElement>;
-}
-
-export type OptionsWithForm = Partial<Omit<UseFormProps, 'resolver' | 'disabled'>>;
-
-const former = <T extends HocFormProps>(
+export type OptionsWithForm = Omit<UseFormProps, 'resolver' | 'disabled'>;
+const former = <T extends object>(
   WrappedComponent: ComponentType<T>,
-  Schema: yup.AnyObjectSchema,
+  Schema?: yup.AnyObjectSchema,
   options?: OptionsWithForm,
 ) => {
-  const Component: React.FC<Omit<T, keyof Omit<HocFormProps, keyof OptionsWithForm>>> = ({
-    mode,
-    defaultValues,
-    ...props
-  }) => {
-    const [isLoading, setIsLoading] = useState(false);
+  const Component: React.FC<T> = props => {
     const { loading } = useSelector(state => state.global);
+
     const form = useForm({
-      resolver: yupResolver(Schema),
-      mode: options?.mode || mode,
-      disabled: loading,
-      defaultValues: options?.defaultValues || defaultValues || Schema.cast({}),
       ...options,
+      resolver: Schema && yupResolver(Schema),
+      mode: options?.mode,
+      disabled: loading,
+      defaultValues: Schema ? Schema.getDefault() : options?.defaultValues,
     });
 
-    useEffect(() => {
-      setIsLoading(loading);
-    }, [form.formState.disabled]);
-
-    return <WrappedComponent {...(props as T)} {...form} loading={isLoading} />;
+    return (
+      <FormProvider {...form}>
+        <WrappedComponent {...props} />
+      </FormProvider>
+    );
   };
 
   Component.displayName = 'HOCWithForm';

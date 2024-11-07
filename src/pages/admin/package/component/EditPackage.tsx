@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import DirectRoute from '@/components/direct';
-import { updatePackage, getPackageById } from '@/services/package.service';
+import { updatePackage, getPackageById, getCategory } from '@/services/package.service';
 import { IPackage } from '@/types/package.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Input from '@/components/input';
@@ -12,11 +12,14 @@ import MessageForm from '@/components/message';
 import { List } from '@/components/icons';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import convertToOptions from '@/helpers/convertToOptions';
+import Select from '@/components/select';
 const schema = yup.object().shape({
   name: yup.string().trim().required('Không được để trống'),
   description: yup.string().required('Không được để trống'),
   content: yup.string().trim().required('Không được để trống'),
   image: yup.mixed().notRequired(),
+  category_id: yup.string().nullable().required('Vui lòng chọn danh mục'),
 });
 const EditPackage = () => {
   const navigate = useNavigate();
@@ -24,9 +27,10 @@ const EditPackage = () => {
   const [loading, setLoading] = useState(false);
   const [packageData, setPackageData] = useState<IPackage | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [packageCategory, setPackageCategory] = useState([]);
   const {
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     control,
     reset,
     setValue,
@@ -34,6 +38,15 @@ const EditPackage = () => {
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const res = await getCategory();
+      const data = convertToOptions(res.data);
+      setPackageCategory(data);
+    };
+
+    fetchCategories();
+  }, []);
   useEffect(() => {
     const fetchPackage = async () => {
       try {
@@ -52,6 +65,7 @@ const EditPackage = () => {
           if (selectedPackage.image) {
             setSelectedImage(selectedPackage.image);
           }
+          setValue('category_id', selectedPackage.category_id);
         }
       } catch (error) {
         console.error(error);
@@ -71,14 +85,15 @@ const EditPackage = () => {
       setValue('image', undefined);
     }
   };
-  const handleUpdate: SubmitHandler<IPackage> = async data => {
-    if (!isValid) return;
+  const handleUpdate: SubmitHandler<any> = async data => {
+    // if (!isValid) return;
     setLoading(true);
     const formData = new FormData();
     formData.append('name', data.name || packageData?.name || '');
     formData.append('description', data.description || packageData?.description || '');
     formData.append('content', data.content || packageData?.content || '');
     formData.append('image', data.image || packageData?.image || '');
+    formData.append('category_id', data.category_id || packageData?.category_id || '');
 
     try {
       const res = await updatePackage(String(id), formData);
@@ -129,6 +144,14 @@ const EditPackage = () => {
               </Field>
               <MessageForm error={errors.name?.message} />
             </div>
+            <div className="min-w-[400px] w-1/2">
+              <Label htmlFor="categoryId">Danh mục gói khám</Label>
+              <Select placeholder="Danh mục gói khám" name="category_id" control={control} options={packageCategory} />
+
+              <MessageForm error={errors.category_id?.message} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col">
               <Field>
                 <Label htmlFor="description" className="text-sm font-medium mb-1">
@@ -137,29 +160,28 @@ const EditPackage = () => {
                 <Input
                   name="description"
                   type="text"
-                  className="border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third"
+                  className="border rounded-md p-2 focus:ring-2  outline-none !font-normal !text-dark  bg-white focus:border-third min-h-[100px]"
                   placeholder="Nhập mô tả"
                   control={control}
                 />
               </Field>
               <MessageForm error={errors.description?.message} />
             </div>
-          </div>
-
-          <div className="flex flex-col">
-            <Field>
-              <Label htmlFor="content" className="text-sm font-medium mb-1">
-                Nội dung gói khám <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                name="content"
-                type="text"
-                className="border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third min-h-[100px]"
-                placeholder="Nhập nội dung ..... "
-                control={control}
-              />
-            </Field>
-            <MessageForm error={errors.content?.message} />
+            <div className="flex flex-col">
+              <Field>
+                <Label htmlFor="content" className="text-sm font-medium mb-1">
+                  Nội dung gói khám <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  name="content"
+                  type="text"
+                  className="border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third min-h-[100px]"
+                  placeholder="Nhập nội dung ..... "
+                  control={control}
+                />
+              </Field>
+              <MessageForm error={errors.content?.message} />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 items-end">
@@ -170,6 +192,7 @@ const EditPackage = () => {
               {selectedImage && <img src={selectedImage} alt="Selected" className="w-32 h-32 object-cover mb-4" />}
               <input
                 type="file"
+                id="image"
                 name="image"
                 onChange={handleImageChange}
                 className="border rounded-md p-2 focus:ring-2 outline-none bg-white"

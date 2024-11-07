@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { ForgotPassword } from './ForgotPassword';
 import yup from '@/utils/locate';
 import { resetPassword } from '@/services/auth.service';
@@ -9,7 +9,7 @@ import { regexAllowTypeNumber } from '@/utils/utils';
 import { Button, Text } from '@mantine/core';
 import { toast } from 'react-toastify';
 import { IResetPassword, IResetPasswordError } from '@/types/auth.type';
-import former, { HocFormProps } from '@/lib/former';
+import former from '@/lib/former';
 
 const resetPasswordSchema = yup.object({
   otp: yup.string().length(6).default('').required(),
@@ -17,20 +17,18 @@ const resetPasswordSchema = yup.object({
 });
 
 export type ResetPassword = yup.InferType<typeof resetPasswordSchema>;
-interface ResetPasswordProps extends HocFormProps {
+interface ResetPasswordProps {
   handleSendEmail: (data: ForgotPassword) => void;
   email: string;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-const ResetPassword: React.FC<ResetPasswordProps> = ({
-  handleSendEmail,
-  email,
-  control,
-  handleSubmit,
-  reset,
-  loading,
-}) => {
+const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { disabled },
+  } = useFormContext<ResetPassword>();
   const navigate = useNavigate();
   const handleSendRequest = async (data: ResetPassword) => {
     try {
@@ -44,7 +42,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
     }
   };
   const handleResendOtp = async () => {
-    if (!loading) handleSendEmail({ email });
+    if (!disabled) handleSendEmail({ email });
   };
 
   return (
@@ -90,7 +88,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
             );
           }}
         />
-        <Button disabled={loading} loading={loading} type="submit">
+        <Button disabled={disabled} loading={disabled} type="submit">
           Gửi
         </Button>
         <Text size="sm" className="text-center select-none">
