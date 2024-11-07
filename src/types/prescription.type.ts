@@ -1,15 +1,17 @@
 export interface IMedications {
-  id: number;
+  id: string;
   name: string;
   created_at?: string;
   updated_at?: string;
 }
 
 export interface IMedication {
-  medication_id: number;
-  instructions: string;
-  quantity: number;
-  duration: number;
+  id?: string;
+  prescription_id?: string;
+  medication_id: string;
+  quantity?: number;
+  duration?: number;
+  instructions?: string;
 }
 
 export interface IPrescription {

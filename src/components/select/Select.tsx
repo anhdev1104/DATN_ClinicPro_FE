@@ -1,6 +1,6 @@
 import useToggle from '@/hooks/useToggle';
 import { FC } from 'react';
-import { useController, Control } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 import { ArrowDropDownIcon, ArrowDropUpIcon } from '../icons';
 
 export interface Option {
@@ -9,7 +9,7 @@ export interface Option {
 }
 
 interface CustomSelectProps {
-  control: Control<any>;
+  control: any;
   options: Option[];
   name: string;
   placeholder: string;
@@ -17,7 +17,7 @@ interface CustomSelectProps {
 }
 
 const CustomSelect: FC<CustomSelectProps> = ({ control, options, name, placeholder, setIsDialogOpen }) => {
-  const { field } = useController({ name, control, defaultValue: '' });
+  const { field } = useController({ name, control });
   const { show, handleToggle } = useToggle();
   const selectedOption = options.find(option => option.value === field.value);
 
