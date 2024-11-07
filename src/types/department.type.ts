@@ -1,5 +1,5 @@
 export interface Manager {
-  id: number;
+  id: string;
   address: string;
   fullname: string;
   avatar: string;
@@ -10,7 +10,7 @@ export interface Manager {
 }
 
 export interface Department {
-  id: number;
+  id: string;
   name: string;
   description?: string;
   manager_id?: number;

@@ -19,9 +19,11 @@ import AddPackage from '@/pages/admin/package/AddPackage';
 import { useEffect } from 'react';
 import { Route, RouteProps, Routes, useLocation } from 'react-router-dom';
 import Prescription from '@/pages/admin/prescriptions/Prescription';
+import ProfilePage from '@/pages/client/profile/ProfilePage';
 import ChangePassword from '@/pages/client/auth/ChangePassword';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ForgotPassword from '@/pages/client/auth/ForgotPassword';
+import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistoriesPage';
 
 type IRouter = RouteProps & {
   title: string;
@@ -51,6 +53,16 @@ const clientRouter: IRouter[] = [
     path: '/community',
     element: <CommunityPage />,
     title: 'Cộng đồng',
+  },
+  {
+    path: '/profile',
+    element: <ProfilePage />,
+    title: 'Thông tin cá nhân',
+  },
+  {
+    path: '/medical-histories',
+    element: <MedicalHistoriesPage />,
+    title: 'Xem bệnh án',
   },
   {
     path: '/change-password',

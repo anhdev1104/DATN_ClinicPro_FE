@@ -9,6 +9,7 @@ interface IInput {
   className?: string;
   placeholder: string;
   isGlass?: boolean;
+  disabled?: boolean;
   colorGlass?: string;
 }
 

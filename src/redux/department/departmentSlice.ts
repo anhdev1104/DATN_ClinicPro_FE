@@ -6,6 +6,7 @@ interface InitialState {
   isOpenDepartmentDetail: boolean;
   departmentDetail: Department | null;
 }
+
 const initialState: InitialState = {
   isOpenNewDepartment: false,
   isOpenDepartmentDetail: false,

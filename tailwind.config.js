@@ -30,6 +30,19 @@ export default {
       boxShadow: {
         tr: '0 0 3px #e5e5e5',
       },
+      animation: {
+        bounce: 'bounce 1s infinite',
+      },
+      keyframes: {
+        bounce: {
+          '0%, 100%': {
+            transform: 'translateY(0)',
+          },
+          '50%': {
+            transform: 'translateY(-10px)',
+          },
+        },
+      },
     },
   },
   plugins: [
