@@ -6,10 +6,12 @@ export interface IMedications {
 }
 
 export interface IMedication {
+  id?: string;
+  prescription_id?: string;
   medication_id: string;
-  instructions: string;
-  quantity: number;
-  duration: number;
+  quantity?: number;
+  duration?: number;
+  instructions?: string;
 }
 
 export interface IPrescription {

@@ -2,49 +2,34 @@ import { List } from '@/components/icons';
 import Input from '@/components/input';
 import Field from '@/components/field';
 import Label from '@/components/label';
-import { SubmitHandler, useWatch } from 'react-hook-form';
+import { Controller, SubmitHandler, useWatch } from 'react-hook-form';
 import { Button } from '@/components/button';
 import Select from '@/components/select';
-import { getCategoryMedication, getMedication } from '@/services/prescriptions.service';
+import { createPrescription, getCategoryMedication, getMedication } from '@/services/prescriptions.service';
 import { useEffect, useState } from 'react';
 import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
-import { IMedications, IPrescription } from '@/types/prescription.type';
+import { IMedications } from '@/types/prescription.type';
 import ModalMedication from '@/components/modal/ModalMedication';
 import convertToOptions from '@/helpers/convertToOptions';
 import DirectRoute from '@/components/direct';
+import { toast } from 'react-toastify';
 
 const patientsOptions = [
   {
     label: 'Nguyễn Văn A',
-    value: '1',
+    value: '64c13314-2273-49bf-bbaf-dae139a348b8',
   },
   {
     label: 'Trần Thị B',
-    value: '2',
+    value: '146a51c2-d710-4559-ae0e-ef1ed7df5a39',
   },
   {
     label: 'Lê Văn C',
-    value: '3',
+    value: '13b50927-da93-47e7-9a4b-e1c14fc951e1',
   },
   {
-    id: '1',
     label: 'Phạm Thị D',
-    value: '4',
-  },
-  {
-    id: '1',
-    label: 'Nguyễn Văn E',
-    value: '5',
-  },
-  {
-    id: '1',
-    label: 'Trần Văn F',
-    value: '6',
-  },
-  {
-    id: '1',
-    label: 'Lê Thị G',
-    value: '7',
+    value: 'ee4c008f-4c3b-4c2c-b2d5-dd3ffaf60873',
   },
 ];
 
@@ -54,27 +39,23 @@ interface AddPrescripton {
 
 const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   const [medicationCategory, setMedicationCategory] = useState([]);
-
   const [medications, setMedications] = useState<IMedications[]>([]);
-
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const {
     form: {
       control,
       reset,
-      formState: { isSubmitting, isValid },
+      formState: { isSubmitting, isValid, errors },
       handleSubmit,
-      getValues,
     },
   } = usePrescriptionContextForm();
-  const medicationsForm = getValues();
-  console.log(medicationsForm.medications.filter((item: any) => item !== null || item.medication_id !== undefined));
+  console.log('errors form', errors);
 
   const selectedCategoryId = useWatch({
     control,
     name: 'isCategory',
-  });
+  }) as string;
 
   useEffect(() => {
     (async () => {
@@ -85,20 +66,44 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   }, []);
 
   useEffect(() => {
-    if (selectedCategoryId) {
-      (async () => {
-        const res = await getMedication(selectedCategoryId);
-        setMedications(res.data);
-      })();
-    }
+    if (!selectedCategoryId) return;
+    (async () => {
+      const res = await getMedication(selectedCategoryId);
+      setMedications(res.data);
+    })();
   }, [selectedCategoryId]);
 
-  const handleCreateMedication: SubmitHandler<IPrescription> = async data => {
+  const handleCreateMedication: SubmitHandler<any> = async data => {
+    console.log('🚀 ~ AddPrescriptions ~ data:', data);
     if (!isValid) return;
-    console.log(data);
+    const newPrescription = {
+      patient_id: data.patient_id,
+      user_id: '3119acf9-b33c-4de6-9b51-0275be8ea689',
+      name: data.name,
+      description: data.description,
+      medications: data.medications,
+    };
+    await createPrescription(newPrescription);
+    toast.success('Tạo đơn thuốc thành công !');
+    handleResetForm();
   };
 
-  const handleResetForm = () => reset();
+  const handleResetForm = () =>
+    reset({
+      patient_id: '',
+      user_id: '',
+      description: '',
+      name: '',
+      medications: [
+        {
+          instructions: '',
+          quantity: undefined,
+          duration: undefined,
+          medication_id: '',
+        },
+      ],
+      isCategory: '',
+    });
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
@@ -153,12 +158,20 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
 
               <div className="mb-7">
                 <Label htmlFor="description">Lời dặn</Label>
-                <textarea
-                  className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                <Controller
                   name="description"
-                  placeholder="Nhập lời dặn ..."
-                  id="description"
-                ></textarea>
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <textarea
+                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                        placeholder="Nhập lời dặn ..."
+                        id="description"
+                        {...field}
+                      ></textarea>
+                    );
+                  }}
+                />
               </div>
 
               <div className="flex items-center gap-7 w-1/4 justify-end ml-auto pt-3">
@@ -167,7 +180,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                   styled="normal"
                   className="bg-primaryAdmin text-white disabled:bg-primaryAdmin/50"
                   isLoading={isSubmitting}
-                  disabled={!isValid || isSubmitting}
+                  disabled={isSubmitting}
                 >
                   Xác nhận
                 </Button>
