@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Lexend', 'sans-serif']
+        body: ['Lexend', 'sans-serif'],
       },
       colors: {
         primary: '#4DB6AC',
@@ -13,35 +13,54 @@ export default {
         third: '#00749b',
         lightGray: '#E0F2F1',
         dark: '#5d5d5d',
-        borderColor: '#ececed'
+        borderColor: '#ececed',
       },
       keyframes: {
         slideInRight: {
           '0%': { opacity: '0', transform: 'translateX(10%)' },
-          '100%': { opacity: '1', transform: 'translateX(0)' }
-        }
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        move: {
+          '33%': { top: '0px' },
+          '66%': { top: '20px' },
+          '100%': { top: '0px' },
+        },
       },
       animation: {
-        'slide-in-right': 'slideInRight 0.5s ease-in-out forwards'
+        'slide-in-right': 'slideInRight 0.5s ease-in-out forwards',
+        move: 'move 2.5s infinite',
       },
       spacing: {
-        '65p': '65%'
+        '65p': '65%',
       },
       boxShadow: {
-        tr: '0 0 3px #e5e5e5'
-      }
-    }
+        tr: '0 0 3px #e5e5e5',
+      },
+      animation: {
+        bounce: 'bounce 1s infinite',
+      },
+      keyframes: {
+        bounce: {
+          '0%, 100%': {
+            transform: 'translateY(0)',
+          },
+          '50%': {
+            transform: 'translateY(-10px)',
+          },
+        },
+      },
+    },
   },
   plugins: [
     function ({ addUtilities }) {
       addUtilities({
         '.object-unset': {
-          'object-fit': 'unset'
+          'object-fit': 'unset',
         },
         '.clip-path-border': {
-          'clip-path': 'polygon(0 0, 100% 0, 100% 90%, 0 90%)'
-        }
+          'clip-path': 'polygon(0 0, 100% 0, 100% 90%, 0 90%)',
+        },
       });
-    }
-  ]
+    },
+  ],
 };

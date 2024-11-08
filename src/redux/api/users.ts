@@ -1,4 +1,4 @@
-import { axiosBaseQuery } from '@/config/axiosBaseQuery';
+import { axiosBaseQuery } from '@/helpers/axiosBaseQuery';
 import { IUserInfo } from '@/types/user.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
@@ -13,9 +13,9 @@ export const usersApi = createApi({
   endpoints: builder => ({
     getAllUsers: builder.query<ResponseTypes<IUserInfo[]>, void>({
       query: () => ({
-        url: 'users'
-      })
-    })
-  })
+        url: 'users',
+      }),
+    }),
+  }),
 });
 export const { useGetAllUsersQuery } = usersApi;

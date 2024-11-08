@@ -6,7 +6,6 @@ import { departmentApi } from './api/department';
 import { departmentSlice } from './department/departmentSlice';
 import { globalSlice } from './globalStore';
 import { usersApi } from './api/users';
-
 const persistConfig = {
   key: 'root',
   version: 1,

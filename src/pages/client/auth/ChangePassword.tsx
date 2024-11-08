@@ -1,10 +1,12 @@
+import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
-import former, { HocFormProps } from '@/lib/former';
+import former, { OptionsWithForm } from '@/providers/former';
+import Form from '@/lib/Form';
 import { changePassword } from '@/services/auth.service';
 import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
-import yup from '@/utils/locate';
-import { Box, Button, Container, Paper, Stack, Title } from '@mantine/core';
-import { Controller } from 'react-hook-form';
+import yup from '@/helpers/locate';
+import { Container, Paper, Stack, Title } from '@mantine/core';
+import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 export const passwordSchema = yup
@@ -20,22 +22,36 @@ export const passwordSchema = yup
   .required();
 export type PasswordProps = yup.InferType<typeof passwordSchema>;
 
-const ChangePassword: React.FC<HocFormProps> = ({
-  control,
-  handleSubmit,
-  setError,
-  reset,
-  formState: { isValid, errors },
-  loading,
-}) => {
+const formElement = [
+  {
+    label: 'mật khẩu hiện tại',
+    name: 'password',
+  },
+  {
+    label: 'mật khẩu mới',
+    name: 'newPassword',
+  },
+  {
+    label: 'xác nhận mật khẩu mới',
+    name: 'confirmNewPassword',
+  },
+];
+
+const ChangePassword = () => {
+  const {
+    formState: { isValid, errors, disabled },
+    reset,
+    setError,
+    handleSubmit,
+  } = useFormContext<PasswordProps>();
+
   const handleChangePassword = async <T extends Array<keyof PasswordProps>>(data: PasswordProps) => {
     if (!isValid) {
       const errorName = Object.keys(errors) as T;
-      setError(errorName[0], { message: errors[errorName[0]]?.message as string });
+      setError(errorName[0], { message: errors[errorName[0]]?.message });
       return;
     }
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmNewPassword, ...formData } = yup.object().snakeCase().cast(data) as PasswordProps;
       const response = await changePassword<ChangePasswordResponse>(formData);
       toast.success(response.message);
@@ -46,8 +62,10 @@ const ChangePassword: React.FC<HocFormProps> = ({
         const errorName = Object.keys(yup.object().camelCase().cast(errors)) as T;
         const errorPure = Object.keys(errors) as Array<keyof typeof errors>;
         setError(errorName[0], { message: errors[errorPure[0]][0] });
-      } else {
+      } else if (message) {
         toast.error(message);
+      } else {
+        toast.error('lỗi server vui lòng đợi trong giây lát');
       }
     }
   };
@@ -59,67 +77,34 @@ const ChangePassword: React.FC<HocFormProps> = ({
           <Title order={1} lineClamp={1} className="capitalize text-center">
             thay đổi mật khẩu
           </Title>
-          <Box
+          <Form
             onSubmit={handleSubmit(handleChangePassword)}
-            component="form"
             className="space-y-2 flex flex-col my-10 justify-center items-center"
           >
             <Stack gap="md" justify="center" align="center" className="w-full lg:w-3/4">
-              <Controller
-                name="password"
-                control={control}
-                render={({ field, fieldState }) => {
-                  return (
-                    <BaseInput.Password
-                      radius="md"
-                      className="w-full"
-                      label="mật khẩu hiện tại"
-                      error={fieldState.error?.message}
-                      type="password"
-                      autoComplete="password"
-                      {...field}
-                    />
-                  );
-                }}
-              />
-              <Controller
-                name="newPassword"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <BaseInput.Password
-                    radius="md"
-                    className="w-full"
-                    label="mật khẩu mới"
-                    error={fieldState.error?.message}
-                    type="password"
-                    autoComplete="newPassword"
-                    {...field}
-                  />
-                )}
-              />
-              <Controller
-                name="confirmNewPassword"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <BaseInput.Password
-                    radius="md"
-                    className="w-full"
-                    label="xác nhận mật khẩu mới"
-                    error={fieldState.error?.message}
-                    type="password"
-                    autoComplete="confirmNewPassword"
-                    {...field}
-                  />
-                )}
-              />
-              <Button fullWidth loading={loading} disabled={loading} className="my-4" type="submit">
+              {formElement.map(element => (
+                <BaseInput.Password
+                  key={element.name}
+                  name={element.name}
+                  radius="md"
+                  className="w-full"
+                  label={element.label}
+                  type="password"
+                  autoComplete={element.name}
+                />
+              ))}
+              <BaseButton fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
                 Gửi
-              </Button>
+              </BaseButton>
             </Stack>
-          </Box>
+          </Form>
         </Paper>
       </Container>
     </>
   );
 };
-export default former(ChangePassword, passwordSchema);
+
+const optionsWithForm: OptionsWithForm = {
+  mode: 'onChange',
+};
+export default former(ChangePassword, passwordSchema, optionsWithForm);
