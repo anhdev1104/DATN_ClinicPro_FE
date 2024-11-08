@@ -1,3 +1,4 @@
+import { emailRegex } from '@/constants/regex';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import unidecode from 'unidecode';
@@ -8,10 +9,6 @@ export const cn = (...input: ClassValue[]) => {
 
 export const convertStringToASCII = (value: string) => {
   return unidecode(value).toLowerCase();
-};
-
-export const isObject = (variable: unknown) => {
-  return typeof variable === 'object' && variable instanceof Object && variable !== null && !Array.isArray(variable);
 };
 
 interface queryKey {
@@ -29,12 +26,9 @@ export const formatQueryParam = (endPoint: string, queryKey: queryKey) => {
 };
 
 export const filterOutManagers = <T extends any[]>(data: T) => {
-  return data.filter(fil => fil.role.id === 1);
+  return data.filter(fil => fil.role.name === 'doctor');
 };
 
-export const regexAllowTypeNumber = /^[0-9]*$/;
-export const isEmailRegex =
-  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export const validateEmail = (email: string) => {
-  return String(email).toLowerCase().match(isEmailRegex);
+  return String(email).toLowerCase().match(emailRegex);
 };

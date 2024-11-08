@@ -20,7 +20,7 @@ const ModalHeaderUser = forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElemen
       {...props}
     >
       <Link
-        to=""
+        to="/profile"
         className="bg-white px-3 py-2 text-xs cursor-pointer block transition-all ease-linear hover:bg-gray-100"
       >
         Thông tin cá nhân
@@ -36,6 +36,12 @@ const ModalHeaderUser = forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElemen
         className="bg-white px-3 py-2 text-xs cursor-pointer block transition-all ease-linear hover:bg-gray-100"
       >
         Lịch sử khám bệnh
+      </Link>
+      <Link
+        to="/medical-histories"
+        className="bg-white px-3 py-2 text-xs cursor-pointer block transition-all ease-linear hover:bg-gray-100"
+      >
+        Xem bệnh án cá nhân
       </Link>
       <Link
         to="/change-password"

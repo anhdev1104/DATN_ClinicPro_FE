@@ -1,9 +1,10 @@
 import Http from '@/helpers/http';
+import { IAccount, IProfileUpdate } from '@/types/auth.type';
 import { PasswordProps } from '@/pages/client/auth/ChangePassword';
 import { ForgotPassword } from '@/pages/client/auth/ForgotPassword';
 import { ResetPassword } from '@/pages/client/auth/ResetPassword';
-import { IAccount } from '@/types/auth.type';
 import { AxiosError } from 'axios';
+
 const http = new Http();
 
 export const registerService = async (newAccount: IAccount) => {
@@ -24,6 +25,23 @@ export const logoutService = async () => {
   }
 };
 
+export const getProfile = async () => {
+  try {
+    const response = await http.get('/auth/profile');
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateProfile = async (id: string, newProfile: IProfileUpdate) => {
+  try {
+    const response = await http.update(`/auth/profile/${id}`, newProfile);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
 export const changePassword = async <T>(data: Partial<Omit<PasswordProps, 'confirmPassword'>>): Promise<T> => {
   try {
     const response = await http.api.put<T>('/auth/change-password', data);

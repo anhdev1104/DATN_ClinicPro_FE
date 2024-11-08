@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import LoadingSpin from '../loading/LoadingSpin';
-import { cn } from '@/utils/utils';
+import { cn } from '@/helpers/utils';
 
 type ButtonType = 'submit' | 'button';
 
@@ -41,7 +41,7 @@ const Button: FC<IButton> = ({
       className={cn(
         'transition-all duration-300 ease-linear flex items-center justify-center outline-none select-none disabled:bg-gray-300/60 disabled:pointer-events-none',
         styledBtn,
-        className
+        className,
       )}
       {...props}
       onClick={onClick}

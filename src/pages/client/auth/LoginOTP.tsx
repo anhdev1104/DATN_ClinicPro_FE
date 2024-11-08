@@ -15,7 +15,7 @@ const schema = yup.object({
     .string()
     .trim()
     .required('Trường này là bắt buộc !')
-    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'Email không dúng định dạng !' })
+    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'Email không dúng định dạng !' }),
 });
 
 const LoginOTP = () => {
@@ -23,10 +23,10 @@ const LoginOTP = () => {
   const {
     handleSubmit,
     control,
-    formState: { isSubmitting, errors, isValid }
+    formState: { isSubmitting, errors, isValid },
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   const handleLoginOTP: SubmitHandler<{ email: string }> = async data => {

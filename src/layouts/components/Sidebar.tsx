@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ChevronRightIcon,
   GroupIcon,
@@ -8,7 +7,7 @@ import {
   AssignmentIcon,
   Tablet,
 } from '@/components/icons';
-import { cn } from '@/utils/utils';
+import { cn } from '@/helpers/utils';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -60,9 +59,9 @@ const dumpCategory = [
   {
     id: 6,
     categoryName: 'Gói khám',
-    path: '/package',
+    path: '/packages',
     icon: AssignmentIcon,
-    pathActive: ['/package'],
+    pathActive: ['/packages'],
   },
 ];
 

@@ -34,7 +34,7 @@ const Topbar: FC<{ handleToggle: () => void }> = ({ handleToggle }) => {
 
 function SearchAdmin() {
   const { control } = useForm({
-    mode: 'onChange'
+    mode: 'onChange',
   });
   return (
     <form className="w-[300px]">

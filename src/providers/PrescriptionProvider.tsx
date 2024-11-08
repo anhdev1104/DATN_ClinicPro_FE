@@ -29,7 +29,6 @@ type TPrescriptionContext = {
 const PrescriptionContext = createContext<TPrescriptionContext>({} as TPrescriptionContext);
 
 const initialMedicationData = {} as IPrescription;
-// eslint-disable-next-line react-refresh/only-export-components
 export const usePrescriptionContextForm = () => useContext(PrescriptionContext);
 
 export default function PrescriptionProvider({ children }: { children: ReactNode }) {

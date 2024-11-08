@@ -1,28 +1,23 @@
 import Search from '@/components/search/Search';
-import { PopupNewDepartment } from '@/redux/department/departmentSlice';
 import { AddRounded } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDisclosure } from '@mantine/hooks';
+import { Modal } from '@mantine/core';
+import NewDepartment from '../NewDepartment';
 
 const HeaderDepartment = () => {
-  const dispatch = useDispatch();
-  const handleShowPopup = () => {
-    dispatch(PopupNewDepartment(true));
-  };
+  const [opened, { open, close }] = useDisclosure(false);
   return (
     <>
       <div className="p-2 flex justify-between">
         <Search />
-        <IconButton
-          onClick={handleShowPopup}
-          color="primary"
-          aria-label="add new department"
-          className="px-3"
-          size="small"
-        >
+        <IconButton onClick={open} color="primary" aria-label="add new department" className="px-3" size="small">
           <AddRounded />
         </IconButton>
       </div>
+      <Modal radius="md" size="lg" centered opened={opened} onClose={close} title="Tạo Mới Phòng Ban">
+        <NewDepartment handleClose={close} />
+      </Modal>
     </>
   );
 };

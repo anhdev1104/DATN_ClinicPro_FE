@@ -67,19 +67,18 @@ class Http {
       return error.response.data;
     }
   }
-
-  async post(url: string, data?: any) {
+  async post(url: string, data?: any, config?: any) {
     try {
-      const response = await this.api.post(url, data);
+      const response = await this.api.post(url, data, config);
       return response.data;
     } catch (error: any) {
       return error.response.data;
     }
   }
 
-  async update(url: string, data: any) {
+  async update(url: string, data: any, config?: any) {
     try {
-      const response = await this.api.put(url, data);
+      const response = await this.api.put(url, data, config);
       return response.data;
     } catch (error: any) {
       return error.response.data;

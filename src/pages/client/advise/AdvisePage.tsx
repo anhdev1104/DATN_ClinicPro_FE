@@ -6,29 +6,29 @@ import { useForm } from 'react-hook-form';
 const packageData = [
   {
     label: 'Thai sản',
-    value: 'Thai sản'
+    value: 'Thai sản',
   },
   {
     label: 'Khám sức khoẻ',
-    value: 'Khám sức khoẻ'
+    value: 'Khám sức khoẻ',
   },
   {
     label: 'Khám cơ xương',
-    value: 'Khám cơ xương'
+    value: 'Khám cơ xương',
   },
   {
     label: 'Nhãn khoa',
-    value: 'Nhãn khoa'
+    value: 'Nhãn khoa',
   },
   {
     label: 'Tai mũi họng',
-    value: 'Tai mũi họng'
-  }
+    value: 'Tai mũi họng',
+  },
 ];
 
 const AdvisePage = () => {
   const { control } = useForm({
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   return (
