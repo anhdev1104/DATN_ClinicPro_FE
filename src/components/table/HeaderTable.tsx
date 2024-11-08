@@ -1,4 +1,4 @@
-import { cn } from '@/utils/utils';
+import { cn } from '@/helpers/utils';
 import { Column } from '@tanstack/react-table';
 import { Button } from '@mantine/core';
 import BaseIcon from '../base/BaseIcon';

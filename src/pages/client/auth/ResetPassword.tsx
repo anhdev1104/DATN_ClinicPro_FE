@@ -2,16 +2,16 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useFormContext } from 'react-hook-form';
 import { ForgotPassword } from './ForgotPassword';
-import yup from '@/utils/locate';
+import yup from '@/helpers/locate';
 import { resetPassword } from '@/services/auth.service';
 import BaseInput from '@/components/base/input';
-import { numberRegex } from '@/utils/regex';
 import { toast } from 'react-toastify';
 import { IResetPassword, IResetPasswordError } from '@/types/auth.type';
-import former from '@/hocs/former';
+import former from '@/providers/former';
 import Form from '@/lib/Form';
 import BaseButton from '@/components/base/button';
 import { Text } from '@mantine/core';
+import { numberRegex } from '@/constants/regex';
 
 const resetPasswordSchema = yup.object({
   otp: yup.string().length(6).default('').required(),

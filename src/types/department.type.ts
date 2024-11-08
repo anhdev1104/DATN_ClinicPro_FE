@@ -6,7 +6,7 @@ import {
   newDepartmentSchemaResponse,
   updateDepartmentSchema,
 } from '@/schema/department.schema';
-import yup from '@/utils/locate';
+import yup from '@/helpers/locate';
 
 export type Department = yup.InferType<typeof departmentSchema>;
 export type Manager = yup.InferType<typeof managerSchema>;

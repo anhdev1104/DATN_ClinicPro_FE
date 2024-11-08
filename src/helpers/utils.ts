@@ -1,7 +1,7 @@
+import { emailRegex } from '@/constants/regex';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import unidecode from 'unidecode';
-import { emailRegex } from './regex';
 
 export const cn = (...input: ClassValue[]) => {
   return twMerge(clsx(input));

@@ -3,7 +3,7 @@ import { CachedIcon, CloseIcon, CompareArrows } from '@/components/icons';
 import { Dialog } from '@mui/material';
 import { getMedicalHistoriesById } from '@/services/medicalHistories.service';
 import { MedicalRecord } from '@/types/medicalHistories.type';
-import Loading from './component/Loading';
+import Loading from './components/Loading';
 import convertTime from '@/helpers/convertTime';
 
 interface DetailMedicalHistories {
@@ -36,7 +36,6 @@ const MedicalHistoriesPage = () => {
         const medicalRecords = await getMedicalHistoriesById('13b50927-da93-47e7-9a4b-e1c14fc951e1');
         setListMedicalRecords(medicalRecords);
         setLoading(false);
-        console.log(listMedicalRecords);
       }, 1000);
     };
     fetchMedicalRecords();

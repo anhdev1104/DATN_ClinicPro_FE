@@ -170,7 +170,10 @@ export default function AppRouter() {
         </Route>
         {authRouter.length > 0 &&
           authRouter.map(route => <Route key={route.path} path={route.path} element={route.element} />)}
-        <Route path="*" element={<NotFoundPage />} />
+        <Route
+          path="*"
+          element={<NotFoundPage title="Oops!! Chúng tôi không thể tìm thấy trang bạn đang tìm kiếm !" />}
+        />
       </Routes>
     </>
   );

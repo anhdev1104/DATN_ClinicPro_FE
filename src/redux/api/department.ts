@@ -1,5 +1,5 @@
-import { axiosBaseQuery } from '@/config/axiosBaseQuery';
-import { formatQueryParam } from '@/utils/utils';
+import { axiosBaseQuery } from '@/helpers/axiosBaseQuery';
+import { formatQueryParam } from '@/helpers/utils';
 import { Department, DepartmentDetail, NewDepartmentProps, NewDepartmentResponseProps } from '@/types/department.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
 

@@ -1,15 +1,15 @@
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
-import { AxiosBaseQueryError } from '@/config/axiosBaseQuery';
-import former, { OptionsWithForm } from '@/hocs/former';
+import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import former, { OptionsWithForm } from '@/providers/former';
 import Form from '@/lib/Form';
 import { useAddAnDepartmentMutation } from '@/redux/api/department';
 import { useGetAllUsersQuery } from '@/redux/api/users';
 import { newDepartmentSchema } from '@/schema/department.schema';
 import { NewDepartmentProps } from '@/types/department.type';
 import { IUserInfo } from '@/types/user.type';
-import { filterOutManagers } from '@/utils/utils';
+import { filterOutManagers } from '@/helpers/utils';
 import { Avatar, Group, Stack } from '@mantine/core';
 import { useMemo } from 'react';
 import { SubmitHandler, useFormContext } from 'react-hook-form';

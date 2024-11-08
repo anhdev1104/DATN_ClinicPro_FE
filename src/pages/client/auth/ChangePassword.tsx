@@ -1,10 +1,10 @@
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
-import former, { OptionsWithForm } from '@/hocs/former';
+import former, { OptionsWithForm } from '@/providers/former';
 import Form from '@/lib/Form';
 import { changePassword } from '@/services/auth.service';
 import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
-import yup from '@/utils/locate';
+import yup from '@/helpers/locate';
 import { Container, Paper, Stack, Title } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';

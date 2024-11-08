@@ -4,17 +4,17 @@ import { motion } from 'framer-motion';
 import BaseInput from '@/components/base/input';
 import { Button } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
-import yup from '@/utils/locate';
-import { emailRegex } from '@/utils/regex';
+import yup from '@/helpers/locate';
 import { forgotPassword } from '@/services/auth.service';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { IForgotPassWord, IForgotPassWordError } from '@/types/auth.type';
 import ResetPassword from './ResetPassword';
-import former, { OptionsWithForm } from '@/hocs/former';
+import former, { OptionsWithForm } from '@/providers/former';
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import Form from '@/lib/Form';
+import { emailRegex } from '@/constants/regex';
 
 const forgotPasswordSchema = yup.object({
   email: yup.string().required().ensure().matches(emailRegex, { message: 'Trường này phải là email' }),
