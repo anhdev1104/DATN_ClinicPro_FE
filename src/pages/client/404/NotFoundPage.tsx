@@ -10,18 +10,18 @@ const NotFoundPage: React.FC<NotFoundProps> = ({ title }) => {
   return (
     <>
       <div className="max-h-screen w-full">
-        <center className="mt-24 m-auto">
+        <center className="pt-24">
           <EmojiNotFound className="relative animate-move w-36 sm:w-40 md:w-52 lg:w-60" />
           <div className=" tracking-widest mt-4">
-            <span className="text-gray-500 text-3xl sm:text-4xl md:text-5xl lg:text-6xl block">
+            <span className="text-gray-500 text-3xl sm:text-4xl md:text-5xl lg:text-6xl block my-5">
               <span>4 0 4</span>
             </span>
             <span className="text-gray-500 text-lg md:text-xl">{title}</span>
           </div>
         </center>
-        <center className="mt-6">
+        <center className="mt-5">
           <BaseButton size="sm" onClick={() => navigate(-1)}>
-            trở lại
+            Trở lại
           </BaseButton>
         </center>
       </div>
