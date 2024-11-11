@@ -30,7 +30,7 @@ const EditPackage = () => {
   const [packageCategory, setPackageCategory] = useState([]);
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     control,
     reset,
     setValue,
@@ -86,7 +86,7 @@ const EditPackage = () => {
     }
   };
   const handleUpdate: SubmitHandler<any> = async data => {
-    // if (!isValid) return;
+    if (!isValid) return;
     setLoading(true);
     const formData = new FormData();
     formData.append('name', data.name || packageData?.name || '');
