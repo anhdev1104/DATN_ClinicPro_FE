@@ -9,6 +9,8 @@ interface IInput {
   className?: string;
   placeholder?: string;
   isGlass?: boolean;
+  disabled?: boolean;
+  colorGlass?: string;
 }
 
 const Input: FC<IInput> = ({ name = '', type = 'text', className = '', isGlass = false, control, ...props }) => {

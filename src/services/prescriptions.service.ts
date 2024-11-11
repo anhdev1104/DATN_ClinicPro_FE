@@ -14,7 +14,16 @@ export const createPrescription = async (newPrescription: IPrescription) => {
 export const getPrescription = async () => {
   try {
     const response = await http.get('/prescriptions');
-    return response;
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getPrescriptionDetails = async (id: string) => {
+  try {
+    const response = await http.get(`/prescriptions/${id}`);
+    return response.data;
   } catch (error) {
     return error;
   }

@@ -1,4 +1,3 @@
- 
 import {
   ChevronRightIcon,
   GroupIcon,
@@ -8,7 +7,7 @@ import {
   AssignmentIcon,
   Tablet,
 } from '@/components/icons';
-import { cn } from '@/utils/utils';
+import { cn } from '@/helpers/utils';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-import yup from '@/utils/locate';
+import yup from '@/helpers/locate';
 import { useSelector } from '@/hooks/redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { ComponentType } from 'react';
@@ -6,11 +6,9 @@ import { FormProvider, useForm, UseFormProps } from 'react-hook-form';
 
 /**
  * @description: this is HOCS for form, serves logic reuse, this partern use react hook form combine with yup validation
- * @recomented : I highly recommented use yup at second parameter to handling error
  * @warning :second parameter is yup object schema, each field of schema must have .default('') or .ensure() to ensure the correctness of the data
  * if you dont want use recommented below you can custom defaultValues of useForm in three parameter
- * @note : don't wrap memo outside former, to use memo wrap it inside former like: former(memo(Component),schema,ontions)
- * @package: using useFormContext provide by react-hook-form to recived data
+ * @package using useFormContext provide by react-hook-form to recived data
  * @example:
  * function App() {
  *  const {handleSubmit} = useFormContext<Types>()
@@ -29,16 +27,15 @@ const former = <T extends object>(
   const Component: React.FC<T> = props => {
     const { loading } = useSelector(state => state.global);
 
-    const form = useForm({
+    const methods = useForm({
       ...options,
       resolver: Schema && yupResolver(Schema),
-      mode: options?.mode,
       disabled: loading,
       defaultValues: Schema ? Schema.getDefault() : options?.defaultValues,
     });
 
     return (
-      <FormProvider {...form}>
+      <FormProvider {...methods}>
         <WrappedComponent {...props} />
       </FormProvider>
     );

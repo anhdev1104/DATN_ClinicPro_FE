@@ -17,31 +17,19 @@ import { toast } from 'react-toastify';
 const patientsOptions = [
   {
     label: 'Nguyễn Văn A',
-    value: '1',
+    value: '64c13314-2273-49bf-bbaf-dae139a348b8',
   },
   {
     label: 'Trần Thị B',
-    value: '2',
+    value: '146a51c2-d710-4559-ae0e-ef1ed7df5a39',
   },
   {
     label: 'Lê Văn C',
-    value: '3',
+    value: '13b50927-da93-47e7-9a4b-e1c14fc951e1',
   },
   {
     label: 'Phạm Thị D',
-    value: '4',
-  },
-  {
-    label: 'Nguyễn Văn E',
-    value: '5',
-  },
-  {
-    label: 'Trần Văn F',
-    value: '6',
-  },
-  {
-    label: 'Lê Thị G',
-    value: '7',
+    value: 'ee4c008f-4c3b-4c2c-b2d5-dd3ffaf60873',
   },
 ];
 
@@ -58,10 +46,11 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
     form: {
       control,
       reset,
-      formState: { isSubmitting },
+      formState: { isSubmitting, isValid, errors },
       handleSubmit,
     },
   } = usePrescriptionContextForm();
+  console.log('errors form', errors);
 
   const selectedCategoryId = useWatch({
     control,
@@ -85,19 +74,36 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   }, [selectedCategoryId]);
 
   const handleCreateMedication: SubmitHandler<any> = async data => {
-    // if (!isValid) return;
+    console.log('🚀 ~ AddPrescriptions ~ data:', data);
+    if (!isValid) return;
     const newPrescription = {
       patient_id: data.patient_id,
-      user_id: 'c3456789-e89b-12d3-a456-426614174002',
+      user_id: '3119acf9-b33c-4de6-9b51-0275be8ea689',
       name: data.name,
       description: data.description,
       medications: data.medications,
     };
     await createPrescription(newPrescription);
     toast.success('Tạo đơn thuốc thành công !');
+    handleResetForm();
   };
 
-  const handleResetForm = () => reset();
+  const handleResetForm = () =>
+    reset({
+      patient_id: '',
+      user_id: '',
+      description: '',
+      name: '',
+      medications: [
+        {
+          instructions: '',
+          quantity: undefined,
+          duration: undefined,
+          medication_id: '',
+        },
+      ],
+      isCategory: '',
+    });
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);

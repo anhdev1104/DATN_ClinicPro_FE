@@ -18,10 +18,12 @@ import PackageDetail from '@/pages/admin/package/component/PackageDetail';
 import { useEffect } from 'react';
 import { Route, RouteProps, Routes, useLocation } from 'react-router-dom';
 import Prescription from '@/pages/admin/prescriptions/Prescription';
-import EditPackage from '@/pages/admin/package/component/EditPackage';
+import ProfilePage from '@/pages/client/profile/ProfilePage';
 import ChangePassword from '@/pages/client/auth/ChangePassword';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ForgotPassword from '@/pages/client/auth/ForgotPassword';
+import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistoriesPage';
+import EditPackage from '@/pages/admin/package/component/EditPackage';
 import Package from '@/pages/admin/package/Package';
 type IRouter = RouteProps & {
   title: string;
@@ -51,6 +53,16 @@ const clientRouter: IRouter[] = [
     path: '/community',
     element: <CommunityPage />,
     title: 'Cộng đồng',
+  },
+  {
+    path: '/profile',
+    element: <ProfilePage />,
+    title: 'Thông tin cá nhân',
+  },
+  {
+    path: '/medical-histories',
+    element: <MedicalHistoriesPage />,
+    title: 'Xem bệnh án',
   },
   {
     path: '/change-password',
@@ -157,8 +169,11 @@ export default function AppRouter() {
             adminRouter.map(route => <Route key={route.path} path={route.path} element={route.element} />)}
         </Route>
         {authRouter.length > 0 &&
-          authRouter.map(route => <Route key={route.path} path={route.path} element={route.element}></Route>)}
-        <Route path="*" element={<NotFoundPage />}></Route>
+          authRouter.map(route => <Route key={route.path} path={route.path} element={route.element} />)}
+        <Route
+          path="*"
+          element={<NotFoundPage title="Oops!! Chúng tôi không thể tìm thấy trang bạn đang tìm kiếm !" />}
+        />
       </Routes>
     </>
   );
