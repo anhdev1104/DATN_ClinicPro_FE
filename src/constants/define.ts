@@ -1,7 +1,7 @@
 export enum STATUS {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  DISABLED = 'disabled',
+  active = 'active',
+  inactive = 'inactive',
+  disabled = 'disabled',
 }
 
 export enum ROLE {

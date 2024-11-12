@@ -24,3 +24,4 @@ export { default as ArrowDropUpIcon } from '@mui/icons-material/ArrowDropUp';
 export { default as EmailIcon } from '@mui/icons-material/Email';
 export { default as CachedIcon } from '@mui/icons-material/Cached';
 export { default as CompareArrows } from '@mui/icons-material/CompareArrows';
+export { default as MoreHorizIcon } from '@mui/icons-material/MoreHoriz';
