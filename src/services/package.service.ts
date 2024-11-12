@@ -1,4 +1,3 @@
-import { useNavigation } from 'react-router-dom';
 import Http from '@/helpers/http';
 
 const http = new Http();
@@ -36,11 +35,7 @@ export const getCategorybyId = async (id: string) => {
 };
 export const createPackage = async (formData: FormData) => {
   try {
-    const response = await http.post('/packages', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await http.post('/packages', formData);
     return response;
   } catch (error) {
     return error;
@@ -48,11 +43,7 @@ export const createPackage = async (formData: FormData) => {
 };
 export const updatePackage = async (id: string, data: FormData) => {
   try {
-    const response = await http.post(`/packages/${id}`, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await http.update(`/packages/${id}`, data);
     return response;
   } catch (error) {
     return error;
