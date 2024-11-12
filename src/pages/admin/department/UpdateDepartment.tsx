@@ -17,6 +17,7 @@ import { Row } from '@tanstack/react-table';
 import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 interface Options {
   value: string;
@@ -37,6 +38,7 @@ const UpdateDepartment = <T,>({ row }: UpdateDepartmentProps<T>) => {
   const [update] = useUpdateAnDepartmentMutation();
   const open = useSelector(state => state.department.openUpdateDepartment);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const department: IUserInfo[] = useMemo(() => (isSuccess ? filterOutManagers(data?.data) : []), [data]);
   const formatData: Options[] = useMemo(
     () =>
@@ -49,7 +51,7 @@ const UpdateDepartment = <T,>({ row }: UpdateDepartmentProps<T>) => {
   );
   const departmentId = useMemo(
     () => window.location.pathname.split('/')[window.location.pathname.split('/').length - 1],
-    [window.location],
+    [window.location.pathname],
   );
   const departmentUpdate: DepartmentDetail = useMemo(() => row.original as DepartmentDetail, []);
   const handleUpdateDepartment: SubmitHandler<NewDepartmentProps> = async data => {
@@ -71,7 +73,15 @@ const UpdateDepartment = <T,>({ row }: UpdateDepartmentProps<T>) => {
   }, []);
 
   return (
-    <Modal title="Cập Nhật Phòng Ban" centered opened={open} onClose={() => dispatch(setOpenUpdateDepartment(false))}>
+    <Modal
+      title="Cập Nhật Phòng Ban"
+      centered
+      opened={open}
+      onClose={() => {
+        navigate('/departments');
+        dispatch(setOpenUpdateDepartment(false));
+      }}
+    >
       <Form onSubmit={handleSubmit(handleUpdateDepartment)}>
         <Stack>
           <BaseInput.Group autoComplete="name" name="name" label="Tên phòng ban" placeholder="Phòng IT..." />

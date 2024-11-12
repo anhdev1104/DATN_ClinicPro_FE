@@ -1,5 +1,4 @@
-import HeaderDepartment from './components/Header';
-import { Divider, Flex, Text } from '@mantine/core';
+import { Flex, Text } from '@mantine/core';
 import { useGetAllDepartmentQuery } from '@/redux/api/department';
 import { useNavigate } from 'react-router-dom';
 import type { Department, Manager } from '@/types/department.type';
@@ -14,7 +13,7 @@ const columns: ColumnDef<Department>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => <HeaderTable column={column} title="Tên Phòng Ban" />,
-    cell: ({ row }) => <Text size="sm">{row.getValue('name') as string}</Text>,
+    cell: ({ row }) => <div className="capitalize">{row.getValue('name') as string}</div>,
   },
   {
     accessorKey: 'manager',
@@ -32,7 +31,7 @@ const columns: ColumnDef<Department>[] = [
           </Flex>
         </Flex>
       ) : (
-        <Text size="sm">Không Sao tôi lo được</Text>
+        <Text size="sm">Chưa Có</Text>
       );
     },
     enableSorting: false,
@@ -57,9 +56,12 @@ const Department = () => {
   return (
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl">
-        <HeaderDepartment />
-        <Divider />
-        <Table onRowClick={handleRowClick} loading={isFetching} data={isSuccess ? data.data : []} columns={columns} />
+        <Table
+          onRowClick={handleRowClick}
+          isFetching={isFetching}
+          data={isSuccess ? data.data : []}
+          columns={columns}
+        />
       </div>
     </>
   );

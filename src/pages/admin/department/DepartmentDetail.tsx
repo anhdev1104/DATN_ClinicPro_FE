@@ -8,8 +8,6 @@ import DataTable from '@/components/table/Table';
 import { ColumnDef } from '@tanstack/react-table';
 import HeaderTable from '@/components/table/HeaderTable';
 import { userDepartmentSchema } from '@/schema/department.schema';
-import BaseInput from '@/components/base/input';
-import { IMaskInput } from 'react-imask';
 import ActionWithRow from '@/components/table/ActionWithRow';
 import { useMemo } from 'react';
 import BaseButton from '@/components/base/button';
@@ -17,21 +15,24 @@ import { Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
+import fakeUser from './components/fakeUser.json';
 type UserDepartment = yup.InferType<typeof userDepartmentSchema>;
 const columns: ColumnDef<UserDepartment>[] = [
   {
     accessorKey: 'fullname',
     header: ({ column }) => <HeaderTable title="Nhân Viên" column={column} />,
-    cell: ({ row }) => (
-      <Group gap="sm">
-        <Avatar size={40} src={row.getValue('avatar') as string} radius={40} />
-        <div>
-          <Text fz="sm" fw={500}>
-            {row.getValue('fullname') as string}
-          </Text>
-        </div>
-      </Group>
-    ),
+    cell: ({ row }) => {
+      return (
+        <Group gap="sm">
+          <Avatar size={32} src={row.original.avatar} radius={40} />
+          <div>
+            <Text fz="sm" fw={500}>
+              {row.getValue('fullname') as string}
+            </Text>
+          </div>
+        </Group>
+      );
+    },
     enableSorting: false,
   },
   {
@@ -50,16 +51,8 @@ const columns: ColumnDef<UserDepartment>[] = [
   },
   {
     accessorKey: 'phone_number',
-    header: ({ column }) => <HeaderTable title="Trạng Thái" column={column} />,
-    cell: ({ row }) => (
-      <BaseInput
-        value={row.getValue('phone_number') as string}
-        component={IMaskInput}
-        mask="+84 (000) 000-00-00"
-        name="phone"
-        placeholder="Your phone"
-      />
-    ),
+    header: ({ column }) => <HeaderTable title="Số Điện Thoại" column={column} />,
+    cell: ({ row }) => <Text>{row.getValue('phone_number') as string}</Text>,
   },
   {
     id: 'actions',
@@ -145,7 +138,11 @@ const DepartmentDetail = () => {
               <Title order={4} className="capitalize">
                 Nhân viên phòng ban
               </Title>
-              <DataTable columns={columns} data={isSuccess ? data.data?.users : []} loading={isFetching} />
+              <DataTable
+                columns={columns}
+                data={/*isSuccess ? data.data?.users : []*/ fakeUser as UserDepartment[]}
+                isFetching={isFetching}
+              />
             </div>
             <div className="flex justify-between items-center">
               <BaseButton onClick={open} color="red" className="ml-auto my-4">

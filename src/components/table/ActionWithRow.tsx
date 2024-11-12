@@ -32,7 +32,7 @@ const ActionWithRow = <T,>({ row }: ActionWithRowProps<T>) => {
   return (
     <>
       <Menu
-        radius={12}
+        radius="md"
         offset={4}
         classNames={{
           item: 'min-w-[100px] flex justify-between items-center',
@@ -49,7 +49,7 @@ const ActionWithRow = <T,>({ row }: ActionWithRowProps<T>) => {
         <Menu.Dropdown>
           <Menu.Item
             onClick={() => {
-              window.history.replaceState(null, '', (row.original as any).id);
+              window.history.replaceState(null, '', `/departments/${(row.original as any).id}`);
               dispatch(setOpenUpdateDepartment(true));
             }}
             leftSection={<BaseIcon name="pencil-line" />}

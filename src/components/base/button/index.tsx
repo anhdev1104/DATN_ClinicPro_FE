@@ -24,6 +24,7 @@ const BaseButton = polymorphicFactory<ButtonProps>((props, ref) => {
   return <Button {...props} ref={ref} />;
 });
 
+BaseButton.Group = ButtonGroup;
 BaseButton.Icon = ActionIcon;
 BaseButton.Close = CloseButton;
 BaseButton.Copy = CopyButton;

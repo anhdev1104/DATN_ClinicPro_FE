@@ -17,7 +17,7 @@ import Form from '@/lib/Form';
 import { emailRegex } from '@/constants/regex';
 
 const forgotPasswordSchema = yup.object({
-  email: yup.string().required().ensure().matches(emailRegex, { message: 'Trường này phải là email' }),
+  email: yup.string().required().matches(emailRegex, { message: 'Trường này phải là email' }),
 });
 export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 
