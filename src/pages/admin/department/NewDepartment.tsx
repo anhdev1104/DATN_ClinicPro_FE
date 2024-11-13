@@ -14,6 +14,7 @@ import { Avatar, Group, Stack } from '@mantine/core';
 import { useMemo } from 'react';
 import { SubmitHandler, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { IconCheck } from '@tabler/icons-react';
 
 interface Options {
   value: string;
@@ -70,7 +71,7 @@ const NewDepartment = ({ handleClose }: { handleClose: () => void }) => {
             <Group flex="1" gap="xs">
               <Avatar size="sm" src={(option as Options).avatar} />
               {option.label}
-              {checked && <BaseIcon name="check" style={{ marginInlineStart: 'auto' }} />}
+              {checked && <BaseIcon icon={IconCheck} style={{ marginInlineStart: 'auto' }} />}
             </Group>
           )}
           clearable

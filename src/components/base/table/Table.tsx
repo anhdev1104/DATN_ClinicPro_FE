@@ -19,7 +19,7 @@ import { forwardRef } from 'react';
 
 export const TableHead = forwardRef<HTMLTableCellElement, TableThProps>(({ className, ...props }, ref) => {
   return (
-    <TableTh className={cn('py-1 px-2 h-10 text-left align-middle font-medium', className)} {...props} ref={ref} />
+    <TableTh className={cn('py-0 px-2 h-10 text-left align-middle font-medium', className)} {...props} ref={ref} />
   );
 });
 

@@ -11,45 +11,61 @@ import {
   VisibilityState,
 } from '@tanstack/react-table';
 import { Pagination, TableProps } from '@mantine/core';
-import { useState } from 'react';
 import TableSkeleton from '../skeleton/TableSkeleton';
-import BaseInput from '../base/input';
+import TableToolbar from './TableToolbar';
+import TableHeader from './TableHeader';
+import { useState } from 'react';
 interface BaseTableProps<T, D> extends Omit<TableProps, 'data'> {
   data: T[];
   columns: ColumnDef<T, D>[];
   isFetching?: boolean;
   onRowClick?: (data: T, event: React.MouseEvent) => void;
+  toolbar?: React.ReactNode | boolean;
+  manualPagination?: boolean;
+  rowCount?: number;
+  manualFiltering?: boolean;
+  filterItem?: JSX.Element;
 }
-const DataTable = <T, D>({ data, columns, isFetching, onRowClick, ...props }: BaseTableProps<T, D>) => {
+const Table = <T, D>({
+  data,
+  columns,
+  isFetching,
+  toolbar,
+  onRowClick,
+  manualPagination,
+  rowCount,
+  manualFiltering,
+  filterItem,
+  ...props
+}: BaseTableProps<T, D>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = useState<string>('');
+  const [globalFilter, setGlobalFilter] = useState<any>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+      rowSelection,
+      globalFilter,
+      columnVisibility,
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
-    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
-    state: {
-      sorting,
-      columnVisibility,
-      globalFilter,
-    },
+    onColumnVisibilityChange: setColumnVisibility,
+    manualPagination,
+    rowCount,
+    manualFiltering,
   });
   return (
     <div className="w-full p-2">
-      <div className="flex items-center p-2">
-        <BaseInput
-          value={globalFilter}
-          onChange={e => table.setGlobalFilter(e.target.value)}
-          radius="md"
-          placeholder="tìm kiếm..."
-        />
-      </div>
+      {toolbar !== false && <TableToolbar filterItem={filterItem} toolbar={toolbar} table={table} />}
       <BaseTable.Scroll minWidth={800}>
         <BaseTable withTableBorder {...props}>
           <BaseTable.Header>
@@ -58,7 +74,12 @@ const DataTable = <T, D>({ data, columns, isFetching, onRowClick, ...props }: Ba
                 {headerGroup.headers.map(header => {
                   return (
                     <BaseTable.Head key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.isPlaceholder ? null : (
+                        <TableHeader
+                          column={header.column}
+                          title={flexRender(header.column.columnDef.header, header.getContext())}
+                        ></TableHeader>
+                      )}
                     </BaseTable.Head>
                   );
                 })}
@@ -80,7 +101,7 @@ const DataTable = <T, D>({ data, columns, isFetching, onRowClick, ...props }: Ba
             ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map(row => (
                 <BaseTable.Row key={row.id} data-state={row.getIsSelected() && 'selected'} className="cursor-pointer">
-                  {row.getAllCells().map(({ id, column, row, getContext }) => {
+                  {row.getVisibleCells().map(({ id, column, row, getContext }) => {
                     return (
                       <BaseTable.Cell
                         onClick={e => column.columnDef.id !== 'actions' && onRowClick && onRowClick(row.original, e)}
@@ -114,4 +135,4 @@ const DataTable = <T, D>({ data, columns, isFetching, onRowClick, ...props }: Ba
   );
 };
 
-export default DataTable;
+export default Table;

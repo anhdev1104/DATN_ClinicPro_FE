@@ -15,6 +15,7 @@ import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import Form from '@/lib/Form';
 import { emailRegex } from '@/constants/regex';
+import { IconArrowLeft } from '@tabler/icons-react';
 
 const forgotPasswordSchema = yup.object({
   email: yup.string().required().matches(emailRegex, { message: 'Trường này phải là email' }),
@@ -75,7 +76,7 @@ const ForgotPassword = () => {
                     variant="subtle"
                     radius="lg"
                   >
-                    <BaseIcon size="lg" name="arrow-left" />
+                    <BaseIcon size="lg" icon={IconArrowLeft} />
                   </BaseButton.Icon>
                 </div>
                 <div>

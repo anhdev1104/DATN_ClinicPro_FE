@@ -1,18 +1,40 @@
-import { CellContext, ColumnDef, ColumnDefTemplate, IdIdentifier, StringHeaderIdentifier } from '@tanstack/react-table';
+import { ColumnDef, Row } from '@tanstack/react-table';
 import { useMemo } from 'react';
 
 /**
- * @warning during development, don't use
+ * @warning during development, notify me if you get the bug
  */
-export interface ColumnRef<TData, TValue> {
+export interface ColumnProps<TData> {
+  key?: (string & {}) | keyof TData;
   id?: string;
-  key: (string & {}) | keyof TData;
-  name: IdIdentifier<TData, TValue> | StringHeaderIdentifier;
-  cell: ColumnDefTemplate<CellContext<TData, TValue>>;
-  filter: boolean;
-  sort: boolean;
+  label?: string;
+  cell?: string | ((props: { value: any; original: TData; row: Row<TData> }) => unknown);
+  sortable?: boolean;
+  filterable?: boolean;
+  hiding?: boolean;
+  placeholder?: boolean;
 }
-
-type ColumnFucn<T, D> = () => ColumnRef<T, D>[] | ColumnRef<T, D>[];
-
-export const useColumn = <T, D>(columnData: ColumnFucn<T, D>) => {};
+export const useColumn = <TData>(columnsData: ColumnProps<TData>[]) => {
+  const columns = useMemo(() => {
+    return columnsData.map(
+      ({ id, label, filterable = true, hiding = true, sortable = true, placeholder = false, cell, key }) => ({
+        accessorKey: key,
+        id,
+        header: ({ header }) => {
+          header.isPlaceholder = placeholder;
+          return label;
+        },
+        cell: ({ row, renderValue }) =>
+          cell
+            ? typeof cell !== 'string'
+              ? cell({ value: row.getValue(String(key || id)), original: row.original, row })
+              : cell
+            : renderValue(),
+        enableSorting: sortable,
+        enableGlobalFilter: filterable,
+        enableHiding: hiding,
+      }),
+    ) as ColumnDef<TData>[];
+  }, []);
+  return columns;
+};
