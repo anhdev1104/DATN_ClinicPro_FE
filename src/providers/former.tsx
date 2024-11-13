@@ -1,24 +1,26 @@
 import yup from '@/helpers/locate';
 import { useSelector } from '@/hooks/redux';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { ComponentType } from 'react';
+import React, { ComponentType, useEffect, useState } from 'react';
 import { FormProvider, useForm, UseFormProps } from 'react-hook-form';
 
+export type OptionsWithForm = Omit<UseFormProps, 'resolver' | 'disabled'>;
+
 /**
- * @description: this is HOCS for form, serves logic reuse, this partern use react hook form combine with yup validation
- * @warning :second parameter is yup object schema, each field of schema must have .default('') or .ensure() to ensure the correctness of the data
- * if you dont want use recommented below you can custom defaultValues of useForm in three parameter
- * @package using useFormContext provide by react-hook-form to recived data
- * @example:
+ * @description this is HOCS for form, reduce code using react hook form
+ * @usage wrap former to your component: former(YourComponent,YupSchema?,Option?)
+ * and use hook useFormContext provided by react hook form recived data
+ * @example
+ * import Form from '@/lib/Form'
  * function App() {
  *  const {handleSubmit} = useFormContext<Types>()
- * return <form onSubmit(handleSubmit(YourlogicFunc))>
- *  </form>
+ * return (
+ *  <Form onSubmit={(handleSubmit(YourlogicFunc))}>
+ *  </Form>
+ * )
  * }
  * export default former(App,SChema?,config?)
  */
-
-export type OptionsWithForm = Omit<UseFormProps, 'resolver' | 'disabled'>;
 const former = <T extends object>(
   WrappedComponent: ComponentType<T>,
   Schema?: yup.AnyObjectSchema,
@@ -26,16 +28,21 @@ const former = <T extends object>(
 ) => {
   const Component: React.FC<T> = props => {
     const { loading } = useSelector(state => state.global);
-
-    const methods = useForm({
+    const [disabled, setDisabled] = useState(false);
+    const { formState, ...methods } = useForm({
       ...options,
+      disabled,
       resolver: Schema && yupResolver(Schema),
-      disabled: loading,
-      defaultValues: Schema ? Schema.getDefault() : options?.defaultValues,
+      defaultValues: Schema ? options?.defaultValues || Schema.getDefault() : options?.defaultValues,
     });
 
+    useEffect(() => {
+      if (formState.isSubmitting) setDisabled(!disabled);
+      return () => setDisabled(false);
+    }, [loading]);
+
     return (
-      <FormProvider {...methods}>
+      <FormProvider {...methods} formState={formState}>
         <WrappedComponent {...props} />
       </FormProvider>
     );

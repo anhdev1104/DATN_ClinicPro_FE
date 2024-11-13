@@ -21,9 +21,10 @@ export interface ButtonProps extends ButtonFactory {
   };
 }
 const BaseButton = polymorphicFactory<ButtonProps>((props, ref) => {
-  return <Button {...props} ref={ref} />;
+  return <Button ref={ref} {...props} />;
 });
 
+BaseButton.Group = ButtonGroup;
 BaseButton.Icon = ActionIcon;
 BaseButton.Close = CloseButton;
 BaseButton.Copy = CopyButton;

@@ -1,12 +1,12 @@
-import { lazy, Suspense, memo } from 'react';
-import { LucideProps } from 'lucide-react';
-import dynamicIconImports from 'lucide-react/dynamicIconImports';
 import { cva, VariantProps } from 'cva';
-
+import { cn } from '@/helpers/utils';
+import { Icon, IconProps } from '@tabler/icons-react';
+import { memo } from 'react';
 const iconVariants = cva('', {
   variants: {
     size: {
-      xs: 12,
+      xxs: 12,
+      xs: 14,
       sm: 16,
       md: 20,
       lg: 24,
@@ -22,17 +22,11 @@ const iconVariants = cva('', {
     size: 'sm',
   },
 });
-interface BaseIconProps extends Omit<LucideProps, 'ref' | 'size'>, VariantProps<typeof iconVariants> {
-  name: keyof typeof dynamicIconImports;
+interface BaseIconProps extends Omit<IconProps, 'size'>, VariantProps<typeof iconVariants> {
+  icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>;
 }
-const BaseIcon: React.FC<BaseIconProps> = ({ name, size, ...props }) => {
-  const LucideIcon = lazy(dynamicIconImports[name]);
-
-  return (
-    <Suspense fallback={<></>}>
-      <LucideIcon size={iconVariants({ size })} {...props} />
-    </Suspense>
-  );
+const BaseIcon: React.FC<BaseIconProps> = ({ icon: Icon, size, ...props }) => {
+  return <Icon size={cn(iconVariants({ size }))} {...props} />;
 };
 
 export default memo(BaseIcon);

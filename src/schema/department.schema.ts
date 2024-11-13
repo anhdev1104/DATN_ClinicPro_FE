@@ -16,9 +16,9 @@ export const managerSchema = yup
   .default(null);
 
 export const departmentSchema = yup.object({
-  id: yup.string().uuid().ensure(),
-  name: yup.string().ensure(),
-  description: yup.string().ensure(),
+  id: yup.string().uuid().required(),
+  name: yup.string(),
+  description: yup.string(),
   created_at: yup.string().datetime().default(new Date().toLocaleDateString()),
   updated_at: yup.string().datetime().default(new Date().toLocaleDateString()),
   users_count: yup.number().default(0),
@@ -26,7 +26,7 @@ export const departmentSchema = yup.object({
 });
 
 export const userDepartmentSchema = yup.object({
-  id: yup.string().required(),
+  id: yup.number().required(),
   email: yup.string().email().optional(),
   status: yup.string().oneOf(Object.values(STATUS)).required(),
   fullname: yup.string().required(),
@@ -36,7 +36,7 @@ export const userDepartmentSchema = yup.object({
   gender: yup.string().oneOf(Object.values(GENDER)).optional(),
   dob: yup.string().datetime(),
   doctor: yup.object({
-    id: yup.string().required(),
+    id: yup.number().required(),
     specialty: yup.string().required(),
     description: yup.string().required(),
   }),
@@ -49,9 +49,9 @@ export const departmentDetailSchema = yup
   .concat(departmentSchema);
 
 export const newDepartmentSchema = yup.object({
-  name: yup.string().required().ensure(),
-  description: yup.string().required().ensure(),
-  manager_id: yup.string().ensure().nullable().optional().default(null),
+  name: yup.string().required(),
+  description: yup.string().required(),
+  manager_id: yup.string().nullable().optional().default(null),
 });
 export const newDepartmentSchemaResponse = yup.object({
   data: yup.object().concat(departmentSchema),

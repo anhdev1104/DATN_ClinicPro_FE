@@ -5,69 +5,18 @@ import { Avatar, Text, Group } from '@mantine/core';
 import BaseIcon from '@/components/base/BaseIcon';
 import yup from '@/helpers/locate';
 import DataTable from '@/components/table/Table';
-import { ColumnDef } from '@tanstack/react-table';
-import HeaderTable from '@/components/table/HeaderTable';
 import { userDepartmentSchema } from '@/schema/department.schema';
-import BaseInput from '@/components/base/input';
-import { IMaskInput } from 'react-imask';
-import ActionWithRow from '@/components/table/ActionWithRow';
+import ActionWithRow from '@/components/table/TableAction';
 import { useMemo } from 'react';
 import BaseButton from '@/components/base/button';
 import { Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
+import fakeUser from './components/fakeUser.json';
+import { IconArrowLeft, IconAt, IconPhoneCall } from '@tabler/icons-react';
+import { useColumn } from '@/hooks/useColumn';
 type UserDepartment = yup.InferType<typeof userDepartmentSchema>;
-const columns: ColumnDef<UserDepartment>[] = [
-  {
-    accessorKey: 'fullname',
-    header: ({ column }) => <HeaderTable title="Nhân Viên" column={column} />,
-    cell: ({ row }) => (
-      <Group gap="sm">
-        <Avatar size={40} src={row.getValue('avatar') as string} radius={40} />
-        <div>
-          <Text fz="sm" fw={500}>
-            {row.getValue('fullname') as string}
-          </Text>
-        </div>
-      </Group>
-    ),
-    enableSorting: false,
-  },
-  {
-    accessorKey: 'email',
-    header: ({ column }) => <HeaderTable title="Email" column={column} />,
-    cell: ({ row }) => (
-      <Text fz="xs" c="dimmed">
-        {row.getValue('email') as string}
-      </Text>
-    ),
-  },
-  {
-    accessorKey: 'status',
-    header: ({ column }) => <HeaderTable title="Trạng Thái" column={column} />,
-    cell: ({ row }) => <Badge>{row.getValue('status')}</Badge>,
-  },
-  {
-    accessorKey: 'phone_number',
-    header: ({ column }) => <HeaderTable title="Trạng Thái" column={column} />,
-    cell: ({ row }) => (
-      <BaseInput
-        value={row.getValue('phone_number') as string}
-        component={IMaskInput}
-        mask="+84 (000) 000-00-00"
-        name="phone"
-        placeholder="Your phone"
-      />
-    ),
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => {
-      return <ActionWithRow row={row as any} />;
-    },
-  },
-];
 const DepartmentDetail = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const { id } = useParams();
@@ -75,6 +24,49 @@ const DepartmentDetail = () => {
   const { data, isSuccess, isFetching, isError } = useGetDepartmentDetailQuery(id as string);
   const manager = useMemo(() => data?.data.manager, [data]);
   const [handleDelete, { isLoading }] = useDeleteAnDepartmentMutation();
+  const columns = useColumn<UserDepartment>([
+    {
+      key: 'fullname',
+      label: 'Nhân Viên',
+      cell: ({ value, original }) => {
+        return (
+          <Group gap="sm">
+            <Avatar size={32} src={original.avatar} radius={40} />
+            <div>
+              <Text fz="sm" fw={500}>
+                {value}
+              </Text>
+            </div>
+          </Group>
+        );
+      },
+      sortable: false,
+    },
+    {
+      key: 'email',
+      label: 'Email',
+      cell: ({ value }) => (
+        <Text fz="xs" c="dimmed">
+          {value}
+        </Text>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Trạng Thái',
+      cell: ({ value }) => <Badge size="xs">{value}</Badge>,
+    },
+    {
+      key: 'phone_number',
+      label: 'Số Điện Thoại',
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        return <ActionWithRow row={row as any} />;
+      },
+    },
+  ]);
   const handleDeleteDepartment = () => {
     if (isSuccess) {
       handleDelete(data?.data.id);
@@ -96,7 +88,7 @@ const DepartmentDetail = () => {
                 radius="lg"
                 className="absolute left-0"
               >
-                <BaseIcon name="arrow-left" size="xl" />
+                <BaseIcon icon={IconArrowLeft} size="xl" />
               </BaseButton.Icon>
               <Title order={2} className="mt-0">
                 {data?.data.name}
@@ -121,14 +113,14 @@ const DepartmentDetail = () => {
                     </Text>
 
                     <Group wrap="nowrap" gap={10} mt={3}>
-                      <BaseIcon name="at-sign" strokeWidth={1.5} className="" />
+                      <BaseIcon icon={IconAt} strokeWidth={1.5} className="" />
                       <Text fz="xs" c="dimmed">
                         {manager?.email}
                       </Text>
                     </Group>
 
                     <Group wrap="nowrap" gap={10} mt={5}>
-                      <BaseIcon name="phone-call" strokeWidth={1.5} className="" />
+                      <BaseIcon icon={IconPhoneCall} strokeWidth={1.5} className="" />
                       <Text fz="xs" c="dimmed">
                         {manager?.phone_number}
                       </Text>
@@ -145,7 +137,11 @@ const DepartmentDetail = () => {
               <Title order={4} className="capitalize">
                 Nhân viên phòng ban
               </Title>
-              <DataTable columns={columns} data={isSuccess ? data.data?.users : []} loading={isFetching} />
+              <DataTable
+                columns={columns}
+                data={/*isSuccess ? data.data?.users : []*/ fakeUser as UserDepartment[]}
+                isFetching={isFetching}
+              />
             </div>
             <div className="flex justify-between items-center">
               <BaseButton onClick={open} color="red" className="ml-auto my-4">

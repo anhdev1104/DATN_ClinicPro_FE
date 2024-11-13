@@ -14,8 +14,8 @@ import { Text } from '@mantine/core';
 import { numberRegex } from '@/constants/regex';
 
 const resetPasswordSchema = yup.object({
-  otp: yup.string().length(6).default('').required(),
-  password: yup.string().ensure().required().min(8),
+  otp: yup.string().length(6).required(),
+  password: yup.string().required().min(8),
 });
 
 export type ResetPassword = yup.InferType<typeof resetPasswordSchema>;

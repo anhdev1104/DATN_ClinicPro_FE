@@ -3,94 +3,136 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
   useReactTable,
+  VisibilityState,
 } from '@tanstack/react-table';
-import { Pagination } from '@mantine/core';
-import { useState } from 'react';
+import { Pagination, TableProps } from '@mantine/core';
 import TableSkeleton from '../skeleton/TableSkeleton';
-interface BaseTableProps<T, D> {
+import TableToolbar from './TableToolbar';
+import TableHeader from './TableHeader';
+import { useState } from 'react';
+interface BaseTableProps<T, D> extends Omit<TableProps, 'data'> {
   data: T[];
   columns: ColumnDef<T, D>[];
-  loading?: boolean;
+  isFetching?: boolean;
   onRowClick?: (data: T, event: React.MouseEvent) => void;
+  toolbar?: React.ReactNode | boolean;
+  manualPagination?: boolean;
+  rowCount?: number;
+  manualFiltering?: boolean;
+  filterItem?: JSX.Element;
 }
-const DataTable = <T, D>({ data, columns, loading, onRowClick, ...props }: BaseTableProps<T, D>) => {
+const Table = <T, D>({
+  data,
+  columns,
+  isFetching,
+  toolbar,
+  onRowClick,
+  manualPagination,
+  rowCount,
+  manualFiltering,
+  filterItem,
+  ...props
+}: BaseTableProps<T, D>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState<any>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+      rowSelection,
+      globalFilter,
+      columnVisibility,
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
-    state: {
-      sorting,
-    },
+    onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnVisibilityChange: setColumnVisibility,
+    manualPagination,
+    rowCount,
+    manualFiltering,
   });
-
   return (
-    <div className="flex flex-col items-center">
-      <BaseTable highlightOnHover {...props}>
-        <BaseTable.Header>
-          {table.getHeaderGroups().map(headerGroup => (
-            <BaseTable.Row key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
-                return (
-                  <BaseTable.Head key={header.id}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </BaseTable.Head>
-                );
-              })}
-            </BaseTable.Row>
-          ))}
-        </BaseTable.Header>
-
-        <BaseTable.Body>
-          {loading ? (
-            <BaseTable.Row>
-              {columns.map((_, index) => {
-                return (
-                  <BaseTable.Cell key={index}>
-                    <TableSkeleton />
-                  </BaseTable.Cell>
-                );
-              })}
-            </BaseTable.Row>
-          ) : table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map(row => (
-              <BaseTable.Row key={row.id} data-state={row.getIsSelected() && 'selected'} className="cursor-pointer">
-                {row.getAllCells().map(({ id, column, row, getContext }) => {
+    <div className="w-full p-2">
+      {toolbar !== false && <TableToolbar filterItem={filterItem} toolbar={toolbar} table={table} />}
+      <BaseTable.Scroll minWidth={800}>
+        <BaseTable withTableBorder {...props}>
+          <BaseTable.Header>
+            {table.getHeaderGroups().map(headerGroup => (
+              <BaseTable.Row key={headerGroup.id}>
+                {headerGroup.headers.map(header => {
                   return (
-                    <BaseTable.Cell
-                      onClick={e => column.columnDef.id !== 'actions' && onRowClick && onRowClick(row.original, e)}
-                      key={id}
-                    >
-                      {flexRender(column.columnDef.cell, getContext())}
+                    <BaseTable.Head key={header.id}>
+                      {header.isPlaceholder ? null : (
+                        <TableHeader
+                          column={header.column}
+                          title={flexRender(header.column.columnDef.header, header.getContext())}
+                        ></TableHeader>
+                      )}
+                    </BaseTable.Head>
+                  );
+                })}
+              </BaseTable.Row>
+            ))}
+          </BaseTable.Header>
+
+          <BaseTable.Body>
+            {isFetching ? (
+              <BaseTable.Row>
+                {columns.map((_, index) => {
+                  return (
+                    <BaseTable.Cell key={index}>
+                      <TableSkeleton />
                     </BaseTable.Cell>
                   );
                 })}
               </BaseTable.Row>
-            ))
-          ) : (
-            <BaseTable.Row>
-              <BaseTable.Cell colSpan={columns.length} className="h-24 text-center">
-                không có kết quả hiện thị
-              </BaseTable.Cell>
-            </BaseTable.Row>
-          )}
-        </BaseTable.Body>
-      </BaseTable>
-      <Pagination
-        onChange={value => table.setPageIndex(value - 1)}
-        total={table.getPageCount()}
-        radius="lg"
-        className="w-full flex justify-center py-2"
-      />
+            ) : table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map(row => (
+                <BaseTable.Row key={row.id} data-state={row.getIsSelected() && 'selected'} className="cursor-pointer">
+                  {row.getVisibleCells().map(({ id, column, row, getContext }) => {
+                    return (
+                      <BaseTable.Cell
+                        onClick={e => column.columnDef.id !== 'actions' && onRowClick && onRowClick(row.original, e)}
+                        key={id}
+                      >
+                        {flexRender(column.columnDef.cell, getContext())}
+                      </BaseTable.Cell>
+                    );
+                  })}
+                </BaseTable.Row>
+              ))
+            ) : (
+              <BaseTable.Row>
+                <BaseTable.Cell colSpan={columns.length} className="h-24 text-center">
+                  không có kết quả hiện thị
+                </BaseTable.Cell>
+              </BaseTable.Row>
+            )}
+          </BaseTable.Body>
+        </BaseTable>
+      </BaseTable.Scroll>
+      {table.getPageCount() > 1 && (
+        <Pagination
+          onChange={value => table.setPageIndex(value - 1)}
+          total={table.getPageCount()}
+          radius="md"
+          className="w-full flex justify-center py-2"
+        />
+      )}
     </div>
   );
 };
 
-export default DataTable;
+export default Table;

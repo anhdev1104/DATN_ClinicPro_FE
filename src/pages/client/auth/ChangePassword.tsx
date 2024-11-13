@@ -1,6 +1,6 @@
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
-import former, { OptionsWithForm } from '@/providers/former';
+import former from '@/providers/former';
 import Form from '@/lib/Form';
 import { changePassword } from '@/services/auth.service';
 import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
@@ -11,12 +11,11 @@ import { toast } from 'react-toastify';
 
 export const passwordSchema = yup
   .object({
-    password: yup.string().default('').required(),
-    newPassword: yup.string().default('').required(),
+    password: yup.string().required(),
+    newPassword: yup.string().required(),
     confirmNewPassword: yup
       .string()
       .oneOf([yup.ref('newPassword')], 'mật khẩu không khớp!')
-      .default('')
       .required(),
   })
   .required();
@@ -104,7 +103,6 @@ const ChangePassword = () => {
   );
 };
 
-const optionsWithForm: OptionsWithForm = {
+export default former(ChangePassword, passwordSchema, {
   mode: 'onChange',
-};
-export default former(ChangePassword, passwordSchema, optionsWithForm);
+});
