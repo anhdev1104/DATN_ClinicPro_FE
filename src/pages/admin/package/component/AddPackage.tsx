@@ -3,7 +3,7 @@ import { List } from '@/components/icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
 import { createPackage, getCategory } from '@/services/package.service';
-import { IPackage } from '@/types/package.type';
+import UploadFile from '@/components/modal/ModalUploadFile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Input from '@/components/input';
 import Field from '@/components/field';
@@ -13,6 +13,7 @@ import * as yup from 'yup';
 import DirectRoute from '@/components/direct';
 import Select from '@/components/select';
 import convertToOptions from '@/helpers/convertToOptions';
+
 const schema = yup.object().shape({
   name: yup.string().trim().required('Không được để trống'),
   description: yup.string().required('Không được để trống'),
@@ -20,6 +21,7 @@ const schema = yup.object().shape({
   image: yup.mixed().required('Vui lòng chọn 1 file'),
   category_id: yup.string().nullable().required('Vui lòng chọn danh mục'),
 });
+
 interface ListPackage {
   navigate: () => void;
 }
@@ -27,6 +29,7 @@ interface ListPackage {
 const AddPackage = ({ navigate }: ListPackage) => {
   const [loading, setLoading] = useState(false);
   const [packageCategory, setPackageCategory] = useState([]);
+  const [imageUrl, setImageUrl] = useState<string>('');
   const {
     handleSubmit,
     formState: { errors, isValid },
@@ -37,6 +40,7 @@ const AddPackage = ({ navigate }: ListPackage) => {
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
+
   useEffect(() => {
     const fetchCategories = async () => {
       const res = await getCategory();
@@ -46,29 +50,27 @@ const AddPackage = ({ navigate }: ListPackage) => {
 
     fetchCategories();
   }, []);
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setValue('image', file);
-    }
+  const handleUploadSuccess = (url: string) => {
+    setImageUrl(url);
+    setValue('image', url);
   };
-
   const handleCreate: SubmitHandler<any> = async data => {
-    // if (!isValid) return;
+    if (!isValid) return;
     setLoading(true);
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('description', data.description);
     formData.append('content', data.content);
-    formData.append('image', data.image);
+    formData.append('image', imageUrl);
     formData.append('category_id', data.category_id);
     const res = await createPackage(formData);
     if (res.errors) {
-      toast.error('Thêm gói khám bị thất bại');
+      toast.error('Thêm gói khám thất bại');
       console.log(res.message);
     } else {
       toast.success('Thêm gói khám thành công');
       reset();
+      setImageUrl('');
     }
     setLoading(false);
   };
@@ -96,7 +98,7 @@ const AddPackage = ({ navigate }: ListPackage) => {
                 <Input
                   name="name"
                   type="text"
-                  className="border rounded-md p-2 focus:ring-2  outline-none !font-normal !text-dark bg-white focus:border-third"
+                  className="border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third"
                   placeholder="Nhập tên gói khám"
                   control={control}
                 />
@@ -106,7 +108,6 @@ const AddPackage = ({ navigate }: ListPackage) => {
             <div className="min-w-[400px] w-1/2">
               <Label htmlFor="categoryId">Danh mục gói khám</Label>
               <Select placeholder="Danh mục gói khám" name="category_id" control={control} options={packageCategory} />
-
               <MessageForm error={errors.category_id?.message} />
             </div>
           </div>
@@ -119,14 +120,14 @@ const AddPackage = ({ navigate }: ListPackage) => {
                 <Input
                   name="description"
                   type="text"
-                  className="border rounded-md p-2 focus:ring-2  outline-none !font-normal !text-dark  bg-white focus:border-third min-h-[100px]"
+                  className="border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third min-h-[100px]"
                   placeholder="Nhập mô tả"
                   control={control}
                 />
               </Field>
               <MessageForm error={errors.description?.message} />
             </div>
-            <div className="flex flex-col ">
+            <div className="flex flex-col">
               <Field>
                 <Label htmlFor="content" className="text-sm font-medium mb-1">
                   Nội dung gói khám <span className="text-red-500">*</span>
@@ -134,7 +135,7 @@ const AddPackage = ({ navigate }: ListPackage) => {
                 <Input
                   name="content"
                   type="text"
-                  className="border rounded-md p-2 focus:ring-2  outline-none !font-normal !text-dark  bg-white focus:border-third min-h-[100px]"
+                  className="border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third min-h-[100px]"
                   placeholder="Nhập nội dung"
                   control={control}
                 />
@@ -147,12 +148,7 @@ const AddPackage = ({ navigate }: ListPackage) => {
               <Label htmlFor="image" className="text-sm font-medium mb-1">
                 Hình ảnh <span className="text-red-500">*</span>
               </Label>
-              <input
-                name="image"
-                type="file"
-                className="border rounded-md p-2 focus:ring-2  outline-none !font-normal !text-dark  bg-white focus:border-third"
-                onChange={handleFileChange}
-              />
+              <UploadFile onUploadSuccess={handleUploadSuccess} />
               <MessageForm error={errors.image?.message} />
             </div>
             <div className="flex justify-end space-x-4">
