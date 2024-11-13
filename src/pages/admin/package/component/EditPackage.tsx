@@ -14,6 +14,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import convertToOptions from '@/helpers/convertToOptions';
 import Select from '@/components/select';
+import UploadFile from '@/components/modal/ModalUploadFile';
 const schema = yup.object().shape({
   name: yup.string().trim().required('Không được để trống'),
   description: yup.string().required('Không được để trống'),
@@ -26,11 +27,11 @@ const EditPackage = () => {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(false);
   const [packageData, setPackageData] = useState<IPackage | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [ImageUrl, setImageUrl] = useState<string | null>(null);
   const [packageCategory, setPackageCategory] = useState([]);
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     control,
     reset,
     setValue,
@@ -63,7 +64,7 @@ const EditPackage = () => {
           setValue('description', selectedPackage.description);
           setValue('content', selectedPackage.content);
           if (selectedPackage.image) {
-            setSelectedImage(selectedPackage.image);
+            setImageUrl(selectedPackage.image);
           }
           setValue('category_id', selectedPackage.category_id);
         }
@@ -74,19 +75,12 @@ const EditPackage = () => {
     };
     fetchPackage();
   }, [id, setValue]);
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
-      setValue('image', file);
-    } else {
-      setSelectedImage(null);
-      setValue('image', undefined);
-    }
+  const handleUploadSuccess = (url: string) => {
+    setImageUrl(url);
+    setValue('image', url);
   };
   const handleUpdate: SubmitHandler<any> = async data => {
-    // if (!isValid) return;
+    if (!isValid) return;
     setLoading(true);
     const formData = new FormData();
     formData.append('name', data.name || packageData?.name || '');
@@ -189,14 +183,8 @@ const EditPackage = () => {
               <Label htmlFor="image" className="text-sm font-medium mb-1">
                 Hình ảnh
               </Label>
-              {selectedImage && <img src={selectedImage} alt="Selected" className="w-32 h-32 object-cover mb-4" />}
-              <input
-                type="file"
-                id="image"
-                name="image"
-                onChange={handleImageChange}
-                className="border rounded-md p-2 focus:ring-2 outline-none bg-white"
-              />
+              {ImageUrl && <img src={ImageUrl} alt="Selected" className="w-32 h-32 object-cover mb-4" />}
+              <UploadFile onUploadSuccess={handleUploadSuccess} />
               <MessageForm error={errors.image?.message} />
             </div>
 
