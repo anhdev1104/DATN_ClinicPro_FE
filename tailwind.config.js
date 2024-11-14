@@ -20,20 +20,11 @@ export default {
           '0%': { opacity: '0', transform: 'translateX(10%)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
         },
-      },
-      animation: {
-        'slide-in-right': 'slideInRight 0.5s ease-in-out forwards',
-      },
-      spacing: {
-        '65p': '65%',
-      },
-      boxShadow: {
-        tr: '0 0 3px #e5e5e5',
-      },
-      animation: {
-        bounce: 'bounce 1s infinite',
-      },
-      keyframes: {
+        move: {
+          '33%': { top: '0px' },
+          '66%': { top: '20px' },
+          '100%': { top: '0px' },
+        },
         bounce: {
           '0%, 100%': {
             transform: 'translateY(0)',
@@ -42,6 +33,17 @@ export default {
             transform: 'translateY(-10px)',
           },
         },
+      },
+      animation: {
+        'slide-in-right': 'slideInRight 0.5s ease-in-out forwards',
+        move: 'move 2.5s infinite',
+        bounce: 'bounce 1s infinite',
+      },
+      spacing: {
+        '65p': '65%',
+      },
+      boxShadow: {
+        tr: '0 0 3px #e5e5e5',
       },
     },
   },

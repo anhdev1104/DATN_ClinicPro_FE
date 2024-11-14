@@ -8,7 +8,7 @@ import {
   Tablet,
   MedicalRecord,
 } from '@/components/icons';
-import { cn } from '@/utils/utils';
+import { cn } from '@/helpers/utils';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -60,9 +60,9 @@ const dumpCategory = [
   {
     id: 6,
     categoryName: 'Gói khám',
-    path: '/package',
+    path: '/packages',
     icon: AssignmentIcon,
-    pathActive: ['/package'],
+    pathActive: ['/packages'],
   },
   {
     id: 7,

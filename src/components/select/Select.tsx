@@ -1,6 +1,6 @@
 import useToggle from '@/hooks/useToggle';
 import { FC } from 'react';
-import { useController, Control } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 import { ArrowDropDownIcon, ArrowDropUpIcon } from '../icons';
 
 export interface Option {
@@ -9,15 +9,24 @@ export interface Option {
 }
 
 interface CustomSelectProps {
-  control: Control<any>;
+  control: any;
   options: Option[];
   name: string;
   placeholder: string;
   disabled?: boolean;
   setIsDialogOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  className?: string;
 }
 
-const CustomSelect: FC<CustomSelectProps> = ({ control, options, name, placeholder, disabled, setIsDialogOpen }) => {
+const CustomSelect: FC<CustomSelectProps> = ({
+  control,
+  options,
+  name,
+  placeholder,
+  disabled,
+  setIsDialogOpen,
+  className = '',
+}) => {
   const { field } = useController({ name, control, defaultValue: '' });
   const { show, handleToggle } = useToggle();
   const selectedOption = options.find(option => option.value === field.value);
@@ -29,9 +38,9 @@ const CustomSelect: FC<CustomSelectProps> = ({ control, options, name, placehold
   };
 
   return (
-    <div className={`relative `}>
+    <div className="relative">
       <div
-        className={`h-10 min-w-[250px] px-4 bg-[#f3f4f7] flex items-center justify-between rounded-md ${disabled ? 'cursor-not-allowed select-none' : ' cursor-pointer'}`}
+        className={`h-10 min-w-[250px] px-4 bg-[#f3f4f7] flex items-center justify-between rounded-md ${disabled ? 'cursor-not-allowed select-none' : ' cursor-pointer'} ${className}`}
         onClick={() => !disabled && handleToggle()}
       >
         <span className="line-clamp-1">{selectedOption?.label || placeholder}</span>

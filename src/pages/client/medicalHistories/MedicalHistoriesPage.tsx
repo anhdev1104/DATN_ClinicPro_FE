@@ -3,7 +3,7 @@ import { CachedIcon, CloseIcon, CompareArrows } from '@/components/icons';
 import { Dialog } from '@mui/material';
 import { getDetailMedicalHistorie, getMedicalHistoriesById } from '@/services/medicalHistories.service';
 import { MedicalRecord } from '@/types/medicalHistories.type';
-import Loading from './component/Loading';
+import Loading from './components/Loading';
 import convertTime from '@/helpers/convertTime';
 
 interface DetailMedicalHistories {

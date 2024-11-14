@@ -3,26 +3,28 @@ import PosterAuth from './components/PosterAuth';
 import { motion } from 'framer-motion';
 import BaseInput from '@/components/base/input';
 import { Button } from '@mantine/core';
-import { Controller, useFormContext } from 'react-hook-form';
-import yup from '@/utils/locate';
-import { isEmailRegex } from '@/utils/utils';
+import { useFormContext } from 'react-hook-form';
+import yup from '@/helpers/locate';
 import { forgotPassword } from '@/services/auth.service';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
 import { IForgotPassWord, IForgotPassWordError } from '@/types/auth.type';
 import ResetPassword from './ResetPassword';
-import former, { OptionsWithForm } from '@/lib/former';
+import former, { OptionsWithForm } from '@/providers/former';
+import BaseIcon from '@/components/base/BaseIcon';
+import BaseButton from '@/components/base/button';
+import Form from '@/lib/Form';
+import { emailRegex } from '@/constants/regex';
+import { IconArrowLeft } from '@tabler/icons-react';
 
 const forgotPasswordSchema = yup.object({
-  email: yup.string().required().ensure().matches(isEmailRegex, { message: 'Trường này phải là email' }),
+  email: yup.string().required().matches(emailRegex, { message: 'Trường này phải là email' }),
 });
 export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ForgotPassword = () => {
   const {
-    control,
     handleSubmit,
     formState: { isValid, errors, disabled },
     setError,
@@ -66,13 +68,16 @@ const ForgotPassword = () => {
               className="my-10"
             >
               <div className="relative flex justify-center items-center gap-2 mb-2">
-                <div
-                  onClick={() => {
-                    isSend === true ? setIsSend(false) : navigate('/login');
-                  }}
-                  className="absolute left-20 cursor-pointer"
-                >
-                  <ArrowLeft />
+                <div className="absolute left-20 cursor-pointer">
+                  <BaseButton.Icon
+                    onClick={() => {
+                      isSend === true ? setIsSend(false) : navigate('/login');
+                    }}
+                    variant="subtle"
+                    radius="lg"
+                  >
+                    <BaseIcon size="lg" icon={IconArrowLeft} />
+                  </BaseButton.Icon>
                 </div>
                 <div>
                   <h1 className="text-third text-[25px] uppercase font-bold">Quên mật khẩu</h1>
@@ -80,27 +85,19 @@ const ForgotPassword = () => {
                 </div>
               </div>
               {!isSend ? (
-                <form onSubmit={handleSubmit(handleSendEmail)} className="w-3/4 flex flex-col mx-auto space-y-2">
-                  <Controller
+                <Form onSubmit={handleSubmit(handleSendEmail)} className="w-3/4 flex flex-col mx-auto space-y-2">
+                  <BaseInput.Group
+                    autoComplete="email"
                     name="email"
-                    control={control}
-                    render={({ field, fieldState }) => {
-                      return (
-                        <BaseInput.Group
-                          error={fieldState.error?.message}
-                          className="my-2"
-                          label="Email"
-                          type="email"
-                          placeholder="Nhập địa chỉ email ..."
-                          {...field}
-                        />
-                      );
-                    }}
+                    className="my-2"
+                    label="Email"
+                    type="email"
+                    placeholder="Nhập địa chỉ email ..."
                   />
                   <Button disabled={disabled} loading={disabled} type="submit">
                     Gửi
                   </Button>
-                </form>
+                </Form>
               ) : (
                 <ResetPassword handleSendEmail={handleSendEmail} email={getValues('email')} />
               )}

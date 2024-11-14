@@ -1,21 +1,16 @@
-export interface Manager {
-  id: string;
-  address: string;
-  fullname: string;
-  avatar: string;
-  dob: string;
-  phone_number: string;
-  gender: string;
-  email: string;
-}
+import {
+  departmentDetailSchema,
+  departmentSchema,
+  managerSchema,
+  newDepartmentSchema,
+  newDepartmentSchemaResponse,
+  updateDepartmentSchema,
+} from '@/schema/department.schema';
+import yup from '@/helpers/locate';
 
-export interface Department {
-  id: string;
-  name: string;
-  description?: string;
-  manager_id?: number;
-  created_at: Date;
-  updated_at?: Date;
-  users_count?: number;
-  manager: Manager;
-}
+export type Department = yup.InferType<typeof departmentSchema>;
+export type Manager = yup.InferType<typeof managerSchema>;
+export type DepartmentDetail = yup.InferType<typeof departmentDetailSchema>;
+export type NewDepartmentProps = yup.InferType<typeof newDepartmentSchema>;
+export type NewDepartmentResponseProps = yup.InferType<typeof newDepartmentSchemaResponse>;
+export type UpdateDepartmentResponseProps = yup.InferType<typeof updateDepartmentSchema>;
