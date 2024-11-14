@@ -135,7 +135,6 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
   );
 };
 
-// Component tìm kiếm
 function SearchAdmin() {
   const { control } = useForm({
     mode: 'onChange',
