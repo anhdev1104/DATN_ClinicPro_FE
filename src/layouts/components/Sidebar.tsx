@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ChevronRightIcon,
   GroupIcon,
@@ -7,6 +6,7 @@ import {
   ApartmentIcon,
   AssignmentIcon,
   Tablet,
+  MedicalRecord,
 } from '@/components/icons';
 import { cn } from '@/utils/utils';
 import { useEffect, useState } from 'react';
@@ -63,6 +63,13 @@ const dumpCategory = [
     path: '/package',
     icon: AssignmentIcon,
     pathActive: ['/package'],
+  },
+  {
+    id: 7,
+    categoryName: 'Bệnh án',
+    path: '/dashboard/medical-histories',
+    icon: MedicalRecord,
+    pathActive: ['/dashboard/medical-histories'],
   },
 ];
 
