@@ -29,7 +29,7 @@ export const departmentApi = createApi({
         method: 'POST',
         data,
       }),
-      invalidatesTags: ['Department'],
+      invalidatesTags: result => (result ? ['Department'] : []),
     }),
     updateAnDepartment: builder.mutation<unknown, any & { id: string | number }>({
       query: query => {
