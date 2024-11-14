@@ -25,6 +25,7 @@ interface BaseTableProps<T, D> extends Omit<TableProps, 'data'> {
   rowCount?: number;
   manualFiltering?: boolean;
   filterItem?: JSX.Element;
+  pagination?: JSX.Element | boolean;
 }
 const Table = <T, D>({
   data,
@@ -32,10 +33,11 @@ const Table = <T, D>({
   isFetching,
   toolbar,
   onRowClick,
-  manualPagination,
   rowCount,
   manualFiltering,
   filterItem,
+  manualPagination,
+  pagination,
   ...props
 }: BaseTableProps<T, D>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -123,14 +125,16 @@ const Table = <T, D>({
           </BaseTable.Body>
         </BaseTable>
       </BaseTable.Scroll>
-      {table.getPageCount() > 1 && (
-        <Pagination
-          onChange={value => table.setPageIndex(value - 1)}
-          total={table.getPageCount()}
-          radius="md"
-          className="w-full flex justify-center py-2"
-        />
-      )}
+      {pagination !== false &&
+        (pagination ||
+          (table.getPageCount() > 1 && (
+            <Pagination
+              onChange={value => table.setPageIndex(value - 1)}
+              total={table.getPageCount()}
+              radius="md"
+              className="w-full flex justify-center py-2"
+            />
+          )))}
     </div>
   );
 };

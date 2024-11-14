@@ -1,6 +1,6 @@
-import { Flex, Modal, Stack, Text } from '@mantine/core';
+import { Flex, Modal, Pagination, Stack, Text } from '@mantine/core';
 import { useGetAllDepartmentQuery } from '@/redux/api/department';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { Department, DepartmentDetail, Manager } from '@/types/department.type';
 import Table from '@/components/table/Table';
 import { Avatar } from '@mantine/core';
@@ -15,14 +15,23 @@ import { useColumn } from '@/hooks/useColumn';
 import { toast } from 'react-toastify';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import { useDeleteAnDepartmentMutation } from '@/redux/api/department';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import UpdateDepartment from './UpdateDepartment';
+import BaseInput from '@/components/base/input';
 
 const Department = () => {
+  const [search, setSearch] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
   const [modalNew, handleModalNew] = useDisclosure(false);
   const [modalDelete, handleModalDelete] = useDisclosure(false);
   const [modalUpdate, handleModalUpdate] = useDisclosure(false);
-  const { data, isSuccess, isFetching } = useGetAllDepartmentQuery({});
+  const [limit] = useState(5);
+  const [page] = useState(1);
+  const { data, isSuccess, isFetching } = useGetAllDepartmentQuery({
+    q: searchParams.get('q') || '',
+    limit,
+    page: Number(searchParams.get('page')) || page,
+  });
   const navigate = useNavigate();
   const [deleteDepartment, { isLoading }] = useDeleteAnDepartmentMutation();
   const idRef = useRef<string>('');
@@ -91,6 +100,14 @@ const Department = () => {
       placeholder: true,
     },
   ]);
+  useEffect(() => {
+    if (search || search === '') {
+      const timer = setTimeout(() => {
+        setSearchParams({ q: search, page: searchParams.get('page') || '' });
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [search]);
   const handleDeleteDepartment = async () => {
     const result = await deleteDepartment(idRef.current);
     if (result.error) {
@@ -104,6 +121,20 @@ const Department = () => {
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl">
         <Table
+          highlightOnHover
+          manualFiltering
+          filterItem={
+            <BaseInput onChange={e => setSearch(e.target.value)} size="xs" radius="md" placeholder="tìm kiếm..." />
+          }
+          manualPagination
+          pagination={
+            <Pagination
+              total={Math.round((data?.total || limit) / limit)}
+              onChange={value => setSearchParams({ q: search, page: value.toString() })}
+              radius="md"
+              className="w-full flex justify-center py-2"
+            />
+          }
           onRowClick={handleRowClick}
           isFetching={isFetching}
           data={isSuccess ? data.data : []}
