@@ -42,6 +42,7 @@ export const updateProfile = async (id: string, newProfile: IProfileUpdate) => {
     return error;
   }
 };
+
 export const changePassword = async <T>(data: Partial<Omit<PasswordProps, 'confirmPassword'>>): Promise<T> => {
   try {
     const response = await http.api.put<T>('/auth/change-password', data);

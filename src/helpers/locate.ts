@@ -2,13 +2,13 @@ import * as yup from 'yup';
 
 yup.setLocale({
   mixed: {
-    required: 'trường này là bắt buộc',
+    required: 'Trường này là bắt buộc !',
   },
   string: {
-    email: 'trường này phải là email',
-    min: ({ min }) => `trường này phải tối thiểu ${min} ký tự`,
-    max: ({ max }) => `trường này phải tối đa ${max} ký tự`,
-    length: ({ length }) => `độ dài chỉ được ${length} ký tự`,
+    email: 'Trường này phải là email !',
+    min: ({ min }) => `Trường này phải tối thiểu ${min} ký tự.`,
+    max: ({ max }) => `Trường này phải tối đa ${max} ký tự.`,
+    length: ({ length }) => `Độ dài chỉ được ${length} ký tự.`,
   },
 });
 

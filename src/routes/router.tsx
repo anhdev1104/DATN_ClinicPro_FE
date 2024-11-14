@@ -20,7 +20,7 @@ import { Route, RouteProps, Routes, useLocation } from 'react-router-dom';
 import Prescription from '@/pages/admin/prescriptions/Prescription';
 import ProfilePage from '@/pages/client/profile/ProfilePage';
 import ChangePassword from '@/pages/client/auth/ChangePassword';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import ProtectedRoute from '@/components/auth';
 import ForgotPassword from '@/pages/client/auth/ForgotPassword';
 import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistoriesPage';
 import EditPackage from '@/pages/admin/package/component/EditPackage';

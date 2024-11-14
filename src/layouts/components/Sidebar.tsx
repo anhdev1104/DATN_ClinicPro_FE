@@ -66,6 +66,7 @@ const dumpCategory = [
 ];
 
 const Sidebar = ({ show }: { show: boolean }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [categoryManagement, setCategoryManagement] = useState<ICategoryManagement[]>(dumpCategory);
   const [tabActive, setTabActive] = useState<number>(1);
   const navigate = useNavigate();
