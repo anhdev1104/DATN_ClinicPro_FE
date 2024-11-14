@@ -25,6 +25,8 @@ import ForgotPassword from '@/pages/client/auth/ForgotPassword';
 import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistoriesPage';
 import EditPackage from '@/pages/admin/package/component/EditPackage';
 import Package from '@/pages/admin/package/Package';
+import MedicalHistories from '@/pages/admin/medicalHistories/MedicalHistories';
+
 type IRouter = RouteProps & {
   title: string;
 };
@@ -87,6 +89,11 @@ const adminRouter: IRouter[] = [
     title: 'Trang quản lý',
   },
   {
+    path: '/dashboard/medical-histories',
+    element: <MedicalHistories />,
+    title: 'Danh sách gói khám',
+  },
+  {
     path: '/prescriptions',
     element: <Prescription />,
     title: 'Danh sách đơn thuốc',
@@ -111,6 +118,7 @@ const adminRouter: IRouter[] = [
     element: <PackageDetail />,
     title: 'Danh sách gói khám',
   },
+
   {
     path: '/edit-package/:id',
     element: <EditPackage />,

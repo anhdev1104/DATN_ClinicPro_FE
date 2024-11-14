@@ -12,6 +12,7 @@ interface Doctor {
   fullname: string;
   phone_number: string;
   gender: string;
+  avatar: string;
 }
 
 interface Patient {
@@ -20,6 +21,7 @@ interface Patient {
   email: string;
   phone_number: string;
   gender: string;
+  avatar: string;
 }
 
 export interface MedicalRecord {
