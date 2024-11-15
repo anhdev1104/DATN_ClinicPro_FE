@@ -3,7 +3,7 @@ import Banner from './components/Banner';
 import FormSearchHome from './components/FormSearchHome';
 import { ArrowRightAltIcon } from '@/components/icons';
 import OurSpecialties from './components/OurSpecialties';
-
+import Doctors from './components/Doctor';
 const HomePage = () => {
   return (
     <div className="mt-[106px]">
@@ -31,7 +31,9 @@ const HomePage = () => {
       </section>
       <section className="py-[60px]">
         <h2 className="font-semibold text-[32px] text-center text-primary">Bác sĩ của chúng tôi</h2>
-        <div className="pt-[62px]"></div>
+        <div className="pt-[60px]">
+          <Doctors />
+        </div>
       </section>
     </div>
   );
