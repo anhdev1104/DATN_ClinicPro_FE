@@ -33,7 +33,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onUploadSuccess }) => {
   };
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col">
       <input
         id="image"
         name="image"
