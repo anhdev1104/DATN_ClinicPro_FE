@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import HeaderInfo from './HeaderInfo';
 import { ModalAppointment } from '@/components/modal';
+import useToggle from '@/hooks/useToggle';
 
 const menuList = [
   {
@@ -41,6 +42,7 @@ const menuList = [
 const Header = () => {
   const auth = useSelector((state: RootState) => state.auth.data);
   const location = useLocation();
+  const { show, handleToggle } = useToggle();
 
   return (
     <>
@@ -66,14 +68,14 @@ const Header = () => {
             </ul>
           </nav>
           <div className="flex gap-5 items-center">
-            <Button type="button" className="capitalize">
+            <Button type="button" className="capitalize" onClick={handleToggle}>
               Đặt lịch khám
             </Button>
             {auth?.access_token ? <HeaderInfo /> : <Link to={'/login'}>Đăng nhập</Link>}
           </div>
         </div>
       </header>
-      <ModalAppointment />
+      <ModalAppointment show={show} handleToggle={handleToggle} />
     </>
   );
 };

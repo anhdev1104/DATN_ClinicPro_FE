@@ -4,14 +4,17 @@ import { useForm } from 'react-hook-form';
 import Input from '@/components/input';
 import { MoreVertIcon, AddIcon } from '@/components/icons';
 import DirectRoute from '@/components/direct';
-import { getPackages, DeletePackage } from '@/services/package.service';
-import { IPackage } from '@/types/package.type';
+import { getPackages, DeletePackage, getCategory } from '@/services/package.service';
+import { IPackage, Category } from '@/types/package.type';
 import { toast } from 'react-toastify';
+
 interface ListPackageProps {
   navigate: () => void;
 }
+
 const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
   const [packages, setPackages] = useState<IPackage[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -23,15 +26,12 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
   const isOpen = (id: string) => selectedId === id;
 
   useEffect(() => {
-    const fetchPackages = async () => {
+    const fetchPackagesAndCategory = async () => {
       try {
-        const response = await getPackages();
-        if (response) {
-          const data = response.data;
-          setPackages(data);
-        } else {
-          setPackages([]);
-        }
+        const packageResponse = await getPackages();
+        const categoryResponse = await getCategory();
+        setPackages(packageResponse.data || []);
+        setCategories(categoryResponse.data || []);
       } catch (error) {
         setError('Không thể tải danh sách gói khám. Vui lòng thử lại sau.');
       } finally {
@@ -39,14 +39,20 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
       }
     };
 
-    fetchPackages();
+    fetchPackagesAndCategory();
   }, []);
+
+  const getCategoryName = (categoryId: string) => {
+    const category = categories.find(cat => cat.id === categoryId);
+    return category ? category.name : 'Không có danh mục';
+  };
 
   const handleDelete = async (id: string) => {
     await DeletePackage(id);
     setPackages(prevPackages => prevPackages.filter(pkg => pkg.id !== id));
     toast.success('Xóa gói khám thành công!');
   };
+
   if (loading || error) {
     return <div>{loading ? 'Đang tải dữ liệu...' : 'Không thể lấy dữ liệu'}</div>;
   }
@@ -85,10 +91,10 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
               {packages.map((pkg, index) => (
                 <tr key={index} className="odd">
                   <td className="p-4 w-1/12">{index + 1}</td>
-                  <td className="p-4 text-gray-800 w-2/12">{pkg.name}</td>
-                  <td className="p-4 text-gray-600 w-2/12">{pkg.category_id}</td>
+                  <td className="p-4 text-gray-800 w-[15%]">{pkg.name}</td>
+                  <td className="p-4 text-gray-600 w-[15%]">{getCategoryName(pkg.category_id)}</td>
                   <td className="p-4 text-gray-600 w-2/12">{pkg.description}</td>
-                  <td className="p-4 profile-image w-2/12 h-32">
+                  <td className="p-4 profile-image w-[20%] h-32">
                     <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover" />
                   </td>
                   <td className="p-4 text-gray-600 w-[30%]">
