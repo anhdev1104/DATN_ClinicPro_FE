@@ -7,6 +7,7 @@ import {
   AssignmentIcon,
   Tablet,
   MedicalRecord,
+  SpecialtiesIcon,
 } from '@/components/icons';
 import { cn } from '@/helpers/utils';
 import { useEffect, useState } from 'react';
@@ -70,6 +71,13 @@ const dumpCategory = [
     path: '/dashboard/medical-histories',
     icon: MedicalRecord,
     pathActive: ['/dashboard/medical-histories'],
+  },
+  {
+    id: 8,
+    categoryName: 'Chuyên khoa',
+    path: '/specialties',
+    icon: SpecialtiesIcon,
+    pathActive: ['/specialties'],
   },
 ];
 

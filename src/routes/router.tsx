@@ -27,6 +27,7 @@ import MedicalHistories from '@/pages/admin/medicalHistories/MedicalHistories';
 import EditPackage from '@/pages/admin/package/component/EditPackage';
 import Package from '@/pages/admin/package/Package';
 import EditMedicalHistories from '@/pages/admin/medicalHistories/components/EditMedicalHistories';
+import SpecialtiesPage from '@/pages/admin/specialties/SpecialtiesPage';
 type IRouter = RouteProps & {
   title: string;
 };
@@ -87,6 +88,11 @@ const adminRouter: IRouter[] = [
     path: '/dashboard',
     element: <Dashboard />,
     title: 'Trang quản lý',
+  },
+  {
+    path: '/specialties',
+    element: <SpecialtiesPage />,
+    title: 'Trang chuyên khoa',
   },
   {
     path: '/dashboard/medical-histories',
