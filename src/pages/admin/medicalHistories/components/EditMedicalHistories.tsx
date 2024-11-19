@@ -6,18 +6,16 @@ import Input from '@/components/input';
 import Label from '@/components/label';
 import { Controller, useForm } from 'react-hook-form';
 import UploadFiles from './UploadFiles';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import yup from '@/helpers/locate';
 import { yupResolver } from '@hookform/resolvers/yup';
-// import { NewMedical } from '@/types/medicalHistories.type';
 import { uploadImages } from '@/services/uploadFile';
-import { createMedicalHistorie } from '@/services/medicalHistories.service';
-import { toast } from 'react-toastify';
+import { getDetailMedicalHistorie, updateMedicalHistorie } from '@/services/medicalHistories.service';
+import { Link, useParams } from 'react-router-dom';
+import { FileMidecal, MedicalRecord } from '@/types/medicalHistories.type';
 import FormPatient from './FormPatient';
-
-interface AddMedicalHistories {
-  navigate: () => void;
-}
+import { toast } from 'react-toastify';
+import { ModalConfirm } from '@/components/modal';
 
 interface ImageWithDescription {
   file: File | string;
@@ -31,11 +29,11 @@ const schema = yup.object().shape({
 });
 
 interface IPatientSelect {
-  id: string | null;
-  name: string | null;
+  id: string | null | undefined;
+  name: string | null | undefined;
 }
 
-const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
+const EditMedicalHistories = () => {
   const {
     handleSubmit,
     control,
@@ -47,69 +45,107 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
     getFiles: () => ImageWithDescription[];
     resetFiles: () => void;
   } | null>(null);
+  const [medicalDetail, setMedicalDetail] = useState<MedicalRecord>();
   const [selectPatient, setSelectPatient] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState<IPatientSelect | null>(null);
+  const [initFiles, setInitFiles] = useState<FileMidecal[] | []>(medicalDetail?.files || []);
+  const [filesDelete, setFilesDelete] = useState<string[]>([]);
+  const [modalStatus, setModalStatus] = useState(false);
 
+  const { id } = useParams();
+
+  // Xử lý với form Patient
   const handleCloseDialog = () => {
     setSelectPatient(false);
   };
-
+  // Xử lý với form Patient
   const handleSelectedPatientId = (id: string | null, name: string | null) => {
     setSelectedPatientId({
       id,
       name,
     });
   };
+  // Xử lý data Ảnh đã có
+  const handleRemoveFilesOld = (url: string, id: string) => {
+    const updatedFiles = initFiles?.filter(file => file.file !== url);
+    const deleteId = [...filesDelete, id];
+    setFilesDelete(deleteId);
+    setInitFiles(updatedFiles);
+  };
+  // Xử lý data Ảnh đã có
+  const handleChangeDescriptionOld = (fileUrl: string, newDescription: string) => {
+    const updatedFiles = initFiles?.map(file =>
+      file.file === fileUrl ? { ...file, description: newDescription } : file,
+    );
+    setInitFiles(updatedFiles);
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (!id) return;
+      try {
+        const data = await getDetailMedicalHistorie(id);
+        setMedicalDetail(data);
+        const oldPatient = {
+          name: data.patient.fullname,
+          id: data.patient.id,
+        };
+        const oldFiles = [...data.files];
+        setSelectedPatientId(oldPatient);
+        setInitFiles(oldFiles);
+
+        reset({
+          diagnosis: data.diagnosis,
+          description: data.description,
+          treatment: data.treatment,
+        });
+      } catch (error) {
+        toast.error('Lỗi khi lấy dữ liệu bệnh án:', error ? error : '');
+      }
+    })();
+  }, [id, reset]);
 
   const onSubmit = async (data: any) => {
-    const images = uploadFilesRef.current ? uploadFilesRef.current.getFiles() : [];
+    const imagesNew = uploadFilesRef?.current?.getFiles() || [];
+    let newImages = [];
+    if (imagesNew.length > 0) {
+      const formData = new FormData();
+      imagesNew?.forEach((img: ImageWithDescription) => {
+        formData.append('images[]', img.file);
+      });
 
-    if (!images.length) {
-      // eslint-disable-next-line no-console
-      console.warn('No images selected for upload.');
-      return;
+      const res = await uploadImages(formData);
+      const imagesWithDescriptions = res.urls.map((url: string, index: any) => ({
+        file: url,
+        description: imagesNew[index]?.description || '',
+      }));
+
+      newImages = [...imagesWithDescriptions, ...initFiles];
+    } else {
+      newImages = [...initFiles];
     }
-
-    const formData = new FormData();
-    images.forEach((img: ImageWithDescription) => {
-      formData.append('images[]', img.file);
-    });
 
     try {
-      const res = await uploadImages(formData);
-      if (res?.urls) {
-        const imagesWithDescriptions = res.urls.map((url: string, index: any) => ({
-          file: url,
-          description: images[index]?.description || '',
-        }));
+      const finalData = {
+        ...data,
+        patient_id: selectedPatientId?.id,
+        user_id: '8a9c264e-d283-4550-a14c-cf932199f2dc',
+        files: [...newImages],
+        file_deletes: [...filesDelete],
+      };
 
-        const medicalHistoryData = {
-          ...data,
-          files: imagesWithDescriptions,
-          user_id: '8a9c264e-d283-4550-a14c-cf932199f2dc',
-          patient_id: selectedPatientId?.id,
-        };
-        const response = await createMedicalHistorie(medicalHistoryData);
-        toast.success(response.message, { position: 'top-right' });
-        reset({
-          diagnosis: '',
-          description: '',
-          treatment: '',
-        });
-        setSelectedPatientId(null);
-
-        if (uploadFilesRef.current) {
-          uploadFilesRef.current.resetFiles();
-        }
-      } else {
-        // eslint-disable-next-line no-console
-        console.error('Error: No URLs returned from upload API.');
-      }
+      const idDoctor = id ? id : '';
+      const response = await updateMedicalHistorie(idDoctor, finalData);
+      toast.success(response.message, { position: 'top-right' });
+      handleClose();
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error uploading images:', error);
+      return error;
     }
   };
+  const handleClose = () => {
+    setModalStatus(!modalStatus);
+  };
+  const handleSubmitForm = handleSubmit(onSubmit);
 
   return (
     <div>
@@ -117,14 +153,14 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
       <div className="bg-white size-full p-[20px] rounded-[26px]">
         <div className="mb-6 flex items-center justify-start gap-5">
           <div>
-            <h1 className="text-[18px] text-black font-medium">Thêm bệnh án</h1>
+            <h1 className="text-[18px] text-black font-medium">Sửa bệnh án</h1>
           </div>
-          <button
-            onClick={navigate}
+          <Link
+            to={'/dashboard/medical-histories'}
             className="text-[18px] font-medium gap-3 border-borderColor border p-2 rounded-lg bg-[#f3f4f7]"
           >
             <List className="text-primaryAdmin" />
-          </button>
+          </Link>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col">
           <div className="flex w-full gap-10 mb-5">
@@ -139,29 +175,8 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                   control={control}
                 />
               </Field>
-
               <Field className="flex gap-3 flex-col">
-                <Label htmlFor="description">Mô tả bệnh án:</Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <textarea
-                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
-                        placeholder="Mô tả bệnh án ..."
-                        id="description"
-                        {...field}
-                      ></textarea>
-                    );
-                  }}
-                />
-              </Field>
-            </div>
-            <div className="w-1/2">
-              <Field className="flex flex-col gap-3">
                 <Label htmlFor="patient_id">Danh sách bệnh nhân:</Label>
-
                 {selectedPatientId ? (
                   <div className="flex flex-col gap-2 border p-3 rounded-md bg-gray-100">
                     <div>
@@ -190,7 +205,8 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                   </Button>
                 )}
               </Field>
-
+            </div>
+            <div className="w-1/2">
               <Field className="flex gap-3 flex-col">
                 <Label htmlFor="treatment">Phương pháp điều trị:</Label>
                 <Controller
@@ -208,13 +224,36 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                   }}
                 />
               </Field>
+              <Field className="flex gap-3 flex-col">
+                <Label htmlFor="description">Mô tả bệnh án:</Label>
+                <Controller
+                  name="description"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <textarea
+                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                        placeholder="Mô tả bệnh án ..."
+                        id="description"
+                        {...field}
+                      ></textarea>
+                    );
+                  }}
+                />
+              </Field>
             </div>
           </div>
-          <UploadFiles ref={uploadFilesRef} />
+          <UploadFiles
+            handleRemoveFilesOld={handleRemoveFilesOld}
+            setInitData={setInitFiles}
+            initData={initFiles}
+            ref={uploadFilesRef}
+            handleChangeDescriptionOld={handleChangeDescriptionOld}
+          />
           <div className="flex gap-3 justify-end">
             <Button
-              isLoading={isSubmitting}
-              type="submit"
+              type="button"
+              onClick={() => setModalStatus(true)}
               styled="normal"
               className="bg-primaryAdmin text-white disabled:bg-primaryAdmin/50"
             >
@@ -226,6 +265,15 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
           </div>
         </form>
       </div>
+      <ModalConfirm
+        isLoading={isSubmitting}
+        disabled={isSubmitting}
+        submit={handleSubmitForm}
+        isClose={handleClose}
+        isOpen={modalStatus}
+        title="Cập nhập bệnh án"
+        description="Bạn có chắc muốn cập nhập hồ sơ bệnh án ? Các thông tin cũ sẽ mất vỉnh viễn và không được khôi phục lại! "
+      />
       {selectPatient && (
         <FormPatient
           onSelectPatient={handleSelectedPatientId}
@@ -238,4 +286,4 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
   );
 };
 
-export default AddMedicalHistories;
+export default EditMedicalHistories;

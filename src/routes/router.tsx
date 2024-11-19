@@ -26,6 +26,7 @@ import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistori
 import MedicalHistories from '@/pages/admin/medicalHistories/MedicalHistories';
 import EditPackage from '@/pages/admin/package/component/EditPackage';
 import Package from '@/pages/admin/package/Package';
+import EditMedicalHistories from '@/pages/admin/medicalHistories/components/EditMedicalHistories';
 type IRouter = RouteProps & {
   title: string;
 };
@@ -90,7 +91,12 @@ const adminRouter: IRouter[] = [
   {
     path: '/dashboard/medical-histories',
     element: <MedicalHistories />,
-    title: 'Danh sách gói khám',
+    title: 'Danh sách bệnh án',
+  },
+  {
+    path: '/dashboard/medical-histories/:id',
+    element: <EditMedicalHistories />,
+    title: 'Chỉnh sửa bệnh án',
   },
   {
     path: '/prescriptions',

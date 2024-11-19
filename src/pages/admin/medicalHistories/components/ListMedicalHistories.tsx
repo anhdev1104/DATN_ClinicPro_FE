@@ -27,33 +27,6 @@ const SearchOptions = [
   },
 ];
 
-const files = [
-  {
-    id: 'd9b0a92d-3c9e-4f2f-8c28-1a2f0a6726e4',
-    file: 'https://i.pinimg.com/236x/f8/5c/15/f85c157e55063ef6f0c882e29305d900.jpg',
-    description: 'Kết quả chụp X-quang',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  },
-  {
-    id: 'e9c1a43f-1c2e-4f8f-9f29-3e72c9d2e47b',
-    file: 'https://i.pinimg.com/236x/86/02/1f/86021f215c190c24bbedc7acbb071f65.jpg',
-    description: 'Báo cáo xét nghiệm máu',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  },
-  {
-    id: 'f7d2e53a-8e41-4a8e-b1f1-9b3d5c9a9d72',
-    file: 'https://i.pinimg.com/236x/a3/46/e8/a346e85f8c95c13f32d056d91bc1d133.jpg',
-    description: 'Kết quả siêu âm',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  },
-  {
-    id: 'b2f7e8d1-7c9b-4d2e-b9a3-5a5c1e2d8f93',
-    file: 'https://i.pinimg.com/236x/3f/10/36/3f1036b1e1f7b038aa9ae5ad8988146d.jpg',
-    description: 'Kết quả đo điện tâm đồ',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  },
-];
-
 interface ListMedicalRecord {
   navigate: () => void;
 }
@@ -67,6 +40,7 @@ interface DetailMedicalHistories {
 const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([]);
   const [showDropdown, setShowDropdown] = useState<string | null>(null);
+  const [idMedical, setIdMedical] = useState<string | null>(null);
   const [open, setOpen] = useState<{ status: boolean; id: string }>({
     status: false,
     id: '#',
@@ -80,8 +54,9 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
     })();
   }, []);
 
-  const handleToggle = (id: string) => {
+  const handleToggle = (id: string | null) => {
     setShowDropdown(showDropdown === id ? null : id);
+    setIdMedical(id);
   };
 
   const handleClose = () => {
@@ -96,7 +71,7 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
     setActiveModal(!activeModal);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: any) => {
     const res = await deleteDetailMedicalHistorie(id);
     handleCloseModal();
     const newMedicalRecord = await getMedicalHistories();
@@ -121,7 +96,7 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
           </button>
         </div>
         <div className="w-full">
-          <div className="w-full flex justify-between border-b border-borderColor text-left py-4 font-semibold px-2">
+          <div className="w-full bg-[#f3f7fe] flex justify-between border-b border-[#cfe1fc] text-left py-4 font-semibold px-2">
             <div className="flex-[0_0_17%]">Mã bệnh án</div>
             <div className="flex-[0_0_11%]">Chẩn đoán</div>
             <div className="flex-[0_0_20%]">Bác sĩ</div>
@@ -130,8 +105,8 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
             <div className="flex-[0_0_9%]"></div>
           </div>
           <div className="w-full border-b border-borderColor text-left">
-            {medicalRecords.length > 0 ? (
-              medicalRecords.map((record, index) => (
+            {medicalRecords?.length > 0 ? (
+              medicalRecords?.map((record, index) => (
                 <div
                   key={index}
                   className={`py-6 text-black flex justify-between w-full text-left hover:opacity-100 opacity-75 cursor-pointer ${index % 2 === 1 ? 'bg-white' : 'bg-gray-200'} px-2`}
@@ -140,11 +115,17 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
                   <div className="flex-[0_0_11%] truncate">{record.diagnosis}</div>
                   <div className="flex-[0_0_20%] truncate font-semibold flex items-center gap-2">
                     <img className="size-[50px] rounded-full" src={record.doctor.avatar} alt="" />
-                    <span>{record.doctor.fullname}</span>
+                    <div className="flex flex-col">
+                      <span>{record.doctor.fullname}</span>
+                      <span className="opacity-70">{record.doctor.email}</span>
+                    </div>
                   </div>
                   <div className="flex-[0_0_20%] truncate font-semibold flex items-center gap-2">
                     <img className="size-[50px] rounded-full" src={record.patient.avatar} alt="" />
-                    <span>{record.patient.fullname}</span>
+                    <div className="flex flex-col">
+                      <span>{record.patient.fullname}</span>
+                      <span className="opacity-70">{record.patient.email}</span>
+                    </div>
                   </div>
                   <div className="flex-[0_0_17%]">{convertTime(record.created_at)}</div>
                   <div className="flex-[0_0_9%] text-blue-600 hover:underline cursor-pointer">
@@ -169,9 +150,11 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
                             Chi tiết
                           </Link>
                           <Link
-                            to={'#'}
+                            to={`/dashboard/medical-histories/${record.id}`}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => handleToggle(record.id)}
+                            onClick={() => {
+                              handleToggle(record.id);
+                            }}
                           >
                             Sửa
                           </Link>
@@ -189,13 +172,6 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
                       )}
                     </div>
                   </div>
-                  <ModalConfirm
-                    description="Dữ liệu sẽ không thể khôi phục"
-                    title="Bạn các chắc muốn xóa"
-                    isClose={handleCloseModal}
-                    isOpen={activeModal}
-                    submit={() => handleDelete(record.id)}
-                  />
                 </div>
               ))
             ) : (
@@ -203,7 +179,13 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
             )}
           </div>
         </div>
-        <div></div>
+        <ModalConfirm
+          description="Dữ liệu sẽ không thể khôi phục"
+          title="Bạn các chắc muốn xóa"
+          isClose={handleCloseModal}
+          isOpen={activeModal}
+          submit={() => handleDelete(idMedical)}
+        />
       </div>
       {open.status && <DetailMedicalHistories close={handleClose} statusLog={open.status} id={open.id} />}
     </div>
@@ -331,7 +313,7 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
                 <div className="flex flex-col gap-4">
                   <h1 className="font-medium">Ảnh chụp X-QUANG:</h1>
                   <div className="">
-                    {files.map(file => (
+                    {medicalRecord?.files?.map(file => (
                       <div key={file.id} className="h-fit w-[48%] inline-block m-1 float-start">
                         <img className="object-cover w-full mb-2 max-h-[180px]" src={file.file} alt="" />
                         <div className="text-center">

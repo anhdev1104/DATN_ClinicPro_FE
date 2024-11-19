@@ -24,6 +24,20 @@ interface Patient {
   avatar: string;
 }
 
+export interface FileMidecal {
+  file: string;
+  description: string;
+}
+
+export interface NewMedical {
+  diagnosis: string;
+  description: string;
+  patient_id: string;
+  treatment: string;
+  user_id: string;
+  files: FileMidecal[];
+}
+
 export interface MedicalRecord {
   id: string;
   description: string;
