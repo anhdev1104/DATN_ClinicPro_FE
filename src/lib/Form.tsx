@@ -6,7 +6,7 @@ const InputWithController = ({
 }: {
   child: React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>>;
 }) => {
-  if (!child.props.name) throw 'Field name is required!';
+  if (!child.props.name) throw new TypeError('Field name of input expected a string!');
   const { defaultValues } = useFormState();
   const { fieldState, field } = useController({
     name: child.props.name,

@@ -5,7 +5,6 @@ import { IInfo } from './auth.type';
 interface IUserProfile extends IInfo {
   department_id?: number | null;
 }
-
 export interface IUserInfo {
   id: string;
   email: string;

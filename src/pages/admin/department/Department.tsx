@@ -1,6 +1,6 @@
 import { Flex, Modal, Pagination, Stack, Text } from '@mantine/core';
-import { useGetAllDepartmentQuery } from '@/redux/api/department';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useGetAllDepartmentQuery, useDeleteAnDepartmentMutation } from '@/redux/api/department';
+import { useNavigate } from 'react-router-dom';
 import type { Department, DepartmentDetail, Manager } from '@/types/department.type';
 import Table from '@/components/table/Table';
 import { Avatar } from '@mantine/core';
@@ -8,29 +8,30 @@ import { Badge } from '@mantine/core';
 import ActionWithRow from '@/components/table/TableAction';
 import BaseButton from '@/components/base/button';
 import BaseIcon from '@/components/base/BaseIcon';
-import { useDisclosure } from '@mantine/hooks';
+import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
 import NewDepartment from './NewDepartment';
 import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
 import { toast } from 'react-toastify';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
-import { useDeleteAnDepartmentMutation } from '@/redux/api/department';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import UpdateDepartment from './UpdateDepartment';
 import BaseInput from '@/components/base/input';
+import { useQueryParams } from '@/hooks/useQueryParams';
 
 const Department = () => {
-  const [search, setSearch] = useState('');
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [params, queryParams] = useQueryParams();
+  const debounced = useDebouncedCallback(value => {
+    queryParams.set('q', value);
+  }, 1000);
   const [modalNew, handleModalNew] = useDisclosure(false);
   const [modalDelete, handleModalDelete] = useDisclosure(false);
   const [modalUpdate, handleModalUpdate] = useDisclosure(false);
   const [limit] = useState(5);
-  const [page] = useState(1);
   const { data, isSuccess, isFetching } = useGetAllDepartmentQuery({
-    q: searchParams.get('q') || '',
-    limit,
-    page: Number(searchParams.get('page')) || page,
+    q: params.q || '',
+    limit: params.limit || limit,
+    page: params.page,
   });
   const navigate = useNavigate();
   const [deleteDepartment, { isLoading }] = useDeleteAnDepartmentMutation();
@@ -100,14 +101,6 @@ const Department = () => {
       placeholder: true,
     },
   ]);
-  useEffect(() => {
-    if (search || search === '') {
-      const timer = setTimeout(() => {
-        setSearchParams({ q: search, page: searchParams.get('page') || '' });
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [search]);
   const handleDeleteDepartment = async () => {
     const result = await deleteDepartment(idRef.current);
     if (result.error) {
@@ -124,16 +117,19 @@ const Department = () => {
           highlightOnHover
           manualFiltering
           filterItem={
-            <BaseInput onChange={e => setSearch(e.target.value)} size="xs" radius="md" placeholder="tìm kiếm..." />
+            <BaseInput onChange={e => debounced(e.target.value)} size="xs" radius="md" placeholder="tìm kiếm..." />
           }
           manualPagination
           pagination={
-            <Pagination
-              total={Math.round((data?.total || limit) / limit)}
-              onChange={value => setSearchParams({ q: search, page: value.toString() })}
-              radius="md"
-              className="w-full flex justify-center py-2"
-            />
+            Math.round((data?.total || limit) / limit) > 1 && (
+              <Pagination
+                total={Math.round((data?.total || limit) / limit)}
+                onChange={value => queryParams.set('page', value.toString())}
+                radius="md"
+                defaultValue={Number(params.page) || 1}
+                className="w-full flex justify-center py-2"
+              />
+            )
           }
           onRowClick={handleRowClick}
           isFetching={isFetching}

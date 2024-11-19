@@ -1,21 +1,38 @@
 import { axiosBaseQuery } from '@/helpers/axiosBaseQuery';
+import { CreateUserProps, UpdateUserProps } from '@/schema/user.schema';
 import { IUserInfo } from '@/types/user.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-export interface QueryParams {
-  limit?: number | string;
-  page?: number | string;
-  q?: string;
-}
 export const usersApi = createApi({
   reducerPath: 'usersApi',
   baseQuery: axiosBaseQuery(),
+  tagTypes: ['Users'],
   endpoints: builder => ({
-    getAllUsers: builder.query<ResponseTypes<IUserInfo[]>, void>({
-      query: () => ({
+    getUsers: builder.query<ResponseTypes<IUserInfo[]>, UserQueryParams | void>({
+      query: params => ({
         url: 'users',
+        params,
+      }),
+    }),
+    getUser: builder.query<unknown, { id: string }>({
+      query: params => ({
+        url: 'users',
+        params,
+      }),
+    }),
+    createUser: builder.mutation<unknown, CreateUserProps>({
+      query: data => ({
+        url: 'users',
+        data,
+      }),
+    }),
+    updateUser: builder.mutation<unknown, UpdateUserProps & { id: string }>({
+      query: ({ id: params, ...data }) => ({
+        url: 'users',
+        params,
+        data,
       }),
     }),
   }),
 });
-export const { useGetAllUsersQuery } = usersApi;
+export const { useGetUsersQuery, useCreateUserMutation, useGetUserQuery, useUpdateUserMutation } = usersApi;

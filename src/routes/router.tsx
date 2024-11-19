@@ -26,6 +26,8 @@ import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistori
 import EditPackage from '@/pages/admin/package/component/EditPackage';
 import Package from '@/pages/admin/package/Package';
 import MedicalHistories from '@/pages/admin/medicalHistories/MedicalHistories';
+import User from '@/pages/admin/users/Users';
+import UserDetail from '@/pages/admin/users/UserDetail';
 
 type IRouter = RouteProps & {
   title: string;
@@ -118,11 +120,20 @@ const adminRouter: IRouter[] = [
     element: <PackageDetail />,
     title: 'Danh sách gói khám',
   },
-
   {
     path: '/edit-package/:id',
     element: <EditPackage />,
     title: 'Chỉnh sửa gói khám',
+  },
+  {
+    path: '/users',
+    element: <User />,
+    title: 'Danh Sách Người Dùng',
+  },
+  {
+    path: '/users/:userId',
+    element: <UserDetail />,
+    title: 'Chi Tiết Người Dùng',
   },
 ];
 
