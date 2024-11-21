@@ -30,7 +30,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '../button';
 import MessageForm from '../message';
 import { addAppointments } from '@/services/appointments.service';
-import convertTime from '@/helpers/convertTime';
 import { GENDER } from '@/constants/define';
 
 const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle: () => void }) => {
@@ -53,17 +52,20 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
   const idSpecialty = watch('specialty_id');
   const handleAppointment: SubmitHandler<IAppointment> = async data => {
     if (!isValid) return;
+    const dob = data.dob && new Date(data.dob).toLocaleDateString('en-CA');
+    const appointment_date = data.appointment_date && new Date(data.appointment_date).toLocaleDateString('en-CA');
+
     const dataAppointment = {
       ...data,
-      dob: convertTime(data.dob, true),
-      appointment_date: data.appointment_date && convertTime(data.appointment_date),
+      dob,
+      appointment_date,
     } as IAppointment;
 
     (async () => {
       try {
-        const res = await addAppointments(dataAppointment);
-        console.log('🚀 ~ res:', res);
-        // toast.success(res);
+        await addAppointments(dataAppointment);
+        // toast.success('Đăng ký lịch hẹn thành công !');
+        // reset();
       } catch (error) {
         console.log(error);
       }
