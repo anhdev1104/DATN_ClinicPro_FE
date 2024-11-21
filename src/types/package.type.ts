@@ -7,6 +7,7 @@ export interface IPackage {
   slug?: string;
   created_at?: Date;
   category_id: string;
+  specialty_id?: string;
 }
 export interface Category {
   id: string;

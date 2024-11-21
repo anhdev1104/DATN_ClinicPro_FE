@@ -75,8 +75,8 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
 
   useEffect(() => {
     (async () => {
-      const res = await getMedicalHistories();
-      setMedicalRecords(res);
+      const data = await getMedicalHistories();
+      setMedicalRecords(data);
     })();
   }, []);
 

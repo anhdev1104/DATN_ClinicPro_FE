@@ -89,7 +89,7 @@ const adminRouter: IRouter[] = [
     title: 'Trang quản lý',
   },
   {
-    path: '/dashboard/medical-histories',
+    path: '/medical-record',
     element: <MedicalHistories />,
     title: 'Danh sách gói khám',
   },
