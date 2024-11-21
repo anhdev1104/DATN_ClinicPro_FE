@@ -31,6 +31,7 @@ import { Button } from '../button';
 import MessageForm from '../message';
 import { addAppointments } from '@/services/appointments.service';
 import convertTime from '@/helpers/convertTime';
+import { GENDER } from '@/constants/define';
 
 const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle: () => void }) => {
   const [specialties, setSpecialties] = useState<ISpecialties[]>([]);
@@ -45,7 +46,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
     resolver: yupResolver(appointmentSchema),
     mode: 'onChange',
     defaultValues: {
-      gender: 'male',
+      gender: GENDER.MALE,
     },
   });
 
@@ -237,7 +238,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
                     render={({ field }) => (
                       <>
                         <RadioGroup
-                          defaultValue="male"
+                          defaultValue={GENDER.MALE}
                           {...field}
                           sx={{
                             flexDirection: 'row',
@@ -249,7 +250,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
                           }}
                         >
                           <FormControlLabel
-                            value="male"
+                            value={GENDER.MALE}
                             sx={{
                               '& .MuiFormControlLabel-label': {
                                 color: '#373737',
@@ -268,7 +269,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
                             label="Nam"
                           />
                           <FormControlLabel
-                            value="female"
+                            value={GENDER.FEMALE}
                             sx={{
                               '& .MuiFormControlLabel-label': {
                                 color: '#373737',

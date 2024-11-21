@@ -35,7 +35,7 @@ const dumpCategory = [
     categoryName: 'User',
     path: '/users',
     icon: GroupIcon,
-    pathActive: ['/dashboard/medical-histories'],
+    pathActive: ['/users'],
   },
   {
     id: 5,
