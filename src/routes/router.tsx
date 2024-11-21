@@ -26,6 +26,7 @@ import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistori
 import EditPackage from '@/pages/admin/package/component/EditPackage';
 import Package from '@/pages/admin/package/Package';
 import MedicalHistories from '@/pages/admin/medicalHistories/MedicalHistories';
+import PrivacyPage from '@/pages/client/privacy/privacyPage';
 
 type IRouter = RouteProps & {
   title: string;
@@ -55,6 +56,11 @@ const clientRouter: IRouter[] = [
     path: '/community',
     element: <CommunityPage />,
     title: 'Cộng đồng',
+  },
+  {
+    path: '/privacy-policy',
+    element: <PrivacyPage />,
+    title: 'Chính sách bảo mật',
   },
   {
     path: '/profile',

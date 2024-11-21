@@ -152,7 +152,9 @@ const EditPackage = () => {
               <MessageForm error={errors.name?.message} />
             </div>
             <div className="min-w-[380px] w-[45%]">
-              <Label htmlFor="categoryId">Danh mục gói khám</Label>
+              <Label htmlFor="categoryId">
+                Danh mục gói khám<span className="text-red-500">*</span>
+              </Label>
               <Select placeholder="Danh mục gói khám" name="category_id" control={control} options={packageCategory} />
               <MessageForm error={errors.category_id?.message} />
             </div>
