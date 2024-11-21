@@ -22,11 +22,11 @@ import ProfilePage from '@/pages/client/profile/ProfilePage';
 import ChangePassword from '@/pages/client/auth/ChangePassword';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ForgotPassword from '@/pages/client/auth/ForgotPassword';
-import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistoriesPage';
-import MedicalHistories from '@/pages/admin/medicalHistories/MedicalHistories';
+import MedicalHistoriesPage from '@/pages/client/medical_histories/MedicalHistoriesPage';
+import MedicalHistories from '@/pages/admin/medical_histories/MedicalHistories';
 import EditPackage from '@/pages/admin/package/component/EditPackage';
 import Package from '@/pages/admin/package/Package';
-import EditMedicalHistories from '@/pages/admin/medicalHistories/components/EditMedicalHistories';
+import EditMedicalHistories from '@/pages/admin/medical_histories/components/EditMedicalHistories';
 type IRouter = RouteProps & {
   title: string;
 };

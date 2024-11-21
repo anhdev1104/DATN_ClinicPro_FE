@@ -22,7 +22,11 @@ const GENDER_OPTIONS = [
 
 const schema = yup.object({
   fullname: yup.string().trim().required('Họ và tên không được bỏ trống!'),
-  phone_number: yup.string().trim().required('Số điện thoại không được bỏ trống!'),
+  phone_number: yup
+    .string()
+    .trim()
+    .required('Số điện thoại không được bỏ trống!')
+    .matches(/^((\+84|84|0)[3|5|7|8|9])+([0-9]{8})$/, 'Số điện thoại không hợp lệ!'),
   dob: yup.string().trim().required('Ngày sinh không được bỏ trống!'),
   gender: yup.string().required('Vui lòng chọn giới tính!'),
   address: yup.string().trim().required('Địa chỉ không được bỏ trống!'),
@@ -225,7 +229,6 @@ const ProfilePage = () => {
           </div>
           <div className="text-[14px]">
             <h1 className="text-black">{profile.email}</h1>
-            <p className="font-extralight">1 tuần trước</p>
           </div>
         </div>
       </div>

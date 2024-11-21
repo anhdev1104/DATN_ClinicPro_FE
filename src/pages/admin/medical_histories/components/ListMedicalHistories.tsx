@@ -15,6 +15,7 @@ import convertTime from '@/helpers/convertTime';
 import { Dialog } from '@mui/material';
 import { ModalConfirm } from '@/components/modal';
 import { toast } from 'react-toastify';
+import Loading from '@/components/loading';
 
 const SearchOptions = [
   {
@@ -46,11 +47,14 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
     id: '#',
   });
   const [activeModal, setActiveModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       const res = await getMedicalHistories();
       setMedicalRecords(res);
+      setLoading(false);
     })();
   }, []);
 
@@ -83,17 +87,19 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
     <div>
       <DirectRoute nav="Quản lý bệnh án" subnav="Bệnh án" />
       <div className="bg-white size-full p-[20px] rounded-[26px]">
-        <div className="mb-6 flex items-center justify-start gap-5">
+        <div className="mb-6 w-full flex items-center justify-between gap-5">
           <div>
             <h1 className="text-[18px] text-black font-medium">Danh sách bệnh án</h1>
           </div>
-          <MedicalRecordSearch />
-          <button
-            onClick={navigate}
-            className="text-[18px] font-medium gap-3 border-borderColor border p-2 rounded-lg bg-[#f3f4f7]"
-          >
-            <AddIcon className="text-primaryAdmin" />
-          </button>
+          <div className="flex justify-center items-center gap-3">
+            <button
+              onClick={navigate}
+              className="text-[18px] font-medium gap-3 border-borderColor border p-2 rounded-lg bg-[#f3f4f7]"
+            >
+              <AddIcon className="text-primaryAdmin" />
+            </button>
+            <MedicalRecordSearch />
+          </div>
         </div>
         <div className="w-full">
           <div className="w-full bg-[#f3f7fe] flex justify-between border-b border-[#cfe1fc] text-left py-4 font-semibold px-2">
@@ -105,26 +111,30 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
             <div className="flex-[0_0_9%]"></div>
           </div>
           <div className="w-full border-b border-borderColor text-left">
-            {medicalRecords?.length > 0 ? (
+            {loading ? (
+              <div className="w-full flex justify-center items-center py-10">
+                <Loading className="!size-16" />
+              </div>
+            ) : medicalRecords?.length > 0 ? (
               medicalRecords?.map((record, index) => (
                 <div
                   key={index}
-                  className={`py-6 text-black flex justify-between w-full text-left hover:opacity-100 opacity-75 cursor-pointer ${index % 2 === 1 ? 'bg-white' : 'bg-gray-200'} px-2`}
+                  className={`py-4 text-black flex items-center justify-between w-full text-left hover:opacity-100 opacity-75 cursor-pointer ${index % 2 === 1 ? 'bg-white' : 'bg-gray-200'} px-2`}
                 >
                   <div className="flex-[0_0_17%] truncate font-semibold">{record.id}</div>
                   <div className="flex-[0_0_11%] truncate">{record.diagnosis}</div>
                   <div className="flex-[0_0_20%] truncate font-semibold flex items-center gap-2">
-                    <img className="size-[50px] rounded-full" src={record.doctor.avatar} alt="" />
+                    <img className="size-[30px] rounded-full" src={record.doctor.avatar} alt="" />
                     <div className="flex flex-col">
-                      <span>{record.doctor.fullname}</span>
-                      <span className="opacity-70">{record.doctor.email}</span>
+                      <span className="text-[14px]">{record.doctor.fullname}</span>
+                      <span className="text-[12px] opacity-70">{record.doctor.email}</span>
                     </div>
                   </div>
                   <div className="flex-[0_0_20%] truncate font-semibold flex items-center gap-2">
-                    <img className="size-[50px] rounded-full" src={record.patient.avatar} alt="" />
+                    <img className="size-[30px] rounded-full" src={record.patient.avatar} alt="" />
                     <div className="flex flex-col">
-                      <span>{record.patient.fullname}</span>
-                      <span className="opacity-70">{record.patient.email}</span>
+                      <span className="text-[14px]">{record.patient.fullname}</span>
+                      <span className="text-[12px] opacity-70">{record.patient.email}</span>
                     </div>
                   </div>
                   <div className="flex-[0_0_17%]">{convertTime(record.created_at)}</div>

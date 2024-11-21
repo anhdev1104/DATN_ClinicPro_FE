@@ -12,6 +12,11 @@
   .container-page {
     @apply w-full max-w-[1150px] mx-auto px-5;
   }
+
+  .lightbox {
+    z-index: 2500 !important; /* Đặt giá trị cao hơn Dialog của Material-UI */
+    position: fixed;
+  }
 }
 
 @layer components {
