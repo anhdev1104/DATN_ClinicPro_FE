@@ -8,6 +8,7 @@ import persistor, { store } from './redux/store.ts';
 import { PersistGate } from 'redux-persist/integration/react';
 import { StyledEngineProvider } from '@mui/material';
 import { StrictMode } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
         <StyledEngineProvider injectFirst>
           <App />
           <ToastContainer position="bottom-right" theme="colored" autoClose={4000} pauseOnHover={false} />
+          <Toaster />
         </StyledEngineProvider>
       </PersistGate>
     </Provider>

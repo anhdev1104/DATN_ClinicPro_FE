@@ -1,27 +1,35 @@
 import { axiosBaseQuery } from '@/helpers/axiosBaseQuery';
-import { formatQueryParam } from '@/helpers/utils';
 import { Department, DepartmentDetail, NewDepartmentProps, NewDepartmentResponseProps } from '@/types/department.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
-
-interface QueryParams {
-  limit?: number | string;
-  page?: number | string;
-  q?: string;
-}
 
 export const departmentApi = createApi({
   reducerPath: 'departmentApi',
   baseQuery: axiosBaseQuery(),
-  tagTypes: ['Department', 'Departments'],
+  tagTypes: ['Department'],
   endpoints: builder => ({
     getAllDepartment: builder.query<ResponseTypes<Department[]>, QueryParams>({
       query: params => ({
-        url: formatQueryParam('departments', params),
+        url: 'departments',
+        params,
       }),
-      providesTags: ['Department'],
+      providesTags: result =>
+        result
+          ? [
+              ...result.data.map(({ id }) => ({ type: 'Department' as const, id })),
+              { type: 'Department', id: 'DEPARTMENT-LIST' },
+            ]
+          : [{ type: 'Department', id: 'DEPARTMENT-LIST' }],
+      keepUnusedDataFor: 120,
     }),
     getDepartmentDetail: builder.query<ResponseTypes<DepartmentDetail>, number | string>({
       query: id => ({ url: `departments/${id}` }),
+      providesTags: result =>
+        result
+          ? [
+              { type: 'Department', id: result.data.id },
+              { type: 'Department', id: 'DEPARTMENT-DETAIL' },
+            ]
+          : [{ type: 'Department', id: 'DEPARTMENT-DETAIL' }],
     }),
     addAnDepartment: builder.mutation<NewDepartmentResponseProps, NewDepartmentProps>({
       query: data => ({
@@ -29,7 +37,7 @@ export const departmentApi = createApi({
         method: 'POST',
         data,
       }),
-      invalidatesTags: result => (result ? ['Department'] : []),
+      invalidatesTags: result => (result ? [{ type: 'Department', id: 'DEPARTMENT-LIST' }] : []),
     }),
     updateAnDepartment: builder.mutation<unknown, any & { id: string | number }>({
       query: query => {
@@ -40,16 +48,20 @@ export const departmentApi = createApi({
           data,
         };
       },
-      invalidatesTags: result => {
-        return result ? ['Department'] : [];
-      },
+      invalidatesTags: (result, _, arg) => (result ? [{ type: 'Department', id: arg.id }] : []),
     }),
     deleteAnDepartment: builder.mutation<unknown, string>({
       query: id => ({
         url: `departments/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Department'],
+      invalidatesTags: (result, _, id) =>
+        result
+          ? [
+              { type: 'Department', id },
+              { type: 'Department', id: 'DEPARTMENT-LIST' },
+            ]
+          : [],
     }),
   }),
 });

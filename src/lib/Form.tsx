@@ -6,7 +6,7 @@ const InputWithController = ({
 }: {
   child: React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>>;
 }) => {
-  if (!child.props.name) throw 'Field name is required!';
+  if (!child.props.name) throw new TypeError('Field name of input expected a string!');
   const { defaultValues } = useFormState();
   const { fieldState, field } = useController({
     name: child.props.name,
@@ -37,11 +37,12 @@ const InputWithController = ({
 const CreateNestedElement = ({ children }: { children: React.ReactNode }) => {
   return Children.map(children, child => {
     return isValidElement(child) ? (
-      child.props?.name &&
-      (child.props?.autoComplete as React.HTMLInputAutoCompleteAttribute).includes(child.props.name) ? (
+      child.props?.name && child.props.name.includes(child.props?.autoComplete) ? (
         <InputWithController child={child} key={child.props.nanme} />
-      ) : (
+      ) : child.props?.children ? (
         createElement(child.type, child.props, <CreateNestedElement children={child.props.children} />)
+      ) : (
+        child
       )
     ) : (
       child

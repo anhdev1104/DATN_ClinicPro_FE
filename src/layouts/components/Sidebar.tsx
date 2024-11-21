@@ -31,6 +31,20 @@ const dumpCategory = [
     pathActive: ['/dashboard'],
   },
   {
+    id: 8,
+    categoryName: 'User',
+    path: '/users',
+    icon: GroupIcon,
+    pathActive: ['/dashboard/medical-histories'],
+  },
+  {
+    id: 5,
+    categoryName: 'Phòng Ban',
+    path: '/departments',
+    icon: ApartmentIcon,
+    pathActive: ['/departments'],
+  },
+  {
     id: 2,
     categoryName: 'Bác sĩ',
     path: '',
@@ -50,13 +64,6 @@ const dumpCategory = [
     path: '/prescriptions',
     icon: Tablet,
     pathActive: ['/prescriptions'],
-  },
-  {
-    id: 5,
-    categoryName: 'Phòng Ban',
-    path: '/departments',
-    icon: ApartmentIcon,
-    pathActive: ['/departments'],
   },
   {
     id: 6,

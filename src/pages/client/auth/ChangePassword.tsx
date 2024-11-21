@@ -8,14 +8,15 @@ import yup from '@/helpers/locate';
 import { Container, Paper, Stack, Title } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { resolveErrorResponse } from '@/helpers/utils';
 
 export const passwordSchema = yup
   .object({
     password: yup.string().required(),
-    newPassword: yup.string().required(),
+    new_password: yup.string().required(),
     confirmNewPassword: yup
       .string()
-      .oneOf([yup.ref('newPassword')], 'mật khẩu không khớp!')
+      .oneOf([yup.ref('new_password')], 'mật khẩu không khớp!')
       .required(),
   })
   .required();
@@ -28,7 +29,7 @@ const formElement = [
   },
   {
     label: 'mật khẩu mới',
-    name: 'newPassword',
+    name: 'new_password',
   },
   {
     label: 'xác nhận mật khẩu mới',
@@ -56,13 +57,9 @@ const ChangePassword = () => {
       toast.success(response.message);
       reset();
     } catch (error) {
-      const { errors, message } = error as ChangePasswordErrorResponse;
+      const errors = error as ChangePasswordErrorResponse;
       if (errors) {
-        const errorName = Object.keys(yup.object().camelCase().cast(errors)) as T;
-        const errorPure = Object.keys(errors) as Array<keyof typeof errors>;
-        setError(errorName[0], { message: errors[errorPure[0]][0] });
-      } else if (message) {
-        toast.error(message);
+        resolveErrorResponse(errors, setError);
       } else {
         toast.error('lỗi server vui lòng đợi trong giây lát');
       }

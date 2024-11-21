@@ -17,9 +17,12 @@ interface TableProps extends Omit<TableFactory, 'staticComponents'> {
 const BaseTable = factory<TableProps>(({ withTableBorder, ...props }, ref) => {
   return (
     <div
-      className={cn({
-        'border rounded-md': withTableBorder,
-      })}
+      className={cn(
+        {
+          'border rounded-md': withTableBorder,
+        },
+        'overflow-x-hidden',
+      )}
     >
       <Table ref={ref} {...props} />
     </div>

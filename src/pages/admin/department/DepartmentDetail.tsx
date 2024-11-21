@@ -1,4 +1,4 @@
-import { useDeleteAnDepartmentMutation, useGetDepartmentDetailQuery } from '@/redux/api/department';
+import { useDeleteAnDepartmentMutation, useGetAllDepartmentQuery } from '@/redux/api/department';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, Box, Paper, Stack, Title } from '@mantine/core';
 import { Avatar, Text, Group } from '@mantine/core';
@@ -11,18 +11,24 @@ import { useMemo } from 'react';
 import BaseButton from '@/components/base/button';
 import { Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { toast } from 'react-toastify';
-import NotFoundPage from '@/pages/client/404/NotFoundPage';
-import fakeUser from './components/fakeUser.json';
 import { IconArrowLeft, IconAt, IconPhoneCall } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
+import { DepartmentDetail as DepartmentById } from '@/types/department.type';
 type UserDepartment = yup.InferType<typeof userDepartmentSchema>;
 const DepartmentDetail = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data, isSuccess, isFetching, isError } = useGetDepartmentDetailQuery(id as string);
-  const manager = useMemo(() => data?.data.manager, [data]);
+  const { data } = useGetAllDepartmentQuery(
+    {},
+    {
+      selectFromResult: ({ data }) => ({
+        data: (data?.data.find(data => data.id === id) || []) as DepartmentById,
+      }),
+    },
+  );
+  // const { data, isSuccess, isFetching, isError } = useGetDepartmentDetailQuery(id as string);
+  const manager = useMemo(() => data?.manager, [data]);
   const [handleDelete, { isLoading }] = useDeleteAnDepartmentMutation();
   const columns = useColumn<UserDepartment>([
     {
@@ -68,107 +74,93 @@ const DepartmentDetail = () => {
     },
   ]);
   const handleDeleteDepartment = () => {
-    if (isSuccess) {
-      handleDelete(data?.data.id);
-      navigate('/departments');
-    } else {
-      toast.error('phòng ban không tồn tại');
-    }
+    handleDelete(data.id);
+    navigate('/departments');
   };
   return (
     <Paper className="p-2 rounded-3xl">
-      {!isError ? (
-        <>
-          <Box component="div" className="text-center space-y-4">
-            <div className="relative flex justify-center items-center">
-              <BaseButton.Icon
-                onClick={() => navigate(-1)}
-                variant="subtle"
-                c="dimmed"
-                radius="lg"
-                className="absolute left-0"
-              >
-                <BaseIcon icon={IconArrowLeft} size="xl" />
-              </BaseButton.Icon>
-              <Title order={2} className="mt-0">
-                {data?.data.name}
-              </Title>
-            </div>
-            <Text fz="xs" c="dimmed" fw={500} className="text-left">
-              {data?.data.description}
-            </Text>
-          </Box>
-          <div className="flex flex-col space-y-10">
-            <div className="space-y-2">
-              <Title order={4}>Quản Lý</Title>
-              {manager ? (
-                <Group wrap="nowrap">
-                  <Avatar src={manager?.avatar} size={94} radius="md" />
-                  <div>
-                    <Text fz="lg" fw={500}>
-                      {manager?.fullname}
-                    </Text>
-                    <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-                      {manager?.address}
-                    </Text>
+      <Box component="div" className="text-center space-y-4">
+        <div className="relative flex justify-center items-center">
+          <BaseButton.Icon
+            onClick={() => navigate(-1)}
+            variant="subtle"
+            c="dimmed"
+            radius="lg"
+            className="absolute left-0"
+          >
+            <BaseIcon icon={IconArrowLeft} size="xl" />
+          </BaseButton.Icon>
+          <Title order={2} className="mt-0">
+            {data.name}
+          </Title>
+        </div>
+        <Text fz="xs" c="dimmed" fw={500} className="text-left">
+          {data.description}
+        </Text>
+      </Box>
+      <div className="flex flex-col space-y-10">
+        <div className="space-y-2">
+          <Title order={4}>Quản Lý</Title>
+          {manager ? (
+            <Group wrap="nowrap">
+              <Avatar src={manager?.avatar} size={94} radius="md" />
+              <div>
+                <Text fz="lg" fw={500}>
+                  {manager?.fullname}
+                </Text>
+                <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
+                  {manager?.address}
+                </Text>
 
-                    <Group wrap="nowrap" gap={10} mt={3}>
-                      <BaseIcon icon={IconAt} strokeWidth={1.5} className="" />
-                      <Text fz="xs" c="dimmed">
-                        {manager?.email}
-                      </Text>
-                    </Group>
-
-                    <Group wrap="nowrap" gap={10} mt={5}>
-                      <BaseIcon icon={IconPhoneCall} strokeWidth={1.5} className="" />
-                      <Text fz="xs" c="dimmed">
-                        {manager?.phone_number}
-                      </Text>
-                    </Group>
-                  </div>
+                <Group wrap="nowrap" gap={10} mt={3}>
+                  <BaseIcon icon={IconAt} strokeWidth={1.5} className="" />
+                  <Text fz="xs" c="dimmed">
+                    {manager?.email}
+                  </Text>
                 </Group>
-              ) : (
-                <Title order={5} c="dimmed" fw={600}>
-                  Chưa có Người Quản Lý
-                </Title>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Title order={4} className="capitalize">
-                Nhân viên phòng ban
-              </Title>
-              <DataTable
-                columns={columns}
-                data={/*isSuccess ? data.data?.users : []*/ fakeUser as UserDepartment[]}
-                isFetching={isFetching}
-              />
-            </div>
-            <div className="flex justify-between items-center">
-              <BaseButton onClick={open} color="red" className="ml-auto my-4">
-                Xóa Phòng Ban
-              </BaseButton>
-            </div>
-          </div>
-          <Modal opened={opened} onClose={close} title="Bạn có chắc muốn xóa phòng ban này" centered>
-            <Stack gap={10}>
-              <Text fz="sm" fw={500}>
-                xóa phòng ban bạn không thể khôi phục được nữa
-              </Text>
-              <BaseButton
-                onClick={handleDeleteDepartment}
-                loading={isLoading}
-                disabled={isLoading}
-                color="red"
-                className="flex ml-auto"
-              >
-                Xóa
-              </BaseButton>
-            </Stack>
-          </Modal>
-        </>
-      ) : (
-        <NotFoundPage title="không có phòng ban hiển thị" />
-      )}
+
+                <Group wrap="nowrap" gap={10} mt={5}>
+                  <BaseIcon icon={IconPhoneCall} strokeWidth={1.5} className="" />
+                  <Text fz="xs" c="dimmed">
+                    {manager?.phone_number}
+                  </Text>
+                </Group>
+              </div>
+            </Group>
+          ) : (
+            <Title order={5} c="dimmed" fw={600}>
+              Chưa có Người Quản Lý
+            </Title>
+          )}
+        </div>
+        <div className="space-y-2">
+          <Title order={4} className="capitalize">
+            Nhân viên phòng ban
+          </Title>
+          <DataTable columns={columns} data={data.users || []} />
+        </div>
+        <div className="flex justify-between items-center">
+          <BaseButton onClick={open} color="red" className="ml-auto my-4">
+            Xóa Phòng Ban
+          </BaseButton>
+        </div>
+      </div>
+      <Modal opened={opened} onClose={close} title="Bạn có chắc muốn xóa phòng ban này" centered>
+        <Stack gap={10}>
+          <Text fz="sm" fw={500}>
+            xóa phòng ban bạn không thể khôi phục được nữa
+          </Text>
+          <BaseButton
+            onClick={handleDeleteDepartment}
+            loading={isLoading}
+            disabled={isLoading}
+            color="red"
+            className="flex ml-auto"
+          >
+            Xóa
+          </BaseButton>
+        </Stack>
+      </Modal>
     </Paper>
   );
 };
