@@ -1,5 +1,5 @@
-import { Flex, Modal, Stack, Text } from '@mantine/core';
-import { useGetAllDepartmentQuery } from '@/redux/api/department';
+import { Flex, Modal, Pagination, Stack, Text } from '@mantine/core';
+import { useGetAllDepartmentQuery, useDeleteAnDepartmentMutation } from '@/redux/api/department';
 import { useNavigate } from 'react-router-dom';
 import type { Department, DepartmentDetail, Manager } from '@/types/department.type';
 import Table from '@/components/table/Table';
@@ -8,21 +8,31 @@ import { Badge } from '@mantine/core';
 import ActionWithRow from '@/components/table/TableAction';
 import BaseButton from '@/components/base/button';
 import BaseIcon from '@/components/base/BaseIcon';
-import { useDisclosure } from '@mantine/hooks';
+import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
 import NewDepartment from './NewDepartment';
 import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
 import { toast } from 'react-toastify';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
-import { useDeleteAnDepartmentMutation } from '@/redux/api/department';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import UpdateDepartment from './UpdateDepartment';
+import BaseInput from '@/components/base/input';
+import { useQueryParams } from '@/hooks/useQueryParams';
 
 const Department = () => {
+  const [params, queryParams] = useQueryParams();
+  const debounced = useDebouncedCallback(value => {
+    queryParams.set('q', value);
+  }, 1000);
   const [modalNew, handleModalNew] = useDisclosure(false);
   const [modalDelete, handleModalDelete] = useDisclosure(false);
   const [modalUpdate, handleModalUpdate] = useDisclosure(false);
-  const { data, isSuccess, isFetching } = useGetAllDepartmentQuery({});
+  const [limit] = useState(5);
+  const { data, isSuccess, isFetching } = useGetAllDepartmentQuery({
+    q: params.q || '',
+    limit: params.limit || limit,
+    page: params.page,
+  });
   const navigate = useNavigate();
   const [deleteDepartment, { isLoading }] = useDeleteAnDepartmentMutation();
   const idRef = useRef<string>('');
@@ -104,6 +114,24 @@ const Department = () => {
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl">
         <Table
+          className="ml-2"
+          highlightOnHover
+          manualFiltering
+          filterItem={
+            <BaseInput onChange={e => debounced(e.target.value)} size="xs" radius="md" placeholder="tìm kiếm..." />
+          }
+          manualPagination
+          pagination={
+            Math.round((data?.total || limit) / limit) > 1 && (
+              <Pagination
+                total={Math.round((data?.total || limit) / limit)}
+                onChange={value => queryParams.set('page', value.toString())}
+                radius="md"
+                defaultValue={Number(params.page) || 1}
+                className="w-full flex justify-center py-2"
+              />
+            )
+          }
           onRowClick={handleRowClick}
           isFetching={isFetching}
           data={isSuccess ? data.data : []}

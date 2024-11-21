@@ -10,7 +10,7 @@ import { useRef, useState } from 'react';
 import yup from '@/helpers/locate';
 import { yupResolver } from '@hookform/resolvers/yup';
 // import { NewMedical } from '@/types/medicalHistories.type';
-import { uploadImages } from '@/services/uploadFile';
+import { uploadImages } from '@/services/uploadFile.service';
 import { createMedicalHistorie } from '@/services/medicalHistories.service';
 import { toast } from 'react-toastify';
 import FormPatient from './FormPatient';
@@ -77,8 +77,9 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
 
     try {
       const res = await uploadImages(formData);
-      if (res?.urls) {
-        const imagesWithDescriptions = res.urls.map((url: string, index: any) => ({
+
+      if (res?.data?.urls) {
+        const imagesWithDescriptions = res.data?.urls?.map((url: string, index: any) => ({
           file: url,
           description: images[index]?.description || '',
         }));
@@ -89,6 +90,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
           user_id: '8a9c264e-d283-4550-a14c-cf932199f2dc',
           patient_id: selectedPatientId?.id,
         };
+
         const response = await createMedicalHistorie(medicalHistoryData);
         toast.success(response.message, { position: 'top-right' });
         reset({
@@ -115,16 +117,16 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
     <div>
       <DirectRoute nav="Quản lý bệnh án" subnav="Bệnh án" targetnav="Tạo bệnh án" />
       <div className="bg-white size-full p-[20px] rounded-[26px]">
-        <div className="mb-6 flex items-center justify-start gap-5">
+        <div className="mb-6 w-full flex items-center justify-between gap-5">
           <div>
             <h1 className="text-[18px] text-black font-medium">Thêm bệnh án</h1>
           </div>
-          <button
-            onClick={navigate}
-            className="text-[18px] font-medium gap-3 border-borderColor border p-2 rounded-lg bg-[#f3f4f7]"
-          >
-            <List className="text-primaryAdmin" />
-          </button>
+          <div className="border-borderColor border px-3 py-2 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-white cursor-pointer">
+            <button onClick={navigate} className="text-dark font-medium flex items-center gap-3">
+              <List className="text-primaryAdmin" />
+              Danh sách bệnh án
+            </button>
+          </div>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col">
           <div className="flex w-full gap-10 mb-5">
@@ -139,26 +141,6 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                   control={control}
                 />
               </Field>
-
-              <Field className="flex gap-3 flex-col">
-                <Label htmlFor="description">Mô tả bệnh án:</Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <textarea
-                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
-                        placeholder="Mô tả bệnh án ..."
-                        id="description"
-                        {...field}
-                      ></textarea>
-                    );
-                  }}
-                />
-              </Field>
-            </div>
-            <div className="w-1/2">
               <Field className="flex flex-col gap-3">
                 <Label htmlFor="patient_id">Danh sách bệnh nhân:</Label>
 
@@ -190,7 +172,8 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                   </Button>
                 )}
               </Field>
-
+            </div>
+            <div className="w-1/2">
               <Field className="flex gap-3 flex-col">
                 <Label htmlFor="treatment">Phương pháp điều trị:</Label>
                 <Controller
@@ -202,6 +185,23 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                         className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
                         placeholder="Phương pháp điều trị  ..."
                         id="treatment"
+                        {...field}
+                      ></textarea>
+                    );
+                  }}
+                />
+              </Field>
+              <Field className="flex gap-3 flex-col">
+                <Label htmlFor="description">Mô tả bệnh án:</Label>
+                <Controller
+                  name="description"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <textarea
+                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                        placeholder="Mô tả bệnh án ..."
+                        id="description"
                         {...field}
                       ></textarea>
                     );

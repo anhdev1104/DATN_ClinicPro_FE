@@ -9,7 +9,7 @@ import UploadFiles from './UploadFiles';
 import { useEffect, useRef, useState } from 'react';
 import yup from '@/helpers/locate';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { uploadImages } from '@/services/uploadFile';
+import { uploadImages } from '@/services/uploadFile.service';
 import { getDetailMedicalHistorie, updateMedicalHistorie } from '@/services/medicalHistories.service';
 import { Link, useParams } from 'react-router-dom';
 import { FileMidecal, MedicalRecord } from '@/types/medicalHistories.type';
@@ -115,7 +115,7 @@ const EditMedicalHistories = () => {
       });
 
       const res = await uploadImages(formData);
-      const imagesWithDescriptions = res.urls.map((url: string, index: any) => ({
+      const imagesWithDescriptions = res.data?.urls?.map((url: string, index: any) => ({
         file: url,
         description: imagesNew[index]?.description || '',
       }));
@@ -156,7 +156,7 @@ const EditMedicalHistories = () => {
             <h1 className="text-[18px] text-black font-medium">Sửa bệnh án</h1>
           </div>
           <Link
-            to={'/dashboard/medical-histories'}
+            to={'/medical-record'}
             className="text-[18px] font-medium gap-3 border-borderColor border p-2 rounded-lg bg-[#f3f4f7]"
           >
             <List className="text-primaryAdmin" />

@@ -1,4 +1,4 @@
-import { STATUS } from '@/constants/define';
+import { GENDER, STATUS } from '@/constants/define';
 
 export interface IAccount {
   fullname?: string;
@@ -18,9 +18,10 @@ export interface IInfo {
   address?: string | null;
   avatar?: string;
   phone_number?: string | null;
-  gender?: string;
+  gender?: `${GENDER}`;
   dob?: string | null;
   identity_card?: IIndentityCard | null;
+  identity_card_id: string;
   created_at?: string;
   updated_at?: string;
 }

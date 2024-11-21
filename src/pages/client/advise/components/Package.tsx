@@ -1,6 +1,6 @@
 import { Button } from '@/components/button';
 import Image2 from '/images/2.webp';
-
+import { StarIcon } from '@/components/icons';
 export const Package = () => {
   return (
     <>
@@ -13,7 +13,10 @@ export const Package = () => {
           />
         </div>
         <div className="p-4 flex flex-col justify-between">
-          <h2 className="text-third text-lg font-semibold mb-2">Sinh Mổ</h2>
+          <div className="flex justify-between">
+            <h2 className="text-third text-lg font-semibold mb-2">Sinh Mổ</h2>
+            <span className="text-4xl text-yellow-600">*****</span>
+          </div>
           <p className="md:line-clamp-5 text-sm mb-4">
             Gói trọn an tâm khi chọn Sinh mổ tại bệnh viện Hoàn Mỹ. Mẹ và bé sẽ nhận được hỗ trợ chăm sóc y tế toàn diện
             từ trước, trong và sau sinh. Tất cả gói trọn trong gói dịch vụ này.

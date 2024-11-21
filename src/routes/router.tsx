@@ -20,14 +20,18 @@ import { Route, RouteProps, Routes, useLocation } from 'react-router-dom';
 import Prescription from '@/pages/admin/prescriptions/Prescription';
 import ProfilePage from '@/pages/client/profile/ProfilePage';
 import ChangePassword from '@/pages/client/auth/ChangePassword';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import ProtectedRoute from '@/components/auth';
 import ForgotPassword from '@/pages/client/auth/ForgotPassword';
-import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistoriesPage';
-import MedicalHistories from '@/pages/admin/medicalHistories/MedicalHistories';
+import MedicalHistoriesPage from '@/pages/client/medical_histories/MedicalHistoriesPage';
+import EditMedicalHistories from '@/pages/admin/medical_histories/components/EditMedicalHistories';
 import EditPackage from '@/pages/admin/package/component/EditPackage';
 import Package from '@/pages/admin/package/Package';
-import EditMedicalHistories from '@/pages/admin/medicalHistories/components/EditMedicalHistories';
-import SpecialtiesPage from '@/pages/admin/specialties/SpecialtiesPage';
+import User from '@/pages/admin/users/Users';
+import GetUser from '@/pages/admin/users/GetUser';
+import UpdateUser from '@/pages/admin/users/UpdateUser';
+import CreateUser from '@/pages/admin/users/CreateUser';
+import MedicalHistories from '@/pages/admin/medical_histories/MedicalHistories';
+
 type IRouter = RouteProps & {
   title: string;
 };
@@ -90,12 +94,7 @@ const adminRouter: IRouter[] = [
     title: 'Trang quản lý',
   },
   {
-    path: '/specialties',
-    element: <SpecialtiesPage />,
-    title: 'Trang chuyên khoa',
-  },
-  {
-    path: '/dashboard/medical-histories',
+    path: '/medical-record',
     element: <MedicalHistories />,
     title: 'Danh sách bệnh án',
   },
@@ -124,7 +123,6 @@ const adminRouter: IRouter[] = [
     element: <Package />,
     title: 'Danh sách gói khám',
   },
-
   {
     path: '/package/:id',
     element: <PackageDetail />,
@@ -134,6 +132,26 @@ const adminRouter: IRouter[] = [
     path: '/edit-package/:id',
     element: <EditPackage />,
     title: 'Chỉnh sửa gói khám',
+  },
+  {
+    path: '/users',
+    element: <User />,
+    title: 'Danh Sách Người Dùng',
+  },
+  {
+    path: '/users/add',
+    element: <CreateUser />,
+    title: 'Danh Sách Người Dùng',
+  },
+  {
+    path: '/users/:userId',
+    element: <GetUser />,
+    title: 'Chi Tiết Người Dùng',
+  },
+  {
+    path: '/users/:userId/edit',
+    element: <UpdateUser />,
+    title: 'Danh Sách Người Dùng',
   },
 ];
 

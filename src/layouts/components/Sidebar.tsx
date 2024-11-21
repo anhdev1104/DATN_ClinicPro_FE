@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ChevronRightIcon,
   GroupIcon,
@@ -31,6 +32,20 @@ const dumpCategory = [
     pathActive: ['/dashboard'],
   },
   {
+    id: 8,
+    categoryName: 'User',
+    path: '/users',
+    icon: GroupIcon,
+    pathActive: ['/users'],
+  },
+  {
+    id: 5,
+    categoryName: 'Phòng Ban',
+    path: '/departments',
+    icon: ApartmentIcon,
+    pathActive: ['/departments'],
+  },
+  {
     id: 2,
     categoryName: 'Bác sĩ',
     path: '',
@@ -52,13 +67,6 @@ const dumpCategory = [
     pathActive: ['/prescriptions'],
   },
   {
-    id: 5,
-    categoryName: 'Phòng Ban',
-    path: '/departments',
-    icon: ApartmentIcon,
-    pathActive: ['/departments'],
-  },
-  {
     id: 6,
     categoryName: 'Gói khám',
     path: '/packages',
@@ -68,9 +76,9 @@ const dumpCategory = [
   {
     id: 7,
     categoryName: 'Bệnh án',
-    path: '/dashboard/medical-histories',
+    path: '/medical-record',
     icon: MedicalRecord,
-    pathActive: ['/dashboard/medical-histories'],
+    pathActive: ['/medical-record'],
   },
   {
     id: 8,
@@ -123,9 +131,7 @@ const Sidebar = ({ show }: { show: boolean }) => {
                 <li
                   className={cn(
                     'px-5 py-2 flex items-center cursor-pointer border-l-[3px] border-transparent transition-all ease-linear group',
-                    isActive
-                      ? 'border-l-primaryAdmin bg-primaryAdmin/5'
-                      : 'hover:!border-l-primaryAdmin hover:bg-primaryAdmin/5',
+                    isActive ? 'border-l-primaryAdmin bg-primaryAdmin/5' : ' hover:bg-primaryAdmin/5',
                   )}
                   key={category.id}
                   onClick={() => handleCategory(category.id, category.path)}

@@ -3,41 +3,16 @@ import { CachedIcon, CloseIcon, CompareArrows } from '@/components/icons';
 import { Dialog } from '@mui/material';
 import { getDetailMedicalHistorie, getMedicalHistoriesById } from '@/services/medicalHistories.service';
 import { MedicalRecord } from '@/types/medicalHistories.type';
-import Loading from './components/Loading';
+import Loading from '@/components/loading';
 import convertTime from '@/helpers/convertTime';
+import LightBox from '@/components/lightbox';
+import convertLightBox from '@/helpers/convertLightBox';
 
 interface DetailMedicalHistories {
   close: () => void;
   statusLog: boolean;
   id?: string;
 }
-
-const files = [
-  {
-    id: 'd9b0a92d-3c9e-4f2f-8c28-1a2f0a6726e4',
-    file: 'https://i.pinimg.com/236x/f8/5c/15/f85c157e55063ef6f0c882e29305d900.jpg',
-    description: 'Kết quả chụp X-quang',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  },
-  {
-    id: 'e9c1a43f-1c2e-4f8f-9f29-3e72c9d2e47b',
-    file: 'https://i.pinimg.com/236x/86/02/1f/86021f215c190c24bbedc7acbb071f65.jpg',
-    description: 'Báo cáo xét nghiệm máu',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  },
-  {
-    id: 'f7d2e53a-8e41-4a8e-b1f1-9b3d5c9a9d72',
-    file: 'https://i.pinimg.com/236x/a3/46/e8/a346e85f8c95c13f32d056d91bc1d133.jpg',
-    description: 'Kết quả siêu âm',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  },
-  {
-    id: 'b2f7e8d1-7c9b-4d2e-b9a3-5a5c1e2d8f93',
-    file: 'https://i.pinimg.com/236x/3f/10/36/3f1036b1e1f7b038aa9ae5ad8988146d.jpg',
-    description: 'Kết quả đo điện tâm đồ',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  },
-];
 
 const MedicalHistoriesPage = () => {
   const [currentDate] = useState(() => new Date().toLocaleDateString());
@@ -102,7 +77,9 @@ const MedicalHistoriesPage = () => {
         </div>
         <div className="w-full border-b border-borderColor text-left">
           {loading ? (
-            <Loading />
+            <div className="w-full flex justify-center items-center py-10">
+              <Loading className="!size-16" />
+            </div>
           ) : Array.isArray(listMedicalRecords) && listMedicalRecords.length > 0 ? (
             listMedicalRecords.map((record, index) => (
               <div
@@ -134,6 +111,7 @@ const MedicalHistoriesPage = () => {
 
 function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories) {
   const [medicalRecord, setMedicalRecord] = useState<MedicalRecord>({} as MedicalRecord);
+
   useEffect(() => {
     (async () => {
       const response = await getDetailMedicalHistorie(id);
@@ -141,10 +119,25 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
     })();
   }, [id]);
 
+  const [isLightBoxOpen, setIsLightBoxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const openLightBox = (index: number) => {
+    if (index >= 0 && index < medicalRecord?.files?.length) {
+      setCurrentImageIndex(index);
+      setIsLightBoxOpen(true);
+    }
+  };
+
+  const closeLightBox = () => {
+    setIsLightBoxOpen(false);
+  };
+
   return (
     <Dialog
       open={statusLog}
       onClose={close}
+      className="!z-[999]"
       PaperProps={{
         style: {
           backgroundColor: '#f5f5f5',
@@ -234,8 +227,12 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
                 <div className="flex flex-col gap-4">
                   <h1 className="font-medium">Ảnh chụp X-QUANG:</h1>
                   <div className="">
-                    {files.map(file => (
-                      <div key={file.id} className="h-fit w-[48%] inline-block m-1 float-start">
+                    {medicalRecord?.files?.map((file, index) => (
+                      <div
+                        onClick={() => openLightBox(index)}
+                        key={file.id}
+                        className="h-fit w-[48%] inline-block m-1 float-start cursor-pointer"
+                      >
                         <img className="object-cover w-full mb-2 max-h-[180px]" src={file.file} alt="" />
                         <div className="text-center">
                           <span className="uppercase font-light">{file.description}</span>
@@ -248,6 +245,13 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
             </div>
           </div>
         </div>
+        {isLightBoxOpen && (
+          <LightBox
+            images={convertLightBox(medicalRecord.files)}
+            currentIndex={currentImageIndex} // Hình ảnh hiện tại
+            onClose={closeLightBox} // Hàm để đóng LightBox
+          />
+        )}
       </div>
     </Dialog>
   );

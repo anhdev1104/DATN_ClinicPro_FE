@@ -122,18 +122,18 @@ const ModalPatient: FC<ModalPatientProps> = ({
                       type="checkbox"
                       className="form-checkbox w-5 h-5 text-blue-600"
                       checked={currentSelectedPatientId === patient.id}
-                      onChange={() => handleSelectPatient(patient.id, patient.patient_info.fullname)}
+                      onChange={() => handleSelectPatient(patient?.id, patient?.patient_info?.fullname)}
                     />
                     <div className="flex flex-col">
-                      <span className="font-bold">{patient.patient_info.fullname}</span>
-                      <span className="text-sm opacity-70">{patient.patient_info.email}</span>
+                      <span className="font-bold">{patient?.patient_info?.fullname}</span>
+                      <span className="text-sm opacity-70">{patient?.patient_info?.email}</span>
                     </div>
                   </div>
                   <button
                     onClick={() => toggleExpand(patient.id)}
                     className="text-blue-500 hover:underline flex items-center gap-1"
                   >
-                    {expandedPatientId === patient.id ? (
+                    {expandedPatientId === patient?.id ? (
                       <>
                         Xem chi tiết <ArrowUpIcon />
                       </>
