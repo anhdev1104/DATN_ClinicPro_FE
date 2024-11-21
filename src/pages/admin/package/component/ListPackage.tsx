@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import Input from '@/components/input';
 import { MoreVertIcon, AddIcon } from '@/components/icons';
 import DirectRoute from '@/components/direct';
-import { getPackages, DeletePackage } from '@/services/package.service';
+import { getPackages, deletePackage } from '@/services/package.service';
 import { IPackage } from '@/types/package.type';
 import { toast } from 'react-toastify';
 interface ListPackageProps {
@@ -32,6 +32,7 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
         } else {
           setPackages([]);
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setError('Không thể tải danh sách gói khám. Vui lòng thử lại sau.');
       } finally {
@@ -43,7 +44,7 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    await DeletePackage(id);
+    await deletePackage(id);
     setPackages(prevPackages => prevPackages.filter(pkg => pkg.id !== id));
     toast.success('Xóa gói khám thành công!');
   };

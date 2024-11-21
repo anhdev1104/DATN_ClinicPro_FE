@@ -3,9 +3,9 @@ export interface IAppointment {
   email: string;
   phone_number: string;
   address: string;
-  gender: string;
+  gender?: string;
   description?: string;
   dob: string;
   appointment_date: string | null;
-  specialty_id: string;
+  specialty_id?: string;
 }
