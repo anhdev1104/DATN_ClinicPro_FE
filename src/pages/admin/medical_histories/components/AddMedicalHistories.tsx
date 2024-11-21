@@ -10,7 +10,7 @@ import { useRef, useState } from 'react';
 import yup from '@/helpers/locate';
 import { yupResolver } from '@hookform/resolvers/yup';
 // import { NewMedical } from '@/types/medicalHistories.type';
-import { uploadImages } from '@/services/uploadFile';
+import { uploadImages } from '@/services/uploadFile.service';
 import { createMedicalHistorie } from '@/services/medicalHistories.service';
 import { toast } from 'react-toastify';
 import FormPatient from './FormPatient';
@@ -77,8 +77,9 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
 
     try {
       const res = await uploadImages(formData);
-      if (res?.urls) {
-        const imagesWithDescriptions = res.urls.map((url: string, index: any) => ({
+
+      if (res?.data?.urls) {
+        const imagesWithDescriptions = res.data?.urls?.map((url: string, index: any) => ({
           file: url,
           description: images[index]?.description || '',
         }));
@@ -89,6 +90,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
           user_id: '8a9c264e-d283-4550-a14c-cf932199f2dc',
           patient_id: selectedPatientId?.id,
         };
+
         const response = await createMedicalHistorie(medicalHistoryData);
         toast.success(response.message, { position: 'top-right' });
         reset({
