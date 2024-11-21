@@ -28,3 +28,4 @@ export { default as MedicalRecord } from '@mui/icons-material/AssignmentInd';
 export { default as MoreHorizIcon } from '@mui/icons-material/MoreHoriz';
 export { default as ArrowDownIcon } from '@mui/icons-material/KeyboardArrowDown';
 export { default as ArrowUpIcon } from '@mui/icons-material/KeyboardArrowUp';
+export { default as StarIcon } from '@mui/icons-material/Star';

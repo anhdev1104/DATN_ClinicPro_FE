@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { uploadFile } from '@/services/uploadFile';
+import { uploadFile } from '@/services/uploadFile.service';
 
 interface UploadFileProps {
   onUploadSuccess: (url: string) => void;
@@ -33,7 +33,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onUploadSuccess }) => {
   };
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col">
       <input
         id="image"
         name="image"

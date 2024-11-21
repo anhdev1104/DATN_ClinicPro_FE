@@ -3,7 +3,7 @@ import BaseButton from '../base/button';
 import BaseIcon from '../base/BaseIcon';
 import { Row } from '@tanstack/react-table';
 
-import { ButtonHTMLAttributes, DetailedHTMLProps, memo } from 'react';
+import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 import { IconDots } from '@tabler/icons-react';
 
 interface ActionWithRowProps<T> {
@@ -34,9 +34,14 @@ const ActionWithRow = <T,>({ data }: ActionWithRowProps<T>) => {
         </BaseButton.Icon>
       </Menu.Target>
       <Menu.Dropdown>
-        {data?.length && data.map(({ label, ...props }) => <Menu.Item {...props}>{label}</Menu.Item>)}
+        {data?.length &&
+          data.map(({ label, ...props }) => (
+            <Menu.Item key={label} {...props}>
+              {label}
+            </Menu.Item>
+          ))}
       </Menu.Dropdown>
     </Menu>
   );
 };
-export default memo(ActionWithRow);
+export default ActionWithRow;

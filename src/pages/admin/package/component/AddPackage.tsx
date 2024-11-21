@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { List } from '@/components/icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
 import { createPackage, getCategory } from '@/services/package.service';
+import { getSpecialties } from '@/services/specialties.service';
 import UploadFile from '@/components/modal/ModalUploadFile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Input from '@/components/input';
@@ -20,6 +21,7 @@ const schema = yup.object().shape({
   content: yup.string().trim().required('Không được để trống'),
   image: yup.mixed().required('Vui lòng chọn 1 file'),
   category_id: yup.string().nullable().required('Vui lòng chọn danh mục'),
+  specialty_id: yup.string().nullable().required('Vui lòng chọn chuyên khoa'),
 });
 
 interface ListPackage {
@@ -29,6 +31,7 @@ interface ListPackage {
 const AddPackage = ({ navigate }: ListPackage) => {
   const [loading, setLoading] = useState(false);
   const [packageCategory, setPackageCategory] = useState([]);
+  const [Specialty, SetSpecialty] = useState([]);
   const [imageUrl, setImageUrl] = useState<string>('');
   const {
     handleSubmit,
@@ -42,13 +45,21 @@ const AddPackage = ({ navigate }: ListPackage) => {
   });
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await getCategory();
-      const data = convertToOptions(res.data);
-      setPackageCategory(data);
+    const fetchOptions = async () => {
+      try {
+        setLoading(true);
+        const categoryRes = await getCategory();
+        const specialtyRes = await getSpecialties();
+        setPackageCategory(convertToOptions(categoryRes));
+        SetSpecialty(convertToOptions(specialtyRes));
+      } catch (error) {
+        toast.error('Không thể tải dữ liệu');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchCategories();
+    fetchOptions();
   }, []);
   const handleUploadSuccess = (url: string) => {
     setImageUrl(url);
@@ -63,12 +74,14 @@ const AddPackage = ({ navigate }: ListPackage) => {
     formData.append('content', data.content);
     formData.append('image', imageUrl);
     formData.append('category_id', data.category_id);
+    formData.append('specialty_id', data.specialty_id);
     const res = await createPackage(formData);
     if (res.errors) {
       toast.error('Thêm gói khám thất bại');
       console.log(res.message);
     } else {
       toast.success('Thêm gói khám thành công');
+      console.log(res.data);
       reset();
       setImageUrl('');
     }
@@ -88,8 +101,12 @@ const AddPackage = ({ navigate }: ListPackage) => {
             </button>
           </div>
         </div>
-        <form className="space-y-6 p-6" encType="multipart/form-data" onSubmit={handleSubmit(handleCreate)}>
-          <div className="grid grid-cols-2 gap-4">
+        <form
+          className="space-y-6 p-6 overflow-hidden"
+          encType="multipart/form-data"
+          onSubmit={handleSubmit(handleCreate)}
+        >
+          <div className="grid grid-cols-3 gap-4">
             <div className="flex flex-col">
               <Field>
                 <Label htmlFor="name" className="text-sm font-medium mb-1">
@@ -98,19 +115,27 @@ const AddPackage = ({ navigate }: ListPackage) => {
                 <Input
                   name="name"
                   type="text"
-                  className="border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third"
+                  className=" w-1/2 border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third"
                   placeholder="Nhập tên gói khám"
                   control={control}
                 />
               </Field>
               <MessageForm error={errors.name?.message} />
             </div>
-            <div className="min-w-[400px] w-1/2">
+            <div className="min-w-[380px] w-[45%]">
               <Label htmlFor="categoryId">Danh mục gói khám</Label>
               <Select placeholder="Danh mục gói khám" name="category_id" control={control} options={packageCategory} />
               <MessageForm error={errors.category_id?.message} />
             </div>
+            <div className="min-w-[380px] w-[45%]">
+              <Label htmlFor="specialty_id" className="text-sm font-medium mb-1">
+                Chuyên khoa <span className="text-red-500">*</span>
+              </Label>
+              <Select placeholder="Chọn chuyên khoa" name="specialty_id" control={control} options={Specialty} />
+              <MessageForm error={errors.specialty_id?.message} />
+            </div>
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col">
               <Field>

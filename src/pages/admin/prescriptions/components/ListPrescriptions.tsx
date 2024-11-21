@@ -63,7 +63,7 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
         </div>
         {isLoading && (
           <div className="mx-auto text-center pt-10">
-            <LoadingSpin className="!w-10 !h-10" />
+            <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
           </div>
         )}
         {!isLoading && (

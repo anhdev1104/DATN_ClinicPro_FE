@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import DirectRoute from '@/components/direct';
 import { updatePackage, getPackageById, getCategory } from '@/services/package.service';
+import { getSpecialties } from '@/services/specialties.service';
 import { IPackage } from '@/types/package.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Input from '@/components/input';
@@ -21,6 +22,7 @@ const schema = yup.object().shape({
   content: yup.string().trim().required('Không được để trống'),
   image: yup.mixed().notRequired(),
   category_id: yup.string().nullable().required('Vui lòng chọn danh mục'),
+  specialty_id: yup.string().nullable().required('Vui lòng chọn chuyên khoa'),
 });
 const EditPackage = () => {
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ const EditPackage = () => {
   const [packageData, setPackageData] = useState<IPackage | null>(null);
   const [ImageUrl, setImageUrl] = useState<string | null>(null);
   const [packageCategory, setPackageCategory] = useState([]);
+  const [Specialty, SetSpecialty] = useState([]);
   const {
     handleSubmit,
     formState: { errors, isValid },
@@ -40,13 +43,21 @@ const EditPackage = () => {
     mode: 'onChange',
   });
   useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await getCategory();
-      const data = convertToOptions(res.data);
-      setPackageCategory(data);
+    const fetchOptions = async () => {
+      try {
+        setLoading(true);
+        const categoryRes = await getCategory();
+        const specialtyRes = await getSpecialties();
+        setPackageCategory(convertToOptions(categoryRes));
+        SetSpecialty(convertToOptions(specialtyRes));
+      } catch (error) {
+        toast.error('Không thể tải dữ liệu, vui lòng thử lại');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchCategories();
+    fetchOptions();
   }, []);
   useEffect(() => {
     const fetchPackage = async () => {
@@ -67,6 +78,7 @@ const EditPackage = () => {
             setImageUrl(selectedPackage.image);
           }
           setValue('category_id', selectedPackage.category_id);
+          setValue('specialty_id', selectedPackage.specialty_id);
         }
       } catch (error) {
         console.error(error);
@@ -88,6 +100,7 @@ const EditPackage = () => {
     formData.append('content', data.content || packageData?.content || '');
     formData.append('image', data.image || packageData?.image || '');
     formData.append('category_id', data.category_id || packageData?.category_id || '');
+    formData.append('  specialty_id', data.specialty_id || packageData?.specialty_id || '');
 
     try {
       const res = await updatePackage(String(id), formData);
@@ -122,7 +135,7 @@ const EditPackage = () => {
         </div>
 
         <form className="space-y-6 p-6" onSubmit={handleSubmit(handleUpdate)} encType="multipart/form-data">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div className="flex flex-col">
               <Field>
                 <Label htmlFor="name" className="text-sm font-medium mb-1">
@@ -131,18 +144,24 @@ const EditPackage = () => {
                 <Input
                   name="name"
                   type="text"
-                  className="border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third"
+                  className="w-1/2 border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third"
                   placeholder="Nhập tên gói khám"
                   control={control}
                 />
               </Field>
               <MessageForm error={errors.name?.message} />
             </div>
-            <div className="min-w-[400px] w-1/2">
+            <div className="min-w-[380px] w-[45%]">
               <Label htmlFor="categoryId">Danh mục gói khám</Label>
               <Select placeholder="Danh mục gói khám" name="category_id" control={control} options={packageCategory} />
-
               <MessageForm error={errors.category_id?.message} />
+            </div>
+            <div className="min-w-[380px] w-[45%]">
+              <Label htmlFor="specialty_id" className="text-sm font-medium mb-1">
+                Chuyên khoa <span className="text-red-500">*</span>
+              </Label>
+              <Select placeholder="Chọn chuyên khoa" name="specialty_id" control={control} options={Specialty} />
+              <MessageForm error={errors.specialty_id?.message} />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
