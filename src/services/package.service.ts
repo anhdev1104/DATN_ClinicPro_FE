@@ -23,7 +23,7 @@ export const getPackageById = async (id: string) => {
 export const getCategory = async () => {
   try {
     const response = await http.get('/package-categories');
-    return response;
+    return response.data;
   } catch (error) {
     return error;
   }
