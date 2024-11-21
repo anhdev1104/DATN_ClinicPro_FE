@@ -31,7 +31,7 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
         const packageResponse = await getPackages();
         const categoryResponse = await getCategory();
         setPackages(packageResponse.data || []);
-        setCategories(categoryResponse.data || []);
+        setCategories(categoryResponse || []);
       } catch (error) {
         setError('Không thể tải danh sách gói khám. Vui lòng thử lại sau.');
       } finally {

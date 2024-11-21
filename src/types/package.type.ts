@@ -6,6 +6,7 @@ export interface IPackage {
   image: string;
   slug?: string;
   created_at?: Date;
+  specialty_id: string;
   category_id: string;
 }
 export interface Category {

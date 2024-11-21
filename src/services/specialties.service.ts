@@ -10,3 +10,11 @@ export const getSpecialties = async () => {
     return error;
   }
 };
+export const getSpecialtyById = async (id: string) => {
+  try {
+    const response = await http.get(`/specialties/${id}`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
