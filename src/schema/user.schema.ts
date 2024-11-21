@@ -2,9 +2,12 @@ import { GENDER, STATUS } from '@/constants/define';
 import yup from '@/helpers/locate';
 
 export const createUserSChema = yup.object({
-  email: yup.string().email(),
-  password: yup.string(),
-  status: yup.string().oneOf([`${STATUS}`]),
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+  status: yup
+    .string()
+    .oneOf([`${STATUS}`])
+    .optional(),
   role_id: yup.string().required(),
   user_info: yup.object({
     fullname: yup.string().required(),
@@ -26,6 +29,7 @@ export const createUserSChema = yup.object({
 
 export const updateUserSchema = createUserSChema.concat(
   yup.object({
+    password: yup.string(),
     doctor: yup.object({
       specialty: yup.string(),
       description: yup.string(),

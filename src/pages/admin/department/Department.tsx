@@ -114,6 +114,7 @@ const Department = () => {
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl">
         <Table
+          className="ml-2"
           highlightOnHover
           manualFiltering
           filterItem={

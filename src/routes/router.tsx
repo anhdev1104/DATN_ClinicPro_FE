@@ -27,7 +27,9 @@ import EditPackage from '@/pages/admin/package/component/EditPackage';
 import Package from '@/pages/admin/package/Package';
 import MedicalHistories from '@/pages/admin/medicalHistories/MedicalHistories';
 import User from '@/pages/admin/users/Users';
-import UserDetail from '@/pages/admin/users/UserDetail';
+import GetUser from '@/pages/admin/users/GetUser';
+import UpdateUser from '@/pages/admin/users/UpdateUser';
+import CreateUser from '@/pages/admin/users/CreateUser';
 
 type IRouter = RouteProps & {
   title: string;
@@ -131,9 +133,19 @@ const adminRouter: IRouter[] = [
     title: 'Danh Sách Người Dùng',
   },
   {
+    path: '/users/add',
+    element: <CreateUser />,
+    title: 'Danh Sách Người Dùng',
+  },
+  {
     path: '/users/:userId',
-    element: <UserDetail />,
+    element: <GetUser />,
     title: 'Chi Tiết Người Dùng',
+  },
+  {
+    path: '/users/:userId/edit',
+    element: <UpdateUser />,
+    title: 'Danh Sách Người Dùng',
   },
 ];
 

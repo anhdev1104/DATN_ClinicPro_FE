@@ -10,7 +10,7 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 const persistConfig = {
   key: 'root',
   version: 1,
-  whitelist: ['auth', departmentApi.reducerPath],
+  whitelist: ['auth', departmentApi.reducerPath, usersApi.reducerPath],
   storage,
 };
 
