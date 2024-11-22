@@ -91,10 +91,10 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
           <div>
             <h1 className="text-[18px] text-black font-medium">Danh sách bệnh án</h1>
           </div>
-          <div className="flex justify-center items-center gap-3">
+          <div className="flex gap-5">
             <button
               onClick={navigate}
-              className="text-[18px] font-medium gap-3 border-borderColor border p-2 rounded-lg bg-[#f3f4f7]"
+              className="text-[18px] font-medium gap-3 border-borderColor border py-2 px-2 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-transparent hover:border-primaryAdmin"
             >
               <AddIcon className="text-primaryAdmin" />
             </button>
@@ -102,15 +102,15 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
           </div>
         </div>
         <div className="w-full">
-          <div className="w-full bg-[#f3f7fe] flex justify-between border-b border-[#cfe1fc] text-left py-4 font-semibold px-2">
-            <div className="flex-[0_0_17%]">Mã bệnh án</div>
+          <div className="w-full flex justify-between border-b-2 border-primaryAdmin/20 bg-primaryAdmin/5 text-left py-4 font-semibold px-2">
+            <div className="flex-[0_0_21%]">Mã bệnh án</div>
             <div className="flex-[0_0_11%]">Chẩn đoán</div>
             <div className="flex-[0_0_20%]">Bác sĩ</div>
             <div className="flex-[0_0_20%]">Người bệnh</div>
             <div className="flex-[0_0_17%]">Ngày khám</div>
-            <div className="flex-[0_0_9%]"></div>
+            <div className="flex-[0_0_5%]"></div>
           </div>
-          <div className="w-full border-b border-borderColor text-left">
+          <div className="w-full border-b-[2px] border-borderColor text-left">
             {loading ? (
               <div className="w-full flex justify-center items-center py-10">
                 <Loading className="!size-16" />
@@ -119,18 +119,18 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
               medicalRecords?.map((record, index) => (
                 <div
                   key={index}
-                  className={`py-4 text-black flex items-center justify-between w-full text-left hover:opacity-100 opacity-75 cursor-pointer ${index % 2 === 1 ? 'bg-white' : 'bg-gray-200'} px-2`}
+                  className={`py-4 text-black flex items-center justify-between w-full text-left cursor-pointer ${index % 2 === 1 ? ' bg-[#f5f5f5]' : 'bg-white'} px-2`}
                 >
-                  <div className="flex-[0_0_17%] truncate font-semibold">{record.id}</div>
-                  <div className="flex-[0_0_11%] truncate">{record.diagnosis}</div>
-                  <div className="flex-[0_0_20%] truncate font-semibold flex items-center gap-2">
+                  <div className="flex-[0_0_21%]  font-semibold">{record.id}</div>
+                  <div className="flex-[0_0_11%] ">{record.diagnosis}</div>
+                  <div className="flex-[0_0_20%]  font-semibold flex items-center gap-2">
                     <img className="size-[30px] rounded-full" src={record.doctor.avatar} alt="" />
                     <div className="flex flex-col">
                       <span className="text-[14px]">{record.doctor.fullname}</span>
                       <span className="text-[12px] opacity-70">{record.doctor.email}</span>
                     </div>
                   </div>
-                  <div className="flex-[0_0_20%] truncate font-semibold flex items-center gap-2">
+                  <div className="flex-[0_0_20%]  font-semibold flex items-center gap-2">
                     <img className="size-[30px] rounded-full" src={record.patient.avatar} alt="" />
                     <div className="flex flex-col">
                       <span className="text-[14px]">{record.patient.fullname}</span>
@@ -210,9 +210,9 @@ function MedicalRecordSearch() {
     <form className="relative flex gap-5 items-center">
       <Input
         name="searchadmin"
-        className="!text-[unset] border-none !h-10 !font-light"
+        className="border-none !h-10 !font-light text-primaryAdmin"
         isGlass
-        colorGlass="text-primaryAdmin"
+        colorGlass="text-primaryAdmin top-[9px]"
         placeholder="Tìm kiếm bệnh án ..."
         control={control}
       />
@@ -251,14 +251,14 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
           <CloseIcon />
         </div>
         <div>
-          <h1 className="uppercase text-center text-[30px] font-bold mb-14">Chi tiết bệnh án</h1>
+          <h1 className="uppercase text-center text-[25px] font-bold mb-14">Chi tiết bệnh án</h1>
           <div className="px-5">
             <div className="mb-12">
-              <div className="font-bold mb-5 flex items-center gap-3">
-                <h1 className="text-[24px]">I.</h1>
-                <p className="text-[20px]">Thông tin cơ bản:</p>
+              <div className="font-semibold mb-5 flex items-center gap-3">
+                <h1 className="text-[20px]">I.</h1>
+                <p className="text-[20px] uppercase">Thông tin cơ bản:</p>
               </div>
-              <div className="flex flex-col gap-2 text-[15px] mb-7">
+              <div className="flex flex-col gap-[5px] text-[15px] mb-7">
                 <div className="mb-2">
                   <h1 className="text-[16px] font-semibold">1. Thông tin người bệnh:</h1>
                 </div>
@@ -279,7 +279,7 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
                   <span className="font-light">{convertTime(medicalRecord?.created_at)}</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-2 text-[15px]">
+              <div className="flex flex-col gap-[5px] text-[15px]">
                 <div className="mb-2">
                   <h1 className="text-[16px] font-semibold">2. Thông tin bác sĩ:</h1>
                 </div>
@@ -298,11 +298,11 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
               </div>
             </div>
             <div>
-              <div className="font-bold mb-5 flex items-center gap-3">
-                <h1 className="text-[24px]">II.</h1>
-                <p className="text-[20px]">Chi tiết bệnh án:</p>
+              <div className="font-semibold mb-5 flex items-center gap-3">
+                <h1 className="text-[20px]">II.</h1>
+                <p className="text-[20px] uppercase">Chi tiết bệnh án:</p>
               </div>
-              <div className="flex flex-col gap-2 text-[15px]">
+              <div className="flex flex-col gap-[5px] text-[15px]">
                 <div className="flex gap-4">
                   <h1 className="font-medium">Mã bệnh án:</h1>
                   <span className="uppercase font-light">{medicalRecord?.id}</span>
@@ -325,7 +325,7 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
                   <div className="">
                     {medicalRecord?.files?.map(file => (
                       <div key={file.id} className="h-fit w-[48%] inline-block m-1 float-start">
-                        <img className="object-cover w-full mb-2 max-h-[180px]" src={file.file} alt="" />
+                        <img className="object-cover w-full mb-2 max-h-[180px] rounded-[4px]" src={file.file} alt="" />
                         <div className="text-center">
                           <span className="uppercase font-light">{file.description}</span>
                         </div>

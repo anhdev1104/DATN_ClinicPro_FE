@@ -1,5 +1,6 @@
 import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@/components/icons';
 import Input from '@/components/input';
+import Tags from '@/components/tags';
 import { getPatient } from '@/services/medicalHistories.service';
 import { IPatient } from '@/types/patient.type';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -112,13 +113,15 @@ const ModalPatient: FC<ModalPatientProps> = ({
         <div className="w-full h-full flex flex-col gap-3 overflow-y-auto">
           {patients.length > 0 ? (
             patients.map(patient => (
-              <div
+              <label
+                htmlFor={patient.id}
                 key={patient.id}
                 className="py-3 px-4 gap-2 flex flex-col items-stretch rounded-lg border border-borderColor hover:bg-slate-100 transition cursor-pointer"
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-5">
                     <input
+                      id={patient.id}
                       type="checkbox"
                       className="form-checkbox w-5 h-5 text-blue-600"
                       checked={currentSelectedPatientId === patient.id}
@@ -187,17 +190,17 @@ const ModalPatient: FC<ModalPatientProps> = ({
                         <span className="text-gray-500 italic">Chưa nhập</span>
                       )}
                     </p>
-                    <p>
+                    <p className="flex gap-3 items-center">
                       <strong>Trạng thái bảo hiểm:</strong>{' '}
                       {patient?.status?.length > 0 ? (
-                        patient.status
+                        <Tags tagsColor={patient.status}>{patient.status}</Tags>
                       ) : (
                         <span className="text-gray-500 italic">Chưa nhập</span>
                       )}
                     </p>
                   </div>
                 </div>
-              </div>
+              </label>
             ))
           ) : (
             <div className="text-center text-[18px] font-bold size-full flex justify-center items-center">

@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 const medicationSchema = yup.object().shape({
-  medication_id: yup.string().required('ID bệnh nhân là bắt buộc'),
+  medication_id: yup.string(),
   instructions: yup.string(),
   quantity: yup.number().positive('Liều lượng phải là số dương').integer('Liều lượng phải là số nguyên'),
   duration: yup.number().positive('Thời gian sử dụng phải là số dương').integer('Thời gian sử dụng phải là số nguyên'),

@@ -31,6 +31,7 @@ import GetUser from '@/pages/admin/users/GetUser';
 import UpdateUser from '@/pages/admin/users/UpdateUser';
 import CreateUser from '@/pages/admin/users/CreateUser';
 import MedicalHistories from '@/pages/admin/medical_histories/MedicalHistories';
+import Specialties from '@/pages/admin/specialties/Specialties';
 
 type IRouter = RouteProps & {
   title: string;
@@ -152,6 +153,11 @@ const adminRouter: IRouter[] = [
     path: '/users/:userId/edit',
     element: <UpdateUser />,
     title: 'Danh Sách Người Dùng',
+  },
+  {
+    path: '/specialties',
+    element: <Specialties />,
+    title: 'Trang chuyên khoa',
   },
 ];
 

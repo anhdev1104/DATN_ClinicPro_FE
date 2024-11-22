@@ -8,7 +8,7 @@ import Select from '@/components/select';
 import { createPrescription, getCategoryMedication, getMedication } from '@/services/prescriptions.service';
 import { useEffect, useState } from 'react';
 import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
-import { IMedications } from '@/types/prescription.type';
+import { IMedications, IPrescription } from '@/types/prescription.type';
 import ModalMedication from '@/components/modal/ModalMedication';
 import convertToOptions from '@/helpers/convertToOptions';
 import DirectRoute from '@/components/direct';
@@ -75,7 +75,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
 
   const handleCreateMedication: SubmitHandler<any> = async data => {
     console.log('🚀 ~ AddPrescriptions ~ data:', data);
-    if (!isValid) return;
+    // if (!isValid) return;
     const newPrescription = {
       patient_id: data.patient_id,
       user_id: '3119acf9-b33c-4de6-9b51-0275be8ea689',
@@ -83,7 +83,12 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
       description: data.description,
       medications: data.medications,
     };
-    await createPrescription(newPrescription);
+    const data1 = await createPrescription({
+      medication_id: '828d04ca-111d-49ee-8043-611648cb5f65',
+      ...newPrescription,
+    } as IPrescription);
+    console.log(data1);
+
     toast.success('Tạo đơn thuốc thành công !');
     handleResetForm();
   };
