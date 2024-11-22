@@ -31,6 +31,7 @@ import GetUser from '@/pages/admin/users/GetUser';
 import UpdateUser from '@/pages/admin/users/UpdateUser';
 import CreateUser from '@/pages/admin/users/CreateUser';
 import MedicalHistories from '@/pages/admin/medical_histories/MedicalHistories';
+import PrivacyPage from '@/pages/client/privacy/privacyPage';
 
 type IRouter = RouteProps & {
   title: string;
@@ -60,6 +61,11 @@ const clientRouter: IRouter[] = [
     path: '/community',
     element: <CommunityPage />,
     title: 'Cộng đồng',
+  },
+  {
+    path: '/privacy-policy',
+    element: <PrivacyPage />,
+    title: 'Chính sách bảo mật',
   },
   {
     path: '/profile',
