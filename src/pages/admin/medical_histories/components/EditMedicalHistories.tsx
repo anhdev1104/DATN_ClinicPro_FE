@@ -187,7 +187,7 @@ const EditMedicalHistories = () => {
                     </div>
                     <Button
                       onClick={() => setSelectPatient(true)}
-                      className="text-black mt-2"
+                      className="text-black mt-2 bg-[#F3F4F7] border"
                       type="button"
                       styled="normal"
                     >
@@ -197,7 +197,7 @@ const EditMedicalHistories = () => {
                 ) : (
                   <Button
                     onClick={() => setSelectPatient(true)}
-                    className="text-black h-[48px]"
+                    className="text-black h-[48px] bg-[#F3F4F7]"
                     type="button"
                     styled="normal"
                   >

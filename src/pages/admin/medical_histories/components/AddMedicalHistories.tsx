@@ -124,7 +124,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
           <div className="border-borderColor border px-3 py-2 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-white cursor-pointer">
             <button onClick={navigate} className="text-dark font-medium flex items-center gap-3">
               <List className="text-primaryAdmin" />
-              Danh sách bệnh án
+              Danh sách đơn thuốc
             </button>
           </div>
         </div>
@@ -154,7 +154,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                     </div>
                     <Button
                       onClick={() => setSelectPatient(true)}
-                      className="text-black mt-2"
+                      className="text-black mt-2 bg-[#F3F4F7] border"
                       type="button"
                       styled="normal"
                     >
@@ -164,7 +164,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                 ) : (
                   <Button
                     onClick={() => setSelectPatient(true)}
-                    className="text-black h-[48px]"
+                    className="text-black h-[48px] bg-[#F3F4F7]"
                     type="button"
                     styled="normal"
                   >
