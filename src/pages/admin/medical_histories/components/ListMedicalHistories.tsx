@@ -15,6 +15,7 @@ import convertTime from '@/helpers/convertTime';
 import { Dialog } from '@mui/material';
 import { ModalConfirm } from '@/components/modal';
 import { toast } from 'react-toastify';
+import Loading from '@/components/loading';
 
 const SearchOptions = [
   {
@@ -24,33 +25,6 @@ const SearchOptions = [
   {
     label: 'Theo mã người bệnh',
     value: 'Theo mã người bệnh',
-  },
-];
-
-const files = [
-  {
-    id: 'd9b0a92d-3c9e-4f2f-8c28-1a2f0a6726e4',
-    file: 'https://i.pinimg.com/236x/f8/5c/15/f85c157e55063ef6f0c882e29305d900.jpg',
-    description: 'Kết quả chụp X-quang',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  },
-  {
-    id: 'e9c1a43f-1c2e-4f8f-9f29-3e72c9d2e47b',
-    file: 'https://i.pinimg.com/236x/86/02/1f/86021f215c190c24bbedc7acbb071f65.jpg',
-    description: 'Báo cáo xét nghiệm máu',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  },
-  {
-    id: 'f7d2e53a-8e41-4a8e-b1f1-9b3d5c9a9d72',
-    file: 'https://i.pinimg.com/236x/a3/46/e8/a346e85f8c95c13f32d056d91bc1d133.jpg',
-    description: 'Kết quả siêu âm',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  },
-  {
-    id: 'b2f7e8d1-7c9b-4d2e-b9a3-5a5c1e2d8f93',
-    file: 'https://i.pinimg.com/236x/3f/10/36/3f1036b1e1f7b038aa9ae5ad8988146d.jpg',
-    description: 'Kết quả đo điện tâm đồ',
-    medical_history_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
   },
 ];
 
@@ -67,21 +41,26 @@ interface DetailMedicalHistories {
 const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([]);
   const [showDropdown, setShowDropdown] = useState<string | null>(null);
+  const [idMedical, setIdMedical] = useState<string | null>(null);
   const [open, setOpen] = useState<{ status: boolean; id: string }>({
     status: false,
     id: '#',
   });
   const [activeModal, setActiveModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       const res = await getMedicalHistories();
       setMedicalRecords(res);
+      setLoading(false);
     })();
   }, []);
 
-  const handleToggle = (id: string) => {
+  const handleToggle = (id: string | null) => {
     setShowDropdown(showDropdown === id ? null : id);
+    setIdMedical(id);
   };
 
   const handleClose = () => {
@@ -96,7 +75,7 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
     setActiveModal(!activeModal);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: any) => {
     const res = await deleteDetailMedicalHistorie(id);
     handleCloseModal();
     const newMedicalRecord = await getMedicalHistories();
@@ -108,43 +87,55 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
     <div>
       <DirectRoute nav="Quản lý bệnh án" subnav="Bệnh án" />
       <div className="bg-white size-full p-[20px] rounded-[26px]">
-        <div className="mb-6 flex items-center justify-start gap-5">
+        <div className="mb-6 w-full flex items-center justify-between gap-5">
           <div>
             <h1 className="text-[18px] text-black font-medium">Danh sách bệnh án</h1>
           </div>
-          <MedicalRecordSearch />
-          <button
-            onClick={navigate}
-            className="text-[18px] font-medium gap-3 border-borderColor border p-2 rounded-lg bg-[#f3f4f7]"
-          >
-            <AddIcon className="text-primaryAdmin" />
-          </button>
+          <div className="flex gap-5">
+            <button
+              onClick={navigate}
+              className="text-[18px] font-medium gap-3 border-borderColor border py-2 px-2 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-transparent hover:border-primaryAdmin"
+            >
+              <AddIcon className="text-primaryAdmin" />
+            </button>
+            <MedicalRecordSearch />
+          </div>
         </div>
         <div className="w-full">
-          <div className="w-full flex justify-between border-b border-borderColor text-left py-4 font-semibold px-2">
-            <div className="flex-[0_0_17%]">Mã bệnh án</div>
+          <div className="w-full flex justify-between border-b-2 border-primaryAdmin/20 bg-primaryAdmin/5 text-left py-4 font-semibold px-2">
+            <div className="flex-[0_0_21%]">Mã bệnh án</div>
             <div className="flex-[0_0_11%]">Chẩn đoán</div>
             <div className="flex-[0_0_20%]">Bác sĩ</div>
             <div className="flex-[0_0_20%]">Người bệnh</div>
             <div className="flex-[0_0_17%]">Ngày khám</div>
-            <div className="flex-[0_0_9%]"></div>
+            <div className="flex-[0_0_5%]"></div>
           </div>
-          <div className="w-full border-b border-borderColor text-left">
-            {medicalRecords.length > 0 ? (
-              medicalRecords.map((record, index) => (
+          <div className="w-full border-b-[2px] border-borderColor text-left">
+            {loading ? (
+              <div className="w-full flex justify-center items-center py-10">
+                <Loading className="!size-16" />
+              </div>
+            ) : medicalRecords?.length > 0 ? (
+              medicalRecords?.map((record, index) => (
                 <div
                   key={index}
-                  className={`py-6 text-black flex justify-between w-full text-left hover:opacity-100 opacity-75 cursor-pointer ${index % 2 === 1 ? 'bg-white' : 'bg-gray-200'} px-2`}
+                  className={`py-4 text-black flex items-center justify-between w-full text-left cursor-pointer ${index % 2 === 1 ? ' bg-[#f5f5f5]' : 'bg-white'} px-2`}
                 >
-                  <div className="flex-[0_0_17%] truncate font-semibold">{record.id}</div>
-                  <div className="flex-[0_0_11%] truncate">{record.diagnosis}</div>
-                  <div className="flex-[0_0_20%] truncate font-semibold flex items-center gap-2">
-                    <img className="size-[50px] rounded-full" src={record.doctor.avatar} alt="" />
-                    <span>{record.doctor.fullname}</span>
+                  <div className="flex-[0_0_21%]  font-semibold">{record.id}</div>
+                  <div className="flex-[0_0_11%] ">{record.diagnosis}</div>
+                  <div className="flex-[0_0_20%]  font-semibold flex items-center gap-2">
+                    <img className="size-[30px] rounded-full" src={record.doctor.avatar} alt="" />
+                    <div className="flex flex-col">
+                      <span className="text-[14px]">{record.doctor.fullname}</span>
+                      <span className="text-[12px] opacity-70">{record.doctor.email}</span>
+                    </div>
                   </div>
-                  <div className="flex-[0_0_20%] truncate font-semibold flex items-center gap-2">
-                    <img className="size-[50px] rounded-full" src={record.patient.avatar} alt="" />
-                    <span>{record.patient.fullname}</span>
+                  <div className="flex-[0_0_20%]  font-semibold flex items-center gap-2">
+                    <img className="size-[30px] rounded-full" src={record.patient.avatar} alt="" />
+                    <div className="flex flex-col">
+                      <span className="text-[14px]">{record.patient.fullname}</span>
+                      <span className="text-[12px] opacity-70">{record.patient.email}</span>
+                    </div>
                   </div>
                   <div className="flex-[0_0_17%]">{convertTime(record.created_at)}</div>
                   <div className="flex-[0_0_9%] text-blue-600 hover:underline cursor-pointer">
@@ -169,9 +160,11 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
                             Chi tiết
                           </Link>
                           <Link
-                            to={'#'}
+                            to={`/dashboard/medical-histories/${record.id}`}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => handleToggle(record.id)}
+                            onClick={() => {
+                              handleToggle(record.id);
+                            }}
                           >
                             Sửa
                           </Link>
@@ -189,13 +182,6 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
                       )}
                     </div>
                   </div>
-                  <ModalConfirm
-                    description="Dữ liệu sẽ không thể khôi phục"
-                    title="Bạn các chắc muốn xóa"
-                    isClose={handleCloseModal}
-                    isOpen={activeModal}
-                    submit={() => handleDelete(record.id)}
-                  />
                 </div>
               ))
             ) : (
@@ -203,7 +189,13 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
             )}
           </div>
         </div>
-        <div></div>
+        <ModalConfirm
+          description="Dữ liệu sẽ không thể khôi phục"
+          title="Bạn các chắc muốn xóa"
+          isClose={handleCloseModal}
+          isOpen={activeModal}
+          submit={() => handleDelete(idMedical)}
+        />
       </div>
       {open.status && <DetailMedicalHistories close={handleClose} statusLog={open.status} id={open.id} />}
     </div>
@@ -218,9 +210,9 @@ function MedicalRecordSearch() {
     <form className="relative flex gap-5 items-center">
       <Input
         name="searchadmin"
-        className="!text-[unset] border-none !h-10 !font-light"
+        className="border-none !h-10 !font-light text-primaryAdmin"
         isGlass
-        colorGlass="text-primaryAdmin"
+        colorGlass="text-primaryAdmin top-[9px]"
         placeholder="Tìm kiếm bệnh án ..."
         control={control}
       />
@@ -259,14 +251,14 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
           <CloseIcon />
         </div>
         <div>
-          <h1 className="uppercase text-center text-[30px] font-bold mb-14">Chi tiết bệnh án</h1>
+          <h1 className="uppercase text-center text-[25px] font-bold mb-14">Chi tiết bệnh án</h1>
           <div className="px-5">
             <div className="mb-12">
-              <div className="font-bold mb-5 flex items-center gap-3">
-                <h1 className="text-[24px]">I.</h1>
-                <p className="text-[20px]">Thông tin cơ bản:</p>
+              <div className="font-semibold mb-5 flex items-center gap-3">
+                <h1 className="text-[20px]">I.</h1>
+                <p className="text-[20px] uppercase">Thông tin cơ bản:</p>
               </div>
-              <div className="flex flex-col gap-2 text-[15px] mb-7">
+              <div className="flex flex-col gap-[5px] text-[15px] mb-7">
                 <div className="mb-2">
                   <h1 className="text-[16px] font-semibold">1. Thông tin người bệnh:</h1>
                 </div>
@@ -287,7 +279,7 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
                   <span className="font-light">{convertTime(medicalRecord?.created_at)}</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-2 text-[15px]">
+              <div className="flex flex-col gap-[5px] text-[15px]">
                 <div className="mb-2">
                   <h1 className="text-[16px] font-semibold">2. Thông tin bác sĩ:</h1>
                 </div>
@@ -306,11 +298,11 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
               </div>
             </div>
             <div>
-              <div className="font-bold mb-5 flex items-center gap-3">
-                <h1 className="text-[24px]">II.</h1>
-                <p className="text-[20px]">Chi tiết bệnh án:</p>
+              <div className="font-semibold mb-5 flex items-center gap-3">
+                <h1 className="text-[20px]">II.</h1>
+                <p className="text-[20px] uppercase">Chi tiết bệnh án:</p>
               </div>
-              <div className="flex flex-col gap-2 text-[15px]">
+              <div className="flex flex-col gap-[5px] text-[15px]">
                 <div className="flex gap-4">
                   <h1 className="font-medium">Mã bệnh án:</h1>
                   <span className="uppercase font-light">{medicalRecord?.id}</span>
@@ -331,9 +323,9 @@ function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories
                 <div className="flex flex-col gap-4">
                   <h1 className="font-medium">Ảnh chụp X-QUANG:</h1>
                   <div className="">
-                    {files.map(file => (
+                    {medicalRecord?.files?.map(file => (
                       <div key={file.id} className="h-fit w-[48%] inline-block m-1 float-start">
-                        <img className="object-cover w-full mb-2 max-h-[180px]" src={file.file} alt="" />
+                        <img className="object-cover w-full mb-2 max-h-[180px] rounded-[4px]" src={file.file} alt="" />
                         <div className="text-center">
                           <span className="uppercase font-light">{file.description}</span>
                         </div>

@@ -14,7 +14,7 @@ export interface IPermission {
 
 export interface IRole {
   id: string;
-  name: keyof typeof ROLE;
+  name: `${ROLE}`;
   description: string;
   permissions?: IPermission[];
 }

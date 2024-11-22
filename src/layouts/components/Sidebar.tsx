@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ChevronRightIcon,
   GroupIcon,
@@ -7,6 +8,7 @@ import {
   AssignmentIcon,
   Tablet,
   MedicalRecord,
+  SpecialtiesIcon,
 } from '@/components/icons';
 import { cn } from '@/helpers/utils';
 import { useEffect, useState } from 'react';
@@ -31,31 +33,31 @@ const dumpCategory = [
   },
   {
     id: 2,
-    categoryName: 'Bác sĩ',
-    path: '',
-    icon: LocalHospitalIcon,
-    pathActive: [''],
-  },
-  {
-    id: 3,
     categoryName: 'Bệnh nhân',
     path: '',
     icon: GroupIcon,
     pathActive: [''],
   },
   {
+    id: 3,
+    categoryName: 'Bác sĩ',
+    path: '',
+    icon: LocalHospitalIcon,
+    pathActive: [''],
+  },
+  {
     id: 4,
+    categoryName: 'Bệnh án',
+    path: '/medical-record',
+    icon: MedicalRecord,
+    pathActive: ['/medical-record'],
+  },
+  {
+    id: 5,
     categoryName: 'Đơn thuốc',
     path: '/prescriptions',
     icon: Tablet,
     pathActive: ['/prescriptions'],
-  },
-  {
-    id: 5,
-    categoryName: 'Phòng Ban',
-    path: '/departments',
-    icon: ApartmentIcon,
-    pathActive: ['/departments'],
   },
   {
     id: 6,
@@ -66,15 +68,28 @@ const dumpCategory = [
   },
   {
     id: 7,
-    categoryName: 'Bệnh án',
-    path: '/dashboard/medical-histories',
-    icon: MedicalRecord,
-    pathActive: ['/dashboard/medical-histories'],
+    categoryName: 'Phòng Ban',
+    path: '/departments',
+    icon: ApartmentIcon,
+    pathActive: ['/departments'],
+  },
+  {
+    id: 8,
+    categoryName: 'User',
+    path: '/users',
+    icon: GroupIcon,
+    pathActive: ['/users'],
+  },
+  {
+    id: 9,
+    categoryName: 'Chuyên khoa',
+    path: '/specialties',
+    icon: SpecialtiesIcon,
+    pathActive: ['/specialties'],
   },
 ];
 
 const Sidebar = ({ show }: { show: boolean }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [categoryManagement, setCategoryManagement] = useState<ICategoryManagement[]>(dumpCategory);
   const [tabActive, setTabActive] = useState<number>(1);
   const navigate = useNavigate();

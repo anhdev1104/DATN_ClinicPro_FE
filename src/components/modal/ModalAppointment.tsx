@@ -5,59 +5,71 @@ import {
   DialogTitle,
   FormControl,
   FormControlLabel,
+  MenuItem,
   Radio,
   RadioGroup,
+  Select,
   Stack,
   Typography,
 } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import { IAppointment } from '@/types/appointment.type';
 import { CloseIcon } from '../icons';
 import { useEffect, useState } from 'react';
 import { getSpecialties } from '@/services/specialties.service';
 import { ISpecialties } from '@/types/specialties.type';
-
-const schema = yup.object({
-  fullname: yup.string().trim().required('Vui lòng điền họ tên hợp lệ.'),
-  email: yup
-    .string()
-    .trim()
-    .required('Vui lòng điền email hợp lệ !')
-    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'Email không dúng định dạng !' }),
-  phone_number: yup
-    .string()
-    .trim()
-    .required('Vui lòng nhập số điện thoại.')
-    .matches(/^\d+$/, 'Số điện thoại chỉ được chứa ký tự số.')
-    .length(10, 'Số điện thoại phải gồm 10 chữ số.'),
-  address: yup.string().trim().required('Vui lòng điền thông tin.'),
-  gender: yup.string().required('Vui lòng điền thông tin.'),
-  description: yup.string(),
-  dob: yup.string().required('Vui lòng điền thông tin.'),
-  specialty_id: yup.string().required('Vui lòng điền thông tin.'),
-  appointment_date: yup.string().required('Vui lòng điền thông tin.'),
-});
+import { appointmentSchema } from '@/schema/appointment.schema';
+import { getPackageBySpecialty } from '@/services/package.service';
+import { IPackage } from '@/types/package.type';
+import { Button } from '../button';
+import MessageForm from '../message';
+import { addAppointments } from '@/services/appointments.service';
+import { GENDER } from '@/constants/define';
+import { useNavigate } from 'react-router-dom';
 
 const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle: () => void }) => {
   const [specialties, setSpecialties] = useState<ISpecialties[]>([]);
-  console.log('🚀 ~ ModalAppointment ~ specialties:', specialties);
+  const [packages, setPackages] = useState<IPackage[]>([]);
+  const navigate = useNavigate();
   const {
     control,
-    formState: { isValid },
+    formState: { isSubmitting, isValid, errors },
     handleSubmit,
+    watch,
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(appointmentSchema),
     mode: 'onChange',
+    defaultValues: {
+      gender: GENDER.MALE,
+    },
   });
 
+  const idSpecialty = watch('specialty_id');
   const handleAppointment: SubmitHandler<IAppointment> = async data => {
     if (!isValid) return;
-    console.log(data);
+    const dob = data.dob && new Date(data.dob).toLocaleDateString('en-CA');
+    const appointment_date = data.appointment_date && new Date(data.appointment_date).toLocaleDateString('en-CA');
+
+    const dataAppointment = {
+      ...data,
+      dob,
+      appointment_date,
+    } as IAppointment;
+
+    (async () => {
+      try {
+        await addAppointments(dataAppointment);
+        // toast.success('Đăng ký lịch hẹn thành công !');
+        // reset();
+      } catch (error) {
+        console.log(error);
+      }
+    })();
   };
 
   useEffect(() => {
@@ -66,6 +78,14 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
       setSpecialties(data);
     })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (!idSpecialty) return;
+      const dataPackage = await getPackageBySpecialty(idSpecialty);
+      setPackages(dataPackage);
+    })();
+  }, [idSpecialty]);
 
   return (
     <Dialog
@@ -76,22 +96,20 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
         onSubmit: handleSubmit(handleAppointment),
         style: {
           borderRadius: '16px',
-          maxWidth: '60%',
+          maxWidth: '65%',
           width: '100%',
         },
       }}
     >
       <Stack
         sx={{
-          maxWidth: '1000px',
           width: '100%',
         }}
         direction={'row'}
       >
         <Box
-          className="pr-[60px] pl-10 py-[30px] flex-1"
+          className="flex-1"
           sx={{
-            pr: '60px',
             pl: '40px',
             py: '30px',
           }}
@@ -106,53 +124,332 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
           >
             Đặt Lịch Hẹn
           </DialogTitle>
-          <DialogContent sx={{ p: 0, mt: '15px', overflow: 'hidden' }}>
-            <Typography
-              component={'h4'}
-              sx={{
-                fontWeight: 600,
-                fontSize: '16px',
-                color: '#4db6ac',
-                mb: 1,
-              }}
-            >
-              Thông tin bệnh nhân
-            </Typography>
-            <Controller
-              name="fullname"
-              control={control}
-              render={({ field }) => (
-                <input {...field} placeholder="Họ và tên" className="appointment-input mb-[10px]" />
-              )}
-            />
-            <Stack direction="row" spacing={1} sx={{ mb: '10px' }}>
+          <Box
+            sx={{
+              height: '480px',
+              overflowY: 'auto',
+              pr: '60px',
+              '::-webkit-scrollbar': {
+                width: '5px',
+              },
+              '::-webkit-scrollbar-thumb': {
+                backgroundColor: '#4db6ac',
+                borderRadius: '4px',
+                cursor: 'grab',
+              },
+            }}
+          >
+            <DialogContent sx={{ p: 0, mt: '15px', overflow: 'hidden' }}>
+              <Typography
+                component={'h4'}
+                sx={{
+                  fontWeight: 600,
+                  fontSize: '16px',
+                  color: '#4db6ac',
+                  mb: 1,
+                }}
+              >
+                Thông tin bệnh nhân
+              </Typography>
               <Controller
-                name="email"
+                name="fullname"
                 control={control}
-                render={({ field }) => <input {...field} placeholder="Email" className="appointment-input" />}
+                render={({ field }) => (
+                  <>
+                    <input {...field} placeholder="Họ và tên" className="appointment-input" />
+                    <MessageForm error={errors.fullname?.message} className="!mt-0 !text-[10px]" />
+                  </>
+                )}
               />
+              <Stack direction="row" spacing={1} sx={{ my: '5px' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field }) => <input {...field} placeholder="Email" className="appointment-input" />}
+                  />
+                  <MessageForm error={errors.email?.message} className="!mt-0 !text-[10px]" />
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
+                  <Controller
+                    name="phone_number"
+                    control={control}
+                    render={({ field }) => (
+                      <input {...field} placeholder="Số điện thoại" className="appointment-input" />
+                    )}
+                  />
+                  <MessageForm error={errors.phone_number?.message} className="!mt-0 !text-[10px]" />
+                </Box>
+              </Stack>
               <Controller
-                name="phone_number"
+                name="address"
                 control={control}
-                render={({ field }) => <input {...field} placeholder="Số điện thoại" className="appointment-input" />}
+                render={({ field }) => (
+                  <>
+                    <input {...field} placeholder="Địa chỉ" className="appointment-input" />
+                    <MessageForm error={errors.address?.message} className="!mt-0 !text-[10px]" />
+                  </>
+                )}
               />
-            </Stack>
-            <Controller
-              name="address"
-              control={control}
-              render={({ field }) => <input {...field} placeholder="Địa chỉ" className="appointment-input mb-[10px]" />}
-            />
-            <Stack direction="row">
+              <Stack direction="row" mt={'5px'}>
+                <Box sx={{ width: '50%' }}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Controller
+                      name="dob"
+                      control={control}
+                      render={({ field }) => (
+                        <DatePicker
+                          {...field}
+                          label="Ngày sinh"
+                          sx={{
+                            width: '100%',
+                            '& .MuiInputBase-input': {
+                              padding: '0 15px',
+                              height: 38,
+                            },
+                            '& .MuiInputBase-root': {
+                              color: '#797979',
+                              backgroundColor: '#f3f4f7',
+                              fontSize: '14px',
+                            },
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              border: 'none',
+                            },
+                            '& .MuiIconButton-root': {
+                              color: 'rgb(77, 182, 172)',
+                            },
+                            '& .css-113d811-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+                              color: 'rgb(77, 182, 172)',
+                            },
+                            '& .css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root': {
+                              fontSize: '12px',
+                              transform: 'translate(14px, 10px) scale(1)',
+                              color: '#797979',
+                            },
+                          }}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                  <MessageForm error={errors.dob?.message} className="!text-[10px]" />
+                </Box>
+                <FormControl>
+                  <Controller
+                    control={control}
+                    name="gender"
+                    render={({ field }) => (
+                      <>
+                        <RadioGroup
+                          defaultValue={GENDER.MALE}
+                          {...field}
+                          sx={{
+                            flexDirection: 'row',
+                            pl: '15px',
+                            '& .MuiButtonBase-root': {
+                              width: '38px',
+                              height: '38px',
+                            },
+                          }}
+                        >
+                          <FormControlLabel
+                            value={GENDER.MALE}
+                            sx={{
+                              '& .MuiFormControlLabel-label': {
+                                color: '#373737',
+                                fontSize: '14px',
+                              },
+                            }}
+                            control={
+                              <Radio
+                                sx={{
+                                  '&.Mui-checked': {
+                                    color: 'rgb(77, 182, 172)',
+                                  },
+                                }}
+                              />
+                            }
+                            label="Nam"
+                          />
+                          <FormControlLabel
+                            value={GENDER.FEMALE}
+                            sx={{
+                              '& .MuiFormControlLabel-label': {
+                                color: '#373737',
+                                fontSize: '14px',
+                              },
+                            }}
+                            control={
+                              <Radio
+                                sx={{
+                                  '&.Mui-checked': {
+                                    color: 'rgb(77, 182, 172)',
+                                  },
+                                }}
+                              />
+                            }
+                            label="Nữ"
+                          />
+                        </RadioGroup>
+                        <MessageForm error={errors.gender?.message} className=" !text-[10px]" />
+                      </>
+                    )}
+                  />
+                </FormControl>
+              </Stack>
+            </DialogContent>
+            <DialogContent sx={{ p: 0, pt: '15px' }}>
+              <Typography
+                component={'h4'}
+                sx={{
+                  fontWeight: 600,
+                  fontSize: '16px',
+                  color: '#4db6ac',
+                  mb: 1,
+                }}
+              >
+                Chọn chuyên khoa
+              </Typography>
+              <FormControl fullWidth>
+                <Controller
+                  control={control}
+                  name="specialty_id"
+                  defaultValue="0"
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        {...field}
+                        sx={{
+                          '& .MuiSelect-select': {
+                            padding: '8px 15px',
+                            fontSize: '12px',
+                            color: '#797979',
+                            backgroundColor: '#f5f5f5',
+                          },
+                          '&:hover': {
+                            border: 'none',
+                          },
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            border: 'none',
+                          },
+                        }}
+                        defaultValue="0"
+                      >
+                        <MenuItem
+                          value="0"
+                          disabled
+                          sx={{
+                            fontSize: '12px',
+                          }}
+                        >
+                          Chuyên khoa
+                        </MenuItem>
+                        {specialties.length > 0 &&
+                          specialties.map(item => (
+                            <MenuItem
+                              value={item.id}
+                              key={item.id}
+                              sx={{
+                                fontSize: '12px',
+                              }}
+                            >
+                              {item.description}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                      <MessageForm error={errors.specialty_id?.message} className="!mt-[5px] !text-[10px]" />
+                    </>
+                  )}
+                />
+              </FormControl>
+              <FormControl fullWidth sx={{ mt: '10px' }}>
+                <Controller
+                  control={control}
+                  name="package_id"
+                  defaultValue="0"
+                  render={({ field }) => {
+                    const selectValue: string | undefined =
+                      field.value && packages && packages.map(pkg => pkg.id).includes(field.value) ? field.value : '0';
+
+                    return (
+                      <>
+                        <Select
+                          {...field}
+                          value={selectValue}
+                          sx={{
+                            '& .MuiSelect-select': {
+                              padding: '8px 15px',
+                              fontSize: '12px',
+                              color: '#797979',
+                              backgroundColor: '#f5f5f5',
+                            },
+                            '&:hover': {
+                              border: 'none',
+                            },
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              border: 'none',
+                            },
+                          }}
+                          defaultValue="0"
+                        >
+                          <MenuItem
+                            value="0"
+                            disabled
+                            sx={{
+                              fontSize: '12px',
+                            }}
+                          >
+                            Gói khám
+                          </MenuItem>
+                          {packages &&
+                            packages.map(item => (
+                              <MenuItem
+                                value={item.id}
+                                key={item.id}
+                                sx={{
+                                  fontSize: '12px',
+                                }}
+                                className="!line-clamp-1"
+                              >
+                                {item.description}
+                              </MenuItem>
+                            ))}
+                        </Select>
+                        <MessageForm error={errors.package_id?.message} className="!mt-[5px] !text-[10px]" />
+                      </>
+                    );
+                  }}
+                />
+              </FormControl>
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <input {...field} placeholder="Thêm thông tin khác" className="appointment-input my-[10px]" />
+                )}
+              />
+            </DialogContent>
+            <DialogContent sx={{ pl: 0, pr: 0, pt: '15px' }}>
+              <Typography
+                component={'h4'}
+                sx={{
+                  fontWeight: 600,
+                  fontSize: '16px',
+                  color: '#4db6ac',
+                  mb: 1,
+                }}
+              >
+                Ngày và Giờ thích hợp
+              </Typography>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Controller
-                  name="dob"
+                  name="appointment_date"
                   control={control}
                   render={({ field }) => (
-                    <DatePicker
+                    <DateTimePicker
                       {...field}
-                      label="Ngày sinh"
+                      label="Chọn ngày và giờ"
                       sx={{
-                        width: '50%',
+                        width: '100%',
                         '& .MuiInputBase-input': {
                           padding: '0 15px',
                           height: 38,
@@ -176,90 +473,43 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
                           transform: 'translate(14px, 10px) scale(1)',
                           color: '#797979',
                         },
-                        pr: '5px',
                       }}
                     />
                   )}
                 />
               </LocalizationProvider>
-              <FormControl>
-                <Controller
-                  control={control}
-                  name="gender"
-                  render={({ field }) => (
-                    <RadioGroup
-                      defaultValue="male"
-                      {...field}
-                      sx={{
-                        flexDirection: 'row',
-                        pl: '15px',
-                      }}
-                    >
-                      <FormControlLabel
-                        value="male"
-                        sx={{
-                          '& .MuiFormControlLabel-label': {
-                            color: '#373737',
-                            fontSize: '14px',
-                          },
-                        }}
-                        control={
-                          <Radio
-                            sx={{
-                              '&.Mui-checked': {
-                                color: 'rgb(77, 182, 172)',
-                              },
-                            }}
-                          />
-                        }
-                        label="Nam"
-                      />
-                      <FormControlLabel
-                        value="female"
-                        sx={{
-                          '& .MuiFormControlLabel-label': {
-                            color: '#373737',
-                            fontSize: '14px',
-                          },
-                        }}
-                        control={
-                          <Radio
-                            sx={{
-                              '&.Mui-checked': {
-                                color: 'rgb(77, 182, 172)',
-                              },
-                            }}
-                          />
-                        }
-                        label="Nữ"
-                      />
-                    </RadioGroup>
-                  )}
-                />
-              </FormControl>
-            </Stack>
-          </DialogContent>
-          <DialogContent sx={{ p: 0, mt: '15px' }}>
-            <Typography
-              component={'h4'}
-              sx={{
-                fontWeight: 600,
-                fontSize: '16px',
-                color: '#4db6ac',
-                mb: 1,
-              }}
-            >
-              Chọn chuyên khoa
-            </Typography>
-          </DialogContent>
+              <MessageForm error={errors.appointment_date?.message} className="!mt-[5px] !text-[10px]" />
+              <Box
+                className="appointment-input h-auto"
+                sx={{ mt: '10px', fontSize: '11px', fontWeight: '300', lineHeight: '20px !important', py: '2px' }}
+              >
+                Bằng cách nhấn nút Đăng ký hoặc nút gửi thông tin đi, tôi xác nhận đã đọc và đồng ý với các{' '}
+                <Typography
+                  component={'span'}
+                  className="text-third text-[11px] cursor-pointer"
+                  onClick={() => {
+                    handleToggle();
+                    navigate('/privacy-policy');
+                  }}
+                >
+                  Chính Sách Quyền Riêng Tư.
+                </Typography>
+              </Box>
+            </DialogContent>
+          </Box>
+          <Box sx={{ mt: '10px' }}>
+            <Button type="submit" isLoading={isSubmitting} disabled={isSubmitting}>
+              Đăng ký
+            </Button>
+          </Box>
         </Box>
         <Box
           sx={{
-            width: '400px',
+            width: '450px',
             position: 'relative',
           }}
         >
-          <img src="/images/form-booking.webp" alt="" className="w-full h-full object-contain" />
+          <img src="/images/form-booking.webp" alt="" className="w-full h-full object-cover" />
           <Box onClick={handleToggle}>
             <CloseIcon className="absolute top-2 right-4 text-[40px] cursor-pointer text-gray-300 transition-all ease-linear hover:text-white" />
           </Box>

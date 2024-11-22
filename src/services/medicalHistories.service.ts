@@ -1,4 +1,5 @@
 import Http from '@/helpers/http';
+import { NewMedical } from '@/types/medicalHistories.type';
 
 const http = new Http();
 
@@ -33,6 +34,34 @@ export const getDetailMedicalHistorie = async (id: string | undefined) => {
 export const deleteDetailMedicalHistorie = async (id: string) => {
   try {
     const response = await http.delete(`/medical-histories`, id);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const createMedicalHistorie = async (medicalRecord: NewMedical) => {
+  try {
+    const response = await http.post(`/medical-histories`, medicalRecord);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateMedicalHistorie = async (id: string, medicalRecord: NewMedical) => {
+  try {
+    const response = await http.update(`/medical-histories/${id}`, medicalRecord);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getPatient = async (key = '') => {
+  try {
+    const query = key ? `?q=${key}` : '';
+    const response = await http.get(`/patients${query}`);
     return response;
   } catch (error) {
     return error;

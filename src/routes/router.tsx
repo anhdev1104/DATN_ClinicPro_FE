@@ -22,11 +22,17 @@ import ProfilePage from '@/pages/client/profile/ProfilePage';
 import ChangePassword from '@/pages/client/auth/ChangePassword';
 import ProtectedRoute from '@/components/auth';
 import ForgotPassword from '@/pages/client/auth/ForgotPassword';
-import MedicalHistoriesPage from '@/pages/client/medicalHistories/MedicalHistoriesPage';
+import MedicalHistoriesPage from '@/pages/client/medical_histories/MedicalHistoriesPage';
+import EditMedicalHistories from '@/pages/admin/medical_histories/components/EditMedicalHistories';
 import EditPackage from '@/pages/admin/package/component/EditPackage';
 import Package from '@/pages/admin/package/Package';
-import MedicalHistories from '@/pages/admin/medicalHistories/MedicalHistories';
+import User from '@/pages/admin/users/Users';
+import GetUser from '@/pages/admin/users/GetUser';
+import UpdateUser from '@/pages/admin/users/UpdateUser';
+import CreateUser from '@/pages/admin/users/CreateUser';
+import MedicalHistories from '@/pages/admin/medical_histories/MedicalHistories';
 import PrivacyPage from '@/pages/client/privacy/privacyPage';
+import Specialties from '@/pages/admin/specialties/Specialties';
 
 type IRouter = RouteProps & {
   title: string;
@@ -95,9 +101,14 @@ const adminRouter: IRouter[] = [
     title: 'Trang quản lý',
   },
   {
-    path: '/dashboard/medical-histories',
+    path: '/medical-record',
     element: <MedicalHistories />,
-    title: 'Danh sách gói khám',
+    title: 'Danh sách bệnh án',
+  },
+  {
+    path: '/dashboard/medical-histories/:id',
+    element: <EditMedicalHistories />,
+    title: 'Chỉnh sửa bệnh án',
   },
   {
     path: '/prescriptions',
@@ -124,11 +135,35 @@ const adminRouter: IRouter[] = [
     element: <PackageDetail />,
     title: 'Danh sách gói khám',
   },
-
   {
     path: '/edit-package/:id',
     element: <EditPackage />,
     title: 'Chỉnh sửa gói khám',
+  },
+  {
+    path: '/users',
+    element: <User />,
+    title: 'Danh Sách Người Dùng',
+  },
+  {
+    path: '/users/add',
+    element: <CreateUser />,
+    title: 'Danh Sách Người Dùng',
+  },
+  {
+    path: '/users/:userId',
+    element: <GetUser />,
+    title: 'Chi Tiết Người Dùng',
+  },
+  {
+    path: '/users/:userId/edit',
+    element: <UpdateUser />,
+    title: 'Danh Sách Người Dùng',
+  },
+  {
+    path: '/specialties',
+    element: <Specialties />,
+    title: 'Trang chuyên khoa',
   },
 ];
 

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import Input from '@/components/input';
 import { MoreVertIcon, AddIcon } from '@/components/icons';
 import DirectRoute from '@/components/direct';
-import { getPackages, DeletePackage, getCategory } from '@/services/package.service';
+import { getPackages, deletePackage, getCategory } from '@/services/package.service';
 import { IPackage, Category } from '@/types/package.type';
 import { toast } from 'react-toastify';
 
@@ -32,6 +32,7 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
         const categoryResponse = await getCategory();
         setPackages(packageResponse.data || []);
         setCategories(categoryResponse || []);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setError('Không thể tải danh sách gói khám. Vui lòng thử lại sau.');
       } finally {
@@ -48,7 +49,7 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
   };
 
   const handleDelete = async (id: string) => {
-    await DeletePackage(id);
+    await deletePackage(id);
     setPackages(prevPackages => prevPackages.filter(pkg => pkg.id !== id));
     toast.success('Xóa gói khám thành công!');
   };
@@ -98,7 +99,7 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
                     <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover" />
                   </td>
                   <td className="p-4 text-gray-600 w-[30%]">
-                    <textarea name="" id="" cols="25" rows="6" disabled className="w-full">
+                    <textarea name="" id="" cols={25} rows={6} disabled className="w-full">
                       {pkg.content}
                     </textarea>
                   </td>

@@ -63,7 +63,7 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
         </div>
         {isLoading && (
           <div className="mx-auto text-center pt-10">
-            <LoadingSpin className="!w-10 !h-10" />
+            <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
           </div>
         )}
         {!isLoading && (
@@ -80,51 +80,52 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
               </tr>
             </thead>
             <tbody>
-              {prescription.map((item, index) => (
-                <tr className="even:bg-[#f5f5f5]" key={item.id}>
-                  <td className="py-2 px-5">{index + 1}</td>
-                  <td className="py-2 px-5 text-gray-800 font-semibold max-w-[250px]">{item.name}</td>
-                  <td className="py-2 px-5 text-gray-600">{item.patient_id}</td>
-                  <td className="py-2 px-5 text-gray-600 max-w-[300px]">{item.description}</td>
-                  <td className="py-2 px-5 text-gray-800">{item.user_id}</td>
-                  <td className="py-2 px-5 text-end">
-                    <div className="relative inline-block text-left">
-                      <button
-                        type="button"
-                        className="flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
-                        onClick={() => handleToggle(item.id)}
-                      >
-                        <MoreHorizIcon />
-                      </button>
-                      {showDropdown === item.id && (
-                        <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white">
-                          <div
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => {
-                              handleToggle(item.id);
-                              // handleClickOpen(item);
-                            }}
-                          >
-                            Chi tiết
+              {prescription &&
+                prescription?.map((item, index) => (
+                  <tr className="even:bg-[#f5f5f5]" key={item.id}>
+                    <td className="py-2 px-5">{index + 1}</td>
+                    <td className="py-2 px-5 text-gray-800 font-semibold max-w-[250px]">{item.name}</td>
+                    <td className="py-2 px-5 text-gray-600">{item.patient_id}</td>
+                    <td className="py-2 px-5 text-gray-600 max-w-[300px]">{item.description}</td>
+                    <td className="py-2 px-5 text-gray-800">{item.user_id}</td>
+                    <td className="py-2 px-5 text-end">
+                      <div className="relative inline-block text-left">
+                        <button
+                          type="button"
+                          className="flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
+                          onClick={() => handleToggle(item.id)}
+                        >
+                          <MoreHorizIcon />
+                        </button>
+                        {showDropdown === item.id && (
+                          <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white">
+                            <div
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              onClick={() => {
+                                handleToggle(item.id);
+                                // handleClickOpen(item);
+                              }}
+                            >
+                              Chi tiết
+                            </div>
+                            <div
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              onClick={() => handleToggle(item.id)}
+                            >
+                              Sửa
+                            </div>
+                            <div
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              onClick={() => handleToggle(item.id)}
+                            >
+                              Xóa bỏ
+                            </div>
                           </div>
-                          <div
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => handleToggle(item.id)}
-                          >
-                            Sửa
-                          </div>
-                          <div
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => handleToggle(item.id)}
-                          >
-                            Xóa bỏ
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         )}

@@ -70,7 +70,7 @@ class Http {
   async post(url: string, data?: any, config?: any) {
     try {
       const response = await this.api.post(url, data, config);
-      return response.data;
+      return response;
     } catch (error: any) {
       return error.response.data;
     }
