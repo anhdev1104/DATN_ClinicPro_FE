@@ -26,16 +26,16 @@ import { ISpecialties } from '@/types/specialties.type';
 import { appointmentSchema } from '@/schema/appointment.schema';
 import { getPackageBySpecialty } from '@/services/package.service';
 import { IPackage } from '@/types/package.type';
-import { Link } from 'react-router-dom';
 import { Button } from '../button';
 import MessageForm from '../message';
 import { addAppointments } from '@/services/appointments.service';
 import { GENDER } from '@/constants/define';
+import { useNavigate } from 'react-router-dom';
 
 const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle: () => void }) => {
   const [specialties, setSpecialties] = useState<ISpecialties[]>([]);
   const [packages, setPackages] = useState<IPackage[]>([]);
-
+  const navigate = useNavigate();
   const {
     control,
     formState: { isSubmitting, isValid, errors },
@@ -484,9 +484,16 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
                 sx={{ mt: '10px', fontSize: '11px', fontWeight: '300', lineHeight: '20px !important', py: '2px' }}
               >
                 Bằng cách nhấn nút Đăng ký hoặc nút gửi thông tin đi, tôi xác nhận đã đọc và đồng ý với các{' '}
-                <Link to="/policy-and-privacy" className="text-third">
+                <Typography
+                  component={'span'}
+                  className="text-third text-[11px] cursor-pointer"
+                  onClick={() => {
+                    handleToggle();
+                    navigate('/privacy-policy');
+                  }}
+                >
                   Chính Sách Quyền Riêng Tư.
-                </Link>
+                </Typography>
               </Box>
             </DialogContent>
           </Box>
