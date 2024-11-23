@@ -9,9 +9,10 @@ type TConfirm = {
   submit?: () => void;
   isLoading?: boolean;
   disabled?: boolean;
+  className?: string;
 };
 
-const ModalConfirm = ({ title, description, isOpen, isClose, submit, isLoading, disabled }: TConfirm) => {
+const ModalConfirm = ({ title, description, isOpen, isClose, submit, isLoading, disabled, className }: TConfirm) => {
   return (
     <Dialog open={isOpen} onClose={isClose} maxWidth="sm" fullWidth>
       <div className="p-6 md:p-8 bg-white rounded-lg shadow-lg">
@@ -25,7 +26,7 @@ const ModalConfirm = ({ title, description, isOpen, isClose, submit, isLoading, 
             disabled={disabled}
             onClick={submit}
             type="submit"
-            className="text-white px-4 py-2 rounded-md transition-all min-w-[104px]"
+            className={`text-white  px-4 py-2 rounded-md transition-all min-w-[104px] ${className}`}
           >
             Xác nhận
           </Button>

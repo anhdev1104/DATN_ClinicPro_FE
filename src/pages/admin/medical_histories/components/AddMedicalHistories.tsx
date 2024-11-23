@@ -124,7 +124,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
           <div className="border-borderColor border px-3 py-2 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-white cursor-pointer">
             <button onClick={navigate} className="text-dark font-medium flex items-center gap-3">
               <List className="text-primaryAdmin" />
-              Danh sách đơn thuốc
+              Danh sách bệnh án
             </button>
           </div>
         </div>
@@ -134,7 +134,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
               <Field className="flex gap-3 flex-col">
                 <Label htmlFor="diagnosis">Bệnh chấn đoán:</Label>
                 <Input
-                  className="h-[48px]"
+                  className="h-[48px] text-primaryAdmin"
                   placeholder="Chẩn đoán ..."
                   name="diagnosis"
                   type="text"
@@ -182,7 +182,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                   render={({ field }) => {
                     return (
                       <textarea
-                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
                         placeholder="Phương pháp điều trị  ..."
                         id="treatment"
                         {...field}
@@ -199,7 +199,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                   render={({ field }) => {
                     return (
                       <textarea
-                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
                         placeholder="Mô tả bệnh án ..."
                         id="description"
                         {...field}

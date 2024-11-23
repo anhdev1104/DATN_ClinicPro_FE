@@ -3,10 +3,10 @@ import { CachedIcon, CloseIcon, CompareArrows } from '@/components/icons';
 import { Dialog } from '@mui/material';
 import { getDetailMedicalHistorie, getMedicalHistoriesById } from '@/services/medicalHistories.service';
 import { MedicalRecord } from '@/types/medicalHistories.type';
-import Loading from '@/components/loading';
 import convertTime from '@/helpers/convertTime';
 import LightBox from '@/components/lightbox';
 import convertLightBox from '@/helpers/convertLightBox';
+import LoadingSpin from '@/components/loading';
 
 interface DetailMedicalHistories {
   close: () => void;
@@ -78,7 +78,7 @@ const MedicalHistoriesPage = () => {
         <div className="w-full border-b border-borderColor text-left">
           {loading ? (
             <div className="w-full flex justify-center items-center py-10">
-              <Loading className="!size-16" />
+              <LoadingSpin className="!size-16" color="border-primaryAdmin" />
             </div>
           ) : Array.isArray(listMedicalRecords) && listMedicalRecords.length > 0 ? (
             listMedicalRecords.map((record, index) => (

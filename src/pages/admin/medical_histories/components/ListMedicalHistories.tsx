@@ -2,7 +2,7 @@ import DirectRoute from '@/components/direct';
 import Input from '@/components/input';
 import { useForm } from 'react-hook-form';
 import Select from '@/components/select';
-import { AddIcon, CloseIcon, MoreVertIcon } from '@/components/icons';
+import { AddIcon, CloseIcon, MoreHorizIcon } from '@/components/icons';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
@@ -15,7 +15,7 @@ import convertTime from '@/helpers/convertTime';
 import { Dialog } from '@mui/material';
 import { ModalConfirm } from '@/components/modal';
 import { toast } from 'react-toastify';
-import Loading from '@/components/loading';
+import LoadingSpin from '@/components/loading';
 
 const SearchOptions = [
   {
@@ -48,6 +48,7 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
   });
   const [activeModal, setActiveModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -76,7 +77,9 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
   };
 
   const handleDelete = async (id: any) => {
+    setIsLoading(true);
     const res = await deleteDetailMedicalHistorie(id);
+    setIsLoading(false);
     handleCloseModal();
     const newMedicalRecord = await getMedicalHistories();
     toast.success(res.message, { position: 'top-right' });
@@ -113,7 +116,7 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
           <div className="w-full border-b-[2px] border-borderColor text-left">
             {loading ? (
               <div className="w-full flex justify-center items-center py-10">
-                <Loading className="!size-16" />
+                <LoadingSpin className="!size-16" color="border-primaryAdmin" />
               </div>
             ) : medicalRecords?.length > 0 ? (
               medicalRecords?.map((record, index) => (
@@ -121,12 +124,12 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
                   key={index}
                   className={`py-4 text-black flex items-center justify-between w-full text-left cursor-pointer ${index % 2 === 1 ? ' bg-[#f5f5f5]' : 'bg-white'} px-2`}
                 >
-                  <div className="flex-[0_0_21%]  font-semibold">{record.id}</div>
-                  <div className="flex-[0_0_11%] ">{record.diagnosis}</div>
-                  <div className="flex-[0_0_20%]  font-semibold flex items-center gap-2">
+                  <div className="flex-[0_0_21%]">{record.id}</div>
+                  <div className="flex-[0_0_11%] font-semibold">{record.diagnosis}</div>
+                  <div className="flex-[0_0_20%] flex items-center gap-2">
                     <img className="size-[30px] rounded-full" src={record.doctor.avatar} alt="" />
                     <div className="flex flex-col">
-                      <span className="text-[14px]">{record.doctor.fullname}</span>
+                      <span className="text-[14px] font-semibold">{record.doctor.fullname}</span>
                       <span className="text-[12px] opacity-70">{record.doctor.email}</span>
                     </div>
                   </div>
@@ -145,7 +148,7 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
                         className="inline-flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
                         onClick={() => handleToggle(record.id)}
                       >
-                        <MoreVertIcon />
+                        <MoreHorizIcon />
                       </button>
                       {showDropdown === record.id && (
                         <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white overflow-hidden">
@@ -191,10 +194,12 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
         </div>
         <ModalConfirm
           description="Dữ liệu sẽ không thể khôi phục"
-          title="Bạn các chắc muốn xóa"
+          title="Bạn có chắc muốn xóa"
           isClose={handleCloseModal}
           isOpen={activeModal}
           submit={() => handleDelete(idMedical)}
+          isLoading={isLoading}
+          className="bg-primaryAdmin hover:bg-primaryAdmin/50"
         />
       </div>
       {open.status && <DetailMedicalHistories close={handleClose} statusLog={open.status} id={open.id} />}
