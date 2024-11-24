@@ -8,7 +8,7 @@ import BaseInput from '@/components/base/input';
 import { toast } from 'react-toastify';
 import { IResetPassword, IResetPasswordError } from '@/types/auth.type';
 import former from '@/providers/former';
-import Form from '@/lib/Form';
+import { Form } from '@/lib/Form';
 import BaseButton from '@/components/base/button';
 import { Text } from '@mantine/core';
 import { numberRegex } from '@/constants/regex';
@@ -26,7 +26,6 @@ interface ResetPasswordProps {
 
 const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
   const {
-    handleSubmit,
     reset,
     formState: { disabled },
   } = useFormContext<ResetPassword>();
@@ -55,7 +54,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
           opacity: 1,
         }}
       >
-        <Form onSubmit={handleSubmit(handleSendRequest)} className="w-3/4 flex flex-col mx-auto space-y-2">
+        <Form onSubmit={handleSendRequest} className="w-3/4 flex flex-col mx-auto space-y-2">
           <BaseInput.Pin
             name="otp"
             autoComplete="otp"

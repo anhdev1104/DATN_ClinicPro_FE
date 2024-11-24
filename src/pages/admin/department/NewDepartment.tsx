@@ -3,7 +3,7 @@ import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import former, { OptionsWithForm } from '@/providers/former';
-import Form from '@/lib/Form';
+import { Form } from '@/lib/Form';
 import { useAddAnDepartmentMutation } from '@/redux/api/department';
 import { useGetUsersQuery } from '@/redux/api/users';
 import { newDepartmentSchema } from '@/schema/department.schema';

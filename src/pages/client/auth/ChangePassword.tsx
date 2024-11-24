@@ -1,7 +1,7 @@
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
 import former from '@/providers/former';
-import Form from '@/lib/Form';
+import { Form } from '@/lib/Form';
 import { changePassword } from '@/services/auth.service';
 import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
 import yup from '@/helpers/locate';
@@ -42,7 +42,6 @@ const ChangePassword = () => {
     formState: { isValid, errors, disabled },
     reset,
     setError,
-    handleSubmit,
   } = useFormContext<PasswordProps>();
 
   const handleChangePassword = async <T extends Array<keyof PasswordProps>>(data: PasswordProps) => {
@@ -73,10 +72,7 @@ const ChangePassword = () => {
           <Title order={1} lineClamp={1} className="capitalize text-center">
             thay đổi mật khẩu
           </Title>
-          <Form
-            onSubmit={handleSubmit(handleChangePassword)}
-            className="space-y-2 flex flex-col my-10 justify-center items-center"
-          >
+          <Form onSubmit={handleChangePassword} className="space-y-2 flex flex-col my-10 justify-center items-center">
             <Stack gap="md" justify="center" align="center" className="w-full lg:w-3/4">
               {formElement.map(element => (
                 <BaseInput.Password
