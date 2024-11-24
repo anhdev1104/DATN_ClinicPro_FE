@@ -31,6 +31,13 @@ import MessageForm from '../message';
 import { addAppointments } from '@/services/appointments.service';
 import { GENDER } from '@/constants/define';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import { toast } from 'react-toastify';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle: () => void }) => {
   const [specialties, setSpecialties] = useState<ISpecialties[]>([]);
@@ -41,6 +48,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
     formState: { isSubmitting, isValid, errors },
     handleSubmit,
     watch,
+    reset,
   } = useForm({
     resolver: yupResolver(appointmentSchema),
     mode: 'onChange',
@@ -53,8 +61,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
   const handleAppointment: SubmitHandler<IAppointment> = async data => {
     if (!isValid) return;
     const dob = data.dob && new Date(data.dob).toLocaleDateString('en-CA');
-    const appointment_date = data.appointment_date && new Date(data.appointment_date).toLocaleDateString('en-CA');
-
+    const appointment_date = dayjs(data.appointment_date).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
     const dataAppointment = {
       ...data,
       dob,
@@ -62,13 +69,15 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
     } as IAppointment;
 
     (async () => {
-      try {
-        await addAppointments(dataAppointment);
-        // toast.success('Đăng ký lịch hẹn thành công !');
-        // reset();
-      } catch (error) {
-        console.log(error);
+      const res = await addAppointments(dataAppointment);
+      if (res.success === false) {
+        toast.error(res.errors[Object.keys(res.errors)[0]]?.[0]);
+        return;
       }
+      toast.success('Đăng ký lịch hẹn thành công !');
+      reset({
+        gender: GENDER.MALE,
+      });
     })();
   };
 
@@ -81,7 +90,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
 
   useEffect(() => {
     (async () => {
-      if (!idSpecialty) return;
+      if (!idSpecialty || idSpecialty === '0') return;
       const dataPackage = await getPackageBySpecialty(idSpecialty);
       setPackages(dataPackage);
     })();
