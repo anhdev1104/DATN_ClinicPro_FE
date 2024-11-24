@@ -6,7 +6,7 @@ const http = new Http();
 export const addAppointments = async (data: IAppointment) => {
   try {
     const response = await http.post('/appointments', data);
-    return response.data;
+    return response;
   } catch (error) {
     return error;
   }

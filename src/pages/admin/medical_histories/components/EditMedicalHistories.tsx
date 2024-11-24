@@ -168,7 +168,7 @@ const EditMedicalHistories = () => {
               <Field className="flex gap-3 flex-col">
                 <Label htmlFor="diagnosis">Bệnh chấn đoán:</Label>
                 <Input
-                  className="h-[48px]"
+                  className="h-[48px] text-primaryAdmin"
                   placeholder="Chẩn đoán ..."
                   name="diagnosis"
                   type="text"
@@ -215,7 +215,7 @@ const EditMedicalHistories = () => {
                   render={({ field }) => {
                     return (
                       <textarea
-                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
                         placeholder="Phương pháp điều trị  ..."
                         id="treatment"
                         {...field}
@@ -232,7 +232,7 @@ const EditMedicalHistories = () => {
                   render={({ field }) => {
                     return (
                       <textarea
-                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
                         placeholder="Mô tả bệnh án ..."
                         id="description"
                         {...field}
@@ -273,6 +273,7 @@ const EditMedicalHistories = () => {
         isOpen={modalStatus}
         title="Cập nhập bệnh án"
         description="Bạn có chắc muốn cập nhập hồ sơ bệnh án ? Các thông tin cũ sẽ mất vỉnh viễn và không được khôi phục lại! "
+        className="bg-primaryAdmin hover:bg-primaryAdmin/50"
       />
       {selectPatient && (
         <FormPatient

@@ -21,4 +21,5 @@ export interface IPrescription {
   name: string;
   description?: string;
   medications: IMedication[];
+  created_at?: string;
 }
