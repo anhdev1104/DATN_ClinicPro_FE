@@ -33,7 +33,7 @@ import CreateUser from '@/pages/admin/users/CreateUser';
 import MedicalHistories from '@/pages/admin/medical_histories/MedicalHistories';
 import PrivacyPage from '@/pages/client/privacy/privacyPage';
 import Specialties from '@/pages/admin/specialties/Specialties';
-
+import Appointment from '@/pages/admin/appointments/Appointment';
 type IRouter = RouteProps & {
   title: string;
 };
@@ -99,6 +99,11 @@ const adminRouter: IRouter[] = [
     path: '/dashboard',
     element: <Dashboard />,
     title: 'Trang quản lý',
+  },
+  {
+    path: '/appointments',
+    element: <Appointment />,
+    title: 'Danh sách lịch hẹn',
   },
   {
     path: '/medical-record',
