@@ -51,7 +51,7 @@ const TableToolbar = <T,>({ table, toolbar, filterItem }: TableToolbarProps<T>) 
                     className="capitalize"
                   >
                     <Text lineClamp={1} className="text-sm text-gray-700">
-                      {column.id}
+                      {/* {column.columnDef.header.} */}
                     </Text>
                   </Menu.Item>
                 );

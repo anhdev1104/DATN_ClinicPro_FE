@@ -24,9 +24,9 @@ interface ResetPasswordProps {
   email: string;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
   const {
-    handleSubmit,
     reset,
     formState: { disabled },
   } = useFormContext<ResetPassword>();
@@ -55,7 +55,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
           opacity: 1,
         }}
       >
-        <Form onSubmit={handleSubmit(handleSendRequest)} className="w-3/4 flex flex-col mx-auto space-y-2">
+        <Form onSubmit={handleSendRequest} className="w-3/4 flex flex-col mx-auto space-y-2">
           <BaseInput.Pin
             name="otp"
             autoComplete="otp"

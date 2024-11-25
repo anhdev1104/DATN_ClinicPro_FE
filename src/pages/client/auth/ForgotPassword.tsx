@@ -14,18 +14,16 @@ import former, { OptionsWithForm } from '@/providers/former';
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import Form from '@/lib/Form';
-import { emailRegex } from '@/constants/regex';
 import { IconArrowLeft } from '@tabler/icons-react';
 
 const forgotPasswordSchema = yup.object({
-  email: yup.string().required().matches(emailRegex, { message: 'Trường này phải là email' }),
+  email: yup.string().email().required(),
 });
 export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ForgotPassword = () => {
   const {
-    handleSubmit,
     formState: { isValid, errors, disabled },
     setError,
     getValues,
@@ -85,7 +83,7 @@ const ForgotPassword = () => {
                 </div>
               </div>
               {!isSend ? (
-                <Form onSubmit={handleSubmit(handleSendEmail)} className="w-3/4 flex flex-col mx-auto space-y-2">
+                <Form onSubmit={handleSendEmail} className="w-3/4 flex flex-col mx-auto space-y-2">
                   <BaseInput.Group
                     autoComplete="email"
                     name="email"

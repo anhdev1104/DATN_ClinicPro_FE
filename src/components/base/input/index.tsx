@@ -25,7 +25,7 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
-import { BasePinInput } from './Input';
+import { BaseDateInput, BasePinInput } from './Input';
 
 interface InputProps extends InputFactory {
   staticComponents: InputFactory['staticComponents'] & {
@@ -52,6 +52,7 @@ interface InputProps extends InputFactory {
     MultiSelect: typeof MultiSelect;
     Tag: typeof TagsInput;
     Pill: typeof PillsInput;
+    Date: typeof BaseDateInput;
   };
 }
 
@@ -67,6 +68,7 @@ BaseInput.Chip = Chip;
 BaseInput.Color = ColorInput;
 BaseInput.ColorPicker = ColorPicker;
 BaseInput.Form = Fieldset;
+BaseInput.File = FileInput;
 BaseInput.Json = JsonInput;
 BaseInput.NativeSelect = NativeSelect;
 BaseInput.Select = Select;
@@ -80,6 +82,7 @@ BaseInput.AutoComplete = Autocomplete;
 BaseInput.MultiSelect = MultiSelect;
 BaseInput.Tag = TagsInput;
 BaseInput.Pill = PillsInput;
+BaseInput.Date = BaseDateInput;
 BaseInput.displayName = '@mantine/core/Input';
 
 export default BaseInput;

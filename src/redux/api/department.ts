@@ -7,7 +7,7 @@ export const departmentApi = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: ['Department'],
   endpoints: builder => ({
-    getAllDepartment: builder.query<ResponseTypes<Department[]>, QueryParams>({
+    getAllDepartment: builder.query<ResponseTypes<Department[]>, QueryParams | void>({
       query: params => ({
         url: 'departments',
         params,
@@ -19,7 +19,7 @@ export const departmentApi = createApi({
               { type: 'Department', id: 'DEPARTMENT-LIST' },
             ]
           : [{ type: 'Department', id: 'DEPARTMENT-LIST' }],
-      keepUnusedDataFor: 120,
+      keepUnusedDataFor: 180,
     }),
     getDepartmentDetail: builder.query<ResponseTypes<DepartmentDetail>, number | string>({
       query: id => ({ url: `departments/${id}` }),

@@ -1,41 +1,45 @@
+import React, { useEffect } from 'react';
+import { Route, RouteProps, Routes, useLocation } from 'react-router-dom';
 import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
-import Dashboard from '@/pages/admin/dashboard/DashBoard';
-import Department from '@/pages/admin/department/Department';
-import DepartmentDetail from '@/pages/admin/department/DepartmentDetail';
-import NotFoundPage from '@/pages/client/404/NotFoundPage';
-import AboutPage from '@/pages/client/about/AboutPage';
-import AchievementPage from '@/pages/client/achievement/AchievementPage';
-import AdvisePage from '@/pages/client/advise/AdvisePage';
-import LoginOTP from '@/pages/client/auth/LoginOTP';
-import LoginPage from '@/pages/client/auth/LoginPage';
-import RegisterPage from '@/pages/client/auth/RegisterPage';
-import BranchsPage from '@/pages/client/branchs/BranchsPage';
-import CommunityPage from '@/pages/client/community/CommunityPage';
-import HomePage from '@/pages/client/home/HomePage';
-import PackageDetail from '@/pages/admin/package/component/PackageDetail';
-import { useEffect } from 'react';
-import { Route, RouteProps, Routes, useLocation } from 'react-router-dom';
-import Prescription from '@/pages/admin/prescriptions/Prescription';
-import ProfilePage from '@/pages/client/profile/ProfilePage';
-import ChangePassword from '@/pages/client/auth/ChangePassword';
 import ProtectedRoute from '@/components/auth';
-import ForgotPassword from '@/pages/client/auth/ForgotPassword';
-import MedicalHistoriesPage from '@/pages/client/medical_histories/MedicalHistoriesPage';
-import EditMedicalHistories from '@/pages/admin/medical_histories/components/EditMedicalHistories';
-import EditPackage from '@/pages/admin/package/component/EditPackage';
-import Package from '@/pages/admin/package/Package';
-import User from '@/pages/admin/users/Users';
-import GetUser from '@/pages/admin/users/GetUser';
-import UpdateUser from '@/pages/admin/users/UpdateUser';
-import CreateUser from '@/pages/admin/users/CreateUser';
-import MedicalHistories from '@/pages/admin/medical_histories/MedicalHistories';
-import Specialties from '@/pages/admin/specialties/Specialties';
-import AddSpecialties from '@/pages/admin/specialties/components/AddSpecialties';
-import EditSpecialties from '@/pages/admin/specialties/components/EditSpecialties';
-import Patients from '@/pages/admin/patient/Patients';
-import DetailPatient from '@/pages/admin/patient/components/DetailPatient';
+
+const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
+const Department = React.lazy(() => import('@/pages/admin/department/Department'));
+const DepartmentDetail = React.lazy(() => import('@/pages/admin/department/DepartmentDetail'));
+const NotFoundPage = React.lazy(() => import('@/pages/client/404/NotFoundPage'));
+const AboutPage = React.lazy(() => import('@/pages/client/about/AboutPage'));
+const AchievementPage = React.lazy(() => import('@/pages/client/achievement/AchievementPage'));
+const AdvisePage = React.lazy(() => import('@/pages/client/advise/AdvisePage'));
+const LoginOTP = React.lazy(() => import('@/pages/client/auth/LoginOTP'));
+const LoginPage = React.lazy(() => import('@/pages/client/auth/LoginPage'));
+const RegisterPage = React.lazy(() => import('@/pages/client/auth/RegisterPage'));
+const BranchsPage = React.lazy(() => import('@/pages/client/branchs/BranchsPage'));
+const CommunityPage = React.lazy(() => import('@/pages/client/community/CommunityPage'));
+const HomePage = React.lazy(() => import('@/pages/client/home/HomePage'));
+const PackageDetail = React.lazy(() => import('@/pages/admin/package/component/PackageDetail'));
+const Prescription = React.lazy(() => import('@/pages/admin/prescriptions/Prescription'));
+const ProfilePage = React.lazy(() => import('@/pages/client/profile/ProfilePage'));
+const ChangePassword = React.lazy(() => import('@/pages/client/auth/ChangePassword'));
+const ForgotPassword = React.lazy(() => import('@/pages/client/auth/ForgotPassword'));
+const MedicalHistoriesPage = React.lazy(() => import('@/pages/client/medical_histories/MedicalHistoriesPage'));
+const EditMedicalHistories = React.lazy(
+  () => import('@/pages/admin/medical_histories/components/EditMedicalHistories'),
+);
+const EditPackage = React.lazy(() => import('@/pages/admin/package/component/EditPackage'));
+const Package = React.lazy(() => import('@/pages/admin/package/Package'));
+const User = React.lazy(() => import('@/pages/admin/users/Users'));
+const GetUser = React.lazy(() => import('@/pages/admin/users/GetUser'));
+const UpdateUser = React.lazy(() => import('@/pages/admin/users/UpdateUser'));
+const CreateUser = React.lazy(() => import('@/pages/admin/users/CreateUser'));
+const MedicalHistories = React.lazy(() => import('@/pages/admin/medical_histories/MedicalHistories'));
+const PrivacyPage = React.lazy(() => import('@/pages/client/privacy/privacyPage'));
+const Specialties = React.lazy(() => import('@/pages/admin/specialties/Specialties'));
+const AddSpecialties = React.lazy(() => import('@/pages/admin/specialties/components/AddSpecialties'));
+const EditSpecialties = React.lazy(() => import('@/pages/admin/specialties/components/EditSpecialties'));
+const Patients = React.lazy(() => import('@/pages/admin/patient/Patients'));
+const DetailPatient = React.lazy(() => import('@/pages/admin/patient/components/DetailPatient'));
 
 type IRouter = RouteProps & {
   title: string;
@@ -65,6 +69,11 @@ const clientRouter: IRouter[] = [
     path: '/community',
     element: <CommunityPage />,
     title: 'Cộng đồng',
+  },
+  {
+    path: '/privacy-policy',
+    element: <PrivacyPage />,
+    title: 'Chính sách bảo mật',
   },
   {
     path: '/profile',

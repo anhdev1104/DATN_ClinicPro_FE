@@ -37,12 +37,12 @@ const formElement = [
   },
 ];
 
+// eslint-disable-next-line react-refresh/only-export-components
 const ChangePassword = () => {
   const {
     formState: { isValid, errors, disabled },
     reset,
     setError,
-    handleSubmit,
   } = useFormContext<PasswordProps>();
 
   const handleChangePassword = async <T extends Array<keyof PasswordProps>>(data: PasswordProps) => {
@@ -52,6 +52,7 @@ const ChangePassword = () => {
       return;
     }
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmNewPassword, ...formData } = yup.object().snakeCase().cast(data) as PasswordProps;
       const response = await changePassword<ChangePasswordResponse>(formData);
       toast.success(response.message);
@@ -67,39 +68,35 @@ const ChangePassword = () => {
   };
 
   return (
-    <>
-      <Container className="min-h-dvh flex justify-center">
-        <Paper shadow="md" radius="lg" p="xl" className="w-full lg:w-3/4">
-          <Title order={1} lineClamp={1} className="capitalize text-center">
-            thay đổi mật khẩu
-          </Title>
-          <Form
-            onSubmit={handleSubmit(handleChangePassword)}
-            className="space-y-2 flex flex-col my-10 justify-center items-center"
-          >
-            <Stack gap="md" justify="center" align="center" className="w-full lg:w-3/4">
-              {formElement.map(element => (
-                <BaseInput.Password
-                  key={element.name}
-                  name={element.name}
-                  radius="md"
-                  className="w-full"
-                  label={element.label}
-                  type="password"
-                  autoComplete={element.name}
-                />
-              ))}
-              <BaseButton fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
-                Gửi
-              </BaseButton>
-            </Stack>
-          </Form>
-        </Paper>
-      </Container>
-    </>
+    <Container className="min-h-dvh flex justify-center">
+      <Paper shadow="md" radius="lg" p="xl" className="w-full lg:w-3/4">
+        <Title order={1} lineClamp={1} className="capitalize text-center">
+          thay đổi mật khẩu
+        </Title>
+        <Form onSubmit={handleChangePassword} className="space-y-2 flex flex-col my-10 justify-center items-center">
+          <Stack gap="md" justify="center" align="center" className="w-full lg:w-3/4">
+            {formElement.map(element => (
+              <BaseInput.Password
+                key={element.name}
+                name={element.name}
+                radius="md"
+                className="w-full"
+                label={element.label}
+                type="password"
+                autoComplete={element.name}
+              />
+            ))}
+            <BaseButton fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
+              Gửi
+            </BaseButton>
+          </Stack>
+        </Form>
+      </Paper>
+    </Container>
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default former(ChangePassword, passwordSchema, {
   mode: 'onChange',
 });

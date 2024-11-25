@@ -19,7 +19,7 @@ const AdminLayout = () => {
       <Topbar handleToggle={handleToggle} />
       <Sidebar show={show} />
       <main
-        className={`${!show ? 'md:ml-[250px] transition-all duration-300 ease-linear' : 'md:ml-0 transition-all duration-300 ease-linear'} mt-[72px] px-[30px] pt-[30px] min-h-screen`}
+        className={`${!show ? 'ml-[250px] transition-all duration-300 ease-linear' : 'ml-0 transition-all duration-300 ease-linear'} mt-[72px] px-[30px] pt-[30px] min-h-screen box-border min-w-fit max-w-full`}
       >
         <Outlet />
       </main>

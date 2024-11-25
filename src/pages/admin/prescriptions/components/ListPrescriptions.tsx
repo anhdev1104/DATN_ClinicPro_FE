@@ -9,6 +9,7 @@ import { getPrescription } from '@/services/prescriptions.service';
 import { IPrescription } from '@/types/prescription.type';
 import useFetchingData from '@/hooks/useFetchingData';
 import LoadingSpin from '@/components/loading';
+import convertTime from '@/helpers/convertTime';
 
 const SearchOptions = [
   {
@@ -31,7 +32,6 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
     serviceFetching: getPrescription,
     initialData: [],
   });
-  console.log('🚀 ~ ListPrescriptions ~ prescription:', prescription);
 
   // const [prescriptionDetails, setPrescriptionDetails] = useState<any[]>([]);
 
@@ -49,7 +49,7 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
     <div>
       <DirectRoute nav="Quản lý đơn thuốc" subnav="Đơn thuốc" />
       <div className="bg-white size-full p-[20px] rounded-[26px] min-h-[500px]">
-        <div className="mb-6 flex items-center justify-between gap-5">
+        <div className={`mb-6 flex items-center justify-between gap-5 w-[${window.screen.width}px]`}>
           <h1 className="text-[18px] text-black font-medium">Danh sách đơn thuốc</h1>
           <div className="flex gap-5">
             <button
@@ -70,7 +70,7 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
           <table className="min-w-full table-auto border-collapse">
             <thead className="border-b-2 border-primaryAdmin/20 bg-primaryAdmin/5">
               <tr className=" text-gray-700">
-                <th className="p-4 font-medium">#</th>
+                <th className="p-4 font-medium">Mã đơn thuốc</th>
                 <th className="p-4 font-medium">Tên đơn thuốc</th>
                 <th className="p-4 font-medium">Bệnh nhân</th>
                 <th className="p-4 font-medium">Lời dặn</th>
@@ -81,13 +81,14 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
             </thead>
             <tbody>
               {prescription &&
-                prescription?.map((item, index) => (
+                prescription?.map(item => (
                   <tr className="even:bg-[#f5f5f5]" key={item.id}>
-                    <td className="py-2 px-5">{index + 1}</td>
+                    <td className="py-2 px-5">{item.id}</td>
                     <td className="py-2 px-5 text-gray-800 font-semibold max-w-[250px]">{item.name}</td>
                     <td className="py-2 px-5 text-gray-600">{item.patient_id}</td>
                     <td className="py-2 px-5 text-gray-600 max-w-[300px]">{item.description}</td>
                     <td className="py-2 px-5 text-gray-800">{item.user_id}</td>
+                    <td className="py-2 px-5 text-gray-800">{item.created_at && convertTime(item.created_at)}</td>
                     <td className="py-2 px-5 text-end">
                       <div className="relative inline-block text-left">
                         <button

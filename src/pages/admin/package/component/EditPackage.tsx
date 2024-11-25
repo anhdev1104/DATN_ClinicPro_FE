@@ -52,6 +52,7 @@ const EditPackage = () => {
         SetSpecialty(convertToOptions(specialtyRes));
       } catch (error) {
         toast.error('Không thể tải dữ liệu, vui lòng thử lại');
+        return error;
       } finally {
         setLoading(false);
       }
@@ -81,8 +82,8 @@ const EditPackage = () => {
           setValue('specialty_id', selectedPackage.specialty_id);
         }
       } catch (error) {
-        console.error(error);
         toast.error('Không thể tải dữ liệu gói khám');
+        return error;
       }
     };
     fetchPackage();
@@ -106,14 +107,13 @@ const EditPackage = () => {
       const res = await updatePackage(String(id), formData);
       if (res.errors) {
         toast.error('Cập nhật gói khám thất bại');
-        console.error(res.message);
       } else {
         toast.success('Cập nhật gói khám thành công');
         navigate('/packages');
       }
     } catch (error) {
       toast.error('Lỗi xảy ra trong quá trình cập nhật');
-      console.error(error);
+      return error;
     } finally {
       setLoading(false);
       reset();
@@ -152,7 +152,9 @@ const EditPackage = () => {
               <MessageForm error={errors.name?.message} />
             </div>
             <div className="min-w-[380px] w-[45%]">
-              <Label htmlFor="categoryId">Danh mục gói khám</Label>
+              <Label htmlFor="categoryId">
+                Danh mục gói khám<span className="text-red-500">*</span>
+              </Label>
               <Select placeholder="Danh mục gói khám" name="category_id" control={control} options={packageCategory} />
               <MessageForm error={errors.category_id?.message} />
             </div>

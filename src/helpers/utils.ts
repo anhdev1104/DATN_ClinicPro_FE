@@ -44,7 +44,10 @@ export interface ErrorResponse {
 
 export const resolveErrorResponse = (errorResolve: ErrorResponse, setError: UseFormSetError<any>) => {
   const { errors, message } = errorResolve;
-  if (message) toast.error(message);
-  const errorName = Object.keys(errors) as Array<keyof typeof errors>;
-  setError(errorName[0] as string, { message: errors[errorName[0]][0] });
+  if (errors) {
+    const errorName = Object.keys(errors) as Array<keyof typeof errors>;
+    setError(errorName[0] as string, { message: errors[errorName[0]][0] });
+  } else {
+    toast.error(message || 'lỗi hệ thống');
+  }
 };

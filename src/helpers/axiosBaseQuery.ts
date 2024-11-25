@@ -13,7 +13,7 @@ type BaseQueryInstance = BaseQueryFn<
   unknown,
   unknown
 >;
-export interface AxiosBaseQueryError<T extends AxiosResponse['data']> {
+export interface AxiosBaseQueryError<T extends AxiosResponse['data'] = AxiosResponse['data']> {
   status?: typeof HttpStatusCode;
   data: T;
 }
