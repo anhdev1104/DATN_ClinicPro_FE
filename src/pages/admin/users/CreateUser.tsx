@@ -1,7 +1,7 @@
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
 import { resolveErrorResponse } from '@/helpers/utils';
-import { Form } from '@/lib/Form';
+import Form from '@/lib/Form';
 import former from '@/providers/former';
 import { useCreateUserMutation } from '@/redux/api/users';
 import { CreateUserProps, createUserSChema } from '@/schema/user.schema';

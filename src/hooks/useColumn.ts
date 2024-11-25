@@ -8,7 +8,7 @@ export interface ColumnProps<TData> {
   key?: (string & {}) | keyof TData;
   id?: string;
   label?: string;
-  cell?: string | ((props: { value: string; original: TData; row: Row<TData> }) => unknown);
+  cell?: string | ((props: { value: any; original: TData; row: Row<TData> }) => unknown);
   sortable?: boolean;
   filterable?: boolean;
   hiding?: boolean;
@@ -28,7 +28,7 @@ export const useColumn = <TData>(columnsData: ColumnProps<TData>[]) => {
         cell: ({ row, renderValue }) => {
           return cell
             ? typeof cell !== 'string'
-              ? cell({ value: row.getValue(id as string), original: row.original, row })
+              ? cell({ value: renderValue() as any, original: row.original, row })
               : cell
             : renderValue();
         },

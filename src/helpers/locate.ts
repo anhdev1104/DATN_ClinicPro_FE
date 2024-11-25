@@ -4,6 +4,7 @@ import * as yup from 'yup';
 yup.setLocale({
   mixed: {
     required: 'Trường này là bắt buộc !',
+    oneOf: ({ values }) => `Giá trị phải bắt buộc trong nhưng giá trị sau: ${values}`,
   },
   string: {
     min: ({ min }) => `Trường này phải tối thiểu ${min} ký tự.`,

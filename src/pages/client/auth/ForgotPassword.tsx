@@ -13,12 +13,11 @@ import ResetPassword from './ResetPassword';
 import former, { OptionsWithForm } from '@/providers/former';
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
-import { Form } from '@/lib/Form';
-import { emailRegex } from '@/constants/regex';
+import Form from '@/lib/Form';
 import { IconArrowLeft } from '@tabler/icons-react';
 
 const forgotPasswordSchema = yup.object({
-  email: yup.string().required().matches(emailRegex, { message: 'Trường này phải là email' }),
+  email: yup.string().email().required(),
 });
 export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 

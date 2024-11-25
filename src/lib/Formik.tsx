@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { forwardRef } from 'react';
 import { FieldValues, FormProvider, useForm, UseFormProps, UseFormReturn } from 'react-hook-form';
 import yup from '@/helpers/locate';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -34,32 +34,29 @@ interface FormikProps<T extends FieldValues, Schema>
   options?: UseFormProps<T>;
 }
 
-export const Formik = <Schema extends yup.AnyObjectSchema, T extends FieldValues = yup.InferType<Schema>>({
-  children,
-  className,
-  options,
-  onSubmit,
-  schema,
-  ...props
-}: FormikProps<T, Schema>) => {
+const Formik = <Schema extends yup.AnyObjectSchema, T extends FieldValues = yup.InferType<Schema>>(
+  { children, className, options, onSubmit, schema, ...props }: FormikProps<T, Schema>,
+  ref: React.Ref<HTMLFormElement>,
+) => {
   const { loading } = useSelector(state => state.global);
-  const [disabled, setDisabled] = useState(false);
-  const form = useForm({ ...options, disabled, resolver: schema && yupResolver(schema) });
-
-  useEffect(() => {
-    if (form.formState.isSubmitting) setDisabled(!disabled);
-    return () => setDisabled(false);
-  }, [loading]);
+  const form = useForm({ ...options, disabled: loading, resolver: schema && yupResolver(schema) });
 
   return (
     <FormProvider {...form}>
       <form
+        ref={ref}
         className={cn('space-y-6', className)}
         onSubmit={form.handleSubmit((data, event) => onSubmit(data, form, event))}
         {...props}
       >
-        {children(form)}
+        {children(form as UseFormReturn<T>)}
       </form>
     </FormProvider>
   );
 };
+export default forwardRef(Formik) as <
+  Schema extends yup.AnyObjectSchema,
+  T extends FieldValues = yup.InferType<Schema>,
+>(
+  props: FormikProps<T, Schema> & { ref?: React.Ref<HTMLFormElement> },
+) => JSX.Element;

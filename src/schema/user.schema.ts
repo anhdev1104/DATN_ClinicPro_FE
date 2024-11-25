@@ -54,7 +54,7 @@ export const updateUserSchema = createUserSChema.concat(
           identity_card_number: yup.string().nullable(),
         })
         .nullable(),
-      identity_card_id: yup.string(),
+      identity_card_id: yup.string().nullable(),
       avatar: yup.mixed(),
     }),
     doctor: yup

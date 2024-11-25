@@ -19,11 +19,13 @@ export const usersApi = createApi({
           : [{ type: 'Users', id: 'LIST-USERS' }],
       keepUnusedDataFor: 120,
     }),
-    getUser: builder.query<any, { id: string }>({
-      query: params => ({
-        url: 'users',
-        params,
+    getUser: builder.query<IUserInfo, string>({
+      query: id => ({
+        url: `users/${id}`,
       }),
+      transformResponse: (response: { data: IUserInfo }) => {
+        return response.data;
+      },
       providesTags: result => (result ? [{ type: 'Users', id: result.id }] : []),
     }),
     createUser: builder.mutation<{ message: string }, CreateUserProps>({

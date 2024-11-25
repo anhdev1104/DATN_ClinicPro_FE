@@ -55,7 +55,7 @@ interface FormProps extends Omit<React.HTMLProps<HTMLFormElement>, 'onSubmit'> {
   onSubmit: SubmitHandler<any>;
 }
 
-export const Form = forwardRef<HTMLFormElement, FormProps>(({ children, onSubmit, ...props }, ref) => {
+const Form = forwardRef<HTMLFormElement, FormProps>(({ children, onSubmit, ...props }, ref) => {
   const { handleSubmit } = useFormContext();
   return (
     <form onSubmit={handleSubmit(onSubmit)} ref={ref} {...props}>
@@ -63,6 +63,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps>(({ children, onSubmit
     </form>
   );
 });
+export default Form;
 
 /**
  * @author https://github.com/seaesa 

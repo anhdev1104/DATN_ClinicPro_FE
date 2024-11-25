@@ -1,7 +1,7 @@
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
 import former from '@/providers/former';
-import { Form } from '@/lib/Form';
+import Form from '@/lib/Form';
 import { changePassword } from '@/services/auth.service';
 import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
 import yup from '@/helpers/locate';
