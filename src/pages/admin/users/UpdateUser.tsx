@@ -167,7 +167,7 @@ const UpdateUser = () => {
                     <Grid.Col span={4}>
                       <BaseInput.Select
                         defaultSearchValue={defaultValues?.status}
-                        onChange={value => setValue('status', value as `${STATUS}`)}
+                        onChange={value => setValue('status', value as (typeof STATUS)[keyof typeof STATUS])}
                         data={Object.values(STATUS)}
                         error={status?.message}
                         autoComplete="status"
