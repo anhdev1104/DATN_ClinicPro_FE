@@ -4,6 +4,8 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import { DatesProvider } from '@mantine/dates';
 import { createTheme, MantineProvider } from '@mantine/core';
+import { Suspense } from 'react';
+import LoadingPage from './pages/client/loading';
 
 const theme = createTheme({});
 function App() {
@@ -11,7 +13,9 @@ function App() {
     <MantineProvider theme={theme} defaultColorScheme="light">
       <DatesProvider settings={{}}>
         <BrowserRouter>
-          <AppRouter />
+          <Suspense fallback={<LoadingPage />}>
+            <AppRouter />
+          </Suspense>
         </BrowserRouter>
       </DatesProvider>
     </MantineProvider>
