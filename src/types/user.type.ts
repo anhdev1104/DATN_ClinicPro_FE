@@ -3,12 +3,12 @@ import { IRole } from './role.type';
 import { IInfo } from './auth.type';
 
 export interface IUserProfile extends IInfo {
-  department_id?: number | null;
+  department_id?: string | null;
 }
 export interface IUserInfo {
   id: string;
   email: string;
-  status: keyof typeof STATUS;
+  status: (typeof STATUS)[keyof typeof STATUS];
   role: IRole;
   user_info: IUserProfile;
 }

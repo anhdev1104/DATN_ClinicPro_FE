@@ -65,6 +65,7 @@ const Table = <T, D>({
     rowCount,
     manualFiltering,
   });
+
   return (
     <div className="w-full p-2">
       {toolbar !== false && <TableToolbar filterItem={filterItem} toolbar={toolbar} table={table} />}
