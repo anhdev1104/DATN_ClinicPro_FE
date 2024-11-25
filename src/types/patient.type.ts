@@ -1,4 +1,6 @@
-interface IPatientInfo {
+import { MedicalRecord } from './medicalHistories.type';
+
+export interface IPatientInfo {
   id: string;
   patient_id: string;
   fullname: string;
@@ -18,4 +20,5 @@ export interface IPatient {
   created_at: string;
   updated_at: string;
   patient_info: IPatientInfo;
+  medical_histories?: MedicalRecord[];
 }

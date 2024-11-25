@@ -92,7 +92,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
         };
 
         const response = await createMedicalHistorie(medicalHistoryData);
-        toast.success(response.message, { position: 'top-right' });
+        toast.success(response.data.message, { position: 'top-right' });
         reset({
           diagnosis: '',
           description: '',

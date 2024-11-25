@@ -34,6 +34,8 @@ import MedicalHistories from '@/pages/admin/medical_histories/MedicalHistories';
 import Specialties from '@/pages/admin/specialties/Specialties';
 import AddSpecialties from '@/pages/admin/specialties/components/AddSpecialties';
 import EditSpecialties from '@/pages/admin/specialties/components/EditSpecialties';
+import Patients from '@/pages/admin/patient/Patients';
+import DetailPatient from '@/pages/admin/patient/components/DetailPatient';
 
 type IRouter = RouteProps & {
   title: string;
@@ -170,6 +172,16 @@ const adminRouter: IRouter[] = [
     path: '/edit-specialties/:id',
     element: <EditSpecialties />,
     title: 'Trang chuyên khoa',
+  },
+  {
+    path: '/patient',
+    element: <Patients />,
+    title: 'Trang bệnh nhân',
+  },
+  {
+    path: '/patient/:id',
+    element: <DetailPatient />,
+    title: 'Trang bệnh nhân',
   },
 ];
 

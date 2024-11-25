@@ -9,6 +9,7 @@ import {
   Tablet,
   MedicalRecord,
   SpecialtiesIcon,
+  Patient,
 } from '@/components/icons';
 import { cn } from '@/helpers/utils';
 import { useEffect, useState } from 'react';
@@ -86,6 +87,13 @@ const dumpCategory = [
     path: '/specialties',
     icon: SpecialtiesIcon,
     pathActive: ['/specialties'],
+  },
+  {
+    id: 10,
+    categoryName: 'Bệnh nhân',
+    path: '/patient',
+    icon: Patient,
+    pathActive: ['/patient'],
   },
 ];
 
