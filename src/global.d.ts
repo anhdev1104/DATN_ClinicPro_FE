@@ -14,7 +14,7 @@ declare global {
   }
 
   interface UserQueryParams extends QueryParams {
-    role: `${ROLE}`;
-    department: string;
+    role?: `${ROLE}`;
+    department?: string;
   }
 }

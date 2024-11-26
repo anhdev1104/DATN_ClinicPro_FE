@@ -6,6 +6,12 @@ export const managerSchema = yup
     id: yup.string().uuid().required(),
     email: yup.string().email(),
     fullname: yup.string().ensure(),
+    role_id: yup.string().required(),
+    status: yup
+      .string()
+      .oneOf(Object.values(STATUS) as `${STATUS}`[])
+      .default(STATUS.inactive),
+    user_info: yup.object({}),
     avatar: yup.string().url(),
     address: yup.string().ensure().optional(),
     phone_number: yup.number().nullable(),

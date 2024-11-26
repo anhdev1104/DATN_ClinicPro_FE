@@ -1,15 +1,14 @@
-import { Flex, Modal, Pagination, Stack, Text } from '@mantine/core';
-import { useGetAllDepartmentQuery, useDeleteAnDepartmentMutation } from '@/redux/api/department';
+import { Modal, Pagination, Stack, Text } from '@mantine/core';
+import { useGetDepartmentsQuery, useDeleteDepartmentMutation } from '@/redux/api/department';
 import { useNavigate } from 'react-router-dom';
 import type { Department, DepartmentDetail, Manager } from '@/types/department.type';
 import Table from '@/components/table/Table';
-import { Avatar } from '@mantine/core';
 import { Badge } from '@mantine/core';
 import ActionWithRow from '@/components/table/TableAction';
 import BaseButton from '@/components/base/button';
 import BaseIcon from '@/components/base/BaseIcon';
 import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
-import NewDepartment from './NewDepartment';
+import NewDepartment from './CreateDepartment';
 import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
 import { toast } from 'react-toastify';
@@ -18,6 +17,7 @@ import { useRef, useState } from 'react';
 import UpdateDepartment from './UpdateDepartment';
 import BaseInput from '@/components/base/input';
 import { useQueryParams } from '@/hooks/useQueryParams';
+import { UserInfo } from '@/components/user-info/UserInfo';
 
 const Department = () => {
   const [params, queryParams] = useQueryParams();
@@ -28,13 +28,13 @@ const Department = () => {
   const [modalDelete, handleModalDelete] = useDisclosure(false);
   const [modalUpdate, handleModalUpdate] = useDisclosure(false);
   const [limit] = useState(5);
-  const { data, isSuccess, isFetching } = useGetAllDepartmentQuery({
+  const { data, isSuccess, isFetching } = useGetDepartmentsQuery({
     q: params.q || '',
     limit: params.limit || limit,
     page: params.page,
   });
   const navigate = useNavigate();
-  const [deleteDepartment, { isLoading }] = useDeleteAnDepartmentMutation();
+  const [deleteDepartment, { isLoading }] = useDeleteDepartmentMutation();
   const idRef = useRef<string>('');
   const departmentUpdateRef = useRef<Department>();
   const handleRowClick = (data: Department) => {
@@ -50,19 +50,8 @@ const Department = () => {
       key: 'manager',
       label: 'Quản Lý',
       cell: ({ value }: { value: Manager }) => {
-        return value ? (
-          <Flex gap={8} align="center">
-            <Avatar size="sm" src={value.avatar} />
-            <Flex direction="column">
-              <Text size="sm">{value.fullname}</Text>
-              <Text size="xs" c="dimmed">
-                {value.email}
-              </Text>
-            </Flex>
-          </Flex>
-        ) : (
-          <Text size="sm">Chưa Có</Text>
-        );
+        console.log(value);
+        return <UserInfo {...value} />;
       },
       sortable: false,
     },

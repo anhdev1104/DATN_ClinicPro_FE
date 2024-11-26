@@ -3,7 +3,7 @@ import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import Dashboard from '@/pages/admin/dashboard/DashBoard';
 import Department from '@/pages/admin/department/Department';
-import DepartmentDetail from '@/pages/admin/department/DepartmentDetail';
+import DepartmentDetail from '@/pages/admin/department/GetDepartment';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
 import AchievementPage from '@/pages/client/achievement/AchievementPage';
@@ -35,6 +35,8 @@ import PrivacyPage from '@/pages/client/privacy/privacyPage';
 import Specialties from '@/pages/admin/specialties/Specialties';
 import AddSpecialties from '@/pages/admin/specialties/components/AddSpecialties';
 import EditSpecialties from '@/pages/admin/specialties/components/EditSpecialties';
+import NewDepartment from '@/pages/admin/department/CreateDepartment';
+import UpdateDepartment from '@/pages/admin/department/UpdateDepartment';
 
 type IRouter = RouteProps & {
   title: string;
@@ -118,14 +120,24 @@ const adminRouter: IRouter[] = [
     title: 'Danh sách đơn thuốc',
   },
   {
+    path: '/departments',
+    element: <Department />,
+    title: 'Danh sách phòng ban',
+  },
+  {
+    path: '/departments/add',
+    element: <NewDepartment />,
+    title: 'Danh sách phòng ban',
+  },
+  {
     path: '/departments/:id',
     element: <DepartmentDetail />,
     title: 'Phòng Ban',
   },
   {
-    path: '/departments',
-    element: <Department />,
-    title: 'Danh sách phòng ban',
+    path: '/departments/:id/edit',
+    element: <UpdateDepartment />,
+    title: 'Phòng Ban',
   },
   {
     path: '/packages',

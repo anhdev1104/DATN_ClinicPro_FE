@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { FieldValues, FormProvider, useForm, UseFormProps, UseFormReturn } from 'react-hook-form';
+import { FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps, UseFormReturn } from 'react-hook-form';
 import yup from '@/helpers/locate';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { cn } from '@/helpers/utils';
@@ -13,18 +13,12 @@ import { useSelector } from '@/hooks/redux';
  * onSubmit={onSubmit}
  * options={{defaultValues}}
  * >
- * {(form) => (
+ * {({formState,...methods}) => (
  *  <div>
  *  </div>
  * )}
  * </Formik>
  */
-
-export type SubmitHandler<S extends FieldValues> = (
-  data: S,
-  form: UseFormReturn<S>,
-  event?: React.BaseSyntheticEvent,
-) => unknown | Promise<unknown>;
 
 interface FormikProps<T extends FieldValues, Schema>
   extends Omit<React.HTMLProps<HTMLFormElement>, 'children' | 'onSubmit'> {
@@ -43,13 +37,8 @@ const Formik = <Schema extends yup.AnyObjectSchema, T extends FieldValues = yup.
 
   return (
     <FormProvider {...form}>
-      <form
-        ref={ref}
-        className={cn('space-y-6', className)}
-        onSubmit={form.handleSubmit((data, event) => onSubmit(data, form, event))}
-        {...props}
-      >
-        {children(form as UseFormReturn<T>)}
+      <form ref={ref} className={cn('space-y-6', className)} onSubmit={form.handleSubmit(onSubmit)} {...props}>
+        {children(form)}
       </form>
     </FormProvider>
   );
@@ -59,4 +48,4 @@ export default forwardRef(Formik) as <
   T extends FieldValues = yup.InferType<Schema>,
 >(
   props: FormikProps<T, Schema> & { ref?: React.Ref<HTMLFormElement> },
-) => JSX.Element;
+) => React.ReactElement;

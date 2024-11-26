@@ -4,6 +4,7 @@ import { Box, Menu, Text } from '@mantine/core';
 import BaseButton from '../base/button';
 import BaseIcon from '../base/BaseIcon';
 import { IconAdjustmentsHorizontal, IconCheck } from '@tabler/icons-react';
+import { ExportFile } from '../export/Export';
 interface TableToolbarProps<T> {
   table: Table<T>;
   toolbar?: React.ReactNode;
@@ -26,6 +27,7 @@ const TableToolbar = <T,>({ table, toolbar, filterItem }: TableToolbarProps<T>) 
           )}
           {toolbar}
         </Box>
+        <ExportFile rows={table.getRowModel().rows} />
         <Menu shadow="md" position="bottom-end" withinPortal={false}>
           <Menu.Target>
             <BaseButton size="xs" leftSection={<BaseIcon icon={IconAdjustmentsHorizontal} />}>

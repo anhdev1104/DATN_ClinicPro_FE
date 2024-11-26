@@ -4,9 +4,8 @@ import BaseInput from '@/components/base/input';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import former, { OptionsWithForm } from '@/providers/former';
 import Form from '@/lib/Form';
-import { useAddAnDepartmentMutation } from '@/redux/api/department';
+import { useCreateDepartmentMutation } from '@/redux/api/department';
 import { useGetUsersQuery } from '@/redux/api/users';
-import { newDepartmentSchema } from '@/schema/department.schema';
 import { NewDepartmentProps } from '@/types/department.type';
 import { IUserInfo } from '@/types/user.type';
 import { filterOutManagers } from '@/helpers/utils';
@@ -15,6 +14,7 @@ import { useMemo } from 'react';
 import { SubmitHandler, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { IconCheck } from '@tabler/icons-react';
+import yup from '@/helpers/locate';
 
 interface Options {
   value: string;
@@ -29,7 +29,7 @@ const NewDepartment = ({ handleClose }: { handleClose: () => void }) => {
     setError,
   } = useFormContext<NewDepartmentProps>();
   const { data, isSuccess } = useGetUsersQuery();
-  const [addDepartment] = useAddAnDepartmentMutation();
+  const [addDepartment] = useCreateDepartmentMutation();
   const department: IUserInfo[] = useMemo(() => (isSuccess ? filterOutManagers(data?.data) : []), [data]);
   const formatData: Options[] = useMemo(
     () =>
@@ -85,7 +85,12 @@ const NewDepartment = ({ handleClose }: { handleClose: () => void }) => {
     </Form>
   );
 };
-
+const newDepartmentSchema = yup.object({
+  name: yup.string().required(),
+  description: yup.string().required(),
+  manager_id: yup.string().nullable().optional().default(null),
+  users: yup.array().of(yup.string()).default([]),
+});
 const optionsWithForm: OptionsWithForm = {
   mode: 'onChange',
 };

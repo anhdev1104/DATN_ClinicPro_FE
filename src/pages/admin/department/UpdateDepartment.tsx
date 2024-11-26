@@ -4,7 +4,7 @@ import BaseInput from '@/components/base/input';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import former, { OptionsWithForm } from '@/providers/former';
 import Form from '@/lib/Form';
-import { useUpdateAnDepartmentMutation } from '@/redux/api/department';
+import { useUpdateDepartmentMutation } from '@/redux/api/department';
 import { useGetUsersQuery } from '@/redux/api/users';
 import { updateDepartmentSchema } from '@/schema/department.schema';
 import { DepartmentDetail, NewDepartmentProps } from '@/types/department.type';
@@ -33,7 +33,7 @@ const UpdateDepartment = ({ departmentUpdate, handleModalUpdate }: UpdateDepartm
     setError,
   } = useFormContext<NewDepartmentProps>();
   const { data, isSuccess } = useGetUsersQuery();
-  const [update] = useUpdateAnDepartmentMutation();
+  const [update] = useUpdateDepartmentMutation();
   const department: IUserInfo[] = useMemo(() => (isSuccess ? filterOutManagers(data?.data) : []), [data]);
   const formatData: Options[] = useMemo(
     () =>

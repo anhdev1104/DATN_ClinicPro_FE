@@ -7,7 +7,7 @@ export const departmentApi = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: ['Department'],
   endpoints: builder => ({
-    getAllDepartment: builder.query<ResponseTypes<Department[]>, QueryParams | void>({
+    getDepartments: builder.query<ResponseTypes<Department[]>, QueryParams | void>({
       query: params => ({
         url: 'departments',
         params,
@@ -21,7 +21,7 @@ export const departmentApi = createApi({
           : [{ type: 'Department', id: 'DEPARTMENT-LIST' }],
       keepUnusedDataFor: 180,
     }),
-    getDepartmentDetail: builder.query<ResponseTypes<DepartmentDetail>, number | string>({
+    getDepartment: builder.query<ResponseTypes<DepartmentDetail>, number | string>({
       query: id => ({ url: `departments/${id}` }),
       providesTags: result =>
         result
@@ -31,7 +31,7 @@ export const departmentApi = createApi({
             ]
           : [{ type: 'Department', id: 'DEPARTMENT-DETAIL' }],
     }),
-    addAnDepartment: builder.mutation<NewDepartmentResponseProps, NewDepartmentProps>({
+    createDepartment: builder.mutation<NewDepartmentResponseProps, NewDepartmentProps>({
       query: data => ({
         url: 'departments',
         method: 'POST',
@@ -39,7 +39,7 @@ export const departmentApi = createApi({
       }),
       invalidatesTags: result => (result ? [{ type: 'Department', id: 'DEPARTMENT-LIST' }] : []),
     }),
-    updateAnDepartment: builder.mutation<unknown, any & { id: string | number }>({
+    updateDepartment: builder.mutation<unknown, any & { id: string | number }>({
       query: query => {
         const { id, ...data } = query;
         return {
@@ -50,7 +50,7 @@ export const departmentApi = createApi({
       },
       invalidatesTags: (result, _, arg) => (result ? [{ type: 'Department', id: arg.id }] : []),
     }),
-    deleteAnDepartment: builder.mutation<unknown, string>({
+    deleteDepartment: builder.mutation<unknown, string>({
       query: id => ({
         url: `departments/${id}`,
         method: 'DELETE',
@@ -66,9 +66,9 @@ export const departmentApi = createApi({
   }),
 });
 export const {
-  useGetAllDepartmentQuery,
-  useGetDepartmentDetailQuery,
-  useAddAnDepartmentMutation,
-  useDeleteAnDepartmentMutation,
-  useUpdateAnDepartmentMutation,
+  useGetDepartmentsQuery,
+  useGetDepartmentQuery,
+  useCreateDepartmentMutation,
+  useDeleteDepartmentMutation,
+  useUpdateDepartmentMutation,
 } = departmentApi;

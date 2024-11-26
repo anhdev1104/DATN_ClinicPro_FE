@@ -1,4 +1,4 @@
-import { useDeleteAnDepartmentMutation, useGetAllDepartmentQuery } from '@/redux/api/department';
+import { useDeleteDepartmentMutation, useGetDepartmentsQuery } from '@/redux/api/department';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, Box, Paper, Stack, Title } from '@mantine/core';
 import { Avatar, Text, Group } from '@mantine/core';
@@ -14,22 +14,21 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconArrowLeft, IconAt, IconPhoneCall } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
 import { DepartmentDetail as DepartmentById } from '@/types/department.type';
+import { useGetUsersQuery } from '@/redux/api/users';
 type UserDepartment = yup.InferType<typeof userDepartmentSchema>;
 const DepartmentDetail = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data } = useGetAllDepartmentQuery(
-    {},
-    {
-      selectFromResult: ({ data }) => ({
-        data: (data?.data.find(data => data.id === id) || []) as DepartmentById,
-      }),
-    },
-  );
-  // const { data, isSuccess, isFetching, isError } = useGetDepartmentDetailQuery(id as string);
+  const { data } = useGetDepartmentsQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      data: (data?.data.find(data => data.id === id) || []) as DepartmentById,
+    }),
+  });
+  const { data: user } = useGetUsersQuery({ department: id });
+  console.log(user);
   const manager = useMemo(() => data?.manager, [data]);
-  const [handleDelete, { isLoading }] = useDeleteAnDepartmentMutation();
+  const [handleDelete, { isLoading }] = useDeleteDepartmentMutation();
   const columns = useColumn<UserDepartment>([
     {
       key: 'fullname',

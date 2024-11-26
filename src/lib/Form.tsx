@@ -1,3 +1,4 @@
+import { cn } from '@/helpers/utils';
 import { Children, createElement, forwardRef, isValidElement, useMemo } from 'react';
 import { SubmitHandler, useController, useFormContext, useFormState } from 'react-hook-form';
 
@@ -55,10 +56,10 @@ interface FormProps extends Omit<React.HTMLProps<HTMLFormElement>, 'onSubmit'> {
   onSubmit: SubmitHandler<any>;
 }
 
-const Form = forwardRef<HTMLFormElement, FormProps>(({ children, onSubmit, ...props }, ref) => {
+const Form = forwardRef<HTMLFormElement, FormProps>(({ children, onSubmit, className, ...props }, ref) => {
   const { handleSubmit } = useFormContext();
   return (
-    <form onSubmit={handleSubmit(onSubmit)} ref={ref} {...props}>
+    <form ref={ref} className={cn('space-y-6', className)} onSubmit={handleSubmit(onSubmit)} {...props}>
       <CreateNestedElement children={children} />
     </form>
   );
