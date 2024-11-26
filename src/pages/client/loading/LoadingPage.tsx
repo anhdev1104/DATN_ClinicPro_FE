@@ -1,33 +1,35 @@
 const LoadingPage = () => {
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '90vh',
-        overflow: 'hidden',
-        aspectRatio: '16 / 9',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
+    <div className="w-screen h-screen bg-white">
       <div
         style={{
-          maxWidth: '800px',
+          width: '100%',
+          height: '90vh',
+          overflow: 'hidden',
+          aspectRatio: '16 / 9',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        <video
-          autoPlay
-          loop
-          muted
+        <div
           style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
+            maxWidth: '800px',
           }}
         >
-          <source src="/loading-page.mp4" type="video/mp4" />
-        </video>
+          <video
+            autoPlay
+            loop
+            muted
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          >
+            <source src="/loading-page.mp4" type="video/mp4" />
+          </video>
+        </div>
       </div>
     </div>
   );
