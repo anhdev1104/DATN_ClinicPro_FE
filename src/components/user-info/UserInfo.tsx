@@ -1,4 +1,4 @@
-import { Avatar, Flex, Text } from '@mantine/core';
+import { Avatar, Group, Text } from '@mantine/core';
 
 interface UserProps {
   avatar?: string;
@@ -12,15 +12,15 @@ export const UserInfo = (user: UserProps) => {
   }
   return (
     <>
-      <Flex gap={8} align="center">
-        <Avatar size="sm" src={user?.avatar} />
-        <Flex direction="column">
+      <Group gap="sm">
+        <Avatar src={user?.avatar} size={36} radius="xl" />
+        <div>
           <Text size="sm">{user?.fullname}</Text>
-          <Text size="xs" c="dimmed">
+          <Text size="xs" opacity={0.5}>
             {user?.email}
           </Text>
-        </Flex>
-      </Flex>
+        </div>
+      </Group>
     </>
   );
 };

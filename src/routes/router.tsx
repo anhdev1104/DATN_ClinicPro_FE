@@ -3,7 +3,7 @@ import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import Dashboard from '@/pages/admin/dashboard/DashBoard';
 import Department from '@/pages/admin/department/Department';
-import DepartmentDetail from '@/pages/admin/department/GetDepartment';
+import GetDepartment from '@/pages/admin/department/GetDepartment';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import AboutPage from '@/pages/client/about/AboutPage';
 import AchievementPage from '@/pages/client/achievement/AchievementPage';
@@ -35,7 +35,6 @@ import PrivacyPage from '@/pages/client/privacy/privacyPage';
 import Specialties from '@/pages/admin/specialties/Specialties';
 import AddSpecialties from '@/pages/admin/specialties/components/AddSpecialties';
 import EditSpecialties from '@/pages/admin/specialties/components/EditSpecialties';
-import NewDepartment from '@/pages/admin/department/CreateDepartment';
 import UpdateDepartment from '@/pages/admin/department/UpdateDepartment';
 
 type IRouter = RouteProps & {
@@ -125,13 +124,8 @@ const adminRouter: IRouter[] = [
     title: 'Danh sách phòng ban',
   },
   {
-    path: '/departments/add',
-    element: <NewDepartment />,
-    title: 'Danh sách phòng ban',
-  },
-  {
     path: '/departments/:id',
-    element: <DepartmentDetail />,
+    element: <GetDepartment />,
     title: 'Phòng Ban',
   },
   {

@@ -6,45 +6,30 @@ import former, { OptionsWithForm } from '@/providers/former';
 import Form from '@/lib/Form';
 import { useCreateDepartmentMutation } from '@/redux/api/department';
 import { useGetUsersQuery } from '@/redux/api/users';
-import { NewDepartmentProps } from '@/types/department.type';
-import { IUserInfo } from '@/types/user.type';
-import { filterOutManagers } from '@/helpers/utils';
-import { Avatar, Group, Stack } from '@mantine/core';
-import { useMemo } from 'react';
-import { SubmitHandler, useFormContext } from 'react-hook-form';
+import { Stack } from '@mantine/core';
+import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { IconCheck } from '@tabler/icons-react';
+import { IconUsersGroup } from '@tabler/icons-react';
 import yup from '@/helpers/locate';
+import { useMemo } from 'react';
+import { filterOutManagers } from '@/helpers/utils';
+import { renderOption } from '@/lib/format';
 
-interface Options {
-  value: string;
-  label: string;
-  avatar?: string;
-}
-const NewDepartment = ({ handleClose }: { handleClose: () => void }) => {
+export type CreateDepartmentProps = yup.InferType<typeof createDepartmentSchema>;
+
+const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
   const {
-    handleSubmit,
-    setValue,
     formState: { disabled },
     setError,
-  } = useFormContext<NewDepartmentProps>();
-  const { data, isSuccess } = useGetUsersQuery();
+  } = useFormContext<CreateDepartmentProps>();
+  const { data: users } = useGetUsersQuery();
+  const managers = useMemo(() => filterOutManagers(users?.data || []), []);
   const [addDepartment] = useCreateDepartmentMutation();
-  const department: IUserInfo[] = useMemo(() => (isSuccess ? filterOutManagers(data?.data) : []), [data]);
-  const formatData: Options[] = useMemo(
-    () =>
-      department.map(item => ({
-        value: item.id,
-        label: item.user_info.fullname,
-        avatar: item.user_info.avatar,
-      })),
-    [department],
-  );
-
-  const handleAddNewDepartment: SubmitHandler<NewDepartmentProps> = async data => {
+  const handleCreateDepartment = async (data: CreateDepartmentProps) => {
     try {
       const result = await addDepartment(data);
       if (result.error) {
+        console.log(result.error);
         const errors = result.error as AxiosBaseQueryError<{ message: string; errors: any[] }>;
         setError('name', { message: errors.data.message });
       } else {
@@ -57,7 +42,7 @@ const NewDepartment = ({ handleClose }: { handleClose: () => void }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit(handleAddNewDepartment)}>
+    <Form onSubmit={handleCreateDepartment}>
       <Stack>
         <BaseInput.Group autoComplete="name" name="name" label="Tên phòng ban" placeholder="Phòng IT..." />
         <BaseInput.Textarea autoComplete="description" name="description" label="Mô tả" />
@@ -65,18 +50,36 @@ const NewDepartment = ({ handleClose }: { handleClose: () => void }) => {
           autoComplete="manager_id"
           name="manager_id"
           label="Chọn Quản lý"
-          data={formatData}
-          onChange={value => setValue('manager_id', value)}
-          renderOption={({ option, checked }) => (
-            <Group flex="1" gap="xs">
-              <Avatar size="sm" src={(option as Options).avatar} />
-              {option.label}
-              {checked && <BaseIcon icon={IconCheck} style={{ marginInlineStart: 'auto' }} />}
-            </Group>
-          )}
+          data={managers?.map(manager => ({
+            label: manager.user_info.fullname,
+            value: manager.id,
+            avatar: manager.user_info.avatar,
+            email: manager.email,
+          }))}
+          renderOption={renderOption}
+          limit={1}
           clearable
           searchable
           nothingFoundMessage="không tìm thấy quản lý"
+        />
+        <BaseInput.MultiSelect
+          name="users"
+          autoComplete="users"
+          label="Chọn nhân viên trong phòng ban"
+          placeholder="Pick value"
+          maxDropdownHeight={200}
+          hidePickedOptions
+          searchable
+          leftSection={<BaseIcon icon={IconUsersGroup} />}
+          comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
+          data={users?.data.map(user => ({
+            label: user.user_info.fullname,
+            value: user.id,
+            avatar: user.user_info?.avatar,
+            email: user.email,
+          }))}
+          renderOption={renderOption}
+          nothingFoundMessage="Không tìm thấy người dùng"
         />
         <BaseButton loading={disabled} disabled={disabled} type="submit">
           Lưu
@@ -85,13 +88,13 @@ const NewDepartment = ({ handleClose }: { handleClose: () => void }) => {
     </Form>
   );
 };
-const newDepartmentSchema = yup.object({
+const createDepartmentSchema = yup.object({
   name: yup.string().required(),
-  description: yup.string().required(),
-  manager_id: yup.string().nullable().optional().default(null),
+  description: yup.string().optional(),
+  manager_id: yup.string().nullable().optional(),
   users: yup.array().of(yup.string()).default([]),
 });
 const optionsWithForm: OptionsWithForm = {
   mode: 'onChange',
 };
-export default former(NewDepartment, newDepartmentSchema, optionsWithForm);
+export default former(CreateDepartment, createDepartmentSchema, optionsWithForm);

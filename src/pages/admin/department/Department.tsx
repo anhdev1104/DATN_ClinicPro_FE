@@ -1,7 +1,7 @@
 import { Modal, Pagination, Stack, Text } from '@mantine/core';
 import { useGetDepartmentsQuery, useDeleteDepartmentMutation } from '@/redux/api/department';
 import { useNavigate } from 'react-router-dom';
-import type { Department, DepartmentDetail, Manager } from '@/types/department.type';
+import type { DepartmentProps, ManagerProps } from '@/types/department.type';
 import Table from '@/components/table/Table';
 import { Badge } from '@mantine/core';
 import ActionWithRow from '@/components/table/TableAction';
@@ -9,12 +9,11 @@ import BaseButton from '@/components/base/button';
 import BaseIcon from '@/components/base/BaseIcon';
 import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
 import NewDepartment from './CreateDepartment';
-import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
 import { toast } from 'react-toastify';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import { useRef, useState } from 'react';
-import UpdateDepartment from './UpdateDepartment';
 import BaseInput from '@/components/base/input';
 import { useQueryParams } from '@/hooks/useQueryParams';
 import { UserInfo } from '@/components/user-info/UserInfo';
@@ -26,7 +25,6 @@ const Department = () => {
   }, 1000);
   const [modalNew, handleModalNew] = useDisclosure(false);
   const [modalDelete, handleModalDelete] = useDisclosure(false);
-  const [modalUpdate, handleModalUpdate] = useDisclosure(false);
   const [limit] = useState(5);
   const { data, isSuccess, isFetching } = useGetDepartmentsQuery({
     q: params.q || '',
@@ -36,11 +34,10 @@ const Department = () => {
   const navigate = useNavigate();
   const [deleteDepartment, { isLoading }] = useDeleteDepartmentMutation();
   const idRef = useRef<string>('');
-  const departmentUpdateRef = useRef<Department>();
-  const handleRowClick = (data: Department) => {
+  const handleRowClick = (data: DepartmentProps) => {
     navigate(data.id);
   };
-  const columns = useColumn<Department>([
+  const columns = useColumn<DepartmentProps>([
     {
       key: 'name',
       label: 'Tên Phòng Ban',
@@ -49,9 +46,8 @@ const Department = () => {
     {
       key: 'manager',
       label: 'Quản Lý',
-      cell: ({ value }: { value: Manager }) => {
-        console.log(value);
-        return <UserInfo {...value} />;
+      cell: ({ value }: { value: ManagerProps }) => {
+        return <UserInfo avatar={value?.avatar} email={value?.email} fullname={value?.fullname} />;
       },
       sortable: false,
     },
@@ -65,15 +61,15 @@ const Department = () => {
       cell: ({ row }) => (
         <ActionWithRow
           data={[
-            {
-              label: 'Sửa',
-              onClick: () => {
-                window.history.replaceState(null, '', `/departments/${row.original.id}`);
-                departmentUpdateRef.current = row.original;
-                handleModalUpdate.open();
-              },
-              leftSection: <BaseIcon icon={IconPencil} />,
-            },
+            // {
+            //   label: 'Sửa',
+            //   onClick: () => {
+            //     window.history.replaceState(null, '', `/departments/${row.original.id}`);
+            //     departmentUpdateRef.current = row.original;
+            //     handleModalUpdate.open();
+            //   },
+            //   leftSection: <BaseIcon icon={IconPencil} />,
+            // },
             {
               label: 'Xóa',
               onClick: () => {
@@ -133,7 +129,7 @@ const Department = () => {
         />
         <Modal
           radius="md"
-          size="lg"
+          size="xl"
           centered
           opened={modalNew}
           onClose={handleModalNew.close}
@@ -157,7 +153,7 @@ const Department = () => {
             </BaseButton>
           </Stack>
         </Modal>
-        <Modal
+        {/* <Modal
           title="Cập Nhật Phòng Ban"
           centered
           opened={modalUpdate}
@@ -170,7 +166,7 @@ const Department = () => {
             handleModalUpdate={handleModalUpdate}
             departmentUpdate={departmentUpdateRef.current as DepartmentDetail}
           />
-        </Modal>
+        </Modal> */}
       </div>
     </>
   );

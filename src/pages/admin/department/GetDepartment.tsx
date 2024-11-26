@@ -3,40 +3,35 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, Box, Paper, Stack, Title } from '@mantine/core';
 import { Avatar, Text, Group } from '@mantine/core';
 import BaseIcon from '@/components/base/BaseIcon';
-import yup from '@/helpers/locate';
-import DataTable from '@/components/table/Table';
-import { userDepartmentSchema } from '@/schema/department.schema';
+import Table from '@/components/table/Table';
 import ActionWithRow from '@/components/table/TableAction';
-import { useMemo } from 'react';
 import BaseButton from '@/components/base/button';
 import { Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconArrowLeft, IconAt, IconPhoneCall } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
-import { DepartmentDetail as DepartmentById } from '@/types/department.type';
 import { useGetUsersQuery } from '@/redux/api/users';
-type UserDepartment = yup.InferType<typeof userDepartmentSchema>;
-const DepartmentDetail = () => {
+import { DepartmentProps } from '@/types/department.type';
+import { IUserInfo } from '@/types/user.type';
+const GetDepartment = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data } = useGetDepartmentsQuery(undefined, {
+  const { department } = useGetDepartmentsQuery(undefined, {
     selectFromResult: ({ data }) => ({
-      data: (data?.data.find(data => data.id === id) || []) as DepartmentById,
+      department: (data?.data.find(data => data.id === id) || []) as DepartmentProps,
     }),
   });
-  const { data: user } = useGetUsersQuery({ department: id });
-  console.log(user);
-  const manager = useMemo(() => data?.manager, [data]);
+  const { data: users, isFetching: isUserFetching } = useGetUsersQuery({ department: id });
   const [handleDelete, { isLoading }] = useDeleteDepartmentMutation();
-  const columns = useColumn<UserDepartment>([
+  const columns = useColumn<IUserInfo>([
     {
-      key: 'fullname',
+      key: 'user_info.fullname',
       label: 'Nhân Viên',
       cell: ({ value, original }) => {
         return (
           <Group gap="sm">
-            <Avatar size={32} src={original.avatar} radius={40} />
+            <Avatar size={32} src={original.user_info.avatar} radius={40} />
             <div>
               <Text fz="sm" fw={500}>
                 {value}
@@ -62,7 +57,7 @@ const DepartmentDetail = () => {
       cell: ({ value }) => <Badge size="xs">{value}</Badge>,
     },
     {
-      key: 'phone_number',
+      key: 'user_info.phone_number',
       label: 'Số Điện Thoại',
     },
     {
@@ -73,7 +68,7 @@ const DepartmentDetail = () => {
     },
   ]);
   const handleDeleteDepartment = () => {
-    handleDelete(data.id);
+    handleDelete(department.id);
     navigate('/departments');
   };
   return (
@@ -90,38 +85,38 @@ const DepartmentDetail = () => {
             <BaseIcon icon={IconArrowLeft} size="xl" />
           </BaseButton.Icon>
           <Title order={2} className="mt-0">
-            {data.name}
+            {department.name}
           </Title>
         </div>
         <Text fz="xs" c="dimmed" fw={500} className="text-left">
-          {data.description}
+          {department.description}
         </Text>
       </Box>
       <div className="flex flex-col space-y-10">
         <div className="space-y-2">
           <Title order={4}>Quản Lý</Title>
-          {manager ? (
+          {department?.manager ? (
             <Group wrap="nowrap">
-              <Avatar src={manager?.avatar} size={94} radius="md" />
+              <Avatar src={department?.manager?.avatar} size={94} radius="md" />
               <div>
                 <Text fz="lg" fw={500}>
-                  {manager?.fullname}
+                  {department?.manager?.fullname}
                 </Text>
                 <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-                  {manager?.address}
+                  {department?.manager?.address}
                 </Text>
 
                 <Group wrap="nowrap" gap={10} mt={3}>
                   <BaseIcon icon={IconAt} strokeWidth={1.5} className="" />
                   <Text fz="xs" c="dimmed">
-                    {manager?.email}
+                    {department?.manager?.email}
                   </Text>
                 </Group>
 
                 <Group wrap="nowrap" gap={10} mt={5}>
                   <BaseIcon icon={IconPhoneCall} strokeWidth={1.5} className="" />
                   <Text fz="xs" c="dimmed">
-                    {manager?.phone_number}
+                    {department?.manager?.phone_number}
                   </Text>
                 </Group>
               </div>
@@ -136,7 +131,7 @@ const DepartmentDetail = () => {
           <Title order={4} className="capitalize">
             Nhân viên phòng ban
           </Title>
-          <DataTable columns={columns} data={data.users || []} />
+          <Table columns={columns} data={users?.data || []} isFetching={isUserFetching} />
         </div>
         <div className="flex justify-between items-center">
           <BaseButton onClick={open} color="red" className="ml-auto my-4">
@@ -163,4 +158,4 @@ const DepartmentDetail = () => {
     </Paper>
   );
 };
-export default DepartmentDetail;
+export default GetDepartment;

@@ -1,16 +1,26 @@
-import {
-  departmentDetailSchema,
-  departmentSchema,
-  managerSchema,
-  newDepartmentSchema,
-  newDepartmentSchemaResponse,
-  updateDepartmentSchema,
-} from '@/schema/department.schema';
-import yup from '@/helpers/locate';
-
-export type Department = yup.InferType<typeof departmentSchema>;
-export type Manager = yup.InferType<typeof managerSchema>;
-export type DepartmentDetail = yup.InferType<typeof departmentDetailSchema>;
-export type NewDepartmentProps = yup.InferType<typeof newDepartmentSchema>;
-export type NewDepartmentResponseProps = yup.InferType<typeof newDepartmentSchemaResponse>;
-export type UpdateDepartmentResponseProps = yup.InferType<typeof updateDepartmentSchema>;
+import { GENDER, STATUS } from '@/constants/define';
+export interface UserProps {
+  id: string;
+  email: string;
+  status: `${STATUS}`;
+  fullname: string;
+  avatar: string;
+  address: string;
+  gender: `${GENDER}`;
+  dob?: Date;
+  phone_number?: string;
+}
+export type ManagerProps = UserProps;
+export interface DepartmentProps {
+  id: string;
+  description?: string | null;
+  manager_id?: string;
+  manager?: ManagerProps;
+  name: string;
+  users_count: string;
+  created_at?: Date;
+  updated_at?: Date;
+}
+export interface DepartmentDetailProps extends DepartmentProps {
+  users: UserProps[];
+}

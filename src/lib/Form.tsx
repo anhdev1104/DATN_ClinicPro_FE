@@ -1,6 +1,6 @@
 import { cn } from '@/helpers/utils';
-import { Children, createElement, forwardRef, isValidElement, useMemo } from 'react';
-import { SubmitHandler, useController, useFormContext, useFormState } from 'react-hook-form';
+import React, { Children, createElement, forwardRef, isValidElement, useMemo } from 'react';
+import { FieldValues, SubmitHandler, useController, useFormContext, useFormState } from 'react-hook-form';
 
 const InputWithController = ({
   child,
@@ -51,20 +51,30 @@ export const CreateNestedElement = ({ children }: { children: React.ReactNode })
   });
 };
 
-interface FormProps extends Omit<React.HTMLProps<HTMLFormElement>, 'onSubmit'> {
+interface FormProps<T extends FieldValues> extends Omit<React.HTMLProps<HTMLFormElement>, 'onSubmit'> {
   children?: React.ReactNode;
-  onSubmit: SubmitHandler<any>;
+  onSubmit: SubmitHandler<T>;
 }
 
-const Form = forwardRef<HTMLFormElement, FormProps>(({ children, onSubmit, className, ...props }, ref) => {
+const Form = <T extends FieldValues>(
+  { children, onSubmit, className, ...props }: FormProps<T>,
+  ref: React.Ref<HTMLFormElement>,
+) => {
   const { handleSubmit } = useFormContext();
   return (
-    <form ref={ref} className={cn('space-y-6', className)} onSubmit={handleSubmit(onSubmit)} {...props}>
+    <form
+      ref={ref}
+      className={cn('space-y-6', className)}
+      onSubmit={handleSubmit(onSubmit as SubmitHandler<any>)}
+      {...props}
+    >
       <CreateNestedElement children={children} />
     </form>
   );
-});
-export default Form;
+};
+export default forwardRef(Form) as <T extends FieldValues>(
+  props: FormProps<T> & { ref?: React.Ref<HTMLFormElement> },
+) => React.ReactElement;
 
 /**
  * @author https://github.com/seaesa 
