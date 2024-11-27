@@ -21,6 +21,5 @@ createRoot(document.getElementById('root')!).render(
         </StyledEngineProvider>
       </PersistGate>
     </Provider>
-    ,
   </StrictMode>,
 );

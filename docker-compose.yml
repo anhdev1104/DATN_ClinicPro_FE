@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  frontend:
+    container_name: datn-clinicpro
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ENV: production
+    ports:
+      - '8080:8080'
+    environment:
+      VITE_API_URL: https://sugar.id.vn/api/v1
+      VITE_API_MASTER_DOMAIN: http://masterdomain.com # replace production domain name
+    volumes:
+      - .:/datn-clinicpro
+      - /datn-clinicpro/node_modules
+    command: yarn dev
+
+  # backend:
+  #   image: postgres:15
+  #   ports:
+  #     - '5432:5432'
+  #   environment:
+  #     POSTGRES_USER: admin
+  #     POSTGRES_PASSWORD: password
+  #     POSTGRES_DB: mydb

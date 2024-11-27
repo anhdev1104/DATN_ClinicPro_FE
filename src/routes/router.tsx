@@ -42,6 +42,7 @@ const EditSpecialties = React.lazy(() => import('@/pages/admin/specialties/compo
 type IRouter = RouteProps & {
   title: string;
 };
+
 const clientRouter: IRouter[] = [
   {
     path: '/parcel',
