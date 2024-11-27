@@ -1,3 +1,4 @@
+import { ROLE } from '@/constants/define';
 import { emailRegex } from '@/constants/regex';
 import { clsx, type ClassValue } from 'clsx';
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form';
@@ -30,20 +31,15 @@ export const formatEndPoint = (endPoint: string, queryKey?: queryKey | void) => 
   return endPoint;
 };
 export const filterOutManagers = <T extends any[]>(data: T) => {
-  return data.filter(fil => fil.role.name === 'doctor');
+  return data.filter(fil => fil.role.name === ROLE.MANAGE);
 };
 
 export const validateEmail = (email: string) => {
   return String(email).toLowerCase().match(emailRegex);
 };
 
-export interface ErrorResponse<T> {
-  errors: T;
-  message: string;
-}
-
 export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
-  errorResolve: ErrorResponse<T>,
+  errorResolve: ErrorResponse,
   setError: UseFormSetError<T>,
 ) => {
   const { errors, message } = errorResolve;

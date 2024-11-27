@@ -50,7 +50,7 @@ const LoginPage = () => {
       toast.success('Đăng nhập thành công !', { position: 'top-right' });
       navigate('/');
     } else {
-      toast.error(res.payload.error, { position: 'top-right' });
+      toast.error(res.payload.message, { position: 'top-right' });
     }
     reset();
   };
@@ -129,11 +129,6 @@ const LoginPage = () => {
                     đăng ký
                   </Link>
                   <p>tại đây!</p>
-                </div>
-                <div>
-                  <Link className="underline text-third" to="/login-otp">
-                    Đăng nhập OTP?
-                  </Link>
                 </div>
               </div>
             </div>

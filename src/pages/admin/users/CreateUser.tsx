@@ -77,7 +77,7 @@ const CreateUser = () => {
               <BaseInput.Group name="user_info.phone_number" autoComplete="phone_number" label="Số Điện Thoại" />
             </Grid.Col>
             <Grid.Col span={4}>
-              <BaseInput.Group name="password" autoComplete="password" label="Password" />
+              <BaseInput.Password name="password" autoComplete="password" label="Password" />
             </Grid.Col>
             <Grid.Col span={4}>
               <BaseInput.Select
@@ -124,7 +124,7 @@ const CreateUser = () => {
             </Grid.Col>
           </Grid>
           <BaseButton type="submit" className="flex ml-auto">
-            Cập Nhật
+            Thêm
           </BaseButton>
         </Form>
       </div>

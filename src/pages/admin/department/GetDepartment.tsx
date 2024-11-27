@@ -131,11 +131,11 @@ const GetDepartment = () => {
             <Table columns={columns} data={users?.data || []} isFetching={isUserFetching} />
           </div>
           <div className="flex justify-end items-center space-x-4 my-4">
-            <BaseButton leftSection={<BaseIcon icon={IconTrash} />} onClick={open} color="red">
+            <BaseButton size="xs" leftSection={<BaseIcon icon={IconTrash} />} onClick={open} color="red">
               Xóa Phòng Ban
             </BaseButton>
             <Link to="edit">
-              <BaseButton leftSection={<BaseIcon icon={IconPencil} />} color="blue">
+              <BaseButton size="xs" leftSection={<BaseIcon icon={IconPencil} />} color="blue">
                 Cập Nhật
               </BaseButton>
             </Link>

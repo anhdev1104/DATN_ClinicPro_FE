@@ -11,7 +11,7 @@ import { useFormContext } from 'react-hook-form';
 import { IconUsersGroup } from '@tabler/icons-react';
 import yup from '@/helpers/locate';
 import { useMemo } from 'react';
-import { filterOutManagers } from '@/helpers/utils';
+import { filterOutManagers, resolveErrorResponse } from '@/helpers/utils';
 import { renderOption } from '@/helpers/format';
 import toast from 'react-hot-toast';
 
@@ -19,6 +19,7 @@ export type CreateDepartmentProps = yup.InferType<typeof createDepartmentSchema>
 
 const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
   const {
+    setError,
     formState: { disabled },
   } = useFormContext<CreateDepartmentProps>();
   const { data: users } = useGetUsersQuery();
@@ -28,9 +29,7 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
     try {
       const result = await addDepartment(data);
       if (result.error) {
-        console.log(result.error);
-        const errors = result.error as AxiosBaseQueryError<{ error: string; errors: any[] }>;
-        toast.error(errors.data.error);
+        resolveErrorResponse((result.error as AxiosBaseQueryError).data, setError);
       } else {
         toast.success(result.data?.message);
         handleClose();

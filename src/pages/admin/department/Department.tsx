@@ -59,6 +59,7 @@ const Department = () => {
           </Avatar.Group>
         </>
       ),
+      sortable: false,
     },
     {
       key: 'created_at',
