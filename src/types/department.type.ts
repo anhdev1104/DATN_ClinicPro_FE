@@ -21,6 +21,6 @@ export interface DepartmentProps {
   created_at?: Date;
   updated_at?: Date;
 }
-export interface DepartmentDetailProps extends DepartmentProps {
+export interface DepartmentDetailProps extends Omit<DepartmentProps, 'manager_id'> {
   users: UserProps[];
 }

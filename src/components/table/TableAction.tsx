@@ -34,12 +34,15 @@ const ActionWithRow = <T,>({ data }: ActionWithRowProps<T>) => {
         </BaseButton.Icon>
       </Menu.Target>
       <Menu.Dropdown>
-        {data?.length &&
+        {data && data?.length > 0 ? (
           data.map(({ label, ...props }) => (
             <Menu.Item key={label} {...props}>
               {label}
             </Menu.Item>
-          ))}
+          ))
+        ) : (
+          <></>
+        )}
       </Menu.Dropdown>
     </Menu>
   );

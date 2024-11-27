@@ -6,18 +6,18 @@ interface UserProps {
   email?: string;
   [k: string]: any;
 }
-export const UserInfo = (user: UserProps) => {
-  if (!user) {
+export const UserInfo = ({ avatar, email, fullname }: UserProps) => {
+  if (!avatar && !email && !fullname) {
     return 'Chưa Có';
   }
   return (
     <>
       <Group gap="sm">
-        <Avatar src={user?.avatar} size={36} radius="xl" />
+        <Avatar src={avatar} size={36} radius="xl" />
         <div>
-          <Text size="sm">{user?.fullname}</Text>
+          <Text size="sm">{fullname}</Text>
           <Text size="xs" opacity={0.5}>
-            {user?.email}
+            {email}
           </Text>
         </div>
       </Group>
