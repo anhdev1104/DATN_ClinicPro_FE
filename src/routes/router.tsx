@@ -7,7 +7,8 @@ import ProtectedRoute from '@/components/auth';
 
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
 const Department = React.lazy(() => import('@/pages/admin/department/Department'));
-const DepartmentDetail = React.lazy(() => import('@/pages/admin/department/DepartmentDetail'));
+const GetDepartment = React.lazy(() => import('@/pages/admin/department/GetDepartment'));
+const UpdateDepartment = React.lazy(() => import('@/pages/admin/department/UpdateDepartment'));
 const NotFoundPage = React.lazy(() => import('@/pages/client/404/NotFoundPage'));
 const AboutPage = React.lazy(() => import('@/pages/client/about/AboutPage'));
 const AchievementPage = React.lazy(() => import('@/pages/client/achievement/AchievementPage'));
