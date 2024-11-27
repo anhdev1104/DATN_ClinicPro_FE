@@ -29,7 +29,7 @@ const former = <T extends object>(
   const Component: React.FC<T> = props => {
     const { loading } = useSelector(state => state.global);
     const [disabled, setDisabled] = useState(false);
-    const { formState, ...methods } = useForm({
+    const form = useForm({
       ...options,
       disabled,
       resolver: Schema && yupResolver(Schema),
@@ -37,12 +37,11 @@ const former = <T extends object>(
     });
 
     useEffect(() => {
-      if (formState.isSubmitting) setDisabled(!disabled);
-      return () => setDisabled(false);
+      if (form.formState.isSubmitting) setDisabled(!disabled);
     }, [loading]);
 
     return (
-      <FormProvider {...methods} formState={formState}>
+      <FormProvider {...form}>
         <WrappedComponent {...props} />
       </FormProvider>
     );

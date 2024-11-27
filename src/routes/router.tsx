@@ -7,7 +7,8 @@ import ProtectedRoute from '@/components/auth';
 
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
 const Department = React.lazy(() => import('@/pages/admin/department/Department'));
-const DepartmentDetail = React.lazy(() => import('@/pages/admin/department/DepartmentDetail'));
+const GetDepartment = React.lazy(() => import('@/pages/admin/department/GetDepartment'));
+const UpdateDepartment = React.lazy(() => import('@/pages/admin/department/UpdateDepartment'));
 const NotFoundPage = React.lazy(() => import('@/pages/client/404/NotFoundPage'));
 const AboutPage = React.lazy(() => import('@/pages/client/about/AboutPage'));
 const AchievementPage = React.lazy(() => import('@/pages/client/achievement/AchievementPage'));
@@ -122,14 +123,19 @@ const adminRouter: IRouter[] = [
     title: 'Danh sách đơn thuốc',
   },
   {
-    path: '/departments/:id',
-    element: <DepartmentDetail />,
-    title: 'Phòng Ban',
-  },
-  {
     path: '/departments',
     element: <Department />,
     title: 'Danh sách phòng ban',
+  },
+  {
+    path: '/departments/:id',
+    element: <GetDepartment />,
+    title: 'Phòng Ban',
+  },
+  {
+    path: '/departments/:id/edit',
+    element: <UpdateDepartment />,
+    title: 'Phòng Ban',
   },
   {
     path: '/packages',

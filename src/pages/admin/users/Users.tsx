@@ -42,7 +42,7 @@ const User = () => {
   ]);
   return (
     <>
-      <div className="bg-white rounded-3xl w-full shadow-xl">
+      <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
           toolbar={
             <BaseButton.Icon onClick={() => navigate('add')} variant="subtle" radius="lg">

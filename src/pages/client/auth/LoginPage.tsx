@@ -130,11 +130,6 @@ const LoginPage = () => {
                   </Link>
                   <p>tại đây!</p>
                 </div>
-                <div>
-                  <Link className="underline text-third" to="/login-otp">
-                    Đăng nhập OTP?
-                  </Link>
-                </div>
               </div>
             </div>
           </div>

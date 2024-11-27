@@ -1,6 +1,6 @@
 import { http } from '@/helpers/http';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
-import type { AxiosRequestConfig, AxiosError, HttpStatusCode, AxiosResponse } from 'axios';
+import type { AxiosRequestConfig, AxiosError, HttpStatusCode } from 'axios';
 
 type BaseQueryInstance = BaseQueryFn<
   {
@@ -13,9 +13,9 @@ type BaseQueryInstance = BaseQueryFn<
   unknown,
   unknown
 >;
-export interface AxiosBaseQueryError<T extends AxiosResponse['data'] = AxiosResponse['data']> {
+export interface AxiosBaseQueryError {
   status?: typeof HttpStatusCode;
-  data: T;
+  data: ErrorResponse;
 }
 export const axiosBaseQuery = (): BaseQueryInstance => async props => {
   try {

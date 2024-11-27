@@ -8,16 +8,15 @@ import { IRole } from '@/types/role.type';
 import { Avatar, Grid } from '@mantine/core';
 import { IconCalendar, IconUpload } from '@tabler/icons-react';
 import { useEffect, useMemo, useState } from 'react';
-import { UseFormReturn } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
-import { useGetAllDepartmentQuery } from '@/redux/api/department';
+import { useGetDepartmentsQuery } from '@/redux/api/department';
 import { uploadFile } from '@/services/uploadFile.service';
 import { resolveErrorResponse } from '@/helpers/utils';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import { GENDER, STATUS } from '@/constants/define';
 import dayjs from 'dayjs';
-import Formik from '@/lib/Formik';
+import Formik, { FormikHandler } from '@/lib/Formik';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 
 const UpdateUser = () => {
@@ -26,13 +25,13 @@ const UpdateUser = () => {
   const { userId } = useParams();
   const [updateUser] = useUpdateUserMutation();
   const { data: user } = useGetUserQuery(userId as string);
-  const { data } = useGetAllDepartmentQuery();
+  const { data } = useGetDepartmentsQuery();
   const listDepartment = useMemo(
     () => data?.data.map(department => ({ label: department.name, value: department.id })) || [],
     [data],
   );
   const [image, setImage] = useState(user?.user_info.avatar);
-  const handleUpdateUser = async (data: UpdateUserProps, { reset, setError }: UseFormReturn<UpdateUserProps>) => {
+  const handleUpdateUser: FormikHandler<UpdateUserProps> = async (data, { reset, setError }) => {
     const { user_info, ...props } = data;
     if (file) {
       const formData = new FormData();
