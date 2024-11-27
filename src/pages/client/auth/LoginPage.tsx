@@ -50,7 +50,7 @@ const LoginPage = () => {
       toast.success('Đăng nhập thành công !', { position: 'top-right' });
       navigate('/');
     } else {
-      toast.error(res.payload.error, { position: 'top-right' });
+      toast.error(res.payload.response.data.message, { position: 'top-right' });
     }
     reset();
   };

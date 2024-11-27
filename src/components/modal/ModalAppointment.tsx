@@ -497,8 +497,8 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
                   component={'span'}
                   className="text-third text-[11px] cursor-pointer"
                   onClick={() => {
-                    handleToggle();
                     navigate('/privacy-policy');
+                    handleToggle();
                   }}
                 >
                   Chính Sách Quyền Riêng Tư.
