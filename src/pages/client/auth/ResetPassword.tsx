@@ -24,6 +24,7 @@ interface ResetPasswordProps {
   email: string;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
   const {
     reset,

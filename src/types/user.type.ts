@@ -8,7 +8,7 @@ export interface IUserProfile extends IInfo {
 export interface IUserInfo {
   id: string;
   email: string;
-  status: `${STATUS}`;
+  status: (typeof STATUS)[keyof typeof STATUS];
   role: IRole;
   user_info: IUserProfile;
 }

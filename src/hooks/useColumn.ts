@@ -38,6 +38,7 @@ export const useColumn = <TData>(columnsData: ColumnProps<TData>[]) => {
         meta,
       }),
     ) as ColumnDef<TData>[];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return columns;
 };

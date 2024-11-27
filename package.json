@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -31,9 +31,9 @@
     "framer-motion": "^11.11.9",
     "js-cookie": "^3.0.5",
     "lightbox-react": "^0.3.8",
-    "react": "^18.3.0",
     "react-csv": "^2.2.2",
-    "react-dom": "^18.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
     "react-hot-toast": "^2.4.1",
     "react-imask": "^7.6.1",
@@ -80,12 +80,13 @@
     "vite": "^5.4.5"
   },
   "peerDependencies": {
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "prettier --write"
+      "prettier --write",
+      "eslint --fix"
     ]
   }
 }
