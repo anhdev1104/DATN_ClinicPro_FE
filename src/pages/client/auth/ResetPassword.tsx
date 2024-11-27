@@ -7,7 +7,7 @@ import { resetPassword } from '@/services/auth.service';
 import BaseInput from '@/components/base/input';
 import { toast } from 'react-toastify';
 import { IResetPassword, IResetPasswordError } from '@/types/auth.type';
-import former from '@/providers/former';
+import former from '@/lib/former';
 import Form from '@/lib/Form';
 import BaseButton from '@/components/base/button';
 import { Text } from '@mantine/core';

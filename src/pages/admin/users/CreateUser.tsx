@@ -5,7 +5,7 @@ import { GENDER } from '@/constants/define';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import { resolveErrorResponse } from '@/helpers/utils';
 import Form from '@/lib/Form';
-import former from '@/providers/former';
+import former from '@/lib/former';
 import { useGetDepartmentsQuery } from '@/redux/api/department';
 import { useCreateUserMutation } from '@/redux/api/users';
 import { CreateUserProps, createUserSChema } from '@/schema/user.schema';

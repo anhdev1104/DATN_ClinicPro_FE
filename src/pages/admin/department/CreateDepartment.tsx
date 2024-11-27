@@ -2,25 +2,24 @@ import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
-import former, { OptionsWithForm } from '@/providers/former';
+import former, { OptionsWithForm } from '@/lib/former';
 import Form from '@/lib/Form';
 import { useCreateDepartmentMutation } from '@/redux/api/department';
 import { useGetUsersQuery } from '@/redux/api/users';
 import { Stack } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
-import { toast } from 'react-toastify';
 import { IconUsersGroup } from '@tabler/icons-react';
 import yup from '@/helpers/locate';
 import { useMemo } from 'react';
 import { filterOutManagers } from '@/helpers/utils';
-import { renderOption } from '@/lib/format';
+import { renderOption } from '@/helpers/format';
+import toast from 'react-hot-toast';
 
 export type CreateDepartmentProps = yup.InferType<typeof createDepartmentSchema>;
 
 const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
   const {
     formState: { disabled },
-    setError,
   } = useFormContext<CreateDepartmentProps>();
   const { data: users } = useGetUsersQuery();
   const managers = useMemo(() => filterOutManagers(users?.data || []), []);
@@ -30,8 +29,8 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
       const result = await addDepartment(data);
       if (result.error) {
         console.log(result.error);
-        const errors = result.error as AxiosBaseQueryError<{ message: string; errors: any[] }>;
-        setError('name', { message: errors.data.message });
+        const errors = result.error as AxiosBaseQueryError<{ error: string; errors: any[] }>;
+        toast.error(errors.data.error);
       } else {
         toast.success(result.data?.message);
         handleClose();

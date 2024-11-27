@@ -61,15 +61,6 @@ const Department = () => {
       cell: ({ row }) => (
         <ActionWithRow
           data={[
-            // {
-            //   label: 'Sửa',
-            //   onClick: () => {
-            //     window.history.replaceState(null, '', `/departments/${row.original.id}`);
-            //     departmentUpdateRef.current = row.original;
-            //     handleModalUpdate.open();
-            //   },
-            //   leftSection: <BaseIcon icon={IconPencil} />,
-            // },
             {
               label: 'Xóa',
               onClick: () => {

@@ -1,6 +1,6 @@
 import { emailRegex } from '@/constants/regex';
 import { clsx, type ClassValue } from 'clsx';
-import { UseFormSetError } from 'react-hook-form';
+import { FieldValues, Path, UseFormSetError } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
 import unidecode from 'unidecode';
@@ -37,17 +37,23 @@ export const validateEmail = (email: string) => {
   return String(email).toLowerCase().match(emailRegex);
 };
 
-export interface ErrorResponse {
-  errors: { [key: string]: any };
+export interface ErrorResponse<T> {
+  errors: T;
   message: string;
 }
 
-export const resolveErrorResponse = (errorResolve: ErrorResponse, setError: UseFormSetError<any>) => {
+export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
+  errorResolve: ErrorResponse<T>,
+  setError: UseFormSetError<T>,
+) => {
   const { errors, message } = errorResolve;
+  if (!errors && !message) {
+    toast.error('lỗi hệ thống vui lòng đợi trong giây lát');
+    return;
+  }
+  if (message) toast.error(message);
   if (errors) {
-    const errorName = Object.keys(errors) as Array<keyof typeof errors>;
-    setError(errorName[0] as string, { message: errors[errorName[0]][0] });
-  } else {
-    toast.error(message || 'lỗi hệ thống');
+    const errorName = Object.keys(errors) as (keyof T)[];
+    errorName.length && setError(errorName[0] as 'root' | Path<T>, { message: errors[errorName[0]][0] });
   }
 };

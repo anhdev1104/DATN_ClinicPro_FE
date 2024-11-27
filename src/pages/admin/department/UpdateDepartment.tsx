@@ -1,7 +1,7 @@
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
-import former, { OptionsWithForm } from '@/providers/former';
+import former, { OptionsWithForm } from '@/lib/former';
 import Form from '@/lib/Form';
 import { useUpdateDepartmentMutation } from '@/redux/api/department';
 import { useGetUsersQuery } from '@/redux/api/users';
@@ -12,7 +12,7 @@ import { useMemo } from 'react';
 import { SubmitHandler, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import yup from '@/helpers/locate';
-import { renderOption } from '@/lib/format';
+import { renderOption } from '@/helpers/format';
 
 const updateDepartmentSchema = yup.object({
   name: yup.string().required(),

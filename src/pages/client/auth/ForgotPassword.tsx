@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { IForgotPassWord, IForgotPassWordError } from '@/types/auth.type';
 import ResetPassword from './ResetPassword';
-import former, { OptionsWithForm } from '@/providers/former';
+import former, { OptionsWithForm } from '@/lib/former';
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import Form from '@/lib/Form';
