@@ -25,9 +25,7 @@ export const usersApi = createApi({
         url: `users/${id}`,
       }),
       providesTags: result => (result ? [{ type: 'Users', id: result.id }] : []),
-      transformResponse: (response: { data: IUserInfo }) => {
-        return response.data;
-      },
+      transformResponse: (response: { data: IUserInfo }) => response.data,
       keepUnusedDataFor: 90,
     }),
     createUser: builder.mutation<{ message: string }, CreateUserProps>({

@@ -16,7 +16,7 @@ import { useQueryParams } from '@/hooks/useQueryParams';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import dayjs from 'dayjs';
 
-const Department = () => {
+export default function Department() {
   const [params, queryParams] = useQueryParams();
   const debounced = useDebouncedCallback(value => {
     queryParams.set('q', value);
@@ -53,13 +53,13 @@ const Department = () => {
     {
       key: 'users_count',
       label: 'Nhân viên',
-      cell: ({ value }) => (
+      cell: ({ value, original }) => (
         <>
           <Avatar.Group>
-            <Avatar src="image.png" />
-            <Avatar src="image.png" />
-            <Avatar src="image.png" />
-            <Avatar>+{value}</Avatar>
+            {original.users.slice(0, 3).map(user => (
+              <Avatar key={user.id} src={user.avatar} />
+            ))}
+            <Avatar>{value}</Avatar>
           </Avatar.Group>
         </>
       ),
@@ -140,5 +140,4 @@ const Department = () => {
       </div>
     </>
   );
-};
-export default Department;
+}

@@ -1,5 +1,4 @@
 import { UserInfo } from '@/components/user-info/UserInfo';
-
 export interface Options {
   value: string;
   label: string;
