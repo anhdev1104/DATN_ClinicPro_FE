@@ -40,6 +40,7 @@ const AddSpecialties = React.lazy(() => import('@/pages/admin/specialties/compon
 const EditSpecialties = React.lazy(() => import('@/pages/admin/specialties/components/EditSpecialties'));
 const Patients = React.lazy(() => import('@/pages/admin/patient/Patients'));
 const DetailPatient = React.lazy(() => import('@/pages/admin/patient/components/DetailPatient'));
+const AddPatient = React.lazy(() => import('@/pages/admin/patient/components/AddPatient'));
 
 type IRouter = RouteProps & {
   title: string;
@@ -190,6 +191,11 @@ const adminRouter: IRouter[] = [
   {
     path: '/patient/:id',
     element: <DetailPatient />,
+    title: 'Trang bệnh nhân',
+  },
+  {
+    path: '/add-patient',
+    element: <AddPatient />,
     title: 'Trang bệnh nhân',
   },
 ];

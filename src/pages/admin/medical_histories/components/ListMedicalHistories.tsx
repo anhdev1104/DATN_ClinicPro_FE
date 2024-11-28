@@ -115,8 +115,8 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
           </div>
           <div className="w-full border-b-[2px] border-borderColor text-left">
             {loading ? (
-              <div className="w-full flex justify-center items-center py-10">
-                <LoadingSpin className="!size-16" color="border-primaryAdmin" />
+              <div className="mx-auto text-center pt-10">
+                <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
               </div>
             ) : medicalRecords?.length > 0 ? (
               medicalRecords?.map((record, index) => (
