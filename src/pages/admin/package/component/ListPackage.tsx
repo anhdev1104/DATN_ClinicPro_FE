@@ -78,7 +78,7 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
         <div className="list-package p-4">
           <table className="min-w-full table-auto border-collapse">
             <thead>
-              <tr className="text-left text-gray-700">
+              <tr className="border-b-2 border-primaryAdmin/20 text-gray-700 bg-primaryAdmin/5">
                 <th className="p-4 font-medium">ID</th>
                 <th className="p-4 font-medium">Gói khám</th>
                 <th className="p-4 font-medium">Danh mục</th>

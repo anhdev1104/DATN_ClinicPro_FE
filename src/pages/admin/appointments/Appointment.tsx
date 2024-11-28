@@ -1,9 +1,12 @@
-import DirectRoute from '@/components/direct';
-
+import ListAppointment from './Compontents/ListAppointment';
 const Appointment = () => {
   return (
     <div>
-      <DirectRoute nav="Quản lý lịch hẹn" subnav="Danh sách lịch hẹn" />
+      <div>
+        <h1>
+          <ListAppointment />
+        </h1>
+      </div>
     </div>
   );
 };

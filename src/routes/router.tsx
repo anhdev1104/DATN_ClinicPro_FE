@@ -34,6 +34,9 @@ import MedicalHistories from '@/pages/admin/medical_histories/MedicalHistories';
 import PrivacyPage from '@/pages/client/privacy/privacyPage';
 import Specialties from '@/pages/admin/specialties/Specialties';
 import Appointment from '@/pages/admin/appointments/Appointment';
+import AddSpecialties from '@/pages/admin/specialties/components/AddSpecialties';
+import EditSpecialties from '@/pages/admin/specialties/components/EditSpecialties';
+
 type IRouter = RouteProps & {
   title: string;
 };
@@ -168,6 +171,16 @@ const adminRouter: IRouter[] = [
   {
     path: '/specialties',
     element: <Specialties />,
+    title: 'Trang chuyên khoa',
+  },
+  {
+    path: '/add-specialties',
+    element: <AddSpecialties />,
+    title: 'Trang chuyên khoa',
+  },
+  {
+    path: '/edit-specialties/:id',
+    element: <EditSpecialties />,
     title: 'Trang chuyên khoa',
   },
 ];

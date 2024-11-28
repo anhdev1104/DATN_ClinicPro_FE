@@ -1,5 +1,5 @@
-import { Children, createElement, forwardRef, isValidElement, memo, useMemo } from 'react';
-import { useController, useFormState } from 'react-hook-form';
+import { Children, createElement, forwardRef, isValidElement, useMemo } from 'react';
+import { SubmitHandler, useController, useFormContext, useFormState } from 'react-hook-form';
 
 const InputWithController = ({
   child,
@@ -34,7 +34,7 @@ const InputWithController = ({
   );
 };
 
-const CreateNestedElement = ({ children }: { children: React.ReactNode }) => {
+export const CreateNestedElement = ({ children }: { children: React.ReactNode }) => {
   return Children.map(children, child => {
     return isValidElement(child) ? (
       child.props?.name && child.props.name.includes(child.props?.autoComplete) ? (
@@ -50,17 +50,21 @@ const CreateNestedElement = ({ children }: { children: React.ReactNode }) => {
   });
 };
 
-interface FormProps extends React.HTMLProps<HTMLFormElement> {
+interface FormProps extends Omit<React.HTMLProps<HTMLFormElement>, 'onSubmit'> {
   children?: React.ReactNode;
+  onSubmit: SubmitHandler<any>;
 }
 
-const Form = forwardRef<HTMLFormElement, FormProps>(({ children, ...props }, ref) => {
+const Form = forwardRef<HTMLFormElement, FormProps>(({ children, onSubmit, ...props }, ref) => {
+  const { handleSubmit } = useFormContext();
   return (
-    <form {...props} ref={ref}>
+    <form onSubmit={handleSubmit(onSubmit)} ref={ref} {...props}>
       <CreateNestedElement children={children} />
     </form>
   );
 });
+export default Form;
+
 /**
  * @author https://github.com/seaesa 
  * @description this is lib remove Controller component in your code, usage with former hocs
@@ -93,4 +97,3 @@ const Form = forwardRef<HTMLFormElement, FormProps>(({ children, ...props }, ref
   <Form/> 
   /> 
  */
-export default memo(Form);

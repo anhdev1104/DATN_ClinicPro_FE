@@ -17,7 +17,7 @@ export const managerSchema = yup
 
 export const departmentSchema = yup.object({
   id: yup.string().uuid().required(),
-  name: yup.string(),
+  name: yup.string().required(),
   description: yup.string(),
   created_at: yup.string().datetime().default(new Date().toLocaleDateString()),
   updated_at: yup.string().datetime().default(new Date().toLocaleDateString()),

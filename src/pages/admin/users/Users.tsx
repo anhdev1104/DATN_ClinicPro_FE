@@ -15,6 +15,7 @@ const User = () => {
     {
       label: 'Tên',
       key: 'user_info.fullname',
+      meta: 'Tên',
     },
     {
       label: 'Địa Chỉ',

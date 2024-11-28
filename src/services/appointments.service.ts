@@ -2,11 +2,19 @@ import Http from '@/helpers/http';
 import { IAppointment } from '@/types/appointment.type';
 
 const http = new Http();
+export const getAppointments = async () => {
+  try {
+    const response = await http.get('/appointments');
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
 
 export const addAppointments = async (data: IAppointment) => {
   try {
     const response = await http.post('/appointments', data);
-    return response.data;
+    return response;
   } catch (error) {
     return error;
   }
