@@ -14,8 +14,8 @@ export type ManagerProps = UserProps;
 export interface DepartmentProps {
   id: string;
   description?: string | null;
-  manager_id?: string;
-  manager?: ManagerProps;
+  manager_id?: string | null;
+  manager: ManagerProps | null;
   name: string;
   users_count: string;
   created_at?: Date;

@@ -23,7 +23,7 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
     formState: { disabled },
   } = useFormContext<CreateDepartmentProps>();
   const { data: users } = useGetUsersQuery();
-  const managers = useMemo(() => filterOutManagers(users?.data || []), []);
+  const managers = useMemo(() => filterOutManagers(users?.data || []), [users]);
   const [addDepartment] = useCreateDepartmentMutation();
   const handleCreateDepartment = async (data: CreateDepartmentProps) => {
     try {
@@ -31,14 +31,13 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
       if (result.error) {
         resolveErrorResponse((result.error as AxiosBaseQueryError).data, setError);
       } else {
-        toast.success(result.data?.message);
+        toast.success(result.data?.message as string);
         handleClose();
       }
     } catch (error) {
       throw error;
     }
   };
-
   return (
     <Form onSubmit={handleCreateDepartment}>
       <Stack>
@@ -55,7 +54,6 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
             email: manager.email,
           }))}
           renderOption={renderOption}
-          limit={1}
           clearable
           searchable
           nothingFoundMessage="không tìm thấy quản lý"

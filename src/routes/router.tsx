@@ -33,7 +33,6 @@ const Package = React.lazy(() => import('@/pages/admin/package/Package'));
 const User = React.lazy(() => import('@/pages/admin/users/Users'));
 const GetUser = React.lazy(() => import('@/pages/admin/users/GetUser'));
 const UpdateUser = React.lazy(() => import('@/pages/admin/users/UpdateUser'));
-const CreateUser = React.lazy(() => import('@/pages/admin/users/CreateUser'));
 const MedicalHistories = React.lazy(() => import('@/pages/admin/medical_histories/MedicalHistories'));
 const PrivacyPage = React.lazy(() => import('@/pages/client/privacy/privacyPage'));
 const Specialties = React.lazy(() => import('@/pages/admin/specialties/Specialties'));
@@ -155,11 +154,6 @@ const adminRouter: IRouter[] = [
   {
     path: '/users',
     element: <User />,
-    title: 'Danh Sách Người Dùng',
-  },
-  {
-    path: '/users/add',
-    element: <CreateUser />,
     title: 'Danh Sách Người Dùng',
   },
   {

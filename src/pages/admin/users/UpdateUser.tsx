@@ -2,7 +2,6 @@ import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
 import { useGetUserQuery, useUpdateUserMutation } from '@/redux/api/users';
-import { UpdateUserProps, updateUserSchema } from '@/schema/user.schema';
 import { getAllRole } from '@/services/roles.service';
 import { IRole } from '@/types/role.type';
 import { Avatar, Grid } from '@mantine/core';
@@ -18,7 +17,23 @@ import { GENDER, STATUS } from '@/constants/define';
 import dayjs from 'dayjs';
 import Formik, { FormikHandler } from '@/lib/Formik';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
+import yup from '@/helpers/locate';
 
+const updateUserSchema = yup.object({
+  email: yup.string().email().required(),
+  status: yup.string().oneOf(Object.values(STATUS) as `${STATUS}`[]),
+  role_id: yup.string().required(),
+  user_info: yup.object({
+    fullname: yup.string().required(),
+    address: yup.string().nullable(),
+    phone_number: yup.string().nullable(),
+    avatar: yup.string().url(),
+    gender: yup.string().oneOf(Object.values(GENDER) as `${GENDER}`[]),
+    dob: yup.string().nullable().optional(),
+    department_id: yup.string().nullable(),
+  }),
+});
+export type UpdateUserProps = yup.InferType<typeof updateUserSchema>;
 const UpdateUser = () => {
   const [file, setFile] = useState<{ file: File | null; url?: string }>();
   const [roles, setRoles] = useState<IRole[]>([]);
@@ -30,7 +45,7 @@ const UpdateUser = () => {
     () => data?.data.map(department => ({ label: department.name, value: department.id })) || [],
     [data],
   );
-  const [image, setImage] = useState(user?.user_info.avatar);
+  const [image, setImage] = useState(user?.user_info?.avatar);
   const handleUpdateUser: FormikHandler<UpdateUserProps> = async (data, { reset, setError }) => {
     const { user_info, ...props } = data;
     if (file) {
@@ -45,6 +60,7 @@ const UpdateUser = () => {
     }
     const result = await updateUser({
       ...props,
+      id: '',
       user_info: {
         ...user_info,
         avatar: file?.url || user_info.avatar,
@@ -71,7 +87,12 @@ const UpdateUser = () => {
         {user ? (
           <Formik
             options={{
-              defaultValues: updateUserSchema.default({ ...user, role_id: user?.role.id }).getDefault(),
+              defaultValues: {
+                email: user.email,
+                role_id: user.role.id,
+                status: user.status,
+                user_info: user.user_info,
+              },
               mode: 'onChange',
             }}
             schema={updateUserSchema}
@@ -79,13 +100,14 @@ const UpdateUser = () => {
           >
             {({
               formState: {
-                errors: { email, user_info, role_id, status },
+                errors: { email, user_info, role_id, status, ...props },
                 disabled,
                 defaultValues,
               },
               register,
               setValue,
             }) => {
+              console.log(props);
               return (
                 <>
                   <Grid>

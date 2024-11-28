@@ -20,5 +20,6 @@ declare global {
   interface ErrorResponse {
     errors?: { [k: string]: string | string[] };
     message: string;
+    success: boolean;
   }
 }
