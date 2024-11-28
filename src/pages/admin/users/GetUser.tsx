@@ -96,7 +96,7 @@ const GetUser = () => {
           </section>
         </div>
       ) : (
-        <NotFoundPage title={(error as AxiosBaseQueryError).data.message} />
+        <NotFoundPage title={(error as AxiosBaseQueryError)?.data.message} />
       )}
     </>
   );

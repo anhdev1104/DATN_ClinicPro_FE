@@ -69,7 +69,7 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
           leftSection={<BaseIcon icon={IconUsersGroup} />}
           comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
           data={users?.data.map(user => ({
-            label: user.user_info.fullname,
+            label: user.user_info?.fullname,
             value: user.id,
             avatar: user.user_info?.avatar,
             email: user.email,
