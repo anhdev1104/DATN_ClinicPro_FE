@@ -11,7 +11,7 @@ import { useFormContext } from 'react-hook-form';
 import { IconUsersGroup } from '@tabler/icons-react';
 import yup from '@/helpers/locate';
 import { useMemo } from 'react';
-import { filterOutManagers, resolveErrorResponse } from '@/helpers/utils';
+import { filterOutManagers, formatUserSelect, resolveErrorResponse } from '@/helpers/utils';
 import { renderOption } from '@/helpers/format';
 import toast from 'react-hot-toast';
 
@@ -23,19 +23,16 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
     formState: { disabled },
   } = useFormContext<CreateDepartmentProps>();
   const { data: users } = useGetUsersQuery();
-  const managers = useMemo(() => filterOutManagers(users?.data || []), [users]);
+  const managers = useMemo(() => formatUserSelect(filterOutManagers(users?.data || [])), [users]);
+  const listUser = useMemo(() => formatUserSelect(users?.data || []), [users]);
   const [addDepartment] = useCreateDepartmentMutation();
   const handleCreateDepartment = async (data: CreateDepartmentProps) => {
-    try {
-      const result = await addDepartment(data);
-      if (result.error) {
-        resolveErrorResponse((result.error as AxiosBaseQueryError).data, setError);
-      } else {
-        toast.success(result.data?.message as string);
-        handleClose();
-      }
-    } catch (error) {
-      throw error;
+    const result = await addDepartment(data);
+    if (result.error) {
+      resolveErrorResponse((result.error as AxiosBaseQueryError).data, setError);
+    } else {
+      toast.success(result.data?.message as string);
+      handleClose();
     }
   };
   return (
@@ -47,12 +44,7 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
           autoComplete="manager_id"
           name="manager_id"
           label="Chọn Quản lý"
-          data={managers?.map(manager => ({
-            label: manager.user_info.fullname,
-            value: manager.id,
-            avatar: manager.user_info.avatar,
-            email: manager.email,
-          }))}
+          data={managers}
           renderOption={renderOption}
           clearable
           searchable
@@ -68,12 +60,7 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
           searchable
           leftSection={<BaseIcon icon={IconUsersGroup} />}
           comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-          data={users?.data.map(user => ({
-            label: user.user_info?.fullname,
-            value: user.id,
-            avatar: user.user_info?.avatar,
-            email: user.email,
-          }))}
+          data={listUser}
           renderOption={renderOption}
           nothingFoundMessage="Không tìm thấy người dùng"
         />

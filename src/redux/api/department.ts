@@ -1,7 +1,7 @@
 import { axiosBaseQuery } from '@/helpers/axiosBaseQuery';
 import { CreateDepartmentProps } from '@/pages/admin/department/components/CreateDepartment';
 import { UpdateDepartmentProps } from '@/pages/admin/department/UpdateDepartment';
-import { DepartmentDetailProps, DepartmentProps } from '@/types/department.type';
+import { DepartmentProps } from '@/types/department.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 export const departmentApi = createApi({
@@ -23,7 +23,7 @@ export const departmentApi = createApi({
           : [{ type: 'Department', id: 'DEPARTMENT-LIST' }],
       keepUnusedDataFor: 180,
     }),
-    getDepartment: builder.query<DepartmentDetailProps, string>({
+    getDepartment: builder.query<DepartmentProps, string>({
       query: id => ({ url: `departments/${id}` }),
       providesTags: result =>
         result
@@ -32,7 +32,7 @@ export const departmentApi = createApi({
               { type: 'Department', id: 'DEPARTMENT-DETAIL' },
             ]
           : [{ type: 'Department', id: 'DEPARTMENT-DETAIL' }],
-      transformResponse: (response: { data: DepartmentDetailProps }) => response.data,
+      transformResponse: (response: { data: DepartmentProps }) => response.data,
       keepUnusedDataFor: 90,
     }),
     createDepartment: builder.mutation<{ message: string }, CreateDepartmentProps>({
@@ -44,14 +44,11 @@ export const departmentApi = createApi({
       invalidatesTags: result => (result ? [{ type: 'Department', id: 'DEPARTMENT-LIST' }] : []),
     }),
     updateDepartment: builder.mutation<{ message: string }, UpdateDepartmentProps & { id: string }>({
-      query: query => {
-        const { id, ...data } = query;
-        return {
-          url: `departments/${id}`,
-          method: 'PUT',
-          data,
-        };
-      },
+      query: ({ id, ...data }) => ({
+        url: `departments/${id}`,
+        method: 'PUT',
+        data,
+      }),
       invalidatesTags: (result, _, arg) => (result ? [{ type: 'Department', id: arg.id }] : []),
     }),
     deleteDepartment: builder.mutation<{ message: string }, string>({
