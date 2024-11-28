@@ -6,10 +6,11 @@ import yup from '@/helpers/locate';
 import { renderOption } from '@/helpers/format';
 import Formik, { FormikHandler } from '@/lib/Formik';
 import { useNavigate, useParams } from 'react-router-dom';
-import { resolveErrorResponse } from '@/helpers/utils';
+import { filterOutManagers, formatUserSelect, resolveErrorResponse } from '@/helpers/utils';
 import { useGetUsersQuery } from '@/redux/api/users';
 import toast from 'react-hot-toast';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { useMemo } from 'react';
 
 const updateDepartmentSchema = yup.object({
   name: yup.string().required().optional(),
@@ -20,21 +21,24 @@ const updateDepartmentSchema = yup.object({
 });
 export type UpdateDepartmentProps = yup.InferType<typeof updateDepartmentSchema>;
 
-const UpdateDepartment = () => {
+export default function UpdateDepartment() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: department, isSuccess } = useGetDepartmentQuery(id as string);
-  const { data: managers } = useGetUsersQuery({ role: 'manage' });
   const { data: users } = useGetUsersQuery();
+
+  const managers = useMemo(() => formatUserSelect(filterOutManagers(users?.data || [])), [users]);
+  const listUsers = useMemo(() => formatUserSelect(users?.data || []), [users]);
+
   const [handleUpdate] = useUpdateDepartmentMutation();
   const handleUpdateDepartment: FormikHandler<UpdateDepartmentProps> = async (data, { setError }) => {
     const result = await handleUpdate({ id: id as string, ...data });
-    if (result.error) {
-      resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
-    } else {
-      toast.success((result.data as any)?.message);
+    if (result.data) {
+      toast.success(result.data?.message || '');
       navigate(-1);
+      return;
     }
+    resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
   };
 
   return (
@@ -63,14 +67,7 @@ const UpdateDepartment = () => {
                     name="manager_id"
                     autoComplete="manager_id"
                     label="Chọn Quản lý"
-                    data={
-                      managers?.data?.map(manager => ({
-                        value: manager.id,
-                        label: manager.user_info.fullname || '',
-                        avatar: manager.user_info.avatar,
-                        email: manager.email,
-                      })) || []
-                    }
+                    data={managers}
                     renderOption={renderOption}
                     clearable
                     searchable
@@ -79,14 +76,7 @@ const UpdateDepartment = () => {
                   />
                   <BaseInput.MultiSelect
                     onRemove={value => setValue('users_delete', [...(getValues('users_delete') || ''), value])}
-                    data={
-                      users?.data?.map(user => ({
-                        value: user.id,
-                        label: user.user_info?.fullname || '',
-                        avatar: user.user_info?.avatar,
-                        email: user.email,
-                      })) || []
-                    }
+                    data={listUsers}
                     renderOption={renderOption}
                     name="users"
                     autoComplete="users"
@@ -107,6 +97,4 @@ const UpdateDepartment = () => {
       )}
     </div>
   );
-};
-
-export default UpdateDepartment;
+}

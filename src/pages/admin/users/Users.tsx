@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import CreateUser from './components/CreateUser';
 import BaseModal from '@/components/base/modal';
 
-const User = () => {
+export default function User() {
   const [opened, { close, open }] = useDisclosure();
   const { data, isSuccess, isFetching } = useGetUsersQuery();
   const navigate = useNavigate();
@@ -66,5 +66,4 @@ const User = () => {
       </BaseModal>
     </>
   );
-};
-export default User;
+}

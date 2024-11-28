@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply font-body text-sm min-h-screen text-dark;
+    @apply font-body text-sm min-h-screen text-dark scroll-smooth;
     padding-right: 0 !important;
     overflow: unset !important;
   }

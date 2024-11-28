@@ -34,7 +34,7 @@ const updateUserSchema = yup.object({
   }),
 });
 export type UpdateUserProps = yup.InferType<typeof updateUserSchema>;
-const UpdateUser = () => {
+export default function UpdateUser() {
   const [file, setFile] = useState<{ file: File | null; url?: string }>();
   const [roles, setRoles] = useState<IRole[]>([]);
   const { userId } = useParams();
@@ -233,5 +233,4 @@ const UpdateUser = () => {
       </div>
     </>
   );
-};
-export default UpdateUser;
+}

@@ -7,7 +7,7 @@ import { Avatar, Text } from '@mantine/core';
 import { IconPencil } from '@tabler/icons-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const GetUser = () => {
+export default function GetUser() {
   const { userId } = useParams();
   const navigate = useNavigate();
   const { data: user, error } = useGetUserQuery(userId as string);
@@ -96,9 +96,8 @@ const GetUser = () => {
           </section>
         </div>
       ) : (
-        <NotFoundPage title={(error as AxiosBaseQueryError).data.message} />
+        <NotFoundPage title={(error as AxiosBaseQueryError)?.data?.message} />
       )}
     </>
   );
-};
-export default GetUser;
+}

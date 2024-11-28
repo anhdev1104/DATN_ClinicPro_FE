@@ -1,40 +1,34 @@
 import { useGetDepartmentQuery, useUpdateDepartmentMutation } from '@/redux/api/department';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, Box, Paper, Title } from '@mantine/core';
-import { Avatar, Text, Group } from '@mantine/core';
+import { Badge, Paper } from '@mantine/core';
+import { Text } from '@mantine/core';
 import BaseIcon from '@/components/base/BaseIcon';
 import Table from '@/components/table/Table';
 import ActionWithRow from '@/components/table/TableAction';
-import BaseButton from '@/components/base/button';
-import { useDisclosure } from '@mantine/hooks';
-import { IconAt, IconPencil, IconPhoneCall, IconTrash } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
-import { Link } from 'react-router-dom';
 import { DeleteDepartment } from './components/DeleteDepartment';
 import { UserProps } from '@/types/department.type';
 import { Header } from './components/Header';
-const GetDepartment = () => {
-  const [opened, { open, close }] = useDisclosure(false);
+import { UserInfo } from '@/components/user-info/UserInfo';
+import toast from 'react-hot-toast';
+import { resolveErrorResponse } from '@/helpers/utils';
+import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { Manager } from './components/Manager';
+import { Mock } from '@/components/base/Link/Mock';
+
+export default function GetDepartment() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [handleUpdate] = useUpdateDepartmentMutation();
   const { data: department, isFetching } = useGetDepartmentQuery(id as string);
   const columns = useColumn<UserProps>([
     {
-      key: 'user_info.fullname',
+      key: 'fullname',
       label: 'Nhân Viên',
       cell: ({ value, original }) => {
-        return (
-          <Group gap="sm">
-            <Avatar size={32} src={original.avatar} radius={40} />
-            <div>
-              <Text fz="sm" fw={500}>
-                {value}
-              </Text>
-            </div>
-          </Group>
-        );
+        return <UserInfo avatar={original.avatar} email={original.email} fullname={value} />;
       },
-      sortable: false,
     },
     {
       key: 'email',
@@ -44,15 +38,28 @@ const GetDepartment = () => {
           {value}
         </Text>
       ),
+      sortable: false,
     },
     {
       key: 'status',
       label: 'Trạng Thái',
       cell: ({ value }) => <Badge size="xs">{value}</Badge>,
+      sortable: false,
     },
     {
-      key: 'user_info.phone_number',
+      key: 'gender',
+      label: 'Giới tính',
+      cell: ({ value }) => (
+        <Badge color="grape" size="xs">
+          {value}
+        </Badge>
+      ),
+      sortable: false,
+    },
+    {
+      key: 'phone_number',
       label: 'Số Điện Thoại',
+      sortable: false,
     },
     {
       id: 'actions',
@@ -62,7 +69,14 @@ const GetDepartment = () => {
             data={[
               {
                 label: 'Xóa',
-                onClick: () => handleUpdate({ id: original.id, users_delete: [original.id] }),
+                onClick: async () => {
+                  const result = await handleUpdate({ id: id as string, users_delete: [original.id] });
+                  if (result.data) {
+                    toast.success(result.data.message);
+                    return;
+                  }
+                  resolveErrorResponse((result.error as AxiosBaseQueryError).data);
+                },
                 color: 'red',
                 leftSection: <BaseIcon icon={IconTrash} />,
               },
@@ -76,62 +90,26 @@ const GetDepartment = () => {
   return (
     <>
       <Paper className="p-2 rounded-3xl">
-        <Header />
-        <div className="flex flex-col space-y-10">
+        <Header department={department || null} />
+        <div className="px-2 flex flex-col space-y-4">
           <div className="space-y-2">
-            <Title order={4}>Quản Lý</Title>
-            {department?.manager ? (
-              <Group wrap="nowrap">
-                <Avatar src={department?.manager?.avatar} size={94} radius="md" />
-                <div>
-                  <Text fz="lg" fw={500}>
-                    {department?.manager?.fullname}
-                  </Text>
-                  <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-                    {department?.manager?.address}
-                  </Text>
-
-                  <Group wrap="nowrap" gap={10} mt={3}>
-                    <BaseIcon icon={IconAt} strokeWidth={1.5} className="" />
-                    <Text fz="xs" c="dimmed">
-                      {department?.manager?.email}
-                    </Text>
-                  </Group>
-
-                  <Group wrap="nowrap" gap={10} mt={5}>
-                    <BaseIcon icon={IconPhoneCall} strokeWidth={1.5} className="" />
-                    <Text fz="xs" c="dimmed">
-                      {department?.manager?.phone_number}
-                    </Text>
-                  </Group>
-                </div>
-              </Group>
-            ) : (
-              <Title order={5} c="dimmed" fw={600}>
-                Chưa có Người Quản Lý
-              </Title>
-            )}
+            <Manager manager={department?.manager || null} />
           </div>
           <div className="space-y-2">
-            <Title order={4} className="capitalize">
-              Nhân viên phòng ban
-            </Title>
-            <Table columns={columns} data={department?.users || []} isFetching={isFetching} />
+            <Mock href="#table-user" name="Nhân viên phòng ban" />
+            <Table
+              id="table-user"
+              onRowClick={value => navigate(`/users/${value.id}`)}
+              columns={columns}
+              data={department?.users || []}
+              isFetching={isFetching}
+            />
           </div>
           <div className="flex justify-end items-center space-x-4 my-4">
-            <BaseButton size="xs" leftSection={<BaseIcon icon={IconTrash} />} onClick={open} color="red">
-              Xóa Phòng Ban
-            </BaseButton>
-            <Link to="edit">
-              <BaseButton size="xs" leftSection={<BaseIcon icon={IconPencil} />} color="blue">
-                Cập Nhật
-              </BaseButton>
-            </Link>
+            <DeleteDepartment />
           </div>
         </div>
       </Paper>
-      <DeleteDepartment opened={opened} close={close} />
     </>
   );
-};
-export default GetDepartment;
+}
