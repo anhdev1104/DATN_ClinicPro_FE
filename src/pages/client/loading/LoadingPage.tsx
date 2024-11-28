@@ -12,24 +12,7 @@ const LoadingPage = () => {
           alignItems: 'center',
         }}
       >
-        <div
-          style={{
-            maxWidth: '800px',
-          }}
-        >
-          <video
-            autoPlay
-            loop
-            muted
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-          >
-            <source src="/loading-page.mp4" type="video/mp4" />
-          </video>
-        </div>
+        <div className="loader"></div>
       </div>
     </div>
   );

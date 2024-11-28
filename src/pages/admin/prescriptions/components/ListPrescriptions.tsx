@@ -32,7 +32,6 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
     serviceFetching: getPrescription,
     initialData: [],
   });
-  console.log('🚀 ~ ListPrescriptions ~ prescription:', prescription);
 
   // const [prescriptionDetails, setPrescriptionDetails] = useState<any[]>([]);
 
@@ -45,8 +44,6 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
   //     const data = await getPrescriptionDetails(id);
   //   })();
   // };
-  console.log(window.screen.width);
-  console.log();
 
   return (
     <div>

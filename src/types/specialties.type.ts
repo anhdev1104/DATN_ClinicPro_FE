@@ -5,7 +5,7 @@ export interface ISpecialNew {
 
 export interface ISpecialties extends ISpecialNew {
   description: string;
-  created_at: string;
+  created_at?: string;
   updated_at?: string;
   doctors_count?: string;
 }
