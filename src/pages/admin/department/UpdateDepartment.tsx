@@ -12,19 +12,19 @@ import toast from 'react-hot-toast';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 
 const updateDepartmentSchema = yup.object({
-  name: yup.string().required(),
-  description: yup.string().optional().nullable(),
-  manager_id: yup.string().nullable().optional(),
-  users: yup.array().of(yup.string()).default([]),
-  users_delete: yup.array().of(yup.string()).default([]),
+  name: yup.string().required().optional(),
+  description: yup.string().optional(),
+  manager_id: yup.string().optional(),
+  users: yup.array().of(yup.string()).optional(),
+  users_delete: yup.array().of(yup.string()).optional(),
 });
 export type UpdateDepartmentProps = yup.InferType<typeof updateDepartmentSchema>;
 
 const UpdateDepartment = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: department, isFetching: isUserFetching } = useGetDepartmentQuery(id as string);
-  const { data: managers } = useGetUsersQuery({ role: 'manager' });
+  const { data: department, isSuccess } = useGetDepartmentQuery(id as string);
+  const { data: managers } = useGetUsersQuery({ role: 'manage' });
   const { data: users } = useGetUsersQuery();
   const [handleUpdate] = useUpdateDepartmentMutation();
   const handleUpdateDepartment: FormikHandler<UpdateDepartmentProps> = async (data, { setError }) => {
@@ -36,9 +36,10 @@ const UpdateDepartment = () => {
       navigate(-1);
     }
   };
+
   return (
     <div className="bg-white rounded-3xl w-full shadow-xl p-4">
-      {!isUserFetching ? (
+      {isSuccess && (
         <Formik
           withAutoValidate
           schema={updateDepartmentSchema}
@@ -46,7 +47,7 @@ const UpdateDepartment = () => {
           options={{
             defaultValues: {
               manager_id: department?.manager?.id,
-              description: department?.description,
+              description: department?.description || '',
               name: department?.name,
               users: department?.users?.map(user => user.id) || [],
             },
@@ -62,12 +63,14 @@ const UpdateDepartment = () => {
                     name="manager_id"
                     autoComplete="manager_id"
                     label="Chọn Quản lý"
-                    data={managers?.data?.map(manager => ({
-                      value: manager.id,
-                      label: manager.user_info.fullname,
-                      avatar: manager.user_info.avatar,
-                      email: manager.email,
-                    }))}
+                    data={
+                      managers?.data?.map(manager => ({
+                        value: manager.id,
+                        label: manager.user_info.fullname || '',
+                        avatar: manager.user_info.avatar,
+                        email: manager.email,
+                      })) || []
+                    }
                     renderOption={renderOption}
                     clearable
                     searchable
@@ -75,15 +78,17 @@ const UpdateDepartment = () => {
                     nothingFoundMessage="không tìm thấy quản lý"
                   />
                   <BaseInput.MultiSelect
-                    name="users"
-                    data={users?.data?.map(user => ({
-                      value: user.id,
-                      label: user.user_info?.fullname,
-                      avatar: user.user_info?.avatar,
-                      email: user.email,
-                    }))}
                     onRemove={value => setValue('users_delete', [...(getValues('users_delete') || ''), value])}
+                    data={
+                      users?.data?.map(user => ({
+                        value: user.id,
+                        label: user.user_info?.fullname || '',
+                        avatar: user.user_info?.avatar,
+                        email: user.email,
+                      })) || []
+                    }
                     renderOption={renderOption}
+                    name="users"
                     autoComplete="users"
                     label="Chọn Nhân Viên"
                     clearable
@@ -99,8 +104,6 @@ const UpdateDepartment = () => {
             );
           }}
         </Formik>
-      ) : (
-        <></>
       )}
     </div>
   );

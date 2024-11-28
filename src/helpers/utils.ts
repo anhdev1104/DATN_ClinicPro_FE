@@ -40,7 +40,7 @@ export const validateEmail = (email: string) => {
 
 export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
   errorResolve: ErrorResponse,
-  setError: UseFormSetError<T>,
+  setError?: UseFormSetError<T>,
 ) => {
   const { errors, message } = errorResolve;
   if (!errors && !message) {
@@ -48,7 +48,7 @@ export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
     return;
   }
   if (message) toast.error(message);
-  if (errors) {
+  if (errors && setError) {
     const errorName = Object.keys(errors) as (keyof T)[];
     errorName.length && setError(errorName[0] as 'root' | Path<T>, { message: errors[errorName[0]][0] });
   }

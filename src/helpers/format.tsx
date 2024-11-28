@@ -8,5 +8,5 @@ export interface Options {
 }
 
 export const renderOption = ({ option }: { option: Options; checked?: boolean }) => {
-  return <UserInfo avatar={option.avatar} email={option.email} fullname={option.label} />;
+  return option && <UserInfo avatar={option.avatar} email={option.email} fullname={option.label} />;
 };

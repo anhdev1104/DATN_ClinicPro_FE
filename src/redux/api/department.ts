@@ -1,5 +1,5 @@
 import { axiosBaseQuery } from '@/helpers/axiosBaseQuery';
-import { CreateDepartmentProps } from '@/pages/admin/department/CreateDepartment';
+import { CreateDepartmentProps } from '@/pages/admin/department/components/CreateDepartment';
 import { UpdateDepartmentProps } from '@/pages/admin/department/UpdateDepartment';
 import { DepartmentDetailProps, DepartmentProps } from '@/types/department.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
@@ -33,8 +33,9 @@ export const departmentApi = createApi({
             ]
           : [{ type: 'Department', id: 'DEPARTMENT-DETAIL' }],
       transformResponse: (response: { data: DepartmentDetailProps }) => response.data,
+      keepUnusedDataFor: 90,
     }),
-    createDepartment: builder.mutation<any, CreateDepartmentProps>({
+    createDepartment: builder.mutation<{ message: string }, CreateDepartmentProps>({
       query: data => ({
         url: 'departments',
         method: 'POST',
@@ -42,7 +43,7 @@ export const departmentApi = createApi({
       }),
       invalidatesTags: result => (result ? [{ type: 'Department', id: 'DEPARTMENT-LIST' }] : []),
     }),
-    updateDepartment: builder.mutation<unknown, UpdateDepartmentProps & { id: string }>({
+    updateDepartment: builder.mutation<{ message: string }, UpdateDepartmentProps & { id: string }>({
       query: query => {
         const { id, ...data } = query;
         return {
@@ -53,7 +54,7 @@ export const departmentApi = createApi({
       },
       invalidatesTags: (result, _, arg) => (result ? [{ type: 'Department', id: arg.id }] : []),
     }),
-    deleteDepartment: builder.mutation<unknown, string>({
+    deleteDepartment: builder.mutation<{ message: string }, string>({
       query: id => ({
         url: `departments/${id}`,
         method: 'DELETE',

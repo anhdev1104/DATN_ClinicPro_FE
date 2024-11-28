@@ -1,5 +1,6 @@
 import BaseButton from '@/components/base/button';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { resolveErrorResponse } from '@/helpers/utils';
 import { useDeleteDepartmentMutation } from '@/redux/api/department';
 import { Modal, Stack, Text } from '@mantine/core';
 import toast from 'react-hot-toast';
@@ -12,9 +13,10 @@ export const DeleteDepartment = ({ close, opened }: { close: () => void; opened:
   const handleDeleteDepartment = async () => {
     const result = await handleDelete(id as string);
     if (result.error) {
-      toast.error((result.error as AxiosBaseQueryError<any>).data.error);
+      resolveErrorResponse((result.error as AxiosBaseQueryError).data);
+      close();
     } else {
-      toast.success((result.data as any).data);
+      toast.success(result.data?.message as string);
       navigate('/departments');
     }
   };
