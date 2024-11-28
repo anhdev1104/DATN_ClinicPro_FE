@@ -1,5 +1,6 @@
 import { axiosBaseQuery } from '@/helpers/axiosBaseQuery';
-import { CreateUserProps, UpdateUserProps } from '@/schema/user.schema';
+import { CreateUserProps } from '@/pages/admin/users/components/CreateUser';
+import { UpdateUserProps } from '@/pages/admin/users/UpdateUser';
 import { IUserInfo } from '@/types/user.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
@@ -23,10 +24,11 @@ export const usersApi = createApi({
       query: id => ({
         url: `users/${id}`,
       }),
+      providesTags: result => (result ? [{ type: 'Users', id: result.id }] : []),
       transformResponse: (response: { data: IUserInfo }) => {
         return response.data;
       },
-      providesTags: result => (result ? [{ type: 'Users', id: result.id }] : []),
+      keepUnusedDataFor: 90,
     }),
     createUser: builder.mutation<{ message: string }, CreateUserProps>({
       query: data => ({
@@ -36,7 +38,7 @@ export const usersApi = createApi({
       }),
       invalidatesTags: result => (result ? [{ type: 'Users', id: 'LIST-USERS' }] : []),
     }),
-    updateUser: builder.mutation<{ message: string }, UpdateUserProps>({
+    updateUser: builder.mutation<{ message: string }, UpdateUserProps & { id: string }>({
       query: ({ id, ...data }) => {
         return {
           url: `users/${id}`,

@@ -23,7 +23,11 @@ const Department = () => {
   }, 1000);
   const [modalNew, handleModalNew] = useDisclosure(false);
   const [limit] = useState(5);
-  const { data, isSuccess, isFetching } = useGetDepartmentsQuery({
+  const {
+    data: departments,
+    isSuccess,
+    isFetching,
+  } = useGetDepartmentsQuery({
     q: params.q || '',
     limit: params.limit || limit,
     page: params.page,
@@ -103,9 +107,9 @@ const Department = () => {
           }
           manualPagination
           pagination={
-            Math.round((data?.total || limit) / limit) > 1 && (
+            Math.round((departments?.total || limit) / limit) > 1 && (
               <Pagination
-                total={Math.round((data?.total || limit) / limit)}
+                total={Math.round((departments?.total || limit) / limit)}
                 onChange={value => queryParams.set('page', value.toString())}
                 radius="md"
                 defaultValue={Number(params.page) || 1}
@@ -115,7 +119,7 @@ const Department = () => {
           }
           onRowClick={handleRowClick}
           isFetching={isFetching}
-          data={isSuccess ? data.data : []}
+          data={isSuccess ? departments.data : []}
           columns={columns}
           toolbar={
             <BaseButton.Icon onClick={handleModalNew.open} variant="subtle" radius="lg">

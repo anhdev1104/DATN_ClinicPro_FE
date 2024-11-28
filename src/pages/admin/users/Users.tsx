@@ -5,10 +5,14 @@ import TableAction from '@/components/table/TableAction';
 import { useColumn } from '@/hooks/useColumn';
 import { useGetUsersQuery } from '@/redux/api/users';
 import { IUserInfo } from '@/types/user.type';
+import { useDisclosure } from '@mantine/hooks';
 import { IconPlus } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
+import CreateUser from './components/CreateUser';
+import BaseModal from '@/components/base/modal';
 
 const User = () => {
+  const [opened, { close, open }] = useDisclosure();
   const { data, isSuccess, isFetching } = useGetUsersQuery();
   const navigate = useNavigate();
   const columns = useColumn<IUserInfo>([
@@ -36,7 +40,7 @@ const User = () => {
     {
       id: 'actions',
       cell: ({ row, original }) => (
-        <TableAction row={row} data={[{ label: 'Sửa', onClick: () => navigate(`${original.id}/edit`) }]} />
+        <TableAction row={row} data={[{ label: 'Xem Chi Tiết', onClick: () => navigate(original.id) }]} />
       ),
     },
   ]);
@@ -45,7 +49,7 @@ const User = () => {
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
           toolbar={
-            <BaseButton.Icon onClick={() => navigate('add')} variant="subtle" radius="lg">
+            <BaseButton.Icon onClick={open} variant="subtle" radius="lg">
               <BaseIcon icon={IconPlus} />
             </BaseButton.Icon>
           }
@@ -57,6 +61,9 @@ const User = () => {
           isFetching={isFetching}
         />
       </div>
+      <BaseModal title="Tạo Mới User" opened={opened} onClose={close}>
+        <CreateUser close={close} />
+      </BaseModal>
     </>
   );
 };

@@ -17,4 +17,6 @@ export interface IRole {
   name: `${ROLE}`;
   description: string;
   permissions?: IPermission[];
+  created_at?: Date;
+  updated_at?: Date;
 }
