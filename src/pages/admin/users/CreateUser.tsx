@@ -74,10 +74,10 @@ const CreateUser = () => {
               <BaseInput.Group name="email" autoComplete="email" label="Email" />
             </Grid.Col>
             <Grid.Col span={4}>
-              <BaseInput.Group name="user_info.phone_number" autoComplete="phone_number" label="Số Điện Thoại" />
+              <BaseInput.Group name="user_info.phone_number" label="Số Điện Thoại" autoComplete="off" />
             </Grid.Col>
             <Grid.Col span={4}>
-              <BaseInput.Password name="password" autoComplete="password" label="Password" />
+              <BaseInput.Password name="password" label="Password" />
             </Grid.Col>
             <Grid.Col span={4}>
               <BaseInput.Select

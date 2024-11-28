@@ -12,7 +12,12 @@ export const createUserSChema = yup.object({
   user_info: yup.object({
     fullname: yup.string().required(),
     address: yup.string().nullable(),
-    phone_number: yup.string().nullable(),
+    phone_number: yup
+      .string()
+      .trim()
+      .required('Vui lòng nhập số điện thoại.')
+      .matches(/^\d+$/, 'Số điện thoại chỉ được chứa ký tự số.')
+      .length(10, 'Số điện thoại phải gồm 10 chữ số.'),
     avatar: yup.string().url(),
     gender: yup
       .string()
