@@ -123,7 +123,7 @@ export default function Department() {
               />
             )
           }
-          onRowClick={data => navigate(`/department/${data.id}`)}
+          onRowClick={data => navigate(`/departments/${data.id}`)}
           isFetching={isFetching}
           data={isSuccess ? departments.data : []}
           columns={columns}

@@ -37,7 +37,7 @@ const former = <T extends object>(
     });
 
     useEffect(() => {
-      if (form.formState.isSubmitting) setDisabled(loading);
+      if (form.formState.isSubmitting || form.formState.isSubmitted) setDisabled(loading);
     }, [loading]);
 
     return (
