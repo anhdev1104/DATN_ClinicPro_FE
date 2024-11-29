@@ -10,32 +10,41 @@ import { IconPlus } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import CreateUser from './components/CreateUser';
 import BaseModal from '@/components/base/modal';
+import { UserInfo } from '@/components/user-info/UserInfo';
+import { Badge } from '@mantine/core';
 
 export default function User() {
   const [opened, { close, open }] = useDisclosure();
-  const { data, isSuccess, isFetching } = useGetUsersQuery();
+  const { data: users, isFetching } = useGetUsersQuery();
   const navigate = useNavigate();
   const columns = useColumn<IUserInfo>([
     {
       label: 'Tên',
       key: 'user_info.fullname',
-      meta: 'Tên',
+      cell: ({ value, original }) => (
+        <UserInfo avatar={original?.user_info.fullname} fullname={value} email={original.email} />
+      ),
     },
     {
       label: 'Địa Chỉ',
       key: 'user_info.address',
+      sortable: false,
     },
     {
       label: 'date of birth',
       key: 'user_info.dob',
+      sortable: false,
     },
     {
       label: 'số điện thoại',
       key: 'user_info.phone_number',
+      sortable: false,
     },
     {
       label: 'Status',
       key: 'status',
+      cell: ({ value }) => <Badge size="sm">{value}</Badge>,
+      sortable: false,
     },
     {
       id: 'actions',
@@ -44,6 +53,7 @@ export default function User() {
       ),
     },
   ]);
+
   return (
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
@@ -57,7 +67,7 @@ export default function User() {
           className="mx-2"
           highlightOnHover
           columns={columns}
-          data={isSuccess ? data?.data : []}
+          data={users?.data || []}
           isFetching={isFetching}
         />
       </div>

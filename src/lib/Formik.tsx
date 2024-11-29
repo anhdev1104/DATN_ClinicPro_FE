@@ -4,7 +4,7 @@ import yup from '@/helpers/locate';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { cn } from '@/helpers/utils';
 import { useSelector } from '@/hooks/redux';
-import { CreateNestedElement } from './Form';
+import { CreateNestedElement } from './controller';
 
 /**
  * @idea Formik library
@@ -48,7 +48,7 @@ const Formik = <Schema extends yup.AnyObjectSchema, T extends FieldValues = yup.
   });
 
   useEffect(() => {
-    if (form.formState.isSubmitting) setDisabled(!disabled);
+    if (form.formState.isSubmitting || form.formState.isSubmitted) setDisabled(loading);
   }, [loading]);
 
   return (

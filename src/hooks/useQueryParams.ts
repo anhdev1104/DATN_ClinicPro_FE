@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 interface SearchParams<T> {
   get: (key: keyof T) => string;
   getAll: () => T;
-  set: (key: keyof T, value: string) => void;
+  set: (key: keyof T, value: string | number) => void;
   remove: (key: keyof T) => void;
   removeAll: () => void;
   has: (key: keyof T) => boolean;
@@ -12,12 +12,12 @@ interface SearchParams<T> {
 export const useQueryParams = <T extends { [k in keyof QueryParams]: any }>(): [T, SearchParams<T>] => {
   const [searchParams, setSearchParams] = useSearchParams();
   const paramsRef = useRef({} as T);
-  const getQueryParam = (key: keyof T) => searchParams.get(key as string) || '';
+  const getQueryParam = (key: keyof T) => searchParams.get(key.toString()) || '';
 
-  const getAllQueryParam = () => Object.fromEntries(searchParams) as T;
+  const getAllQueryParam = () => Object.fromEntries(searchParams.entries()) as T;
 
-  const setQueryParam = (key: keyof T, value: string) => {
-    searchParams.set(key.toString(), value);
+  const setQueryParam = (key: keyof T | Array<keyof T>, value: string | number) => {
+    searchParams.set(key.toString(), value.toString());
     setSearchParams(searchParams.toString());
   };
 
@@ -28,14 +28,11 @@ export const useQueryParams = <T extends { [k in keyof QueryParams]: any }>(): [
 
   const removeAllQueryParam = () => setSearchParams('');
 
-  const hasQueryParams = (key: keyof T) => searchParams.has(key as string);
+  const hasQueryParams = (key: keyof T) => searchParams.has(key.toString());
 
   useEffect(() => {
-    if (searchParams.toString()) {
-      searchParams.forEach((value, key) => value === '' && searchParams.delete(key));
-      paramsRef.current = getAllQueryParam();
-      setSearchParams(searchParams.toString());
-    }
+    paramsRef.current = getAllQueryParam();
+    setSearchParams(searchParams.toString());
   }, [searchParams]);
 
   return [
