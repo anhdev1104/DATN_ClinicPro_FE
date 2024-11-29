@@ -40,6 +40,7 @@ const ListAppointment = () => {
         const appointmentResponse = await getAppointments();
         setAppointments(appointmentResponse.data || []);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error);
         setError('Không thể tải danh sách gói khám. Vui lòng thử lại sau.');
       } finally {
@@ -181,7 +182,7 @@ function ModalDetail({ close, statusLog, appointment }: ModalDetail) {
       onClose={close}
       PaperProps={{
         style: {
-          backgroundColor: '#f5f5f5',
+          backgroundColor: 'white',
           width: '700px',
           height: 'auto',
           maxWidth: '700px',
@@ -191,34 +192,66 @@ function ModalDetail({ close, statusLog, appointment }: ModalDetail) {
       }}
     >
       <div className="p-6">
-        {/* Title */}
         <h2 className="text-xl font-bold text-center text-gray-800 mb-4">Chi tiết lịch hẹn </h2>
-
-        {/* Details */}
-        <div className="flex flex-col gap-4">
-          <div className="flex">
-            <span className="font-semibold text-gray-600 w-1/3">ID:</span>
-            <span className="text-gray-800">{appointment?.id || 'Không có'}</span>
-          </div>
-          <div className="flex">
-            <span className="font-semibold text-gray-600 w-1/3">Tên:</span>
-            <span className="text-gray-800">{appointment?.patient_id || 'Không có'}</span>
-          </div>
-          <div className="flex">
-            <span className="font-semibold text-gray-600 w-1/3">Mô tả:</span>
-            <span className="text-gray-800">{appointment?.specialty_id || 'Không có'}</span>
-          </div>
-          <div className="flex">
-            <span className="font-semibold text-gray-600 w-1/3">Số lượng bác sĩ:</span>
-            <span className="text-gray-800">{appointment?.booking_type || '0'}</span>
-          </div>
-          <div className="flex">
-            <span className="font-semibold text-gray-600 w-1/3">Ngày tạo:</span>
-            <span className="text-gray-800">{convertTime(appointment?.appointment_date || 'Không có')}</span>
+        <div className="card-box p-6 ">
+          <h3 className="card-title text-lg font-semibold text-gray-700 mb-4">{appointment?.user_id}</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="input-block">
+              <label className="focus-label text-sm font-medium text-gray-600">ID Bệnh nhân</label>
+              <input
+                type="text"
+                className="form-control floating w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+                defaultValue={appointment?.patient_id}
+              />
+            </div>
+            <div className="input-block">
+              <label className="focus-label text-sm font-medium text-gray-600">Subject</label>
+              <input
+                type="text"
+                className="form-control floating w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+                defaultValue="Computer Science"
+              />
+            </div>
+            <div className="input-block">
+              <label className="focus-label text-sm font-medium text-gray-600">Starting Date</label>
+              <div className="cal-icon relative">
+                <input
+                  type="text"
+                  className="form-control floating w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+                  defaultValue="01/06/2002"
+                />
+                <i className="absolute top-3 right-3 text-gray-400 fa fa-calendar"></i>
+              </div>
+            </div>
+            <div className="input-block">
+              <label className="focus-label text-sm font-medium text-gray-600">Complete Date</label>
+              <div className="cal-icon relative">
+                <input
+                  type="text"
+                  className="form-control floating w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+                  defaultValue="31/05/2006"
+                />
+                <i className="absolute top-3 right-3 text-gray-400 fa fa-calendar"></i>
+              </div>
+            </div>
+            <div className="input-block">
+              <label className="focus-label text-sm font-medium text-gray-600">Thời gian hẹn khám</label>
+              <input
+                type="text"
+                className="form-control floating w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+                defaultValue={convertTime(appointment?.appointment_date || 'Chưa chọn giờ')}
+              />
+            </div>
+            <div className="input-block">
+              <label className="focus-label text-sm font-medium text-gray-600">Grade</label>
+              <input
+                type="text"
+                className="form-control floating w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+                defaultValue="Grade A"
+              />
+            </div>
           </div>
         </div>
-
-        {/* Buttons */}
         <div className="mt-6 flex justify-end gap-4">
           <button onClick={close} className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
             Đóng

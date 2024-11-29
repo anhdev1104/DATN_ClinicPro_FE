@@ -7,7 +7,7 @@ export const createUserSChema = yup.object({
   status: yup
     .string()
     .oneOf(Object.values(STATUS) as `${STATUS}`[])
-    .default(STATUS.inactive),
+    .default(STATUS.INACTIVE),
   role_id: yup.string().required(),
   user_info: yup.object({
     fullname: yup.string().required(),
@@ -18,7 +18,7 @@ export const createUserSChema = yup.object({
       .string()
       .oneOf(Object.values(GENDER) as `${GENDER}`[])
       .default(GENDER.OTHER),
-    dob: yup.date().nullable().optional(),
+    dob: yup.date().nullable().optional().default(null),
     department_id: yup.string().nullable(),
     identity_card: yup
       .object({

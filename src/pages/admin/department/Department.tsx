@@ -1,23 +1,20 @@
-import { Flex, Modal, Pagination, Stack, Text } from '@mantine/core';
-import { useGetAllDepartmentQuery, useDeleteAnDepartmentMutation } from '@/redux/api/department';
+import { Avatar, Modal, Pagination, Text } from '@mantine/core';
+import { useGetDepartmentsQuery } from '@/redux/api/department';
 import { useNavigate } from 'react-router-dom';
-import type { Department, DepartmentDetail, Manager } from '@/types/department.type';
+import type { DepartmentProps, ManagerProps } from '@/types/department.type';
 import Table from '@/components/table/Table';
-import { Avatar } from '@mantine/core';
-import { Badge } from '@mantine/core';
 import ActionWithRow from '@/components/table/TableAction';
 import BaseButton from '@/components/base/button';
 import BaseIcon from '@/components/base/BaseIcon';
 import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
-import NewDepartment from './NewDepartment';
-import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
+import NewDepartment from './components/CreateDepartment';
+import { IconPlus } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
-import { toast } from 'react-toastify';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
-import { useRef, useState } from 'react';
-import UpdateDepartment from './UpdateDepartment';
+import { useState } from 'react';
 import BaseInput from '@/components/base/input';
 import { useQueryParams } from '@/hooks/useQueryParams';
+import { UserInfo } from '@/components/user-info/UserInfo';
+import dayjs from 'dayjs';
 
 const Department = () => {
   const [params, queryParams] = useQueryParams();
@@ -25,22 +22,17 @@ const Department = () => {
     queryParams.set('q', value);
   }, 1000);
   const [modalNew, handleModalNew] = useDisclosure(false);
-  const [modalDelete, handleModalDelete] = useDisclosure(false);
-  const [modalUpdate, handleModalUpdate] = useDisclosure(false);
   const [limit] = useState(5);
-  const { data, isSuccess, isFetching } = useGetAllDepartmentQuery({
+  const { data, isSuccess, isFetching } = useGetDepartmentsQuery({
     q: params.q || '',
     limit: params.limit || limit,
     page: params.page,
   });
   const navigate = useNavigate();
-  const [deleteDepartment, { isLoading }] = useDeleteAnDepartmentMutation();
-  const idRef = useRef<string>('');
-  const departmentUpdateRef = useRef<Department>();
-  const handleRowClick = (data: Department) => {
+  const handleRowClick = (data: DepartmentProps) => {
     navigate(data.id);
   };
-  const columns = useColumn<Department>([
+  const columns = useColumn<DepartmentProps>([
     {
       key: 'name',
       label: 'Tên Phòng Ban',
@@ -49,50 +41,48 @@ const Department = () => {
     {
       key: 'manager',
       label: 'Quản Lý',
-      cell: ({ value }: { value: Manager }) => {
-        return value ? (
-          <Flex gap={8} align="center">
-            <Avatar size="sm" src={value.avatar} />
-            <Flex direction="column">
-              <Text size="sm">{value.fullname}</Text>
-              <Text size="xs" c="dimmed">
-                {value.email}
-              </Text>
-            </Flex>
-          </Flex>
-        ) : (
-          <Text size="sm">Chưa Có</Text>
-        );
+      cell: ({ value }: { value: ManagerProps }) => {
+        return <UserInfo avatar={value?.avatar} email={value?.email} fullname={value?.fullname} />;
       },
       sortable: false,
     },
     {
       key: 'users_count',
-      label: 'số người trong phòng ban',
-      cell: ({ value }) => <Badge size="sm">{value}</Badge>,
+      label: 'Nhân viên',
+      cell: ({ value }) => (
+        <>
+          <Avatar.Group>
+            <Avatar src="image.png" />
+            <Avatar src="image.png" />
+            <Avatar src="image.png" />
+            <Avatar>+{value}</Avatar>
+          </Avatar.Group>
+        </>
+      ),
+      sortable: false,
+    },
+    {
+      key: 'created_at',
+      label: 'Ngày tạo',
+      cell: ({ value }) => {
+        const date = dayjs(value).format('DD-MM-YYYY');
+        return (
+          <>
+            <Text size="sm" fw={400} c="dimmed">
+              {date}
+            </Text>
+          </>
+        );
+      },
     },
     {
       id: 'actions',
-      cell: ({ row }) => (
+      cell: ({ row, original }) => (
         <ActionWithRow
           data={[
             {
-              label: 'Sửa',
-              onClick: () => {
-                window.history.replaceState(null, '', `/departments/${row.original.id}`);
-                departmentUpdateRef.current = row.original;
-                handleModalUpdate.open();
-              },
-              leftSection: <BaseIcon icon={IconPencil} />,
-            },
-            {
-              label: 'Xóa',
-              onClick: () => {
-                idRef.current = row.original.id;
-                handleModalDelete.open();
-              },
-              color: 'red',
-              leftSection: <BaseIcon icon={IconTrash} />,
+              label: 'Xem chi tiết',
+              onClick: () => navigate(original.id),
             },
           ]}
           row={row as any}
@@ -101,18 +91,9 @@ const Department = () => {
       placeholder: true,
     },
   ]);
-  const handleDeleteDepartment = async () => {
-    const result = await deleteDepartment(idRef.current);
-    if (result.error) {
-      toast.error((result.error as AxiosBaseQueryError<any>).data.error);
-    } else {
-      toast.success((result.data as any).data);
-      handleModalDelete.close();
-    }
-  };
   return (
     <>
-      <div className="bg-white rounded-3xl w-full shadow-xl">
+      <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
           className="ml-2"
           highlightOnHover
@@ -144,43 +125,13 @@ const Department = () => {
         />
         <Modal
           radius="md"
-          size="lg"
+          size="xl"
           centered
           opened={modalNew}
           onClose={handleModalNew.close}
           title="Tạo Mới Phòng Ban"
         >
           <NewDepartment handleClose={handleModalNew.close} />
-        </Modal>
-        <Modal title="Xóa Phòng Ban" centered opened={modalDelete} onClose={handleModalDelete.close}>
-          <Stack gap={10}>
-            <Text size="sm" c="gray">
-              Bạn có chắc muốn xóa phòng ban
-            </Text>
-            <BaseButton
-              disabled={isLoading}
-              loading={isLoading}
-              onClick={handleDeleteDepartment}
-              className="flex justify-center w-20 ml-auto"
-              color="red"
-            >
-              Xóa
-            </BaseButton>
-          </Stack>
-        </Modal>
-        <Modal
-          title="Cập Nhật Phòng Ban"
-          centered
-          opened={modalUpdate}
-          onClose={() => {
-            navigate('/departments');
-            handleModalUpdate.close();
-          }}
-        >
-          <UpdateDepartment
-            handleModalUpdate={handleModalUpdate}
-            departmentUpdate={departmentUpdateRef.current as DepartmentDetail}
-          />
         </Modal>
       </div>
     </>

@@ -1,6 +1,6 @@
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
-import former from '@/providers/former';
+import former from '@/lib/former';
 import Form from '@/lib/Form';
 import { changePassword } from '@/services/auth.service';
 import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
@@ -68,33 +68,31 @@ const ChangePassword = () => {
   };
 
   return (
-    <>
-      <Container className="min-h-dvh flex justify-center">
-        <Paper shadow="md" radius="lg" p="xl" className="w-full lg:w-3/4">
-          <Title order={1} lineClamp={1} className="capitalize text-center">
-            thay đổi mật khẩu
-          </Title>
-          <Form onSubmit={handleChangePassword} className="space-y-2 flex flex-col my-10 justify-center items-center">
-            <Stack gap="md" justify="center" align="center" className="w-full lg:w-3/4">
-              {formElement.map(element => (
-                <BaseInput.Password
-                  key={element.name}
-                  name={element.name}
-                  radius="md"
-                  className="w-full"
-                  label={element.label}
-                  type="password"
-                  autoComplete={element.name}
-                />
-              ))}
-              <BaseButton fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
-                Gửi
-              </BaseButton>
-            </Stack>
-          </Form>
-        </Paper>
-      </Container>
-    </>
+    <Container className="min-h-dvh flex justify-center">
+      <Paper shadow="md" radius="lg" p="xl" className="w-full lg:w-3/4">
+        <Title order={1} lineClamp={1} className="capitalize text-center">
+          thay đổi mật khẩu
+        </Title>
+        <Form onSubmit={handleChangePassword} className="space-y-2 flex flex-col my-10 justify-center items-center">
+          <Stack gap="md" justify="center" align="center" className="w-full lg:w-3/4">
+            {formElement.map(element => (
+              <BaseInput.Password
+                key={element.name}
+                name={element.name}
+                radius="md"
+                className="w-full"
+                label={element.label}
+                type="password"
+                autoComplete={element.name}
+              />
+            ))}
+            <BaseButton fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
+              Gửi
+            </BaseButton>
+          </Stack>
+        </Form>
+      </Paper>
+    </Container>
   );
 };
 
