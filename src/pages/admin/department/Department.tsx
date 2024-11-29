@@ -17,10 +17,8 @@ import { UserInfo } from '@/components/user-info/UserInfo';
 import dayjs from 'dayjs';
 
 export default function Department() {
+  const navigate = useNavigate();
   const [params, queryParams] = useQueryParams();
-  const debounced = useDebouncedCallback(value => {
-    queryParams.set('q', value);
-  }, 1000);
   const [modalNew, handleModalNew] = useDisclosure(false);
   const [limit] = useState(5);
   const {
@@ -28,14 +26,16 @@ export default function Department() {
     isSuccess,
     isFetching,
   } = useGetDepartmentsQuery({
-    q: params.q || '',
+    q: params.q,
     limit: params.limit || limit,
     page: params.page,
   });
-  const navigate = useNavigate();
-  const handleRowClick = (data: DepartmentProps) => {
-    navigate(data.id);
-  };
+  const handleSearch = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value) queryParams.set('q', value);
+    else queryParams.remove('q');
+    queryParams.set('page', 1);
+  }, 500);
   const columns = useColumn<DepartmentProps>([
     {
       key: 'name',
@@ -103,7 +103,13 @@ export default function Department() {
           highlightOnHover
           manualFiltering
           filterItem={
-            <BaseInput onChange={e => debounced(e.target.value)} size="xs" radius="md" placeholder="tìm kiếm..." />
+            <BaseInput
+              defaultValue={queryParams.get('q')}
+              onChange={handleSearch}
+              size="xs"
+              radius="md"
+              placeholder="tìm kiếm..."
+            />
           }
           manualPagination
           pagination={
@@ -117,7 +123,7 @@ export default function Department() {
               />
             )
           }
-          onRowClick={handleRowClick}
+          onRowClick={data => navigate(`/departments/${data.id}`)}
           isFetching={isFetching}
           data={isSuccess ? departments.data : []}
           columns={columns}

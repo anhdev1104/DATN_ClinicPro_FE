@@ -11,9 +11,10 @@ import former from '@/lib/former';
 import { useGetDepartmentsQuery } from '@/redux/api/department';
 import { useCreateUserMutation } from '@/redux/api/users';
 import { getAllRole } from '@/services/roles.service';
+import { uploadFile } from '@/services/uploadFile.service';
 import { IRole } from '@/types/role.type';
-import { Grid } from '@mantine/core';
-import { IconCalendar } from '@tabler/icons-react';
+import { Avatar, Grid } from '@mantine/core';
+import { IconCalendar, IconUpload } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -22,6 +23,7 @@ import { toast } from 'react-hot-toast';
 export type CreateUserProps = yup.InferType<typeof createUserSChema>;
 
 const CreateUser = ({ close }: BaseModalProps) => {
+  const [upload, setUpload] = useState<{ file?: File | null; image?: string }>({ file: null, image: '' });
   const [roles, setRoles] = useState<IRole[]>([]);
   const {
     setError,
@@ -36,7 +38,11 @@ const CreateUser = ({ close }: BaseModalProps) => {
     [department],
   );
   const handleCreateUser = async (data: CreateUserProps) => {
-    const result = await createUser(data);
+    const { user_info, ...rest } = data;
+    const formData = new FormData();
+    formData.append('file', upload.file as File);
+    const url = await uploadFile(formData);
+    const result = await createUser({ ...rest, user_info: { ...user_info, avatar: url?.data?.url } });
     if (result.data) {
       toast.success(result.data.message);
       close();
@@ -57,26 +63,21 @@ const CreateUser = ({ close }: BaseModalProps) => {
     <>
       <Form onSubmit={handleCreateUser}>
         <Grid>
-          {/* <Grid.Col className="flex space-x-6 items-center"> */}
-          {/* <Avatar size={100} src={image} alt="avatar"></Avatar> */}
-          {/* <BaseButton.File
-                        onChange={e => {
-                          setFile(file => ({ ...file, file: e }));
-                          const reader = new FileReader();
-                          reader.onload = e => {
-                            setImage(e.target?.result as string);
-                          };
-                          reader.readAsDataURL(e as File);
-                        }}
-                        accept="image/png,image/jpeg"
-                      > */}
-          {/* {props => (
-                          <BaseButton {...props} size="xs" rightSection={<BaseIcon icon={IconUpload} />}>
-                            Upload
-                          </BaseButton>
-                        )}
-                      </BaseButton.File> */}
-          {/* </Grid.Col> */}
+          <Grid.Col className="flex space-x-6 items-center">
+            <Avatar size={100} src={upload.image} alt="avatar" />
+            <BaseButton.File
+              onChange={file => {
+                setUpload({ file, image: URL.createObjectURL(file as File) });
+              }}
+              accept="image/png,image/jpeg"
+            >
+              {props => (
+                <BaseButton {...props} size="xs" rightSection={<BaseIcon icon={IconUpload} />}>
+                  Upload
+                </BaseButton>
+              )}
+            </BaseButton.File>
+          </Grid.Col>
           <Grid.Col span={4}>
             <BaseInput.Group name="user_info.fullname" autoComplete="fullname" label="Họ và Tên" />
           </Grid.Col>
@@ -92,8 +93,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
           <Grid.Col span={4}>
             <BaseInput.Select
               name="user_info.gender"
-              defaultSearchValue={'other'}
-              onChange={value => setValue('user_info.gender', value as `${GENDER}`)}
+              defaultSearchValue="other"
               data={Object.values(GENDER)}
               autoComplete="gender"
               label="Giới tính"
@@ -164,4 +164,4 @@ export const createUserSChema = yup.object({
     department_id: yup.string().nullable(),
   }),
 });
-export default former(CreateUser, createUserSChema, { mode: 'onChange' });
+export default former(CreateUser, createUserSChema);

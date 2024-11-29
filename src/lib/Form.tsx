@@ -1,58 +1,10 @@
 import { cn } from '@/helpers/utils';
-import React, { Children, createElement, forwardRef, isValidElement, useMemo } from 'react';
-import { FieldValues, SubmitHandler, useController, useFormContext, useFormState } from 'react-hook-form';
+import { forwardRef } from 'react';
+import { FieldValues, SubmitHandler, useFormContext } from 'react-hook-form';
+import { CreateNestedElement } from './controller';
 
-const InputWithController = ({
-  child,
-}: {
-  child: React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>>;
-}) => {
-  if (!child.props.name) throw new TypeError('Field name of input expected a string!');
-  const { defaultValues } = useFormState();
-  const { fieldState, field } = useController({
-    name: child.props.name,
-    defaultValue: defaultValues?.[child.props.name] || '',
-  });
-
-  const error = useMemo(
-    () =>
-      typeof child.type !== 'string' && (child.type as React.ComponentType).displayName?.startsWith('@mantine')
-        ? 'error'
-        : 'aria-errormessage',
-    [child.type],
-  );
-  return createElement(
-    child.type,
-    {
-      [error]: fieldState.error?.message || fieldState.invalid,
-      'aria-invalid': fieldState.invalid,
-      'aria-selected': fieldState.isTouched,
-      'aria-busy': fieldState.isValidating,
-      ...field,
-      ...child.props,
-    },
-    child.props?.children,
-  );
-};
-
-export const CreateNestedElement = ({ children }: { children: React.ReactNode }) => {
-  return Children.map(children, child => {
-    return isValidElement(child) ? (
-      child.props?.name && child.props.name.includes(child.props?.autoComplete) ? (
-        <InputWithController child={child} key={child.props.nanme} />
-      ) : child.props?.children ? (
-        createElement(child.type, child.props, <CreateNestedElement children={child.props.children} />)
-      ) : (
-        child
-      )
-    ) : (
-      child
-    );
-  });
-};
-
-interface FormProps<T extends FieldValues> extends Omit<React.HTMLProps<HTMLFormElement>, 'onSubmit'> {
-  children?: React.ReactNode;
+interface FormProps<T extends FieldValues> extends Omit<React.HTMLProps<HTMLFormElement>, 'onSubmit' | 'children'> {
+  children: React.ReactNode;
   onSubmit: SubmitHandler<T>;
 }
 
