@@ -87,7 +87,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
         const medicalHistoryData = {
           ...data,
           files: imagesWithDescriptions,
-          user_id: '8a9c264e-d283-4550-a14c-cf932199f2dc',
+          user_id: '885acee8-3042-4f9f-a306-923991dee831',
           patient_id: selectedPatientId?.id,
         };
 
@@ -134,7 +134,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
               <Field className="flex gap-3 flex-col">
                 <Label htmlFor="diagnosis">Bệnh chấn đoán:</Label>
                 <Input
-                  className="h-[48px] text-primaryAdmin"
+                  className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
                   placeholder="Chẩn đoán ..."
                   name="diagnosis"
                   type="text"
@@ -154,7 +154,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                     </div>
                     <Button
                       onClick={() => setSelectPatient(true)}
-                      className="text-black mt-2 bg-[#F3F4F7] border"
+                      className="text-black mt-2 bg-white border"
                       type="button"
                       styled="normal"
                     >
@@ -182,7 +182,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                   render={({ field }) => {
                     return (
                       <textarea
-                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
+                        className="scroll-select block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]  !font-normal !text-dark bg-white "
                         placeholder="Phương pháp điều trị  ..."
                         id="treatment"
                         {...field}
@@ -199,7 +199,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                   render={({ field }) => {
                     return (
                       <textarea
-                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
+                        className="scroll-select block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]  !font-normal !text-dark bg-white "
                         placeholder="Mô tả bệnh án ..."
                         id="description"
                         {...field}

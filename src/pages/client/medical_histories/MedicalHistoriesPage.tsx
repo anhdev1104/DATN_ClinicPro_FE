@@ -52,7 +52,7 @@ const MedicalHistoriesPage = () => {
   return (
     <div className="py-[3rem] container-page">
       <div className="mb-20 flex flex-col gap-2">
-        <div className="font-bold text-[30px] text-primary">Xin chào, Lê Nguyễn Bảo Tâm ...</div>
+        <div className="font-bold text-[30px] text-primary">Xin chào, {listMedicalRecords[0].patient.fullname} ...</div>
         <div>{currentDate}</div>
       </div>
       <div className="mb-10 flex justify-between">

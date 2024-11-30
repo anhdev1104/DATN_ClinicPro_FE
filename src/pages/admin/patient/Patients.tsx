@@ -76,7 +76,7 @@ const Patients = () => {
               <tbody>
                 {patients &&
                   patients?.map((item, index) => (
-                    <tr className="even:bg-[#f5f5f5]" key={item.id}>
+                    <tr className="even:bg-[#f5f5f5] hover:bg-yellow-50/45" key={item.id}>
                       <td className="py-2 px-5 text-gray-800">{index + 1}</td>
                       <td className="py-2 px-5 text-gray-800 max-w-[200px] truncate font-semibold">
                         {item?.patient_info?.fullname || (
@@ -110,7 +110,7 @@ const Patients = () => {
                             to={`/patient/${item.id}`}
                             className="flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
                           >
-                            <VisibilityIcon />
+                            <VisibilityIcon className="text-green-500" />
                           </Link>
                         </div>
                       </td>

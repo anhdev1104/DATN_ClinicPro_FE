@@ -1,5 +1,6 @@
 import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@/components/icons';
 import Input from '@/components/input';
+import LoadingSpin from '@/components/loading';
 import Tags from '@/components/tags';
 import { getPatient } from '@/services/medicalHistories.service';
 import { IPatient } from '@/types/patient.type';
@@ -35,12 +36,15 @@ const ModalPatient: FC<ModalPatientProps> = ({
   const [currentSelectedPatientId, setCurrentSelectedPatientId] = useState<string | null | undefined>(
     selectedPatientId,
   );
+  const [loading, setLoading] = useState(false);
   // const [key, setKey] = useState('');
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       const res = await getPatient();
       setPatients(res.data);
+      setLoading(false);
     })();
   }, []);
 
@@ -111,7 +115,11 @@ const ModalPatient: FC<ModalPatientProps> = ({
         </div>
 
         <div className="w-full h-full flex flex-col gap-3 overflow-y-auto">
-          {patients.length > 0 ? (
+          {loading ? (
+            <div className="mx-auto text-center pt-10">
+              <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
+            </div>
+          ) : patients.length > 0 ? (
             patients.map(patient => (
               <label
                 htmlFor={patient.id}

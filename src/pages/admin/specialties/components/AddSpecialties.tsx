@@ -59,7 +59,7 @@ const AddSpecialties = () => {
             <Field className="flex gap-3 flex-col">
               <Label htmlFor="name">Tên chuyên khoa:</Label>
               <Input
-                className="h-[48px] text-primaryAdmin"
+                className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
                 placeholder="Tên chuyên khoa ..."
                 name="name"
                 type="text"
@@ -69,7 +69,7 @@ const AddSpecialties = () => {
             <Field className="flex gap-3 flex-col">
               <Label htmlFor="description">Chi tiết:</Label>
               <Input
-                className="h-[48px] text-primaryAdmin"
+                className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
                 placeholder="Chi tiết ..."
                 name="description"
                 type="text"
