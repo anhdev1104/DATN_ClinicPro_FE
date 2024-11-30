@@ -79,13 +79,17 @@ const clientRouter: IRouter[] = [
   },
   {
     path: '/profile',
-    element: <ProfilePage />,
+    element: (
+      <ProtectedRoute>
+        <ProfilePage />
+      </ProtectedRoute>
+    ),
     title: 'Thông tin cá nhân',
   },
   {
     path: '/medical-histories',
     element: <MedicalHistoriesPage />,
-    title: 'Xem bệnh án',
+    title: 'Lịch sử khám bệnh',
   },
   {
     path: '/change-password',

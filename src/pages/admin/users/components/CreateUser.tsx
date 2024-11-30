@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';

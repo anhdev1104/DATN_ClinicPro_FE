@@ -19,7 +19,7 @@ export const registerService = async (newAccount: IAccount) => {
 export const logoutService = async () => {
   try {
     const response = await http.post('/auth/logout');
-    return response;
+    return response.data;
   } catch (error) {
     return error;
   }
