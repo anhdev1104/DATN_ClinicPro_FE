@@ -21,11 +21,10 @@ const resetPasswordSchema = yup.object({
 export type ResetPassword = yup.InferType<typeof resetPasswordSchema>;
 interface ResetPasswordProps {
   handleSendEmail: (data: ForgotPassword) => void;
-  email: string;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
+const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail }) => {
   const {
     reset,
     formState: { disabled },
@@ -44,7 +43,10 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
     }
   };
   const handleResendOtp = async () => {
-    if (!disabled) handleSendEmail({ email });
+    if (!disabled) {
+      handleSendEmail({ email: localStorage.getItem('email-reset') as string });
+      localStorage.removeItem('email-reset');
+    }
   };
 
   return (

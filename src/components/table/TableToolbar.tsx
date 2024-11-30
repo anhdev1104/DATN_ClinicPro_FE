@@ -4,7 +4,7 @@ import { Box, Menu, Text } from '@mantine/core';
 import BaseButton from '../base/button';
 import BaseIcon from '../base/BaseIcon';
 import { IconAdjustmentsHorizontal, IconCheck } from '@tabler/icons-react';
-import { ExportFile } from '../export/Export';
+import { ExportFile } from '../export';
 interface TableToolbarProps<T> {
   table: Table<T>;
   toolbar?: React.ReactNode;

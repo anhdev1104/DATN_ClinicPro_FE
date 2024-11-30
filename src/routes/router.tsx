@@ -13,7 +13,6 @@ const NotFoundPage = React.lazy(() => import('@/pages/client/404/NotFoundPage'))
 const AboutPage = React.lazy(() => import('@/pages/client/about/AboutPage'));
 const AchievementPage = React.lazy(() => import('@/pages/client/achievement/AchievementPage'));
 const AdvisePage = React.lazy(() => import('@/pages/client/advise/AdvisePage'));
-const LoginOTP = React.lazy(() => import('@/pages/client/auth/LoginOTP'));
 const LoginPage = React.lazy(() => import('@/pages/client/auth/LoginPage'));
 const RegisterPage = React.lazy(() => import('@/pages/client/auth/RegisterPage'));
 const BranchsPage = React.lazy(() => import('@/pages/client/branchs/BranchsPage'));
@@ -215,11 +214,6 @@ const authRouter: IRouter[] = [
     path: '/login',
     element: <LoginPage />,
     title: 'Đăng nhập tài khoản',
-  },
-  {
-    path: '/login-otp',
-    element: <LoginOTP />,
-    title: 'Đăng nhập qua OTP',
   },
   {
     path: '/forgot-password',

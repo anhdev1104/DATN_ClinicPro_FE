@@ -26,9 +26,9 @@ const ForgotPassword = () => {
     setError,
     getValues,
   } = useFormContext<ForgotPassword>();
-
   const [isSend, setIsSend] = useState(false);
   const navigate = useNavigate();
+
   const handleSendEmail = async (data: ForgotPassword) => {
     if (!isValid) {
       const message = errors.email?.message;
@@ -91,12 +91,13 @@ const ForgotPassword = () => {
                     className="bg-third rounded-md w-full mt-3 h-[40px]"
                     isLoading={disabled}
                     disabled={disabled}
+                    onClick={() => localStorage.setItem('email-reset', getValues('email'))}
                   >
                     Gửi
                   </Button>
                 </Form>
               ) : (
-                <ResetPassword handleSendEmail={handleSendEmail} email={getValues('email')} />
+                <ResetPassword handleSendEmail={handleSendEmail} />
               )}
             </motion.div>
           </div>
