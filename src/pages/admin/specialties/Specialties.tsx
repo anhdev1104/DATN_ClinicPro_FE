@@ -34,6 +34,7 @@ interface ModalDetailSpecial {
   statusLog: boolean;
   special?: ISpecialties | null;
   iAction?: boolean;
+  setDataAdd: any;
 }
 
 const Specialtie = () => {
@@ -190,7 +191,13 @@ const Specialtie = () => {
       </div>
 
       {open.status && (
-        <ModalDetailSpecial close={handleClose} statusLog={open.status} special={open.id} iAction={open.action} />
+        <ModalDetailSpecial
+          close={handleClose}
+          statusLog={open.status}
+          special={open.id}
+          iAction={open.action}
+          setDataAdd={setResetData}
+        />
       )}
     </>
   );
@@ -220,7 +227,7 @@ const schema = yup.object().shape({
   description: yup.string().trim().required(),
 });
 
-function ModalDetailSpecial({ close, statusLog, special, iAction }: ModalDetailSpecial) {
+function ModalDetailSpecial({ close, statusLog, special, iAction, setDataAdd }: ModalDetailSpecial) {
   const {
     handleSubmit,
     control,
@@ -236,6 +243,7 @@ function ModalDetailSpecial({ close, statusLog, special, iAction }: ModalDetailS
       } else {
         toast.success(response.data.message, { position: 'top-right' });
         reset();
+        setDataAdd((prev: any) => prev + 1);
       }
     } catch (error) {
       return error;
