@@ -40,7 +40,7 @@ export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
 ) => {
   const { errors, message } = errorResolve;
   if (!errors && !message) {
-    toast.error('lỗi hệ thống vui lòng đợi trong giây lát');
+    toast.error('Lỗi hệ thống vui lòng đợi trong giây lát.');
     return;
   }
   if (message) toast.error(message);

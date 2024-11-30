@@ -26,6 +26,7 @@ const ForgotPassword = () => {
     setError,
     getValues,
   } = useFormContext<ForgotPassword>();
+
   const [isSend, setIsSend] = useState(false);
   const navigate = useNavigate();
   const handleSendEmail = async (data: ForgotPassword) => {
@@ -93,9 +94,6 @@ const ForgotPassword = () => {
                   >
                     Gửi
                   </Button>
-                  {/* <Button disabled={disabled} loading={disabled} type="submit">
-                    Gửi
-                  </Button> */}
                 </Form>
               ) : (
                 <ResetPassword handleSendEmail={handleSendEmail} email={getValues('email')} />

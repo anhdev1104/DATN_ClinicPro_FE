@@ -52,12 +52,9 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
   } = useForm({
     resolver: yupResolver(appointmentSchema),
     mode: 'onChange',
-    defaultValues: {
-      gender: GENDER.MALE,
-    },
   });
-
   const idSpecialty = watch('specialty_id');
+
   const handleAppointment: SubmitHandler<IAppointment> = async data => {
     if (!isValid) return;
     const dob = data.dob && new Date(data.dob).toLocaleDateString('en-CA');
@@ -70,18 +67,13 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
 
     (async () => {
       const res = await addAppointments(dataAppointment);
-      console.log('🚀 ~ res:', res);
-      console.log('🚀 ~ res:', res.message);
-      // if (res.success === false) {
-      //   toast.error(res.errors[Object.keys(res.errors)[0]]?.[0]);
-      //   return;
-      // }
-      if (res.error) {
-        toast.error(res.message);
+      if (res.success === false) {
+        toast.error(res.errors[Object.keys(res.errors)[0]]?.[0]);
+      } else {
+        toast.success('Đăng ký lịch hẹn thành công !');
       }
-      toast.success('Đăng ký lịch hẹn thành công !');
-      reset();
     })();
+    reset();
   };
 
   useEffect(() => {
@@ -111,6 +103,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
           maxWidth: '65%',
           width: '100%',
         },
+        autoComplete: 'off',
       }}
     >
       <Stack
