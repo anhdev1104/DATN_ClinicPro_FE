@@ -56,9 +56,7 @@ export default function Department() {
       cell: ({ value, original }) => (
         <>
           <Avatar.Group>
-            {original.users.slice(0, 3).map(user => (
-              <Avatar key={user.id} src={user.avatar} />
-            ))}
+            {original.users?.slice(0, 3).map(user => <Avatar key={user.id} src={user.avatar} />)}
             <Avatar>{value}</Avatar>
           </Avatar.Group>
         </>
