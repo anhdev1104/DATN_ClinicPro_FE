@@ -12,6 +12,14 @@ yup.setLocale({
     length: ({ length }) => `Độ dài chỉ được ${length} ký tự.`,
   },
 });
+
+yup.addMethod(yup.string, 'omit', function (compare: Array<null | undefined | string>) {
+  return this.transform(value => (compare.includes(value) ? undefined : value));
+});
+
+yup.addMethod(yup.object, 'safeParse', function (value): any {
+  return this.cast(value, { stripUnknown: true, assert: false });
+});
 yup.addMethod(yup.string, 'email', function (message) {
   return this.test('email', message || 'Trường này phải là email !', value => {
     if (!value) return false;

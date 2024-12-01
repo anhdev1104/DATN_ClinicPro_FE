@@ -8,14 +8,14 @@ import NotFoundUser from './not-found-user.svg?react';
 export const Manager = ({ manager }: { manager: ManagerProps | null }) => {
   return (
     <>
-      <div>
+      <div id="manager">
         <Mock href="#manager" name="Quản Lý" />
         {manager ? (
-          <Group className="p-2" id="manager" wrap="nowrap">
+          <Group className="p-2" wrap="nowrap">
             <Avatar src={manager?.avatar} size={94} radius="md" />
             <div>
               <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-                {manager?.dob?.toLocaleDateString() || ''}
+                {manager?.dob?.toString()}
               </Text>
               <Text fz="lg" fw={500}>
                 {manager?.fullname}

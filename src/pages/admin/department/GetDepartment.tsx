@@ -16,12 +16,14 @@ import { resolveErrorResponse } from '@/helpers/utils';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import { Manager } from './components/Manager';
 import { Mock } from '@/components/base/Link/Mock';
+import { Divider } from '@mui/material';
+import NotFoundPage from '@/pages/client/404/NotFoundPage';
 
 export default function GetDepartment() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [handleUpdate] = useUpdateDepartmentMutation();
-  const { data: department, isFetching } = useGetDepartmentQuery(id as string);
+  const { data: department, isFetching } = useGetDepartmentQuery(id!);
   const columns = useColumn<UserProps>([
     {
       key: 'fullname',
@@ -70,7 +72,7 @@ export default function GetDepartment() {
               {
                 label: 'Xóa',
                 onClick: async () => {
-                  const result = await handleUpdate({ id: id as string, users_delete: [original.id] });
+                  const result = await handleUpdate({ id: id!, users_delete: [original.id], users: [] });
                   if (result.data) {
                     toast.success(result.data.message);
                     return;
@@ -81,12 +83,16 @@ export default function GetDepartment() {
                 leftSection: <BaseIcon icon={IconTrash} />,
               },
             ]}
-            row={row as any}
+            row={row}
           />
         );
       },
     },
   ]);
+
+  if (!department) {
+    return <NotFoundPage title="không tìm thấy phòng ban" />;
+  }
   return (
     <>
       <Paper className="p-2 rounded-3xl">
@@ -95,10 +101,10 @@ export default function GetDepartment() {
           <div className="space-y-2">
             <Manager manager={department?.manager || null} />
           </div>
-          <div className="space-y-2">
+          <Divider />
+          <div id="table-user" className="space-y-2">
             <Mock href="#table-user" name="Nhân viên phòng ban" />
             <Table
-              id="table-user"
               onRowClick={value => navigate(`/users/${value.id}`)}
               columns={columns}
               data={department?.users || []}

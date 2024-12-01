@@ -5,17 +5,30 @@ import TableAction from '@/components/table/TableAction';
 import { useColumn } from '@/hooks/useColumn';
 import { useGetUsersQuery } from '@/redux/api/users';
 import { IUserInfo } from '@/types/user.type';
-import { useDisclosure } from '@mantine/hooks';
+import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
 import { IconPlus } from '@tabler/icons-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import CreateUser from './components/CreateUser';
 import BaseModal from '@/components/base/modal';
 import { UserInfo } from '@/components/user-info/UserInfo';
-import { Badge } from '@mantine/core';
+import { Badge, Pagination } from '@mantine/core';
+import NotFoundPage from '@/pages/client/404/NotFoundPage';
+import BaseInput from '@/components/base/input';
+import { useState } from 'react';
 
 export default function User() {
   const [opened, { close, open }] = useDisclosure();
-  const { data: users, isFetching } = useGetUsersQuery();
+  const [params, setParams] = useSearchParams();
+  const [limit] = useState(5);
+  const {
+    data: users,
+    isFetching,
+    error,
+  } = useGetUsersQuery({
+    q: params.get('q')!,
+    limit: limit.toString(),
+    page: params.get('page')!,
+  });
   const navigate = useNavigate();
   const columns = useColumn<IUserInfo>([
     {
@@ -53,7 +66,15 @@ export default function User() {
       ),
     },
   ]);
+  const handleSearch = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value) params.set('q', value);
+    else params.delete('q');
+    params.set('page', '1');
+    setParams(params.toString());
+  }, 500);
 
+  if (error) return <NotFoundPage title="Có lỗi xảy ra! vui lòng tải lại trang" />;
   return (
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
@@ -63,12 +84,35 @@ export default function User() {
               <BaseIcon icon={IconPlus} />
             </BaseButton.Icon>
           }
-          onRowClick={data => navigate(data.id)}
-          className="mx-2"
-          highlightOnHover
+          manualFiltering
+          filterItem={
+            <BaseInput
+              defaultValue={params.get('q') ?? ''}
+              onChange={handleSearch}
+              size="xs"
+              radius="md"
+              placeholder="tìm kiếm..."
+            />
+          }
+          manualPagination
+          pagination={
+            <Pagination
+              total={Number(users?.totalPage) || 1}
+              onChange={value => {
+                params.set('page', value.toString());
+                setParams(params.toString());
+              }}
+              radius="md"
+              defaultValue={Number(params.get('page')) || 1}
+              className="w-full flex justify-center py-2"
+            />
+          }
           columns={columns}
           data={users?.data || []}
           isFetching={isFetching}
+          onRowClick={data => navigate(data.id)}
+          className="mx-2"
+          highlightOnHover
         />
       </div>
       <BaseModal title="Tạo Mới User" opened={opened} onClose={close}>
