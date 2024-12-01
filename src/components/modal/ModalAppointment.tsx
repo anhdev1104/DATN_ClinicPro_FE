@@ -45,13 +45,25 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
   const navigate = useNavigate();
   const {
     control,
-    formState: { isSubmitting, isValid, errors },
+    formState: { isValid, errors, isSubmitting },
     handleSubmit,
     watch,
     reset,
   } = useForm({
     resolver: yupResolver(appointmentSchema),
     mode: 'onChange',
+    defaultValues: {
+      fullname: '',
+      email: '',
+      phone_number: '',
+      address: '',
+      dob: undefined,
+      gender: GENDER.MALE,
+      specialty_id: '0',
+      package_id: '0',
+      description: '',
+      appointment_date: undefined,
+    },
   });
   const idSpecialty = watch('specialty_id');
 
@@ -71,9 +83,9 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
         toast.error(res.errors[Object.keys(res.errors)[0]]?.[0]);
       } else {
         toast.success('Đăng ký lịch hẹn thành công !');
+        reset();
       }
     })();
-    reset();
   };
 
   useEffect(() => {
@@ -504,7 +516,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
           </Box>
           <Box sx={{ mt: '10px' }}>
             <Button type="submit" isLoading={isSubmitting} disabled={isSubmitting}>
-              Đăng ký
+              Đặt lịch
             </Button>
           </Box>
         </Box>
