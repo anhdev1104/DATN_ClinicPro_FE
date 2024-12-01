@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 interface SearchParams<T> {
@@ -12,18 +12,19 @@ interface SearchParams<T> {
 export const useQueryParams = <T extends { [k in keyof QueryParams]: any }>(): [T, SearchParams<T>] => {
   const [searchParams, setSearchParams] = useSearchParams();
   const paramsRef = useRef({} as T);
+  const [update, forceUpdate] = useState({});
   const getQueryParam = (key: keyof T) => searchParams.get(key.toString()) || '';
 
   const getAllQueryParam = () => Object.fromEntries(searchParams.entries()) as T;
 
   const setQueryParam = (key: keyof T | Array<keyof T>, value: string | number) => {
     searchParams.set(key.toString(), value.toString());
-    setSearchParams(searchParams.toString());
+    forceUpdate({});
   };
 
   const removeQueryParam = (key: keyof T) => {
     searchParams.delete(key.toString());
-    setSearchParams(searchParams.toString());
+    forceUpdate({});
   };
 
   const removeAllQueryParam = () => setSearchParams('');
@@ -33,7 +34,7 @@ export const useQueryParams = <T extends { [k in keyof QueryParams]: any }>(): [
   useEffect(() => {
     paramsRef.current = getAllQueryParam();
     setSearchParams(searchParams.toString());
-  }, [searchParams]);
+  }, [update]);
 
   return [
     paramsRef.current,

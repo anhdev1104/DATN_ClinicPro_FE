@@ -20,4 +20,8 @@ export default defineConfig({
       },
     },
   },
+  optimizeDeps: {
+    exclude: ['node_modules/.cache'],
+    force: true,
+  },
 });

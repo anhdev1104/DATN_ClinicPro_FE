@@ -21,7 +21,7 @@ export const Header = ({ department }: { department: DepartmentProps | null }) =
             Cập Nhật
           </BaseButton>
         </div>
-        <Text fz="xs" c="dimmed" fw={400} lineClamp={2} className="w-2/4 mx-auto">
+        <Text fz="xs" c="dimmed" fw={400} lineClamp={2} className="w-2/4 mx-auto text-center">
           {department?.description}
         </Text>
         <Divider my="sm" />

@@ -36,7 +36,7 @@ export const usersApi = createApi({
       }),
       invalidatesTags: result => (result ? [{ type: 'Users', id: 'LIST-USERS' }] : []),
     }),
-    updateUser: builder.mutation<{ message: string }, UpdateUserProps & { id: string }>({
+    updateUser: builder.mutation<{ message: string }, { id: string } & UpdateUserProps>({
       query: ({ id, ...data }) => {
         return {
           url: `users/${id}`,

@@ -15,9 +15,9 @@ export const DeleteDepartment = () => {
   const [handleDelete, { isLoading }] = useDeleteDepartmentMutation();
   const navigate = useNavigate();
   const handleDeleteDepartment = async () => {
-    const result = await handleDelete(id as string);
+    const result = await handleDelete(id!);
     if (result.data) {
-      toast.success(result.data?.message as string);
+      toast.success(result.data?.message!);
       navigate('/departments');
       return;
     }
