@@ -173,7 +173,7 @@ export default function UpdateUser() {
                       autoComplete="dob"
                       leftSection={<BaseIcon icon={IconCalendar} />}
                       valueFormat="YYYY/MM/DD"
-                      placeholder="Chọn Ngày Sinh"
+                      placeholder="Chọn ngày sinh"
                       label="Ngày Sinh"
                     />
                   </Grid.Col>

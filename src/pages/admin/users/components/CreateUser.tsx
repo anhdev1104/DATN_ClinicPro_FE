@@ -115,7 +115,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
               name="user_info.dob"
               autoComplete="dob"
               leftSection={<BaseIcon icon={IconCalendar} />}
-              placeholder="Chọn Ngày Sinh"
+              placeholder="Chọn ngày sinh"
               label="Ngày Sinh"
             />
           </Grid.Col>
