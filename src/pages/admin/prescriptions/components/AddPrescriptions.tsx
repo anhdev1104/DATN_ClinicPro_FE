@@ -15,6 +15,7 @@ import DirectRoute from '@/components/direct';
 import { toast } from 'react-toastify';
 import FormPatient from '../../medical_histories/components/FormPatient';
 import { IPatientSelect } from '../../medical_histories/components/AddMedicalHistories';
+import MessageForm from '@/components/message';
 
 interface AddPrescripton {
   navigate: () => void;
@@ -31,10 +32,11 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
     form: {
       control,
       reset,
-      formState: { isSubmitting },
+      formState: { isSubmitting, errors },
       handleSubmit,
     },
   } = usePrescriptionContextForm();
+  console.log('🚀 ~ AddPrescriptions ~ errors:', errors);
 
   const selectedCategoryId = useWatch({
     control,
@@ -130,6 +132,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                     placeholder="Nhập tên đơn thuốc ..."
                     control={control}
                   />
+                  <MessageForm error={errors.name?.message} />
                 </Field>
                 <div className="min-w-[400px] w-1/2">
                   <Label>Tên bệnh nhân</Label>
@@ -151,6 +154,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                     options={medicationCategory}
                     setIsDialogOpen={setIsDialogOpen}
                   />
+                  <MessageForm error={errors.medications?.message} />
                 </div>
               </div>
 
