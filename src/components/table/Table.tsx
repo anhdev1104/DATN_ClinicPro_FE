@@ -67,7 +67,7 @@ const Table = <T, D>({
   });
 
   return (
-    <div className="w-full p-2">
+    <div className="w-full">
       {toolbar !== false && <TableToolbar filterItem={filterItem} toolbar={toolbar} table={table} />}
       <BaseTable.Scroll minWidth={800}>
         <BaseTable withTableBorder {...props}>

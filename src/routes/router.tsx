@@ -7,12 +7,12 @@ import ProtectedRoute from '@/components/auth';
 
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
 const Department = React.lazy(() => import('@/pages/admin/department/Department'));
-const DepartmentDetail = React.lazy(() => import('@/pages/admin/department/DepartmentDetail'));
+const GetDepartment = React.lazy(() => import('@/pages/admin/department/GetDepartment'));
+const UpdateDepartment = React.lazy(() => import('@/pages/admin/department/UpdateDepartment'));
 const NotFoundPage = React.lazy(() => import('@/pages/client/404/NotFoundPage'));
 const AboutPage = React.lazy(() => import('@/pages/client/about/AboutPage'));
 const AchievementPage = React.lazy(() => import('@/pages/client/achievement/AchievementPage'));
 const AdvisePage = React.lazy(() => import('@/pages/client/advise/AdvisePage'));
-const LoginOTP = React.lazy(() => import('@/pages/client/auth/LoginOTP'));
 const LoginPage = React.lazy(() => import('@/pages/client/auth/LoginPage'));
 const RegisterPage = React.lazy(() => import('@/pages/client/auth/RegisterPage'));
 const BranchsPage = React.lazy(() => import('@/pages/client/branchs/BranchsPage'));
@@ -32,16 +32,19 @@ const Package = React.lazy(() => import('@/pages/admin/package/Package'));
 const User = React.lazy(() => import('@/pages/admin/users/Users'));
 const GetUser = React.lazy(() => import('@/pages/admin/users/GetUser'));
 const UpdateUser = React.lazy(() => import('@/pages/admin/users/UpdateUser'));
-const CreateUser = React.lazy(() => import('@/pages/admin/users/CreateUser'));
 const MedicalHistories = React.lazy(() => import('@/pages/admin/medical_histories/MedicalHistories'));
 const PrivacyPage = React.lazy(() => import('@/pages/client/privacy/privacyPage'));
 const Specialties = React.lazy(() => import('@/pages/admin/specialties/Specialties'));
 const AddSpecialties = React.lazy(() => import('@/pages/admin/specialties/components/AddSpecialties'));
 const EditSpecialties = React.lazy(() => import('@/pages/admin/specialties/components/EditSpecialties'));
+const Patients = React.lazy(() => import('@/pages/admin/patient/Patients'));
+const DetailPatient = React.lazy(() => import('@/pages/admin/patient/components/DetailPatient'));
+const AddPatient = React.lazy(() => import('@/pages/admin/patient/components/AddPatient'));
 
 type IRouter = RouteProps & {
   title: string;
 };
+
 const clientRouter: IRouter[] = [
   {
     path: '/parcel',
@@ -75,13 +78,17 @@ const clientRouter: IRouter[] = [
   },
   {
     path: '/profile',
-    element: <ProfilePage />,
+    element: (
+      <ProtectedRoute>
+        <ProfilePage />
+      </ProtectedRoute>
+    ),
     title: 'Thông tin cá nhân',
   },
   {
     path: '/medical-histories',
     element: <MedicalHistoriesPage />,
-    title: 'Xem bệnh án',
+    title: 'Lịch sử khám bệnh',
   },
   {
     path: '/change-password',
@@ -121,14 +128,19 @@ const adminRouter: IRouter[] = [
     title: 'Danh sách đơn thuốc',
   },
   {
-    path: '/departments/:id',
-    element: <DepartmentDetail />,
-    title: 'Phòng Ban',
-  },
-  {
     path: '/departments',
     element: <Department />,
     title: 'Danh sách phòng ban',
+  },
+  {
+    path: '/departments/:id',
+    element: <GetDepartment />,
+    title: 'Phòng Ban',
+  },
+  {
+    path: '/departments/:id/edit',
+    element: <UpdateDepartment />,
+    title: 'Phòng Ban',
   },
   {
     path: '/packages',
@@ -148,11 +160,6 @@ const adminRouter: IRouter[] = [
   {
     path: '/users',
     element: <User />,
-    title: 'Danh Sách Người Dùng',
-  },
-  {
-    path: '/users/add',
-    element: <CreateUser />,
     title: 'Danh Sách Người Dùng',
   },
   {
@@ -180,6 +187,21 @@ const adminRouter: IRouter[] = [
     element: <EditSpecialties />,
     title: 'Trang chuyên khoa',
   },
+  {
+    path: '/patient',
+    element: <Patients />,
+    title: 'Trang bệnh nhân',
+  },
+  {
+    path: '/patient/:id',
+    element: <DetailPatient />,
+    title: 'Trang bệnh nhân',
+  },
+  {
+    path: '/add-patient',
+    element: <AddPatient />,
+    title: 'Trang bệnh nhân',
+  },
 ];
 
 const authRouter: IRouter[] = [
@@ -192,11 +214,6 @@ const authRouter: IRouter[] = [
     path: '/login',
     element: <LoginPage />,
     title: 'Đăng nhập tài khoản',
-  },
-  {
-    path: '/login-otp',
-    element: <LoginOTP />,
-    title: 'Đăng nhập qua OTP',
   },
   {
     path: '/forgot-password',

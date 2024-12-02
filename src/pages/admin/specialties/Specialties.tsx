@@ -120,7 +120,7 @@ const Specialtie = () => {
                       <td className="py-2 px-5">{index + 1}</td>
                       <td className="py-2 px-5 text-gray-800 font-semibold max-w-[250px]">{item.name}</td>
                       <td className="py-2 px-5 text-gray-600">{item.description}</td>
-                      <td className="py-2 px-5 text-gray-600 max-w-[300px]">{convertTime(item.created_at)}</td>
+                      <td className="py-2 px-5 text-gray-600 max-w-[300px]">{convertTime(item.created_at || '')}</td>
                       <td className="py-2 px-5 text-end">
                         <div className="relative inline-block text-left">
                           <button

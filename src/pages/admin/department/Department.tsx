@@ -1,46 +1,38 @@
-import { Flex, Modal, Pagination, Stack, Text } from '@mantine/core';
-import { useGetAllDepartmentQuery, useDeleteAnDepartmentMutation } from '@/redux/api/department';
-import { useNavigate } from 'react-router-dom';
-import type { Department, DepartmentDetail, Manager } from '@/types/department.type';
+import { Avatar, Modal, Pagination, Text } from '@mantine/core';
+import { useGetDepartmentsQuery } from '@/redux/api/department';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import type { DepartmentProps, ManagerProps } from '@/types/department.type';
 import Table from '@/components/table/Table';
-import { Avatar } from '@mantine/core';
-import { Badge } from '@mantine/core';
 import ActionWithRow from '@/components/table/TableAction';
 import BaseButton from '@/components/base/button';
 import BaseIcon from '@/components/base/BaseIcon';
 import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
-import NewDepartment from './NewDepartment';
-import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
+import NewDepartment from './components/CreateDepartment';
+import { IconPlus } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
-import { toast } from 'react-toastify';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
-import { useRef, useState } from 'react';
-import UpdateDepartment from './UpdateDepartment';
+import { useState } from 'react';
 import BaseInput from '@/components/base/input';
-import { useQueryParams } from '@/hooks/useQueryParams';
+import { UserInfo } from '@/components/user-info/UserInfo';
+import dayjs from 'dayjs';
 
-const Department = () => {
-  const [params, queryParams] = useQueryParams();
-  const debounced = useDebouncedCallback(value => {
-    queryParams.set('q', value);
-  }, 1000);
-  const [modalNew, handleModalNew] = useDisclosure(false);
-  const [modalDelete, handleModalDelete] = useDisclosure(false);
-  const [modalUpdate, handleModalUpdate] = useDisclosure(false);
-  const [limit] = useState(5);
-  const { data, isSuccess, isFetching } = useGetAllDepartmentQuery({
-    q: params.q || '',
-    limit: params.limit || limit,
-    page: params.page,
-  });
+export default function Department() {
   const navigate = useNavigate();
-  const [deleteDepartment, { isLoading }] = useDeleteAnDepartmentMutation();
-  const idRef = useRef<string>('');
-  const departmentUpdateRef = useRef<Department>();
-  const handleRowClick = (data: Department) => {
-    navigate(data.id);
-  };
-  const columns = useColumn<Department>([
+  const [params, setParams] = useSearchParams();
+  const [modalNew, handleModalNew] = useDisclosure(false);
+  const [limit] = useState(5);
+  const { data: departments, isFetching } = useGetDepartmentsQuery({
+    q: params.get('q')!,
+    limit: params.get('limit') || limit.toString(),
+    page: params.get('page')!,
+  });
+  const handleSearch = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value) params.set('q', value);
+    else params.delete('q');
+    params.set('page', '1');
+    setParams(params.toString());
+  }, 500);
+  const columns = useColumn<DepartmentProps>([
     {
       key: 'name',
       label: 'Tên Phòng Ban',
@@ -49,50 +41,46 @@ const Department = () => {
     {
       key: 'manager',
       label: 'Quản Lý',
-      cell: ({ value }: { value: Manager }) => {
-        return value ? (
-          <Flex gap={8} align="center">
-            <Avatar size="sm" src={value.avatar} />
-            <Flex direction="column">
-              <Text size="sm">{value.fullname}</Text>
-              <Text size="xs" c="dimmed">
-                {value.email}
-              </Text>
-            </Flex>
-          </Flex>
-        ) : (
-          <Text size="sm">Chưa Có</Text>
-        );
+      cell: ({ value }: { value: ManagerProps }) => {
+        return <UserInfo avatar={value?.avatar} email={value?.email} fullname={value?.fullname} />;
       },
       sortable: false,
     },
     {
       key: 'users_count',
-      label: 'số người trong phòng ban',
-      cell: ({ value }) => <Badge size="sm">{value}</Badge>,
+      label: 'Nhân viên',
+      cell: ({ value, original }) => (
+        <>
+          <Avatar.Group>
+            {original.users?.slice(0, 3).map(user => <Avatar key={user.id} src={user.avatar} />)}
+            <Avatar>{value}</Avatar>
+          </Avatar.Group>
+        </>
+      ),
+      sortable: false,
+    },
+    {
+      key: 'created_at',
+      label: 'Ngày tạo',
+      cell: ({ value }) => {
+        const date = dayjs(value).format('DD-MM-YYYY');
+        return (
+          <>
+            <Text size="sm" fw={400} c="dimmed">
+              {date}
+            </Text>
+          </>
+        );
+      },
     },
     {
       id: 'actions',
-      cell: ({ row }) => (
+      cell: ({ row, original }) => (
         <ActionWithRow
           data={[
             {
-              label: 'Sửa',
-              onClick: () => {
-                window.history.replaceState(null, '', `/departments/${row.original.id}`);
-                departmentUpdateRef.current = row.original;
-                handleModalUpdate.open();
-              },
-              leftSection: <BaseIcon icon={IconPencil} />,
-            },
-            {
-              label: 'Xóa',
-              onClick: () => {
-                idRef.current = row.original.id;
-                handleModalDelete.open();
-              },
-              color: 'red',
-              leftSection: <BaseIcon icon={IconTrash} />,
+              label: 'Xem chi tiết',
+              onClick: () => navigate(original.id),
             },
           ]}
           row={row as any}
@@ -101,40 +89,38 @@ const Department = () => {
       placeholder: true,
     },
   ]);
-  const handleDeleteDepartment = async () => {
-    const result = await deleteDepartment(idRef.current);
-    if (result.error) {
-      toast.error((result.error as AxiosBaseQueryError<any>).data.error);
-    } else {
-      toast.success((result.data as any).data);
-      handleModalDelete.close();
-    }
-  };
   return (
     <>
-      <div className="bg-white rounded-3xl w-full shadow-xl">
+      <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
           className="ml-2"
           highlightOnHover
           manualFiltering
           filterItem={
-            <BaseInput onChange={e => debounced(e.target.value)} size="xs" radius="md" placeholder="tìm kiếm..." />
+            <BaseInput
+              defaultValue={params.get('q') ?? ''}
+              onChange={handleSearch}
+              size="xs"
+              radius="md"
+              placeholder="tìm kiếm..."
+            />
           }
           manualPagination
           pagination={
-            Math.round((data?.total || limit) / limit) > 1 && (
-              <Pagination
-                total={Math.round((data?.total || limit) / limit)}
-                onChange={value => queryParams.set('page', value.toString())}
-                radius="md"
-                defaultValue={Number(params.page) || 1}
-                className="w-full flex justify-center py-2"
-              />
-            )
+            <Pagination
+              total={Number(departments?.totalPage) || 1}
+              onChange={value => {
+                params.set('page', value.toString());
+                setParams(params.toString());
+              }}
+              radius="md"
+              defaultValue={Number(params.get('page')) || 1}
+              className="w-full flex justify-center py-2"
+            />
           }
-          onRowClick={handleRowClick}
+          onRowClick={data => navigate(`/departments/${data.id}`)}
           isFetching={isFetching}
-          data={isSuccess ? data.data : []}
+          data={departments?.data || []}
           columns={columns}
           toolbar={
             <BaseButton.Icon onClick={handleModalNew.open} variant="subtle" radius="lg">
@@ -144,7 +130,7 @@ const Department = () => {
         />
         <Modal
           radius="md"
-          size="lg"
+          size="xl"
           centered
           opened={modalNew}
           onClose={handleModalNew.close}
@@ -152,38 +138,7 @@ const Department = () => {
         >
           <NewDepartment handleClose={handleModalNew.close} />
         </Modal>
-        <Modal title="Xóa Phòng Ban" centered opened={modalDelete} onClose={handleModalDelete.close}>
-          <Stack gap={10}>
-            <Text size="sm" c="gray">
-              Bạn có chắc muốn xóa phòng ban
-            </Text>
-            <BaseButton
-              disabled={isLoading}
-              loading={isLoading}
-              onClick={handleDeleteDepartment}
-              className="flex justify-center w-20 ml-auto"
-              color="red"
-            >
-              Xóa
-            </BaseButton>
-          </Stack>
-        </Modal>
-        <Modal
-          title="Cập Nhật Phòng Ban"
-          centered
-          opened={modalUpdate}
-          onClose={() => {
-            navigate('/departments');
-            handleModalUpdate.close();
-          }}
-        >
-          <UpdateDepartment
-            handleModalUpdate={handleModalUpdate}
-            departmentUpdate={departmentUpdateRef.current as DepartmentDetail}
-          />
-        </Modal>
       </div>
     </>
   );
-};
-export default Department;
+}

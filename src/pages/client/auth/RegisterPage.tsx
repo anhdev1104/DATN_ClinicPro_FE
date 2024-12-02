@@ -13,6 +13,7 @@ import { registerService } from '@/services/auth.service';
 import { toast } from 'react-toastify';
 import PosterAuth from './components/PosterAuth';
 import useToggle from '@/hooks/useToggle';
+import { emailRegex, passwordRegex } from '@/constants/regex';
 
 const schema = yup.object({
   fullname: yup.string().trim().required('Vui lòng nhập vào họ và tên !'),
@@ -20,17 +21,13 @@ const schema = yup.object({
     .string()
     .trim()
     .required('Trường này là bắt buộc !')
-    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'Email không dúng định dạng !' }),
+    .matches(emailRegex, { message: 'Email không dúng định dạng !' }),
   password: yup
     .string()
     .trim()
     .required('Mật khẩu không được để trống !')
-    .min(6, 'Mật khẩu ít nhất 6 ký tự trở lên !')
-    .matches(
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
-      'Mật khẩu phải chứa ít nhất một số và một ký tự đặc biệt !',
-    ),
-
+    .min(8, 'Mật khẩu ít nhất 8 ký tự trở lên !')
+    .matches(passwordRegex, { message: 'Mật khẩu ít nhất 1 chữ cái viết hoa và 1 ký tự đặt biệt!' }),
   password_confirm: yup
     .string()
     .trim()
@@ -121,7 +118,7 @@ const RegisterPage = () => {
                     name="password"
                     type={show ? 'text' : 'password'}
                     className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
-                    placeholder="Mật khẩu tối thiểu 6 kí tự ..."
+                    placeholder="Mật khẩu tối thiểu 8 kí tự ..."
                     control={control}
                   />
                   <div className="text-gray-400 top-8 right-4 cursor-pointer absolute" onClick={handleToggle}>

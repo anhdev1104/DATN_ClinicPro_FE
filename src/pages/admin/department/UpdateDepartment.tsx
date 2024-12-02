@@ -1,102 +1,102 @@
-import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
-import former, { OptionsWithForm } from '@/providers/former';
-import Form from '@/lib/Form';
-import { useUpdateAnDepartmentMutation } from '@/redux/api/department';
+import { useGetDepartmentQuery, useUpdateDepartmentMutation } from '@/redux/api/department';
+import { Flex, Stack } from '@mantine/core';
+import yup from '@/helpers/locate';
+import { renderOption } from '@/helpers/format';
+import Formik, { FormikHandler } from '@/lib/Formik';
+import { useNavigate, useParams } from 'react-router-dom';
+import { filterOutManagers, formatUserSelect, resolveErrorResponse } from '@/helpers/utils';
 import { useGetUsersQuery } from '@/redux/api/users';
-import { updateDepartmentSchema } from '@/schema/department.schema';
-import { DepartmentDetail, NewDepartmentProps } from '@/types/department.type';
-import { IUserInfo } from '@/types/user.type';
-import { filterOutManagers } from '@/helpers/utils';
-import { Avatar, Group, Stack } from '@mantine/core';
-import { useEffect, useMemo } from 'react';
-import { SubmitHandler, useFormContext } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { IconCheck } from '@tabler/icons-react';
-import { useDisclosure } from '@mantine/hooks';
-interface Options {
-  value: string;
-  label: string;
-  avatar?: string;
-}
-interface UpdateDepartmentProps {
-  departmentUpdate: Partial<DepartmentDetail>;
-  handleModalUpdate: ReturnType<typeof useDisclosure>[1];
-}
-const UpdateDepartment = ({ departmentUpdate, handleModalUpdate }: UpdateDepartmentProps) => {
-  const {
-    handleSubmit,
-    setValue,
-    formState: { disabled },
-    setError,
-  } = useFormContext<NewDepartmentProps>();
-  const { data, isSuccess } = useGetUsersQuery();
-  const [update] = useUpdateAnDepartmentMutation();
-  const department: IUserInfo[] = useMemo(() => (isSuccess ? filterOutManagers(data?.data) : []), [data]);
-  const formatData: Options[] = useMemo(
-    () =>
-      department.map(item => ({
-        value: item.id,
-        label: item.user_info.fullname,
-        avatar: item.user_info.avatar,
-      })),
-    [department],
-  );
-  const departmentId = useMemo(
-    () => window.location.pathname.split('/')[window.location.pathname.split('/').length - 1],
-    [window.location.pathname],
-  );
-  const handleUpdateDepartment: SubmitHandler<NewDepartmentProps> = async data => {
-    const result = await update({ id: departmentId, ...data });
-    if (result.error) {
-      const errors = result.error as AxiosBaseQueryError<{ message: string; errors: any[] }>;
-      const errorName: any = Object.keys(errors.data.errors);
-      setError(errorName[0], { message: errors.data.errors[errorName[0]] });
-    } else {
-      toast.success((result.data as any)?.message);
-      handleModalUpdate.close();
+import toast from 'react-hot-toast';
+import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { useMemo } from 'react';
+import NotFoundPage from '@/pages/client/404/NotFoundPage';
+
+const updateDepartmentSchema = yup.object({
+  name: yup.string().trim().omit([null]),
+  description: yup.string().omit([null]),
+  manager_id: yup.string(),
+  users: yup.array().of(yup.string()),
+  users_delete: yup.array().of(yup.string()).default([]),
+});
+export type UpdateDepartmentProps = yup.InferType<typeof updateDepartmentSchema>;
+
+export default function UpdateDepartment() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [handleUpdate] = useUpdateDepartmentMutation();
+  const { data: department } = useGetDepartmentQuery(id!);
+  const { data: users } = useGetUsersQuery();
+  const managers = useMemo(() => formatUserSelect(filterOutManagers(users?.data || [])), [users]);
+  const listUsers = useMemo(() => formatUserSelect(users?.data || []), [users]);
+
+  const handleUpdateDepartment: FormikHandler<UpdateDepartmentProps> = async (data, { setError }) => {
+    const result = await handleUpdate({ id: id!, ...data });
+    if (result.data) {
+      toast.success(result.data?.message);
+      navigate(-1);
+      return;
     }
+    resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
   };
-
-  useEffect(() => {
-    setValue('name', departmentUpdate.name || '');
-    setValue('manager_id', departmentUpdate.manager?.id || '');
-    setValue('description', departmentUpdate.description || '');
-  }, []);
+  if (!department) return <NotFoundPage title="không tìm thấy phòng ban" />;
   return (
-    <Form onSubmit={handleSubmit(handleUpdateDepartment)}>
-      <Stack>
-        <BaseInput.Group autoComplete="name" name="name" label="Tên phòng ban" placeholder="Phòng IT..." />
-        <BaseInput.Textarea autoComplete="description" name="description" label="Mô tả" />
-        <BaseInput.Select
-          autoComplete="manager_id"
-          name="manager_id"
-          label="Chọn Quản lý"
-          data={formatData}
-          onChange={value => setValue('manager_id', value)}
-          renderOption={({ option, checked }) => (
-            <Group flex="1" gap="xs">
-              <Avatar size="sm" src={(option as Options).avatar} />
-              {option.label}
-              {checked && <BaseIcon icon={IconCheck} style={{ marginInlineStart: 'auto' }} />}
-            </Group>
-          )}
-          clearable
-          searchable
-          allowDeselect={false}
-          nothingFoundMessage="không tìm thấy quản lý"
-        />
-        <BaseButton loading={disabled} disabled={disabled} type="submit">
-          Lưu
-        </BaseButton>
-      </Stack>
-    </Form>
+    <div className="bg-white rounded-3xl w-full shadow-xl p-4">
+      <Formik
+        withAutoValidate
+        onSubmit={handleUpdateDepartment}
+        schema={updateDepartmentSchema}
+        options={{
+          defaultValues: updateDepartmentSchema.safeParse({
+            ...department,
+            users: department?.users.map(user => user?.id || ''),
+          }),
+          mode: 'onChange',
+        }}
+      >
+        {({ formState: { disabled }, setValue, getValues }) => {
+          return (
+            <>
+              <Stack>
+                <BaseInput.Group name="name" autoComplete="name" label="Tên phòng ban" placeholder="Phòng IT..." />
+                <BaseInput.Textarea name="description" autoComplete="description" label="Mô tả" />
+                <BaseInput.Select
+                  name="manager_id"
+                  autoComplete="manager_id"
+                  label="Chọn Quản lý"
+                  data={managers}
+                  renderOption={renderOption}
+                  clearable
+                  searchable
+                  allowDeselect={false}
+                  nothingFoundMessage="không tìm thấy quản lý"
+                />
+                <BaseInput.MultiSelect
+                  name="users"
+                  autoComplete="users"
+                  onRemove={value => setValue('users_delete', [...(getValues('users_delete') || ''), value])}
+                  data={listUsers}
+                  renderOption={renderOption}
+                  label="Chọn Nhân Viên"
+                  clearable
+                  searchable
+                  hidePickedOptions
+                  nothingFoundMessage="không tìm thấy nhân viên nào"
+                />
+              </Stack>
+              <Flex gap={10} justify="end">
+                <BaseButton color="gray" onClick={() => navigate(-1)}>
+                  Hủy
+                </BaseButton>
+                <BaseButton w={100} loading={disabled} disabled={disabled} type="submit">
+                  Lưu
+                </BaseButton>
+              </Flex>
+            </>
+          );
+        }}
+      </Formik>
+    </div>
   );
-};
-
-const optionsWithForm: OptionsWithForm = {
-  mode: 'onChange',
-};
-export default former(UpdateDepartment, updateDepartmentSchema, optionsWithForm);
+}

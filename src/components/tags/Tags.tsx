@@ -26,7 +26,11 @@ const Tags = ({ tagsColor = 'inactive', className, children }: TagsType) => {
       break;
   }
 
-  return <div className={`px-7 py-1 ${bgTags} ${className} w-fit rounded-md font-medium`}>{children}</div>;
+  return (
+    <div className={`px-7 py-1 ${bgTags} ${className} w-fit min-w-[110px] rounded-md font-medium shadow text-center`}>
+      {children}
+    </div>
+  );
 };
 
 export default Tags;

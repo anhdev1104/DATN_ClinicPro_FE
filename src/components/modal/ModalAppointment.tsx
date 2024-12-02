@@ -45,7 +45,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
   const navigate = useNavigate();
   const {
     control,
-    formState: { isSubmitting, isValid, errors },
+    formState: { isValid, errors, isSubmitting },
     handleSubmit,
     watch,
     reset,
@@ -53,11 +53,20 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
     resolver: yupResolver(appointmentSchema),
     mode: 'onChange',
     defaultValues: {
+      fullname: '',
+      email: '',
+      phone_number: '',
+      address: '',
+      dob: undefined,
       gender: GENDER.MALE,
+      specialty_id: '0',
+      package_id: '0',
+      description: '',
+      appointment_date: undefined,
     },
   });
-
   const idSpecialty = watch('specialty_id');
+
   const handleAppointment: SubmitHandler<IAppointment> = async data => {
     if (!isValid) return;
     const dob = data.dob && new Date(data.dob).toLocaleDateString('en-CA');
@@ -72,12 +81,10 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
       const res = await addAppointments(dataAppointment);
       if (res.success === false) {
         toast.error(res.errors[Object.keys(res.errors)[0]]?.[0]);
-        return;
+      } else {
+        toast.success('Đăng ký lịch hẹn thành công !');
+        reset();
       }
-      toast.success('Đăng ký lịch hẹn thành công !');
-      reset({
-        gender: GENDER.MALE,
-      });
     })();
   };
 
@@ -108,6 +115,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
           maxWidth: '65%',
           width: '100%',
         },
+        autoComplete: 'off',
       }}
     >
       <Stack
@@ -497,8 +505,8 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
                   component={'span'}
                   className="text-third text-[11px] cursor-pointer"
                   onClick={() => {
-                    handleToggle();
                     navigate('/privacy-policy');
+                    handleToggle();
                   }}
                 >
                   Chính Sách Quyền Riêng Tư.
@@ -508,7 +516,7 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
           </Box>
           <Box sx={{ mt: '10px' }}>
             <Button type="submit" isLoading={isSubmitting} disabled={isSubmitting}>
-              Đăng ký
+              Đặt lịch
             </Button>
           </Box>
         </Box>

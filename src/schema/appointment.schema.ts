@@ -5,7 +5,7 @@ export const appointmentSchema = yup.object({
   email: yup
     .string()
     .trim()
-    .required('Vui lòng điền email hợp lệ !')
+    .required('Vui lòng điền email của bạn !')
     .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'Email không dúng định dạng.' }),
   phone_number: yup
     .string()
@@ -14,7 +14,7 @@ export const appointmentSchema = yup.object({
     .matches(/^\d+$/, 'Số điện thoại chỉ được chứa ký tự số.')
     .length(10, 'Số điện thoại phải gồm 10 chữ số.'),
   address: yup.string().trim().required('Vui lòng điền vào địa chỉ.'),
-  gender: yup.string(),
+  gender: yup.string().default('male'),
   description: yup.string(),
   dob: yup.string().required('Vui lòng điền ngày sinh.'),
   appointment_date: yup.string().required('Vui lòng chọn ngày và giờ khám bệnh.'),

@@ -1,5 +1,7 @@
 import { axiosBaseQuery } from '@/helpers/axiosBaseQuery';
-import { Department, DepartmentDetail, NewDepartmentProps, NewDepartmentResponseProps } from '@/types/department.type';
+import { CreateDepartmentProps } from '@/pages/admin/department/components/CreateDepartment';
+import { UpdateDepartmentProps } from '@/pages/admin/department/UpdateDepartment';
+import { DepartmentProps } from '@/types/department.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 export const departmentApi = createApi({
@@ -7,7 +9,7 @@ export const departmentApi = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: ['Department'],
   endpoints: builder => ({
-    getAllDepartment: builder.query<ResponseTypes<Department[]>, QueryParams | void>({
+    getDepartments: builder.query<ResponseTypes<DepartmentProps[]>, QueryParams | void>({
       query: params => ({
         url: 'departments',
         params,
@@ -21,17 +23,19 @@ export const departmentApi = createApi({
           : [{ type: 'Department', id: 'DEPARTMENT-LIST' }],
       keepUnusedDataFor: 180,
     }),
-    getDepartmentDetail: builder.query<ResponseTypes<DepartmentDetail>, number | string>({
+    getDepartment: builder.query<DepartmentProps, string>({
       query: id => ({ url: `departments/${id}` }),
       providesTags: result =>
         result
           ? [
-              { type: 'Department', id: result.data.id },
+              { type: 'Department', id: result.id },
               { type: 'Department', id: 'DEPARTMENT-DETAIL' },
             ]
           : [{ type: 'Department', id: 'DEPARTMENT-DETAIL' }],
+      transformResponse: (response: { data: DepartmentProps }) => response.data,
+      keepUnusedDataFor: 90,
     }),
-    addAnDepartment: builder.mutation<NewDepartmentResponseProps, NewDepartmentProps>({
+    createDepartment: builder.mutation<{ message: string }, CreateDepartmentProps>({
       query: data => ({
         url: 'departments',
         method: 'POST',
@@ -39,18 +43,15 @@ export const departmentApi = createApi({
       }),
       invalidatesTags: result => (result ? [{ type: 'Department', id: 'DEPARTMENT-LIST' }] : []),
     }),
-    updateAnDepartment: builder.mutation<unknown, any & { id: string | number }>({
-      query: query => {
-        const { id, ...data } = query;
-        return {
-          url: `departments/${id}`,
-          method: 'PUT',
-          data,
-        };
-      },
+    updateDepartment: builder.mutation<{ message: string }, UpdateDepartmentProps & { id: string }>({
+      query: ({ id, ...data }) => ({
+        url: `departments/${id}`,
+        method: 'PUT',
+        data,
+      }),
       invalidatesTags: (result, _, arg) => (result ? [{ type: 'Department', id: arg.id }] : []),
     }),
-    deleteAnDepartment: builder.mutation<unknown, string>({
+    deleteDepartment: builder.mutation<{ message: string }, string>({
       query: id => ({
         url: `departments/${id}`,
         method: 'DELETE',
@@ -66,9 +67,9 @@ export const departmentApi = createApi({
   }),
 });
 export const {
-  useGetAllDepartmentQuery,
-  useGetDepartmentDetailQuery,
-  useAddAnDepartmentMutation,
-  useDeleteAnDepartmentMutation,
-  useUpdateAnDepartmentMutation,
+  useGetDepartmentsQuery,
+  useGetDepartmentQuery,
+  useCreateDepartmentMutation,
+  useDeleteDepartmentMutation,
+  useUpdateDepartmentMutation,
 } = departmentApi;

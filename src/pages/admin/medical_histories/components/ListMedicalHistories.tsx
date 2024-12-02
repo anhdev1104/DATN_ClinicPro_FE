@@ -115,14 +115,14 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
           </div>
           <div className="w-full border-b-[2px] border-borderColor text-left">
             {loading ? (
-              <div className="w-full flex justify-center items-center py-10">
-                <LoadingSpin className="!size-16" color="border-primaryAdmin" />
+              <div className="mx-auto text-center pt-10">
+                <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
               </div>
             ) : medicalRecords?.length > 0 ? (
               medicalRecords?.map((record, index) => (
                 <div
                   key={index}
-                  className={`py-4 text-black flex items-center justify-between w-full text-left cursor-pointer ${index % 2 === 1 ? ' bg-[#f5f5f5]' : 'bg-white'} px-2`}
+                  className={`py-4 text-black flex items-center justify-between w-full text-left cursor-pointer ${index % 2 === 1 ? ' bg-[#f5f5f5]' : 'bg-white'} px-2 transition-all hover:bg-yellow-50/45`}
                 >
                   <div className="flex-[0_0_21%]">{record.id}</div>
                   <div className="flex-[0_0_11%] font-semibold">{record.diagnosis}</div>

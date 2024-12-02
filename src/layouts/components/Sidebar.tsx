@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ChevronRightIcon,
   GroupIcon,
@@ -9,6 +8,7 @@ import {
   Tablet,
   MedicalRecord,
   SpecialtiesIcon,
+  Patient,
 } from '@/components/icons';
 import { cn } from '@/helpers/utils';
 import { useEffect, useState } from 'react';
@@ -34,9 +34,9 @@ const dumpCategory = [
   {
     id: 2,
     categoryName: 'Bệnh nhân',
-    path: '',
-    icon: GroupIcon,
-    pathActive: [''],
+    path: '/patient',
+    icon: Patient,
+    pathActive: ['/patient'],
   },
   {
     id: 3,
@@ -90,7 +90,7 @@ const dumpCategory = [
 ];
 
 const Sidebar = ({ show }: { show: boolean }) => {
-  const [categoryManagement, setCategoryManagement] = useState<ICategoryManagement[]>(dumpCategory);
+  const [categoryManagement] = useState<ICategoryManagement[]>(dumpCategory);
   const [tabActive, setTabActive] = useState<number>(1);
   const navigate = useNavigate();
   const { pathname } = useLocation();
