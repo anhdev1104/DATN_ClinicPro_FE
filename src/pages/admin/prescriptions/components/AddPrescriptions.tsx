@@ -13,25 +13,8 @@ import ModalMedication from '@/components/modal/ModalMedication';
 import convertToOptions from '@/helpers/convertToOptions';
 import DirectRoute from '@/components/direct';
 import { toast } from 'react-toastify';
-
-const patientsOptions = [
-  {
-    label: 'Nguyễn Văn A',
-    value: '64c13314-2273-49bf-bbaf-dae139a348b8',
-  },
-  {
-    label: 'Trần Thị B',
-    value: '146a51c2-d710-4559-ae0e-ef1ed7df5a39',
-  },
-  {
-    label: 'Lê Văn C',
-    value: '13b50927-da93-47e7-9a4b-e1c14fc951e1',
-  },
-  {
-    label: 'Phạm Thị D',
-    value: 'ee4c008f-4c3b-4c2c-b2d5-dd3ffaf60873',
-  },
-];
+import FormPatient from '../../medical_histories/components/FormPatient';
+import { IPatientSelect } from '../../medical_histories/components/AddMedicalHistories';
 
 interface AddPrescripton {
   navigate: () => void;
@@ -41,16 +24,17 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   const [medicationCategory, setMedicationCategory] = useState([]);
   const [medications, setMedications] = useState<IMedications[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectPatient, setSelectPatient] = useState(false);
+  const [selectedPatientId, setSelectedPatientId] = useState<IPatientSelect | null>(null);
 
   const {
     form: {
       control,
       reset,
-      formState: { isSubmitting, isValid, errors },
+      formState: { isSubmitting },
       handleSubmit,
     },
   } = usePrescriptionContextForm();
-  console.log('errors form', errors);
 
   const selectedCategoryId = useWatch({
     control,
@@ -114,8 +98,15 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
     setIsDialogOpen(false);
   };
 
+  const handleSelectedPatientId = (id: string | null, name: string | null) => {
+    setSelectedPatientId({
+      id,
+      name,
+    });
+  };
+
   return (
-    <div>
+    <>
       <DirectRoute nav="Quản lý đơn thuốc" subnav="Đơn thuốc" targetnav="Tạo đơn thuốc" />
       <div className="flex bg-white size-full p-[20px] rounded-[26px]">
         <div className="flex-1">
@@ -142,12 +133,14 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                 </Field>
                 <div className="min-w-[400px] w-1/2">
                   <Label>Tên bệnh nhân</Label>
-                  <Select
-                    placeholder="Bệnh nhân chỉ định"
-                    name="patient_id"
-                    control={control}
-                    options={patientsOptions}
-                  />
+                  <Button
+                    onClick={() => setSelectPatient(true)}
+                    className="text-black h-[42px] w-full bg-[#F3F4F7]"
+                    type="button"
+                    styled="normal"
+                  >
+                    Chọn bệnh nhân
+                  </Button>
                 </div>
                 <div className="min-w-[400px] w-1/2">
                   <Label htmlFor="categoryId">Danh mục thuốc</Label>
@@ -204,7 +197,16 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
         medications={medications}
         medicationCategory={medicationCategory}
       />
-    </div>
+
+      {selectPatient && (
+        <FormPatient
+          onSelectPatient={handleSelectedPatientId}
+          isDialogOpen={selectPatient}
+          handleCloseDialog={() => setSelectPatient(false)}
+          selectedPatientId={selectedPatientId?.id}
+        />
+      )}
+    </>
   );
 };
 
