@@ -6,15 +6,15 @@ import { Button } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import yup from '@/helpers/locate';
 import { forgotPassword } from '@/services/auth.service';
-import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { IForgotPassWord, IForgotPassWordError } from '@/types/auth.type';
 import ResetPassword from './ResetPassword';
-import former, { OptionsWithForm } from '@/lib/former';
+import former from '@/lib/former';
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import Form from '@/lib/Form';
 import { IconArrowLeft } from '@tabler/icons-react';
+import { resolveErrorResponse } from '@/helpers/utils';
+import toast from 'react-hot-toast';
 
 const forgotPasswordSchema = yup.object({
   email: yup.string().email().required(),
@@ -24,27 +24,19 @@ export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 // eslint-disable-next-line react-refresh/only-export-components
 const ForgotPassword = () => {
   const {
-    formState: { isValid, errors, disabled },
+    formState: { disabled },
     setError,
     getValues,
   } = useFormContext<ForgotPassword>();
   const [isSend, setIsSend] = useState(false);
   const navigate = useNavigate();
   const handleSendEmail = async (data: ForgotPassword) => {
-    if (!isValid) {
-      const message = errors.email?.message;
-      if (message) setError('email', { message: errors.email?.message as string });
-      else toast.error('lỗi không xác định');
-      return;
-    }
     try {
-      const response = await forgotPassword<IForgotPassWord>(data);
+      const response = await forgotPassword<{ message: string }>(data);
       toast.success(response.message);
       setIsSend(true);
     } catch (error) {
-      const axiosError = error as IForgotPassWordError;
-      if (!isSend) setError('email', { message: axiosError.error });
-      else toast.error(axiosError.error);
+      resolveErrorResponse(error as ErrorResponse, setError);
     }
   };
 
@@ -68,9 +60,7 @@ const ForgotPassword = () => {
               <div className="relative flex justify-center items-center gap-2 mb-2">
                 <div className="absolute left-20 cursor-pointer">
                   <BaseButton.Icon
-                    onClick={() => {
-                      isSend === true ? setIsSend(false) : navigate('/login');
-                    }}
+                    onClick={() => (isSend === true ? setIsSend(false) : navigate('/login'))}
                     variant="subtle"
                     radius="lg"
                   >
@@ -107,10 +97,7 @@ const ForgotPassword = () => {
     </>
   );
 };
-
-const optionsWithForm: OptionsWithForm = {
-  mode: 'onChange',
-};
-
 // eslint-disable-next-line react-refresh/only-export-components
-export default former(ForgotPassword, forgotPasswordSchema, optionsWithForm);
+export default former(ForgotPassword, forgotPasswordSchema, {
+  mode: 'onChange',
+});
