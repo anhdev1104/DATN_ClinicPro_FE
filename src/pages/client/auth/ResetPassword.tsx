@@ -5,13 +5,13 @@ import { ForgotPassword } from './ForgotPassword';
 import yup from '@/helpers/locate';
 import { resetPassword } from '@/services/auth.service';
 import BaseInput from '@/components/base/input';
-import { toast } from 'react-toastify';
-import { IResetPassword, IResetPasswordError } from '@/types/auth.type';
 import former from '@/lib/former';
 import Form from '@/lib/Form';
 import { Text } from '@mantine/core';
 import { numberRegex } from '@/constants/regex';
 import { Button } from '@/components/button';
+import { resolveErrorResponse } from '@/helpers/utils';
+import toast from 'react-hot-toast';
 
 const resetPasswordSchema = yup.object({
   otp: yup.string().length(6).required(),
@@ -28,18 +28,18 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail }) => {
   const {
     reset,
     formState: { disabled },
+    setError,
   } = useFormContext<ResetPassword>();
   const navigate = useNavigate();
 
   const handleSendRequest = async (data: ResetPassword) => {
     try {
-      const response = await resetPassword<IResetPassword>(data);
+      const response = await resetPassword<{ message: string }>(data);
       toast.success(response.message);
       navigate('/login');
       reset();
     } catch (error) {
-      const axiosError = error as IResetPasswordError;
-      toast.error(axiosError.error);
+      resolveErrorResponse(error as ErrorResponse, setError);
     }
   };
   const handleResendOtp = async () => {

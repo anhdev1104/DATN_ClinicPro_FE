@@ -25,15 +25,15 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
   const { data: users } = useGetUsersQuery();
   const managers = useMemo(() => formatUserSelect(filterOutManagers(users?.data || [])), [users]);
   const listUser = useMemo(() => formatUserSelect(users?.data || []), [users]);
-  const [addDepartment] = useCreateDepartmentMutation();
+  const [createDepartment] = useCreateDepartmentMutation();
   const handleCreateDepartment = async (data: CreateDepartmentProps) => {
-    const result = await addDepartment(data);
-    if (result.error) {
-      resolveErrorResponse((result.error as AxiosBaseQueryError).data, setError);
-    } else {
-      toast.success(result.data?.message as string);
+    const result = await createDepartment(data);
+    if (result.data) {
+      toast.success(result.data?.message);
       handleClose();
+      return;
     }
+    resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
   };
   return (
     <Form onSubmit={handleCreateDepartment}>

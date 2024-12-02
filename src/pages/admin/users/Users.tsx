@@ -26,7 +26,7 @@ export default function User() {
     error,
   } = useGetUsersQuery({
     q: params.get('q')!,
-    limit: limit.toString(),
+    limit: params.get('limit') || limit.toString(),
     page: params.get('page')!,
   });
   const navigate = useNavigate();

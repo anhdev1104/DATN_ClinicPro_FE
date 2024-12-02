@@ -6,14 +6,14 @@ import BaseInput from '@/components/base/input';
 import { useFormContext } from 'react-hook-form';
 import yup from '@/helpers/locate';
 import { forgotPassword } from '@/services/auth.service';
-import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { IForgotPassWord, IForgotPassWordError } from '@/types/auth.type';
 import ResetPassword from './ResetPassword';
-import former, { OptionsWithForm } from '@/lib/former';
+import former from '@/lib/former';
 import Form from '@/lib/Form';
 import { ArrowLeft } from '@/components/icons';
 import { Button } from '@/components/button';
+import { resolveErrorResponse } from '@/helpers/utils';
+import toast from 'react-hot-toast';
 
 const forgotPasswordSchema = yup.object({
   email: yup.string().email().required(),
@@ -22,7 +22,7 @@ export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 
 const ForgotPassword = () => {
   const {
-    formState: { isValid, errors, disabled },
+    formState: { disabled },
     setError,
     getValues,
   } = useFormContext<ForgotPassword>();
@@ -30,20 +30,12 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
 
   const handleSendEmail = async (data: ForgotPassword) => {
-    if (!isValid) {
-      const message = errors.email?.message;
-      if (message) setError('email', { message: errors.email?.message as string });
-      else toast.error('Lỗi không xác định!');
-      return;
-    }
     try {
-      const response = await forgotPassword<IForgotPassWord>(data);
+      const response = await forgotPassword<{ message: string }>(data);
       toast.success(response.message);
       setIsSend(true);
     } catch (error) {
-      const axiosError = error as IForgotPassWordError;
-      if (!isSend) setError('email', { message: axiosError.error });
-      else toast.error(axiosError.error);
+      resolveErrorResponse(error as ErrorResponse, setError);
     }
   };
 
@@ -70,7 +62,7 @@ const ForgotPassword = () => {
               }}
               className="my-10"
             >
-              <div className="flex justify-center items-center mb-2">
+              <div className="relative flex justify-center items-center gap-2 mb-2">
                 <div>
                   <h1 className="text-third text-[25px] uppercase font-bold mb-2">Quên mật khẩu</h1>
                   <p className="ml-3 text-[13px] text-third">Nhập Email để lấy lại mật khẩu.</p>
@@ -107,9 +99,6 @@ const ForgotPassword = () => {
     </>
   );
 };
-
-const optionsWithForm: OptionsWithForm = {
+export default former(ForgotPassword, forgotPasswordSchema, {
   mode: 'onChange',
-};
-
-export default former(ForgotPassword, forgotPasswordSchema, optionsWithForm);
+});
