@@ -2,7 +2,7 @@ import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
-import former, { OptionsWithForm } from '@/lib/former';
+import former from '@/lib/former';
 import Form from '@/lib/Form';
 import { useCreateDepartmentMutation } from '@/redux/api/department';
 import { useGetUsersQuery } from '@/redux/api/users';
@@ -72,12 +72,11 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
   );
 };
 const createDepartmentSchema = yup.object({
-  name: yup.string().required(),
-  description: yup.string().optional(),
-  manager_id: yup.string().nullable().optional(),
+  name: yup.string().trim().required(),
+  description: yup.string(),
+  manager_id: yup.string().nullable(),
   users: yup.array().of(yup.string()).default([]),
 });
-const optionsWithForm: OptionsWithForm = {
+export default former(CreateDepartment, createDepartmentSchema, {
   mode: 'onChange',
-};
-export default former(CreateDepartment, createDepartmentSchema, optionsWithForm);
+});

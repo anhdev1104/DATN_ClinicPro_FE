@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ChevronRightIcon,
   GroupIcon,
@@ -43,9 +42,9 @@ const dumpCategory = [
   {
     id: 3,
     categoryName: 'Bệnh nhân',
-    path: '',
-    icon: GroupIcon,
-    pathActive: [''],
+    path: '/patient',
+    icon: Patient,
+    pathActive: ['/patient'],
   },
   {
     id: 4,
@@ -96,17 +95,10 @@ const dumpCategory = [
     icon: SpecialtiesIcon,
     pathActive: ['/specialties'],
   },
-  {
-    id: 10,
-    categoryName: 'Bệnh nhân',
-    path: '/patient',
-    icon: Patient,
-    pathActive: ['/patient'],
-  },
 ];
 
 const Sidebar = ({ show }: { show: boolean }) => {
-  const [categoryManagement, setCategoryManagement] = useState<ICategoryManagement[]>(dumpCategory);
+  const [categoryManagement] = useState<ICategoryManagement[]>(dumpCategory);
   const [tabActive, setTabActive] = useState<number>(1);
   const navigate = useNavigate();
   const { pathname } = useLocation();

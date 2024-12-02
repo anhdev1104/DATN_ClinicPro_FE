@@ -122,7 +122,7 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
               medicalRecords?.map((record, index) => (
                 <div
                   key={index}
-                  className={`py-4 text-black flex items-center justify-between w-full text-left cursor-pointer ${index % 2 === 1 ? ' bg-[#f5f5f5]' : 'bg-white'} px-2`}
+                  className={`py-4 text-black flex items-center justify-between w-full text-left cursor-pointer ${index % 2 === 1 ? ' bg-[#f5f5f5]' : 'bg-white'} px-2 transition-all hover:bg-yellow-50/45`}
                 >
                   <div className="flex-[0_0_21%]">{record.id}</div>
                   <div className="flex-[0_0_11%] font-semibold">{record.diagnosis}</div>

@@ -42,9 +42,10 @@ const Formik = <Schema extends yup.AnyObjectSchema, T extends FieldValues = yup.
   const { loading } = useSelector(state => state.global);
   const [disabled, setDisabled] = useState(false);
   const form = useForm({
-    disabled,
     ...options,
+    disabled,
     resolver: schema && yupResolver(schema),
+    defaultValues: schema ? options?.defaultValues || schema.getDefault() : options?.defaultValues,
   });
 
   useEffect(() => {

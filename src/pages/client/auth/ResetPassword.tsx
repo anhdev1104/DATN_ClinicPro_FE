@@ -9,9 +9,9 @@ import { toast } from 'react-toastify';
 import { IResetPassword, IResetPasswordError } from '@/types/auth.type';
 import former from '@/lib/former';
 import Form from '@/lib/Form';
-import BaseButton from '@/components/base/button';
 import { Text } from '@mantine/core';
 import { numberRegex } from '@/constants/regex';
+import { Button } from '@/components/button';
 
 const resetPasswordSchema = yup.object({
   otp: yup.string().length(6).required(),
@@ -21,16 +21,16 @@ const resetPasswordSchema = yup.object({
 export type ResetPassword = yup.InferType<typeof resetPasswordSchema>;
 interface ResetPasswordProps {
   handleSendEmail: (data: ForgotPassword) => void;
-  email: string;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
+const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail }) => {
   const {
     reset,
     formState: { disabled },
   } = useFormContext<ResetPassword>();
   const navigate = useNavigate();
+
   const handleSendRequest = async (data: ResetPassword) => {
     try {
       const response = await resetPassword<IResetPassword>(data);
@@ -43,7 +43,10 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
     }
   };
   const handleResendOtp = async () => {
-    if (!disabled) handleSendEmail({ email });
+    if (!disabled) {
+      handleSendEmail({ email: localStorage.getItem('email-reset') as string });
+      localStorage.removeItem('email-reset');
+    }
   };
 
   return (
@@ -69,14 +72,19 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
           <BaseInput.Password
             autoComplete="password"
             name="password"
-            placeholder="nhập mật khẩu mới"
+            placeholder="Nhập mật khẩu mới"
             className="my-2"
           />
-          <BaseButton disabled={disabled} loading={disabled} type="submit">
-            Gửi
-          </BaseButton>
+          <Button
+            type="submit"
+            className="bg-third rounded-md w-full mt-3 h-[40px]"
+            isLoading={disabled}
+            disabled={disabled}
+          >
+            Đặt lại mật khẩu
+          </Button>
           <Text size="sm" className="text-center select-none">
-            tôi chưa nhận được mã
+            Bạn muốn gửi lại mã OTP?
             <span onClick={handleResendOtp} className="text-blue-600 hover:underline cursor-pointer mx-1">
               gửi lại
             </span>

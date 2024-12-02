@@ -10,8 +10,8 @@ const ModalHeaderUser = forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElemen
 
   const handleLogoutUser = async () => {
     const res = await logoutService();
-    dispatch(authLogout());
     toast.success(res.message);
+    dispatch(authLogout());
   };
   return (
     <div

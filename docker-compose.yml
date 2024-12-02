@@ -17,12 +17,3 @@ services:
       - .:/datn-clinicpro
       - /datn-clinicpro/node_modules
     command: yarn dev
-
-  # backend:
-  #   image: postgres:15
-  #   ports:
-  #     - '5432:5432'
-  #   environment:
-  #     POSTGRES_USER: admin
-  #     POSTGRES_PASSWORD: password
-  #     POSTGRES_DB: mydb

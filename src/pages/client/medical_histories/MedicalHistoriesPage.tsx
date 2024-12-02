@@ -56,7 +56,7 @@ const MedicalHistoriesPage = () => {
         <div>{currentDate}</div>
       </div>
       <div className="mb-10 flex justify-between">
-        <div className="text-[25px] font-bold ">Lịch sử bệnh án:</div>
+        <div className="text-[25px] font-bold ">Lịch sử khám bệnh:</div>
         <div className="flex gap-3">
           <button>
             <CompareArrows className="!transform !rotate-90 size-[25px] hover:text-primaryAdmin cursor-pointer" />

@@ -1,6 +1,6 @@
 import { Avatar, Modal, Pagination, Text } from '@mantine/core';
 import { useGetDepartmentsQuery } from '@/redux/api/department';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { DepartmentProps, ManagerProps } from '@/types/department.type';
 import Table from '@/components/table/Table';
 import ActionWithRow from '@/components/table/TableAction';
@@ -12,29 +12,25 @@ import { IconPlus } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
 import { useState } from 'react';
 import BaseInput from '@/components/base/input';
-import { useQueryParams } from '@/hooks/useQueryParams';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import dayjs from 'dayjs';
 
 export default function Department() {
   const navigate = useNavigate();
-  const [params, queryParams] = useQueryParams();
+  const [params, setParams] = useSearchParams();
   const [modalNew, handleModalNew] = useDisclosure(false);
   const [limit] = useState(5);
-  const {
-    data: departments,
-    isSuccess,
-    isFetching,
-  } = useGetDepartmentsQuery({
-    q: params.q,
-    limit: params.limit || limit,
-    page: params.page,
+  const { data: departments, isFetching } = useGetDepartmentsQuery({
+    q: params.get('q')!,
+    limit: params.get('limit') || limit.toString(),
+    page: params.get('page')!,
   });
   const handleSearch = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value) queryParams.set('q', value);
-    else queryParams.remove('q');
-    queryParams.set('page', 1);
+    if (value) params.set('q', value);
+    else params.delete('q');
+    params.set('page', '1');
+    setParams(params.toString());
   }, 500);
   const columns = useColumn<DepartmentProps>([
     {
@@ -56,9 +52,7 @@ export default function Department() {
       cell: ({ value, original }) => (
         <>
           <Avatar.Group>
-            {original.users.slice(0, 3).map(user => (
-              <Avatar key={user.id} src={user.avatar} />
-            ))}
+            {original.users?.slice(0, 3).map(user => <Avatar key={user.id} src={user.avatar} />)}
             <Avatar>{value}</Avatar>
           </Avatar.Group>
         </>
@@ -104,7 +98,7 @@ export default function Department() {
           manualFiltering
           filterItem={
             <BaseInput
-              defaultValue={queryParams.get('q')}
+              defaultValue={params.get('q') ?? ''}
               onChange={handleSearch}
               size="xs"
               radius="md"
@@ -113,19 +107,20 @@ export default function Department() {
           }
           manualPagination
           pagination={
-            Math.round((departments?.total || limit) / limit) > 1 && (
-              <Pagination
-                total={Math.round((departments?.total || limit) / limit)}
-                onChange={value => queryParams.set('page', value.toString())}
-                radius="md"
-                defaultValue={Number(params.page) || 1}
-                className="w-full flex justify-center py-2"
-              />
-            )
+            <Pagination
+              total={Number(departments?.totalPage) || 1}
+              onChange={value => {
+                params.set('page', value.toString());
+                setParams(params.toString());
+              }}
+              radius="md"
+              defaultValue={Number(params.get('page')) || 1}
+              className="w-full flex justify-center py-2"
+            />
           }
           onRowClick={data => navigate(`/departments/${data.id}`)}
           isFetching={isFetching}
-          data={isSuccess ? departments.data : []}
+          data={departments?.data || []}
           columns={columns}
           toolbar={
             <BaseButton.Icon onClick={handleModalNew.open} variant="subtle" radius="lg">

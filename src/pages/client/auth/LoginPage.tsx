@@ -15,18 +15,20 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import PosterAuth from './components/PosterAuth';
 import useToggle from '@/hooks/useToggle';
+import { emailRegex, passwordRegex } from '@/constants/regex';
 
 const schema = yup.object({
   email: yup
     .string()
     .trim()
     .required('Trường này là bắt buộc !')
-    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'Email không dúng định dạng !' }),
-  password: yup.string().trim().required('Mật khẩu không được để trống !').min(6, 'Mật khẩu ít nhất 6 ký tự trở lên !'),
-  // .matches(
-  //   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
-  //   'Mật khẩu phải chứa ít nhất một số và một ký tự đặc biệt !'
-  // )
+    .matches(emailRegex, { message: 'Email không đúng định dạng !' }),
+  password: yup
+    .string()
+    .trim()
+    .required('Mật khẩu không được để trống !')
+    .min(8, 'Mật khẩu ít nhất 8 ký tự trở lên !')
+    .matches(passwordRegex, { message: 'Mật khẩu ít nhất 1 chữ cái viết hoa và 1 ký tự đặt biệt!' }),
 });
 
 const LoginPage = () => {
@@ -81,10 +83,10 @@ const LoginPage = () => {
               </ButtonSocial>
               <div className="w-full flex items-center gap-2">
                 <div className="h-[1px] w-full bg-gray-200"></div>
-                <h3 className="text-dark opacity-70">or</h3>
+                <h3 className="text-dark opacity-70">hoặc</h3>
                 <div className="h-[1px] w-full bg-gray-200"></div>
               </div>
-              <form className="w-full mb-3 flex flex-col" onSubmit={handleSubmit(handleLogin)}>
+              <form className="w-full mb-3 flex flex-col" autoComplete="off" onSubmit={handleSubmit(handleLogin)}>
                 <Field>
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -102,7 +104,7 @@ const LoginPage = () => {
                     name="password"
                     type={show ? 'text' : 'password'}
                     className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
-                    placeholder="Mật khẩu tối thiểu 6 kí tự ..."
+                    placeholder="Mật khẩu tối thiểu 8 kí tự ..."
                     control={control}
                   />
                   <div className="text-gray-400 top-8 right-4 cursor-pointer absolute" onClick={handleToggle}>
@@ -110,8 +112,8 @@ const LoginPage = () => {
                   </div>
                   <MessageForm error={errors.password?.message} />
                 </Field>
-                <Link to="/forgot-password" className="text-end hover:text-blue-600 hover:underline">
-                  quên mật khẩu
+                <Link to="/forgot-password" className="text-end hover:text-third hover:underline">
+                  Quên mật khẩu
                 </Link>
                 <Button
                   type="submit"

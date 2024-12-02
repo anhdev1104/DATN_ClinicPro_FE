@@ -1,4 +1,6 @@
 import { ROLE } from '@/constants/define';
+import { DepartmentProps } from '@/types/department.type';
+import { IRole } from '@/types/role.type';
 import { IUserInfo } from '@/types/user.type';
 import { clsx, type ClassValue } from 'clsx';
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form';
@@ -31,7 +33,7 @@ export const formatEndPoint = (endPoint: string, queryKey?: queryKey | void) => 
   return endPoint;
 };
 export const filterOutManagers = <T extends any[]>(data: T) => {
-  return data.filter(fil => fil.role.name === ROLE.MANAGE);
+  return data.filter(fil => fil?.role?.name === ROLE.MANAGE);
 };
 
 export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
@@ -40,7 +42,7 @@ export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
 ) => {
   const { errors, message } = errorResolve;
   if (!errors && !message) {
-    toast.error('lỗi hệ thống vui lòng đợi trong giây lát');
+    toast.error('Lỗi hệ thống vui lòng đợi trong giây lát.');
     return;
   }
   if (message) toast.error(message);
@@ -52,9 +54,21 @@ export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
 
 export const formatUserSelect = (users: IUserInfo[]) => {
   return users.map(user => ({
-    label: user.user_info.fullname,
-    value: user.id,
-    avatar: user.user_info?.avatar,
-    email: user.email,
+    label: user?.user_info?.fullname || '',
+    value: user?.id,
+    avatar: user?.user_info?.avatar,
+    email: user?.email,
+  }));
+};
+export const formatDepartmentSelect = (department: DepartmentProps[]) => {
+  return department.map(department => ({
+    label: department?.name,
+    value: department?.id,
+  }));
+};
+export const formatRoleSelect = (roles: IRole[]) => {
+  return roles.map(role => ({
+    label: role?.name || '',
+    value: role?.id,
   }));
 };
