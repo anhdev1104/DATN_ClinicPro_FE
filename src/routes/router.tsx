@@ -33,12 +33,14 @@ const Package = React.lazy(() => import('@/pages/admin/package/Package'));
 const User = React.lazy(() => import('@/pages/admin/users/Users'));
 const GetUser = React.lazy(() => import('@/pages/admin/users/GetUser'));
 const UpdateUser = React.lazy(() => import('@/pages/admin/users/UpdateUser'));
-const CreateUser = React.lazy(() => import('@/pages/admin/users/CreateUser'));
 const MedicalHistories = React.lazy(() => import('@/pages/admin/medical_histories/MedicalHistories'));
 const PrivacyPage = React.lazy(() => import('@/pages/client/privacy/privacyPage'));
 const Specialties = React.lazy(() => import('@/pages/admin/specialties/Specialties'));
 const AddSpecialties = React.lazy(() => import('@/pages/admin/specialties/components/AddSpecialties'));
 const EditSpecialties = React.lazy(() => import('@/pages/admin/specialties/components/EditSpecialties'));
+const Patients = React.lazy(() => import('@/pages/admin/patient/Patients'));
+const DetailPatient = React.lazy(() => import('@/pages/admin/patient/components/DetailPatient'));
+const AddPatient = React.lazy(() => import('@/pages/admin/patient/components/AddPatient'));
 
 type IRouter = RouteProps & {
   title: string;
@@ -163,11 +165,6 @@ const adminRouter: IRouter[] = [
     title: 'Danh Sách Người Dùng',
   },
   {
-    path: '/users/add',
-    element: <CreateUser />,
-    title: 'Danh Sách Người Dùng',
-  },
-  {
     path: '/users/:userId',
     element: <GetUser />,
     title: 'Chi Tiết Người Dùng',
@@ -191,6 +188,21 @@ const adminRouter: IRouter[] = [
     path: '/edit-specialties/:id',
     element: <EditSpecialties />,
     title: 'Trang chuyên khoa',
+  },
+  {
+    path: '/patient',
+    element: <Patients />,
+    title: 'Trang bệnh nhân',
+  },
+  {
+    path: '/patient/:id',
+    element: <DetailPatient />,
+    title: 'Trang bệnh nhân',
+  },
+  {
+    path: '/add-patient',
+    element: <AddPatient />,
+    title: 'Trang bệnh nhân',
   },
 ];
 

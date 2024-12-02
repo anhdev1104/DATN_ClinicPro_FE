@@ -54,6 +54,7 @@ const AddPackage = ({ navigate }: ListPackage) => {
         SetSpecialty(convertToOptions(specialtyRes));
       } catch (error) {
         toast.error('Không thể tải dữ liệu');
+        return error;
       } finally {
         setLoading(false);
       }
@@ -78,10 +79,8 @@ const AddPackage = ({ navigate }: ListPackage) => {
     const res = await createPackage(formData);
     if (res.errors) {
       toast.error('Thêm gói khám thất bại');
-      console.log(res.message);
     } else {
       toast.success('Thêm gói khám thành công');
-      console.log(res.data);
       reset();
       setImageUrl('');
     }

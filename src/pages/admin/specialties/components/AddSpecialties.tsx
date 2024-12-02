@@ -29,8 +29,12 @@ const AddSpecialties = () => {
   const onSubmit = async (data: any) => {
     try {
       const response = await createSpecialties(data);
-      toast.success(response.message, { position: 'top-right' });
-      reset();
+      if (response.errors) {
+        toast.error(response.message, { position: 'top-right' });
+      } else {
+        toast.success(response.data.message, { position: 'top-right' });
+        reset();
+      }
     } catch (error) {
       return error;
     }

@@ -46,14 +46,14 @@ const TableToolbar = <T,>({ table, toolbar, filterItem }: TableToolbarProps<T>) 
                       <BaseIcon
                         icon={IconCheck}
                         className={column.getIsVisible() ? '' : 'text-transparent'}
-                        size="xs"
+                        size="xxs"
                       />
                     }
                     key={column.id}
-                    className="capitalize"
+                    className="capitalize overflow-hidden"
                   >
-                    <Text lineClamp={1} className="text-sm text-gray-700">
-                      {/* {column.columnDef.header.} */}
+                    <Text lineClamp={1} fw={400} size="xs" className="text-gray-700">
+                      {column.id}
                     </Text>
                   </Menu.Item>
                 );

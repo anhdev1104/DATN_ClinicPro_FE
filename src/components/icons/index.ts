@@ -31,3 +31,4 @@ export { default as ArrowUpIcon } from '@mui/icons-material/KeyboardArrowUp';
 export { default as SpecialtiesIcon } from '@mui/icons-material/Diversity1';
 export { default as StarIcon } from '@mui/icons-material/Star';
 export { default as CalendarMonthIcon } from '@mui/icons-material/CalendarMonth';
+export { default as Patient } from '@mui/icons-material/SupervisedUserCircle';

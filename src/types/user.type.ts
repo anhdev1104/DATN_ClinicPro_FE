@@ -1,14 +1,26 @@
-import { STATUS } from '@/constants/define';
+import { GENDER, STATUS } from '@/constants/define';
 import { IRole } from './role.type';
-import { IInfo } from './auth.type';
 
-export interface IUserProfile extends IInfo {
-  department_id?: string | null;
+export interface IUserProfile {
+  id: string;
+  department_id?: string;
+  fullname: string;
+  address: string | null;
+  avatar?: string;
+  phone_number?: string | null;
+  gender: `${GENDER}`;
+  dob: string | null;
+  user_id: string;
+  created_at: Date;
+  updated_at: Date;
+  identity_card?: string | null;
+  identity_card_id?: string | null;
 }
+
 export interface IUserInfo {
   id: string;
   email: string;
-  status: (typeof STATUS)[keyof typeof STATUS];
+  status: `${STATUS}`;
   role: IRole;
   user_info: IUserProfile;
 }

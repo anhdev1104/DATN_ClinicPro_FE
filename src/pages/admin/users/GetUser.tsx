@@ -1,32 +1,38 @@
+import BaseIcon from '@/components/base/BaseIcon';
+import BaseButton from '@/components/base/button';
+import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
-import { useGetUsersQuery } from '@/redux/api/users';
+import { useGetUserQuery } from '@/redux/api/users';
 import { Avatar, Text } from '@mantine/core';
-import { useParams } from 'react-router-dom';
+import { IconPencil } from '@tabler/icons-react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const GetUser = () => {
+export default function GetUser() {
   const { userId } = useParams();
-  const { user } = useGetUsersQuery(undefined, {
-    selectFromResult: result => ({
-      user: result.data?.data.find(data => data.id === userId),
-    }),
-  });
+  const navigate = useNavigate();
+  const { data: user, error } = useGetUserQuery(userId as string);
   return (
     <>
       {user ? (
         <div className="bg-white rounded-3xl w-full shadow-xl p-4 overflow-hidden">
           <section className="w-full">
             <div className="flex flex-col">
-              <div className="sm:w-[80%] xs:w-[90%] mx-auto flex m-4 space-x-4">
-                <Avatar
-                  className="outline outline-2 outline-offset-2 outline-blue-500"
-                  radius="sm"
-                  size="xl"
-                  src={user?.user_info.avatar}
-                  alt="User Profile"
-                />
-                <Text lineClamp={1} size="xl" className="font-mono text-2xl">
-                  {user?.user_info.fullname}
-                </Text>
+              <div className="flex justify-between">
+                <div className="sm:w-[80%] xs:w-[90%] mx-auto flex m-4 space-x-4">
+                  <Avatar
+                    className="outline outline-2 outline-offset-2 outline-blue-500"
+                    radius="sm"
+                    size="xl"
+                    src={user?.user_info?.avatar}
+                    alt="User Profile"
+                  />
+                  <Text lineClamp={1} size="xl" className="font-mono text-2xl">
+                    {user?.user_info?.fullname}
+                  </Text>
+                </div>
+                <BaseButton onClick={() => navigate('edit')} leftSection={<BaseIcon icon={IconPencil} />} size="xs">
+                  Cập Nhật
+                </BaseButton>
               </div>
 
               <div className="xl:w-[80%] lg:w-[90%] md:w-[90%] sm:w-[92%] xs:w-[90%] mx-auto flex flex-col gap-4 items-center relative lg:-top-8 md:-top-6 sm:-top-4 xs:-top-4">
@@ -40,15 +46,15 @@ const GetUser = () => {
                         </div>
                         <div className="flex flex-col py-3">
                           <dt className="mb-1 text-gray-500 md:text-lg ">Role</dt>
-                          <dd className="text-lg font-semibold">{user?.role.name || 'Không'}</dd>
+                          <dd className="text-lg font-semibold">{user?.role?.name || 'Không'}</dd>
                         </div>
                         <div className="flex flex-col py-3">
                           <dt className="mb-1 text-gray-500 md:text-lg ">Date Of Birth</dt>
-                          <dd className="text-lg font-semibold">{user?.user_info.dob || 'Không'}</dd>
+                          <dd className="text-lg font-semibold">{user?.user_info?.dob || 'Không'}</dd>
                         </div>
                         <div className="flex flex-col py-3">
                           <dt className="mb-1 text-gray-500 md:text-lg ">Giới Tính</dt>
-                          <dd className="text-lg font-semibold">{user?.user_info.gender || 'Không'}</dd>
+                          <dd className="text-lg font-semibold">{user?.user_info?.gender || 'Không'}</dd>
                         </div>
                       </dl>
                     </div>
@@ -61,11 +67,11 @@ const GetUser = () => {
 
                         <div className="flex flex-col pt-3">
                           <dt className="mb-1 text-gray-500 md:text-lg ">Phone Number</dt>
-                          <dd className="text-lg font-semibold">{user?.user_info.phone_number || 'Không'}</dd>
+                          <dd className="text-lg font-semibold">{user?.user_info?.phone_number || 'Không'}</dd>
                         </div>
                         <div className="flex flex-col pt-3">
                           <dt className="mb-1 text-gray-500 md:text-lg ">Địa Chỉ</dt>
-                          <dd className="text-lg font-semibold">{user?.user_info.address || 'Không'}</dd>
+                          <dd className="text-lg font-semibold">{user?.user_info?.address || 'Không'}</dd>
                         </div>
                       </dl>
                     </div>
@@ -90,9 +96,8 @@ const GetUser = () => {
           </section>
         </div>
       ) : (
-        <NotFoundPage title="không tim thấy người dùng" />
+        <NotFoundPage title={(error as AxiosBaseQueryError)?.data?.message} />
       )}
     </>
   );
-};
-export default GetUser;
+}

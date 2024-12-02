@@ -16,22 +16,26 @@ import { useQueryParams } from '@/hooks/useQueryParams';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import dayjs from 'dayjs';
 
-const Department = () => {
+export default function Department() {
+  const navigate = useNavigate();
   const [params, queryParams] = useQueryParams();
-  const debounced = useDebouncedCallback(value => {
-    queryParams.set('q', value);
-  }, 1000);
   const [modalNew, handleModalNew] = useDisclosure(false);
   const [limit] = useState(5);
-  const { data, isSuccess, isFetching } = useGetDepartmentsQuery({
-    q: params.q || '',
+  const {
+    data: departments,
+    isSuccess,
+    isFetching,
+  } = useGetDepartmentsQuery({
+    q: params.q,
     limit: params.limit || limit,
     page: params.page,
   });
-  const navigate = useNavigate();
-  const handleRowClick = (data: DepartmentProps) => {
-    navigate(data.id);
-  };
+  const handleSearch = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value) queryParams.set('q', value);
+    else queryParams.remove('q');
+    queryParams.set('page', 1);
+  }, 500);
   const columns = useColumn<DepartmentProps>([
     {
       key: 'name',
@@ -49,13 +53,13 @@ const Department = () => {
     {
       key: 'users_count',
       label: 'Nhân viên',
-      cell: ({ value }) => (
+      cell: ({ value, original }) => (
         <>
           <Avatar.Group>
-            <Avatar src="image.png" />
-            <Avatar src="image.png" />
-            <Avatar src="image.png" />
-            <Avatar>+{value}</Avatar>
+            {original.users.slice(0, 3).map(user => (
+              <Avatar key={user.id} src={user.avatar} />
+            ))}
+            <Avatar>{value}</Avatar>
           </Avatar.Group>
         </>
       ),
@@ -99,13 +103,19 @@ const Department = () => {
           highlightOnHover
           manualFiltering
           filterItem={
-            <BaseInput onChange={e => debounced(e.target.value)} size="xs" radius="md" placeholder="tìm kiếm..." />
+            <BaseInput
+              defaultValue={queryParams.get('q')}
+              onChange={handleSearch}
+              size="xs"
+              radius="md"
+              placeholder="tìm kiếm..."
+            />
           }
           manualPagination
           pagination={
-            Math.round((data?.total || limit) / limit) > 1 && (
+            Math.round((departments?.total || limit) / limit) > 1 && (
               <Pagination
-                total={Math.round((data?.total || limit) / limit)}
+                total={Math.round((departments?.total || limit) / limit)}
                 onChange={value => queryParams.set('page', value.toString())}
                 radius="md"
                 defaultValue={Number(params.page) || 1}
@@ -113,9 +123,9 @@ const Department = () => {
               />
             )
           }
-          onRowClick={handleRowClick}
+          onRowClick={data => navigate(`/departments/${data.id}`)}
           isFetching={isFetching}
-          data={isSuccess ? data.data : []}
+          data={isSuccess ? departments.data : []}
           columns={columns}
           toolbar={
             <BaseButton.Icon onClick={handleModalNew.open} variant="subtle" radius="lg">
@@ -136,5 +146,4 @@ const Department = () => {
       </div>
     </>
   );
-};
-export default Department;
+}

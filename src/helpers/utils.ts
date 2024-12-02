@@ -1,5 +1,5 @@
 import { ROLE } from '@/constants/define';
-import { emailRegex } from '@/constants/regex';
+import { IUserInfo } from '@/types/user.type';
 import { clsx, type ClassValue } from 'clsx';
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -34,13 +34,9 @@ export const filterOutManagers = <T extends any[]>(data: T) => {
   return data.filter(fil => fil.role.name === ROLE.MANAGE);
 };
 
-export const validateEmail = (email: string) => {
-  return String(email).toLowerCase().match(emailRegex);
-};
-
 export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
   errorResolve: ErrorResponse,
-  setError: UseFormSetError<T>,
+  setError?: UseFormSetError<T>,
 ) => {
   const { errors, message } = errorResolve;
   if (!errors && !message) {
@@ -48,8 +44,17 @@ export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
     return;
   }
   if (message) toast.error(message);
-  if (errors) {
+  if (errors && setError) {
     const errorName = Object.keys(errors) as (keyof T)[];
     errorName.length && setError(errorName[0] as 'root' | Path<T>, { message: errors[errorName[0]][0] });
   }
+};
+
+export const formatUserSelect = (users: IUserInfo[]) => {
+  return users.map(user => ({
+    label: user.user_info.fullname,
+    value: user.id,
+    avatar: user.user_info?.avatar,
+    email: user.email,
+  }));
 };

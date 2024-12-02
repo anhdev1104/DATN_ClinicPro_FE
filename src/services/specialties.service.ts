@@ -23,7 +23,7 @@ export const getSpecialtyById = async (id: string | undefined) => {
 export const createSpecialties = async (data: ISpecialties) => {
   try {
     const response = await http.post('/specialties', data);
-    return response.data;
+    return response;
   } catch (error) {
     return error;
   }

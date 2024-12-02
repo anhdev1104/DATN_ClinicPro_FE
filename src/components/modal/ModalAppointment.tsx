@@ -70,14 +70,17 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
 
     (async () => {
       const res = await addAppointments(dataAppointment);
-      if (res.success === false) {
-        toast.error(res.errors[Object.keys(res.errors)[0]]?.[0]);
-        return;
+      console.log('🚀 ~ res:', res);
+      console.log('🚀 ~ res:', res.message);
+      // if (res.success === false) {
+      //   toast.error(res.errors[Object.keys(res.errors)[0]]?.[0]);
+      //   return;
+      // }
+      if (res.error) {
+        toast.error(res.message);
       }
       toast.success('Đăng ký lịch hẹn thành công !');
-      reset({
-        gender: GENDER.MALE,
-      });
+      reset();
     })();
   };
 

@@ -52,6 +52,7 @@ const EditPackage = () => {
         SetSpecialty(convertToOptions(specialtyRes));
       } catch (error) {
         toast.error('Không thể tải dữ liệu, vui lòng thử lại');
+        return error;
       } finally {
         setLoading(false);
       }
@@ -81,8 +82,8 @@ const EditPackage = () => {
           setValue('specialty_id', selectedPackage.specialty_id);
         }
       } catch (error) {
-        console.error(error);
         toast.error('Không thể tải dữ liệu gói khám');
+        return error;
       }
     };
     fetchPackage();
@@ -100,20 +101,19 @@ const EditPackage = () => {
     formData.append('content', data.content || packageData?.content || '');
     formData.append('image', data.image || packageData?.image || '');
     formData.append('category_id', data.category_id || packageData?.category_id || '');
-    formData.append('  specialty_id', data.specialty_id || packageData?.specialty_id || '');
+    formData.append('specialty_id', data.specialty_id || packageData?.specialty_id || '');
 
     try {
       const res = await updatePackage(String(id), formData);
       if (res.errors) {
         toast.error('Cập nhật gói khám thất bại');
-        console.error(res.message);
       } else {
         toast.success('Cập nhật gói khám thành công');
         navigate('/packages');
       }
     } catch (error) {
       toast.error('Lỗi xảy ra trong quá trình cập nhật');
-      console.error(error);
+      return error;
     } finally {
       setLoading(false);
       reset();
