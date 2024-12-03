@@ -60,7 +60,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
         <div className="relative flex justify-center items-center gap-2 mb-2">
           <div className="text-center">
             <h1 className="text-third text-[25px] uppercase font-bold mb-2">Reset Mật khẩu</h1>
-            <p className="ml-3 text-[13px] text-third">Nhập Otp và mật khẩu mới để đặt lại mật khẩu</p>
+            <p className="ml-3 text-[13px] text-third">Nhập OTP và mật khẩu mới để đặt lại mật khẩu</p>
           </div>
         </div>
         <Form onSubmit={handleSendRequest} className="w-3/4 flex flex-col mx-auto space-y-2">
