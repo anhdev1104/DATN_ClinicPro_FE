@@ -49,26 +49,30 @@ const ForgotPassword = () => {
                 <img src="/images/logo.webp" alt="logo-clinicpro" className="size-3/4 object-cover" />
                 <h1 className="text-[#116aef] font-bold text-[18px]">ClinicPro</h1>
               </Link>
-              <div className="flex gap-2 items-center cursor-pointer" onClick={() => navigate(-1)}>
+              <div
+                className="flex gap-2 items-center cursor-pointer"
+                onClick={() => (isSend ? setIsSend(false) : navigate(-1))}
+              >
                 <ArrowLeft className="!size-[16px] !text-dark mt-[2px]" />
                 <p className="text-dark text-[16px]">Quay lại</p>
               </div>
             </div>
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0.7 }}
-              animate={{
-                scale: 1,
-                opacity: 1,
-              }}
-              className="my-10"
-            >
-              <div className="relative flex justify-center items-center gap-2 mb-2">
-                <div className="text-center">
-                  <h1 className="text-third text-[25px] uppercase font-bold mb-2">Reset Mật khẩu</h1>
-                  <p className="ml-3 text-[13px] text-third">Nhập Otp và mật khẩu mới để đặt lại mật khẩu</p>
+            {!isSend ? (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.7 }}
+                animate={{
+                  scale: 1,
+                  opacity: 1,
+                }}
+                className="my-10"
+              >
+                <div className="relative flex justify-center items-center gap-2 mb-2">
+                  <div className="text-center">
+                    <h1 className="text-third text-[25px] uppercase font-bold mb-2">Quên Mật khẩu</h1>
+                    <p className="ml-3 text-[13px] text-third">Nhập Email để lấy lại mật khẩu</p>
+                  </div>
                 </div>
-              </div>
-              {!isSend ? (
+
                 <Form onSubmit={handleSendEmail} className="w-3/4 flex flex-col mx-auto space-y-2">
                   <BaseInput.Group
                     autoComplete="email"
@@ -87,10 +91,10 @@ const ForgotPassword = () => {
                     Gửi
                   </Button>
                 </Form>
-              ) : (
-                <ResetPassword handleSendEmail={handleSendEmail} email={getValues('email')} />
-              )}
-            </motion.div>
+              </motion.div>
+            ) : (
+              <ResetPassword handleSendEmail={handleSendEmail} email={getValues('email')} />
+            )}
           </div>
           <PosterAuth />
         </div>
