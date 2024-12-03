@@ -7,17 +7,17 @@ import { yupResolver } from '@hookform/resolvers/yup';
 const medicationSchema = yup.object().shape({
   medication_id: yup.string(),
   instructions: yup.string(),
-  quantity: yup.number().positive('Liều lượng phải là số dương').integer('Liều lượng phải là số nguyên'),
-  duration: yup.number().positive('Thời gian sử dụng phải là số dương').integer('Thời gian sử dụng phải là số nguyên'),
+  quantity: yup.number(),
+  duration: yup.number(),
 });
 
 const prescriptionSchema = yup.object().shape({
-  patient_id: yup.string(),
+  patient_id: yup.string().required('Bệnh nhân là trường bắt buộc'),
   user_id: yup.string(),
   name: yup.string().required('Tên đơn thuốc là bắt buộc'),
   description: yup.string(),
-  medications: yup.array().of(medicationSchema).required('Danh sách thuốc là bắt buộc'),
-  isCategory: yup.string(),
+  medications: yup.array().of(medicationSchema),
+  isCategory: yup.string().required('Cần có ít nhất một thuốc trong đơn thuốc'),
 });
 
 type Schema = yup.InferType<typeof prescriptionSchema>;
