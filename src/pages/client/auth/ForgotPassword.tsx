@@ -6,14 +6,14 @@ import BaseInput from '@/components/base/input';
 import { useFormContext } from 'react-hook-form';
 import yup from '@/helpers/locate';
 import { forgotPassword } from '@/services/auth.service';
-import { useState } from 'react';
-import ResetPassword from './ResetPassword';
+import { useRef, useState } from 'react';
 import former from '@/lib/former';
 import Form from '@/lib/Form';
 import { ArrowLeft } from '@/components/icons';
 import { Button } from '@/components/button';
 import { resolveErrorResponse } from '@/helpers/utils';
 import toast from 'react-hot-toast';
+import ResetPassword from './ResetPassword';
 
 const forgotPasswordSchema = yup.object({
   email: yup.string().email().required(),
@@ -24,18 +24,18 @@ const ForgotPassword = () => {
   const {
     formState: { disabled },
     setError,
-    getValues,
   } = useFormContext<ForgotPassword>();
   const [isSend, setIsSend] = useState(false);
   const navigate = useNavigate();
-
+  const emailRef = useRef<string>('');
   const handleSendEmail = async (data: ForgotPassword) => {
     try {
+      emailRef.current = data.email;
       const response = await forgotPassword<{ message: string }>(data);
       toast.success(response.message);
       setIsSend(true);
-    } catch (error) {
-      resolveErrorResponse(error as ErrorResponse, setError);
+    } catch (errors) {
+      resolveErrorResponse(errors as ErrorResponse, setError);
     }
   };
 
@@ -93,7 +93,7 @@ const ForgotPassword = () => {
                 </Form>
               </motion.div>
             ) : (
-              <ResetPassword handleSendEmail={handleSendEmail} email={getValues('email')} />
+              <ResetPassword handleSendEmail={handleSendEmail} email={emailRef.current} />
             )}
           </div>
           <PosterAuth />

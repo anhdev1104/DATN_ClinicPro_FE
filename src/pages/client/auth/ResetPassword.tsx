@@ -27,18 +27,15 @@ interface ResetPasswordProps {
 // eslint-disable-next-line react-refresh/only-export-components
 const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
   const {
-    reset,
     formState: { disabled },
     setError,
   } = useFormContext<ResetPassword>();
   const navigate = useNavigate();
-
   const handleSendRequest = async (data: ResetPassword) => {
     try {
       const response = await resetPassword<{ message: string }>(data);
       toast.success(response.message);
       navigate('/login');
-      reset();
     } catch (errors) {
       resolveErrorResponse(errors as ErrorResponse, setError);
     }
