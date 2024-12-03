@@ -108,7 +108,7 @@ export default function Department() {
           manualPagination
           pagination={
             <Pagination
-              total={Number(departments?.totalPage) || 1}
+              total={Number(departments?.total_pages) || 1}
               onChange={value => {
                 params.set('page', value.toString());
                 setParams(params.toString());

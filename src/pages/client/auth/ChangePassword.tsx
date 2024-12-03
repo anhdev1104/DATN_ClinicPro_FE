@@ -3,23 +3,20 @@ import BaseInput from '@/components/base/input';
 import former from '@/lib/former';
 import Form from '@/lib/Form';
 import { changePassword } from '@/services/auth.service';
-import { ChangePasswordErrorResponse, ChangePasswordResponse } from '@/types/auth.type';
 import yup from '@/helpers/locate';
 import { Container, Paper, Stack, Title } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { resolveErrorResponse } from '@/helpers/utils';
 
-export const passwordSchema = yup
-  .object({
-    password: yup.string().required(),
-    new_password: yup.string().required(),
-    confirmNewPassword: yup
-      .string()
-      .oneOf([yup.ref('new_password')], 'mật khẩu không khớp!')
-      .required(),
-  })
-  .required();
+export const passwordSchema = yup.object({
+  password: yup.string().min(8).required(),
+  new_password: yup.string().min(8).required(),
+  confirmNewPassword: yup
+    .string()
+    .oneOf([yup.ref('new_password')], 'mật khẩu không khớp!')
+    .required(),
+});
 export type PasswordProps = yup.InferType<typeof passwordSchema>;
 
 const formElement = [
@@ -40,30 +37,21 @@ const formElement = [
 // eslint-disable-next-line react-refresh/only-export-components
 const ChangePassword = () => {
   const {
-    formState: { isValid, errors, disabled },
+    formState: { disabled },
     reset,
     setError,
   } = useFormContext<PasswordProps>();
 
-  const handleChangePassword = async <T extends Array<keyof PasswordProps>>(data: PasswordProps) => {
-    if (!isValid) {
-      const errorName = Object.keys(errors) as T;
-      setError(errorName[0], { message: errors[errorName[0]]?.message });
-      return;
-    }
+  const handleChangePassword = async (data: PasswordProps) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { confirmNewPassword, ...formData } = yup.object().snakeCase().cast(data) as PasswordProps;
-      const response = await changePassword<ChangePasswordResponse>(formData);
-      toast.success(response.message);
+      const formData = passwordSchema.omit(['confirmNewPassword']).safeParse(data);
+      console.log(formData);
+      const response = await changePassword<{ message: string }>(formData);
+      console.log(formData);
+      toast.success(response?.message);
       reset();
     } catch (error) {
-      const errors = error as ChangePasswordErrorResponse;
-      if (errors) {
-        resolveErrorResponse(errors, setError);
-      } else {
-        toast.error('lỗi server vui lòng đợi trong giây lát');
-      }
+      resolveErrorResponse(error as ErrorResponse, setError);
     }
   };
 

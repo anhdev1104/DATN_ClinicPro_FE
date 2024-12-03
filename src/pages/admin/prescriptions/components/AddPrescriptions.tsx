@@ -1,4 +1,4 @@
-import { List } from '@/components/icons';
+import { ChangeCircleIcon, List } from '@/components/icons';
 import Input from '@/components/input';
 import Field from '@/components/field';
 import Label from '@/components/label';
@@ -13,25 +13,9 @@ import ModalMedication from '@/components/modal/ModalMedication';
 import convertToOptions from '@/helpers/convertToOptions';
 import DirectRoute from '@/components/direct';
 import { toast } from 'react-toastify';
-
-const patientsOptions = [
-  {
-    label: 'Nguyễn Văn A',
-    value: '64c13314-2273-49bf-bbaf-dae139a348b8',
-  },
-  {
-    label: 'Trần Thị B',
-    value: '146a51c2-d710-4559-ae0e-ef1ed7df5a39',
-  },
-  {
-    label: 'Lê Văn C',
-    value: '13b50927-da93-47e7-9a4b-e1c14fc951e1',
-  },
-  {
-    label: 'Phạm Thị D',
-    value: 'ee4c008f-4c3b-4c2c-b2d5-dd3ffaf60873',
-  },
-];
+import FormPatient from '../../medical_histories/components/FormPatient';
+import { IPatientSelect } from '../../medical_histories/components/AddMedicalHistories';
+import MessageForm from '@/components/message';
 
 interface AddPrescripton {
   navigate: () => void;
@@ -41,16 +25,18 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   const [medicationCategory, setMedicationCategory] = useState([]);
   const [medications, setMedications] = useState<IMedications[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectPatient, setSelectPatient] = useState(false);
+  const [selectedPatientId, setSelectedPatientId] = useState<IPatientSelect | null>(null);
 
   const {
     form: {
       control,
       reset,
-      formState: { isSubmitting, isValid, errors },
+      formState: { isSubmitting, errors, isValid },
       handleSubmit,
+      setValue,
     },
   } = usePrescriptionContextForm();
-  console.log('errors form', errors);
 
   const selectedCategoryId = useWatch({
     control,
@@ -75,7 +61,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
 
   const handleCreateMedication: SubmitHandler<any> = async data => {
     console.log('🚀 ~ AddPrescriptions ~ data:', data);
-    // if (!isValid) return;
+    if (!isValid) return;
     const newPrescription = {
       patient_id: data.patient_id,
       user_id: '3119acf9-b33c-4de6-9b51-0275be8ea689',
@@ -83,6 +69,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
       description: data.description,
       medications: data.medications,
     };
+    console.log('🚀 ~ AddPrescriptions ~ newPrescription:', newPrescription);
     const data1 = await createPrescription({
       medication_id: '828d04ca-111d-49ee-8043-611648cb5f65',
       ...newPrescription,
@@ -114,8 +101,22 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
     setIsDialogOpen(false);
   };
 
+  const handleSelectedPatientId = (id: string | null, name: string | null) => {
+    setSelectedPatientId({
+      id,
+      name,
+    });
+  };
+
+  useEffect(() => {
+    if (selectedPatientId) {
+      selectedPatientId.id && setValue('patient_id', selectedPatientId.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPatientId]);
+
   return (
-    <div>
+    <>
       <DirectRoute nav="Quản lý đơn thuốc" subnav="Đơn thuốc" targetnav="Tạo đơn thuốc" />
       <div className="flex bg-white size-full p-[20px] rounded-[26px]">
         <div className="flex-1">
@@ -139,15 +140,34 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                     placeholder="Nhập tên đơn thuốc ..."
                     control={control}
                   />
+                  <MessageForm error={errors.name?.message} />
                 </Field>
-                <div className="min-w-[400px] w-1/2">
+                <div className="min-w-[400px] w-1/2 relative">
                   <Label>Tên bệnh nhân</Label>
-                  <Select
-                    placeholder="Bệnh nhân chỉ định"
-                    name="patient_id"
-                    control={control}
-                    options={patientsOptions}
-                  />
+                  {selectedPatientId ? (
+                    <>
+                      <div
+                        className="absolute right-0 -top-1 cursor-pointer text-primaryAdmin"
+                        onClick={() => setSelectPatient(true)}
+                        title="Thay đổi bệnh nhân"
+                      >
+                        <ChangeCircleIcon className="font-bold" />
+                      </div>
+                      <div className="text-black h-[42px] w-full bg-white border flex justify-center items-center rounded-md">
+                        {selectedPatientId.name}
+                      </div>
+                    </>
+                  ) : (
+                    <Button
+                      onClick={() => setSelectPatient(true)}
+                      className="text-black h-[42px] w-full bg-[#F3F4F7]"
+                      type="button"
+                      styled="normal"
+                    >
+                      Chọn bệnh nhân
+                    </Button>
+                  )}
+                  {!selectedPatientId && <MessageForm error={errors.patient_id?.message} />}
                 </div>
                 <div className="min-w-[400px] w-1/2">
                   <Label htmlFor="categoryId">Danh mục thuốc</Label>
@@ -158,6 +178,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                     options={medicationCategory}
                     setIsDialogOpen={setIsDialogOpen}
                   />
+                  <MessageForm error={errors.isCategory?.message} />
                 </div>
               </div>
 
@@ -204,7 +225,16 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
         medications={medications}
         medicationCategory={medicationCategory}
       />
-    </div>
+
+      {selectPatient && (
+        <FormPatient
+          onSelectPatient={handleSelectedPatientId}
+          isDialogOpen={selectPatient}
+          handleCloseDialog={() => setSelectPatient(false)}
+          selectedPatientId={selectedPatientId?.id}
+        />
+      )}
+    </>
   );
 };
 

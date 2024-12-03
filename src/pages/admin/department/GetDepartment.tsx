@@ -72,7 +72,7 @@ export default function GetDepartment() {
               {
                 label: 'Xóa',
                 onClick: async () => {
-                  const result = await handleUpdate({ id: id!, users_delete: [original.id], users: [] });
+                  const result = await handleUpdate({ id: id!, users_delete: [original.id] });
                   if (result.data) {
                     toast.success(result.data.message);
                     return;

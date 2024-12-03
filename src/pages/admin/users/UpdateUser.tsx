@@ -26,20 +26,18 @@ const updateUserSchema = yup.object({
     .oneOf(Object.values(STATUS) as `${STATUS}`[])
     .default(STATUS.INACTIVE),
   role_id: yup.string().required(),
-  user_info: yup
-    .object({
-      fullname: yup.string().trim().required(),
-      address: yup.string().omit([null]),
-      phone_number: yup.string().max(10).omit([null]),
-      avatar: yup.string().url(),
-      gender: yup
-        .string()
-        .oneOf(Object.values(GENDER) as `${GENDER}`[])
-        .default(GENDER.OTHER),
-      dob: yup.date(),
-      department_id: yup.string().omit([null]),
-    })
-    .nonNullable(),
+  user_info: yup.object({
+    fullname: yup.string().trim().required(),
+    address: yup.string().omit([null]),
+    phone_number: yup.string().max(10).omit([null]),
+    avatar: yup.string().url(),
+    gender: yup
+      .string()
+      .oneOf(Object.values(GENDER) as `${GENDER}`[])
+      .default(GENDER.OTHER),
+    dob: yup.date().nullable(),
+    department_id: yup.string().omit([null]),
+  }),
 });
 export type UpdateUserProps = yup.InferType<typeof updateUserSchema>;
 
@@ -98,12 +96,12 @@ export default function UpdateUser() {
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Formik
           withAutoValidate
+          schema={updateUserSchema}
+          onSubmit={handleUpdateUser}
           options={{
             defaultValues: updateUserSchema.safeParse({ ...user, role_id: user?.role?.id }),
             mode: 'onChange',
           }}
-          schema={updateUserSchema}
-          onSubmit={handleUpdateUser}
         >
           {({ formState: { disabled } }) => {
             return (
@@ -164,6 +162,7 @@ export default function UpdateUser() {
                       name="user_info.gender"
                       autoComplete="gender"
                       data={Object.values(GENDER)}
+                      allowDeselect={false}
                       label="Giới tính"
                     />
                   </Grid.Col>
@@ -178,14 +177,20 @@ export default function UpdateUser() {
                     />
                   </Grid.Col>
                   <Grid.Col span={4}>
-                    <BaseInput.Select name="status" autoComplete="status" data={Object.values(STATUS)} label="Status" />
+                    <BaseInput.Select
+                      name="status"
+                      autoComplete="status"
+                      data={Object.values(STATUS)}
+                      allowDeselect={false}
+                      label="Status"
+                    />
                   </Grid.Col>
                   <Grid.Col>
                     <BaseInput.Textarea name="user_info.address" autoComplete="address" label="Địa Chỉ" />
                   </Grid.Col>
                 </Grid>
                 <Flex gap={10} className="justify-end">
-                  <BaseButton onClick={() => navigate(-1)} disabled={disabled} loading={disabled} color="gray">
+                  <BaseButton onClick={() => navigate(-1)} color="gray">
                     Hủy
                   </BaseButton>
                   <BaseButton disabled={disabled} loading={disabled} type="submit">

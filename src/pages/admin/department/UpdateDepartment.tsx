@@ -12,15 +12,12 @@ import toast from 'react-hot-toast';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import { useMemo } from 'react';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
-import { UserProps } from '@/types/department.type';
+
 const updateDepartmentSchema = yup.object({
-  name: yup.string().trim(),
+  name: yup.string().trim().omit([null]),
   description: yup.string().omit([null]),
-  manager_id: yup.string(),
-  users: yup
-    .array()
-    .of(yup.string().transform((value: UserProps) => value?.id || ''))
-    .default([]),
+  manager_id: yup.string().nullable(),
+  users: yup.array().of(yup.string()),
   users_delete: yup.array().of(yup.string()).default([]),
 });
 export type UpdateDepartmentProps = yup.InferType<typeof updateDepartmentSchema>;
@@ -43,7 +40,6 @@ export default function UpdateDepartment() {
     }
     resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
   };
-
   if (!department) return <NotFoundPage title="không tìm thấy phòng ban" />;
   return (
     <div className="bg-white rounded-3xl w-full shadow-xl p-4">
@@ -54,8 +50,8 @@ export default function UpdateDepartment() {
         options={{
           defaultValues: updateDepartmentSchema.safeParse({
             ...department,
-            manager_id: department?.manager_id || department?.manager?.id,
-            users: department?.users,
+            manager_id: department.manager?.id,
+            users: department?.users.map(user => user?.id || ''),
           }),
           mode: 'onChange',
         }}
@@ -84,7 +80,6 @@ export default function UpdateDepartment() {
                   data={listUsers}
                   renderOption={renderOption}
                   label="Chọn Nhân Viên"
-                  clearable
                   searchable
                   hidePickedOptions
                   nothingFoundMessage="không tìm thấy nhân viên nào"

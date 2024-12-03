@@ -26,7 +26,7 @@ export default function User() {
     error,
   } = useGetUsersQuery({
     q: params.get('q')!,
-    limit: limit.toString(),
+    limit: params.get('limit') || limit.toString(),
     page: params.get('page')!,
   });
   const navigate = useNavigate();
@@ -97,7 +97,7 @@ export default function User() {
           manualPagination
           pagination={
             <Pagination
-              total={Number(users?.totalPage) || 1}
+              total={Number(users?.total_pages) || 1}
               onChange={value => {
                 params.set('page', value.toString());
                 setParams(params.toString());

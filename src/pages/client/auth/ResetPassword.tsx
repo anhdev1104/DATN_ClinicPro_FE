@@ -5,13 +5,14 @@ import { ForgotPassword } from './ForgotPassword';
 import yup from '@/helpers/locate';
 import { resetPassword } from '@/services/auth.service';
 import BaseInput from '@/components/base/input';
-import { toast } from 'react-toastify';
-import { IResetPassword, IResetPasswordError } from '@/types/auth.type';
 import former from '@/lib/former';
 import Form from '@/lib/Form';
 import { Text } from '@mantine/core';
 import { numberRegex } from '@/constants/regex';
 import { Button } from '@/components/button';
+import { resolveErrorResponse } from '@/helpers/utils';
+import toast from 'react-hot-toast';
+import { useSelector } from '@/hooks/redux';
 
 const resetPasswordSchema = yup.object({
   otp: yup.string().length(6).required(),
@@ -21,31 +22,29 @@ const resetPasswordSchema = yup.object({
 export type ResetPassword = yup.InferType<typeof resetPasswordSchema>;
 interface ResetPasswordProps {
   handleSendEmail: (data: ForgotPassword) => void;
+  email: string;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail }) => {
+const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
+  const { loading } = useSelector(state => state.global);
   const {
-    reset,
     formState: { disabled },
+    setError,
   } = useFormContext<ResetPassword>();
   const navigate = useNavigate();
-
   const handleSendRequest = async (data: ResetPassword) => {
     try {
-      const response = await resetPassword<IResetPassword>(data);
+      const response = await resetPassword<{ message: string }>(data);
       toast.success(response.message);
       navigate('/login');
-      reset();
-    } catch (error) {
-      const axiosError = error as IResetPasswordError;
-      toast.error(axiosError.error);
+    } catch (errors) {
+      resolveErrorResponse(errors as ErrorResponse, setError);
     }
   };
   const handleResendOtp = async () => {
-    if (!disabled) {
-      handleSendEmail({ email: localStorage.getItem('email-reset') as string });
-      localStorage.removeItem('email-reset');
+    if (!loading) {
+      handleSendEmail({ email });
     }
   };
 
@@ -58,6 +57,12 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail }) => {
           opacity: 1,
         }}
       >
+        <div className="relative flex justify-center items-center gap-2 mb-2">
+          <div className="text-center">
+            <h1 className="text-third text-[25px] uppercase font-bold mb-2">Reset Mật khẩu</h1>
+            <p className="ml-3 text-[13px] text-third">Nhập OTP và mật khẩu mới để đặt lại mật khẩu</p>
+          </div>
+        </div>
         <Form onSubmit={handleSendRequest} className="w-3/4 flex flex-col mx-auto space-y-2">
           <BaseInput.Pin
             name="otp"
