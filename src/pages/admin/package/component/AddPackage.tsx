@@ -192,7 +192,7 @@ const AddPackage = ({ navigate }: ListPackage) => {
             <div className="flex justify-end space-x-4">
               <button
                 type="submit"
-                className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition duration-200"
+                className="bg-primaryAdmin text-white hover:bg-primaryAdmin/50 px-6 py-2 rounded-md transition duration-200"
               >
                 {loading ? 'Đang tạo...' : 'Tạo gói khám'}
               </button>

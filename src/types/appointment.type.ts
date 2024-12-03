@@ -9,11 +9,9 @@ export interface IAppointment {
   appointment_date: string | null;
   specialty_id?: string;
 }
+import { STATUS, GENDER } from '@/constants/define';
 export interface IListAppointment {
   id: string;
-  patient_id: string;
-  user_id: string;
-  package_id: string;
   appointment_date: string;
   deposit_amount: string | null;
   booking_type: 'online' | 'offline';
@@ -21,5 +19,42 @@ export interface IListAppointment {
   total_amount: string | null;
   status: 'pending' | 'confirmed' | 'canceled';
   cancellation_reason: string | null;
-  specialty_id: string;
+  patient: {
+    id: string;
+    insurance_number: string;
+    identity_card_id: string;
+    status: `${STATUS}`;
+  };
+  user: {
+    id: string;
+    status: `${STATUS}`;
+    role: {
+      id: string;
+      name: string;
+      description: string;
+    };
+    user_info: {
+      id: string;
+      fullname: string;
+      address: string;
+      avatar: string;
+      phone_number: string;
+      gender: `${GENDER}`;
+      dob: string;
+      department_id: string;
+    };
+  };
+  package: {
+    id: string;
+    name: string;
+    description: string;
+    content: string;
+    image: string;
+    slug: string;
+  };
+  specialty: {
+    id: string;
+    name: string;
+    description: string;
+  };
 }

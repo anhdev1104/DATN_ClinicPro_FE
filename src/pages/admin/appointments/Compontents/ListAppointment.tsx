@@ -5,9 +5,10 @@ import Input from '@/components/input';
 import { MoreVertIcon, AddIcon } from '@/components/icons';
 import { IListAppointment } from '@/types/appointment.type';
 import DirectRoute from '@/components/direct';
-import { getAppointments } from '@/services/appointments.service';
+import { getAppointments, deleteAppointment } from '@/services/appointments.service';
 import { Dialog } from '@mui/material';
 import convertTime from '@/helpers/convertTime';
+import toast from 'react-hot-toast';
 interface ModalDetail {
   close: () => void;
   statusLog: boolean;
@@ -33,6 +34,12 @@ const ListAppointment = () => {
 
   const handleClose = () => {
     setOpen({ status: false, id: null });
+  };
+
+  const handleDelete = async (id: string) => {
+    await deleteAppointment(id);
+    setAppointments(prevAppointments => prevAppointments.filter(pkg => pkg.id !== id));
+    toast.success('Xóa gói khám thành công!');
   };
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -89,9 +96,9 @@ const ListAppointment = () => {
               <tbody>
                 {appointments.map((pkg, index) => (
                   <tr key={index} className="odd">
-                    <td className="p-4 text-center text-gray-800 w-[15%] ">{pkg.patient_id}</td>
-                    <td className="p-4 text-center text-gray-600 w-[15%]">{pkg.package_id}</td>
-                    <td className="p-4 text-center  text-gray-600 w-[15%]">{pkg.specialty_id}</td>
+                    <td className="p-4 text-center text-gray-800 w-[15%] ">{pkg?.patient?.id}</td>
+                    <td className="p-4 text-center text-gray-600 w-[15%]">{pkg?.specialty?.name}</td>
+                    <td className="p-4 text-center  text-gray-600 w-[15%]">{pkg?.package?.name}</td>
                     <td className="p-4 text-center text-gray-600 w-[15%]">{convertTime(pkg.appointment_date)}</td>
                     <td className="p-4 text-center text-gray-800 w-[15%] ">{pkg.booking_type}</td>
                     <td
@@ -136,7 +143,7 @@ const ListAppointment = () => {
                             <Link
                               to="#"
                               className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              // onClick={() => handleDelete(pkg.id)}
+                              onClick={() => handleDelete(pkg.id)}
                             >
                               Xóa bỏ
                             </Link>
@@ -194,14 +201,16 @@ function ModalDetail({ close, statusLog, appointment }: ModalDetail) {
       <div className="p-6">
         <h2 className="text-xl font-bold text-center text-gray-800 mb-4">Chi tiết lịch hẹn </h2>
         <div className="card-box p-6 ">
-          <h3 className="card-title text-lg font-semibold text-gray-700 mb-4">{appointment?.user_id}</h3>
+          <h3 className="card-title text-lg font-semibold text-gray-700 mb-4">
+            {appointment?.user?.user_info?.fullname}
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="input-block">
               <label className="focus-label text-sm font-medium text-gray-600">ID Bệnh nhân</label>
               <input
                 type="text"
                 className="form-control floating w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
-                defaultValue={appointment?.patient_id}
+                defaultValue={appointment?.patient?.id}
               />
             </div>
             <div className="input-block">
