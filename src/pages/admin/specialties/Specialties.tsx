@@ -4,10 +4,14 @@ import Input from '@/components/input';
 import { useForm } from 'react-hook-form';
 import Select from '@/components/select';
 import { useEffect, useState } from 'react';
-import { createSpecialties, deleteSpecialties, getSpecialties } from '@/services/specialties.service';
+import {
+  createSpecialties,
+  deleteSpecialties,
+  getSpecialties,
+  updateSpecialties,
+} from '@/services/specialties.service';
 import { ISpecialties } from '@/types/specialties.type';
 import convertTime from '@/helpers/convertTime';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ModalConfirm } from '@/components/modal';
 import LoadingSpin from '@/components/loading';
@@ -34,6 +38,7 @@ interface ModalDetailSpecial {
   statusLog: boolean;
   special?: ISpecialties | null;
   iAction?: boolean;
+  iUpdate?: boolean;
   setDataAdd: any;
 }
 
@@ -45,10 +50,11 @@ const Specialtie = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingList, setIsLoadingList] = useState(false);
   const [resetData, setResetData] = useState(0);
-  const [open, setOpen] = useState<{ status: boolean; id: ISpecialties | null; action: boolean }>({
+  const [open, setOpen] = useState<{ status: boolean; id: ISpecialties | null; action: boolean; iUpdate: boolean }>({
     status: false,
     id: null,
     action: false,
+    iUpdate: false,
   });
 
   const handleToggle = (id: string | null | undefined) => {
@@ -78,12 +84,12 @@ const Specialtie = () => {
     setResetData(pre => pre + 1);
   };
 
-  const handleClickOpen = (id: ISpecialties | null, action = false) => {
-    setOpen({ status: true, id, action });
+  const handleClickOpen = (id: ISpecialties | null, action = false, iUpdate = false) => {
+    setOpen({ status: true, id, action, iUpdate });
   };
 
   const handleClose = () => {
-    setOpen({ status: false, id: null, action: false });
+    setOpen({ status: false, id: null, action: false, iUpdate: false });
   };
 
   return (
@@ -150,16 +156,16 @@ const Specialtie = () => {
                               >
                                 Chi tiết
                               </div>
-                              <Link
-                                // to={`/edit-specialties/${item.id}`}
-                                to={'#'}
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              <button
+                                type="button"
+                                className="block w-full text-start px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                 onClick={() => {
                                   handleToggle(item.id);
+                                  handleClickOpen(item, true, true);
                                 }}
                               >
                                 Sửa
-                              </Link>
+                              </button>
                               <div
                                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                 onClick={() => {
@@ -196,6 +202,7 @@ const Specialtie = () => {
           statusLog={open.status}
           special={open.id}
           iAction={open.action}
+          iUpdate={open.iUpdate}
           setDataAdd={setResetData}
         />
       )}
@@ -227,7 +234,7 @@ const schema = yup.object().shape({
   description: yup.string().trim().required(),
 });
 
-function ModalDetailSpecial({ close, statusLog, special, iAction, setDataAdd }: ModalDetailSpecial) {
+function ModalDetailSpecial({ close, statusLog, special, iAction, setDataAdd, iUpdate }: ModalDetailSpecial) {
   const {
     handleSubmit,
     control,
@@ -235,15 +242,42 @@ function ModalDetailSpecial({ close, statusLog, special, iAction, setDataAdd }: 
     formState: { isSubmitting },
   } = useForm({ resolver: yupResolver(schema), mode: 'onChange' });
 
+  useEffect(() => {
+    if (iAction && special && iUpdate) {
+      reset({
+        name: special.name || '',
+        description: special.description || '',
+      });
+    } else {
+      reset({
+        name: '',
+        description: '',
+      });
+    }
+  }, [iAction, special, reset, iUpdate]);
+
   const onSubmit = async (data: any) => {
-    try {
-      const response = await createSpecialties(data);
+    const handleResponse = (response: any) => {
       if (response.errors) {
         toast.error(response.message, { position: 'top-right' });
       } else {
         toast.success(response.data.message, { position: 'top-right' });
         reset();
         setDataAdd((prev: any) => prev + 1);
+      }
+    };
+
+    try {
+      let response;
+      if (iUpdate && iAction) {
+        response = await updateSpecialties(special?.id, data);
+        toast.success(response.message, { position: 'top-right' });
+        setDataAdd((prev: any) => prev + 1);
+        close();
+      } else {
+        response = await createSpecialties(data);
+        handleResponse(response);
+        close();
       }
     } catch (error) {
       return error;
@@ -299,8 +333,8 @@ function ModalDetailSpecial({ close, statusLog, special, iAction, setDataAdd }: 
               >
                 Xác nhận
               </Button>
-              <Button onClick={() => reset()} type="submit" styled="normal">
-                Nhập lại
+              <Button onClick={() => close()} type="submit" styled="normal">
+                Hủy bỏ
               </Button>
             </div>
           </form>

@@ -7,6 +7,9 @@ import convertTime from '@/helpers/convertTime';
 import LightBox from '@/components/lightbox';
 import convertLightBox from '@/helpers/convertLightBox';
 import LoadingSpin from '@/components/loading';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { IUser } from '@/types/user.type';
 
 interface DetailMedicalHistories {
   close: () => void;
@@ -15,6 +18,7 @@ interface DetailMedicalHistories {
 }
 
 const MedicalHistoriesPage = () => {
+  const auth = useSelector((state: RootState) => state.auth.data) as IUser;
   const [currentDate] = useState(() => new Date().toLocaleDateString());
   const [listMedicalRecords, setListMedicalRecords] = useState<MedicalRecord[]>([]);
   const [resetKey, setResetKey] = useState(0);
@@ -36,11 +40,9 @@ const MedicalHistoriesPage = () => {
   useEffect(() => {
     const fetchMedicalRecords = async () => {
       setLoading(true);
-      setTimeout(async () => {
-        const medicalRecords = await getMedicalHistoriesById('13b50927-da93-47e7-9a4b-e1c14fc951e1');
-        setListMedicalRecords(medicalRecords);
-        setLoading(false);
-      }, 1000);
+      const medicalRecords = await getMedicalHistoriesById(auth.data.user_info.patient_id as string);
+      setListMedicalRecords(medicalRecords);
+      setLoading(false);
     };
     fetchMedicalRecords();
   }, [resetKey]);
@@ -52,7 +54,7 @@ const MedicalHistoriesPage = () => {
   return (
     <div className="py-[3rem] container-page">
       <div className="mb-20 flex flex-col gap-2">
-        <div className="font-bold text-[30px] text-primary">Xin chào, {listMedicalRecords[0].patient.fullname} ...</div>
+        <div className="font-bold text-[30px] text-primary">Xin chào, {auth.data.user_info.fullname} ...</div>
         <div>{currentDate}</div>
       </div>
       <div className="mb-10 flex justify-between">
