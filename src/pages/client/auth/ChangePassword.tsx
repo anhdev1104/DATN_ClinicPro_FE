@@ -45,7 +45,9 @@ const ChangePassword = () => {
   const handleChangePassword = async (data: PasswordProps) => {
     try {
       const formData = passwordSchema.omit(['confirmNewPassword']).safeParse(data);
+      console.log(formData);
       const response = await changePassword<{ message: string }>(formData);
+      console.log(formData);
       toast.success(response?.message);
       reset();
     } catch (error) {

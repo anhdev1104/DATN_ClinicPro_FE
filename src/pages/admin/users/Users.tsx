@@ -97,7 +97,7 @@ export default function User() {
           manualPagination
           pagination={
             <Pagination
-              total={Number(users?.totalPage) || 1}
+              total={Number(users?.total_pages) || 1}
               onChange={value => {
                 params.set('page', value.toString());
                 setParams(params.toString());

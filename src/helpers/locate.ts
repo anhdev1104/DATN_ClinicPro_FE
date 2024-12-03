@@ -5,6 +5,7 @@ yup.setLocale({
   mixed: {
     required: 'Trường này là bắt buộc !',
     oneOf: ({ values }) => `Giá trị phải bắt buộc trong nhưng giá trị sau: ${values}`,
+    notNull: () => 'Giá trị này không thể null',
   },
   string: {
     min: ({ min }) => `Trường này phải tối thiểu ${min} ký tự.`,

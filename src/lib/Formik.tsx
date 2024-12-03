@@ -49,7 +49,7 @@ const Formik = <Schema extends yup.AnyObjectSchema, T extends FieldValues = yup.
   });
 
   useEffect(() => {
-    if (form.formState.isSubmitting || form.formState.isSubmitted) setDisabled(loading);
+    if (form.formState.isSubmitting || form.formState.isSubmitSuccessful) setDisabled(loading);
   }, [loading]);
 
   return (
