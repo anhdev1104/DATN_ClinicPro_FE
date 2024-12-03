@@ -35,7 +35,7 @@ const updateUserSchema = yup.object({
       .string()
       .oneOf(Object.values(GENDER) as `${GENDER}`[])
       .default(GENDER.OTHER),
-    dob: yup.date(),
+    dob: yup.date().nullable(),
     department_id: yup.string().omit([null]),
   }),
 });
@@ -96,12 +96,12 @@ export default function UpdateUser() {
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Formik
           withAutoValidate
+          schema={updateUserSchema}
+          onSubmit={handleUpdateUser}
           options={{
             defaultValues: updateUserSchema.safeParse({ ...user, role_id: user?.role?.id }),
             mode: 'onChange',
           }}
-          schema={updateUserSchema}
-          onSubmit={handleUpdateUser}
         >
           {({ formState: { disabled } }) => {
             return (

@@ -47,8 +47,8 @@ export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
   }
   if (message) toast.error(message);
   if (errors && setError) {
-    const errorName = Object.keys(errors) as (keyof T)[];
-    errorName.length && setError(errorName[0] as 'root' | Path<T>, { message: errors[errorName[0]][0] });
+    const [key] = Object.keys(errors) as (keyof T)[];
+    key && setError(key as 'root' | Path<T>, { message: errors[key][0] });
   }
 };
 

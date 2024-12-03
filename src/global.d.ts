@@ -15,7 +15,7 @@ declare global {
     next_page_url: string;
     prev_page_url: string;
     total: string;
-    totalPage: string;
+    total_pages: string;
   }
   interface QueryParams {
     limit?: string;

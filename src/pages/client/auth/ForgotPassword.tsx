@@ -63,9 +63,9 @@ const ForgotPassword = () => {
               className="my-10"
             >
               <div className="relative flex justify-center items-center gap-2 mb-2">
-                <div>
-                  <h1 className="text-third text-[25px] uppercase font-bold mb-2">Quên mật khẩu</h1>
-                  <p className="ml-3 text-[13px] text-third">Nhập Email để lấy lại mật khẩu.</p>
+                <div className="text-center">
+                  <h1 className="text-third text-[25px] uppercase font-bold mb-2">Reset Mật khẩu</h1>
+                  <p className="ml-3 text-[13px] text-third">Nhập Otp và mật khẩu mới để đặt lại mật khẩu</p>
                 </div>
               </div>
               {!isSend ? (
@@ -83,13 +83,12 @@ const ForgotPassword = () => {
                     className="bg-third rounded-md w-full mt-3 h-[40px]"
                     isLoading={disabled}
                     disabled={disabled}
-                    onClick={() => localStorage.setItem('email-reset', getValues('email'))}
                   >
                     Gửi
                   </Button>
                 </Form>
               ) : (
-                <ResetPassword handleSendEmail={handleSendEmail} />
+                <ResetPassword handleSendEmail={handleSendEmail} email={getValues('email')} />
               )}
             </motion.div>
           </div>
