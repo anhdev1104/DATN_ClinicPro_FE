@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import PosterAuth from './components/PosterAuth';
 import { motion } from 'framer-motion';
 import BaseInput from '@/components/base/input';
-import { useFormContext } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 import yup from '@/helpers/locate';
 import { forgotPassword } from '@/services/auth.service';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import former from '@/lib/former';
 import Form from '@/lib/Form';
 import { ArrowLeft } from '@/components/icons';
@@ -25,12 +25,11 @@ const ForgotPassword = () => {
     formState: { disabled },
     setError,
   } = useFormContext<ForgotPassword>();
+  const { field } = useController({ name: 'email' });
   const [isSend, setIsSend] = useState(false);
   const navigate = useNavigate();
-  const emailRef = useRef<string>('');
   const handleSendEmail = async (data: ForgotPassword) => {
     try {
-      emailRef.current = data.email;
       const response = await forgotPassword<{ message: string }>(data);
       toast.success(response.message);
       setIsSend(true);
@@ -38,7 +37,6 @@ const ForgotPassword = () => {
       resolveErrorResponse(errors as ErrorResponse, setError);
     }
   };
-
   return (
     <>
       <div className="w-screen h-screen flex justify-center items-center bg-[#f2f2f4]">
@@ -93,7 +91,7 @@ const ForgotPassword = () => {
                 </Form>
               </motion.div>
             ) : (
-              <ResetPassword handleSendEmail={handleSendEmail} email={emailRef.current} />
+              <ResetPassword handleSendEmail={handleSendEmail} email={field.value} />
             )}
           </div>
           <PosterAuth />
