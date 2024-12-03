@@ -1,5 +1,6 @@
 import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@/components/icons';
 import Input from '@/components/input';
+import LoadingSpin from '@/components/loading';
 import Tags from '@/components/tags';
 import { getPatient } from '@/services/medicalHistories.service';
 import { IPatient } from '@/types/patient.type';
@@ -35,17 +36,32 @@ const FormPatient: FC<ModalPatientProps> = ({
   const [currentSelectedPatientId, setCurrentSelectedPatientId] = useState<string | null | undefined>(
     selectedPatientId,
   );
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
-      const res = await getPatient();
-      setPatients(res.data);
+      setLoading(true);
+      try {
+        const res = await getPatient();
+        setPatients(res.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, []);
 
   const onSubmit = async (data: any) => {
-    const res = await getPatient(data.search);
-    setPatients(res.data);
+    try {
+      setLoading(true);
+      const res = await getPatient(data.search);
+      setPatients(res.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -77,6 +93,7 @@ const FormPatient: FC<ModalPatientProps> = ({
         style: {
           backgroundColor: '#fff',
           padding: '20px',
+          paddingBottom: '50px',
           width: '1000px',
           height: '800px',
           borderRadius: '12px',
@@ -109,7 +126,7 @@ const FormPatient: FC<ModalPatientProps> = ({
       </div>
 
       <div className="w-full h-full flex flex-col gap-3 overflow-y-auto pr-3 scroll-select">
-        {patients.length > 0 ? (
+        {!loading && patients.length > 0 ? (
           patients.map(patient => (
             <label
               htmlFor={patient.id}
@@ -200,9 +217,13 @@ const FormPatient: FC<ModalPatientProps> = ({
               </div>
             </label>
           ))
-        ) : (
+        ) : !loading ? (
           <div className="text-center text-[18px] font-bold size-full flex justify-center items-center">
             Chưa tìm thấy bệnh nhân nào
+          </div>
+        ) : (
+          <div className="mx-auto text-center pt-10">
+            <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
           </div>
         )}
       </div>

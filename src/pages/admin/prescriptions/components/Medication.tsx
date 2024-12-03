@@ -1,7 +1,9 @@
 import Label from '@/components/label';
+import checkIsNumberic from '@/helpers/checkIsNotNumberic';
 import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
 import { IMedication } from '@/types/prescription.type';
 import { Box, Checkbox, Stack, styled, TextField } from '@mui/material';
+import { ChangeEvent, useState } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 type TMedication = {
@@ -12,13 +14,14 @@ type TMedication = {
 
 const CustomeInput = styled(TextField)(() => ({
   '& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input': {
-    width: '23px',
+    width: '16px',
     padding: '4px 10px',
     fontSize: '14px',
   },
 }));
 
 const Medication: React.FC<TMedication> = ({ id, name, index }) => {
+  const [error, setError] = useState<boolean>(false);
   const {
     form: { control, setValue },
   } = usePrescriptionContextForm();
@@ -53,7 +56,7 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
 
   const indexMedication = medications.findIndex(item => item?.medication_id === id);
   const idMedication = medications.find(item => item?.medication_id === id);
-  const isChecked = medications.some((med: { medication_id: string }) => med.medication_id === id);
+  const isChecked = medications.some((med: { medication_id?: string }) => med.medication_id === id);
 
   return (
     <>
@@ -80,11 +83,16 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
               render={({ field }) => (
                 <CustomeInput
                   value={
-                    !!idMedication
-                      ? medications.find(item => item?.medication_id === id && item.quantity)?.quantity
-                      : ''
+                    error
+                      ? ''
+                      : !!idMedication
+                        ? medications.find(item => item?.medication_id === id && item.quantity)?.quantity
+                        : ''
                   }
                   onChange={field.onChange}
+                  onInput={(e: ChangeEvent<HTMLInputElement>) => {
+                    checkIsNumberic(e) ? setError(true) : setError(false);
+                  }}
                 />
               )}
             />
