@@ -70,8 +70,8 @@ export default function UpdateUser() {
       id: userId!,
       user_info: {
         ...user_info,
-        avatar: url,
-        dob: user_info?.dob ? (dayjs(user_info.dob).format('YYYY-MM-DD') as any) : null,
+        avatar: url?.data?.url,
+        dob: user_info?.dob && (dayjs(user_info.dob).format('YYYY-MM-DD') as any),
       },
     });
     if (result.data) {
@@ -103,7 +103,7 @@ export default function UpdateUser() {
             mode: 'onChange',
           }}
         >
-          {({ formState: { disabled } }) => {
+          {({ formState: { isSubmitting } }) => {
             return (
               <>
                 <Grid>
@@ -116,7 +116,7 @@ export default function UpdateUser() {
                       {props => (
                         <BaseButton
                           {...props}
-                          disabled={disabled}
+                          disabled={isSubmitting}
                           size="xs"
                           rightSection={<BaseIcon icon={IconUpload} />}
                         >
@@ -193,7 +193,7 @@ export default function UpdateUser() {
                   <BaseButton onClick={() => navigate(-1)} color="gray">
                     Hủy
                   </BaseButton>
-                  <BaseButton disabled={disabled} loading={disabled} type="submit">
+                  <BaseButton disabled={isSubmitting} loading={isSubmitting} type="submit">
                     Cập Nhật
                   </BaseButton>
                 </Flex>

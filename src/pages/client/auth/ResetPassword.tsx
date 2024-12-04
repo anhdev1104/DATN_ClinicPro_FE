@@ -12,7 +12,6 @@ import { numberRegex } from '@/constants/regex';
 import { Button } from '@/components/button';
 import { resolveErrorResponse } from '@/helpers/utils';
 import toast from 'react-hot-toast';
-import { useSelector } from '@/hooks/redux';
 
 const resetPasswordSchema = yup.object({
   otp: yup.string().length(6).required(),
@@ -27,9 +26,8 @@ interface ResetPasswordProps {
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
-  const { loading } = useSelector(state => state.global);
   const {
-    formState: { disabled },
+    formState: { isSubmitting, disabled },
     setError,
   } = useFormContext<ResetPassword>();
   const navigate = useNavigate();
@@ -43,7 +41,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
     }
   };
   const handleResendOtp = async () => {
-    if (!loading) {
+    if (!disabled) {
       handleSendEmail({ email });
     }
   };
@@ -63,7 +61,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
             <p className="ml-3 text-[13px] text-third">Nhập Otp và mật khẩu mới để đặt lại mật khẩu</p>
           </div>
         </div>
-        <Form onSubmit={handleSendRequest} className="w-3/4 flex flex-col mx-auto space-y-2">
+        <Form withAutoValidate onSubmit={handleSendRequest} className="w-3/4 flex flex-col mx-auto space-y-2">
           <BaseInput.Pin
             name="otp"
             autoComplete="otp"
@@ -83,8 +81,8 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
           <Button
             type="submit"
             className="bg-third rounded-md w-full mt-3 h-[40px]"
-            isLoading={disabled}
-            disabled={disabled}
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
           >
             Đặt lại mật khẩu
           </Button>

@@ -18,7 +18,7 @@ import dayjs from 'dayjs';
 export default function Department() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
-  const [modalNew, handleModalNew] = useDisclosure(false);
+  const [opened, { close, open }] = useDisclosure(false);
   const [limit] = useState(5);
   const { data: departments, isFetching } = useGetDepartmentsQuery({
     q: params.get('q')!,
@@ -80,10 +80,10 @@ export default function Department() {
           data={[
             {
               label: 'Xem chi tiết',
-              onClick: () => navigate(original.id),
+              onClick: () => navigate(`/departments/${original.id}`),
             },
           ]}
-          row={row as any}
+          row={row}
         />
       ),
       placeholder: true,
@@ -108,7 +108,7 @@ export default function Department() {
           manualPagination
           pagination={
             <Pagination
-              total={Number(departments?.total_pages) || 1}
+              total={Number(departments?.total_pages)}
               onChange={value => {
                 params.set('page', value.toString());
                 setParams(params.toString());
@@ -123,20 +123,13 @@ export default function Department() {
           data={departments?.data || []}
           columns={columns}
           toolbar={
-            <BaseButton.Icon onClick={handleModalNew.open} variant="subtle" radius="lg">
+            <BaseButton.Icon onClick={open} variant="subtle" radius="lg">
               <BaseIcon icon={IconPlus} size="md" />
             </BaseButton.Icon>
           }
         />
-        <Modal
-          radius="md"
-          size="xl"
-          centered
-          opened={modalNew}
-          onClose={handleModalNew.close}
-          title="Tạo Mới Phòng Ban"
-        >
-          <NewDepartment handleClose={handleModalNew.close} />
+        <Modal radius="md" size="xl" centered opened={opened} onClose={close} title="Tạo Mới Phòng Ban">
+          <NewDepartment handleClose={close} />
         </Modal>
       </div>
     </>

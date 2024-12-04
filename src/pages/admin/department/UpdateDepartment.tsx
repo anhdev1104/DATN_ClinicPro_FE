@@ -56,7 +56,7 @@ export default function UpdateDepartment() {
           mode: 'onChange',
         }}
       >
-        {({ formState: { disabled }, setValue, getValues }) => {
+        {({ formState: { isSubmitting }, setValue, getValues }) => {
           return (
             <>
               <Stack>
@@ -89,7 +89,7 @@ export default function UpdateDepartment() {
                 <BaseButton color="gray" onClick={() => navigate(-1)}>
                   Hủy
                 </BaseButton>
-                <BaseButton w={100} loading={disabled} disabled={disabled} type="submit">
+                <BaseButton w={100} loading={isSubmitting} disabled={isSubmitting} type="submit">
                   Lưu
                 </BaseButton>
               </Flex>

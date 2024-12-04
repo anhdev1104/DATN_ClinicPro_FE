@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import PosterAuth from './components/PosterAuth';
 import { motion } from 'framer-motion';
 import BaseInput from '@/components/base/input';
-import { useController, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import yup from '@/helpers/locate';
 import { forgotPassword } from '@/services/auth.service';
 import { useState } from 'react';
@@ -22,10 +22,10 @@ export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 
 const ForgotPassword = () => {
   const {
-    formState: { disabled },
+    formState: { isSubmitting },
     setError,
+    getValues,
   } = useFormContext<ForgotPassword>();
-  const { field } = useController({ name: 'email' });
   const [isSend, setIsSend] = useState(false);
   const navigate = useNavigate();
   const handleSendEmail = async (data: ForgotPassword) => {
@@ -71,7 +71,7 @@ const ForgotPassword = () => {
                   </div>
                 </div>
 
-                <Form onSubmit={handleSendEmail} className="w-3/4 flex flex-col mx-auto space-y-2">
+                <Form withAutoValidate onSubmit={handleSendEmail} className="w-3/4 flex flex-col mx-auto space-y-2">
                   <BaseInput.Group
                     autoComplete="email"
                     name="email"
@@ -83,15 +83,15 @@ const ForgotPassword = () => {
                   <Button
                     type="submit"
                     className="bg-third rounded-md w-full mt-3 h-[40px]"
-                    isLoading={disabled}
-                    disabled={disabled}
+                    isLoading={isSubmitting}
+                    disabled={isSubmitting}
                   >
                     Gửi
                   </Button>
                 </Form>
               </motion.div>
             ) : (
-              <ResetPassword handleSendEmail={handleSendEmail} email={field.value} />
+              <ResetPassword handleSendEmail={handleSendEmail} email={getValues('email')} />
             )}
           </div>
           <PosterAuth />
