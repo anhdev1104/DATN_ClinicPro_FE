@@ -1,5 +1,5 @@
-import React, { Children, createElement, isValidElement } from 'react';
-import { useController, useFormState } from 'react-hook-form';
+import { Children, createElement, isValidElement } from 'react';
+import { useController } from 'react-hook-form';
 
 const InputWithController = ({
   child,
@@ -7,27 +7,17 @@ const InputWithController = ({
   child: React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>>;
 }) => {
   if (!child.props?.name) throw new TypeError('Field name of input expected a string!');
-  const { defaultValues } = useFormState();
-  const { fieldState, field } = useController({
-    name: child.props.name,
-    defaultValue: defaultValues?.[child.props.name] ?? '',
+  const { fieldState, field } = useController({ name: child.props.name });
+
+  const error = (child.type as React.ComponentType).displayName?.startsWith('@mantine') ? 'error' : 'aria-errormessage';
+
+  return createElement(child.type, {
+    [error]: fieldState.error?.message || fieldState.invalid,
+    'aria-invalid': fieldState.invalid,
+    ...field,
+    value: field?.value === undefined ? '' : field.value,
+    ...child.props,
   });
-
-  const error =
-    typeof child.type !== 'string' && (child.type as React.ComponentType).displayName?.startsWith('@mantine')
-      ? 'error'
-      : 'aria-errormessage';
-
-  return createElement(
-    child.type,
-    {
-      [error]: fieldState.error?.message || fieldState.invalid,
-      'aria-invalid': fieldState.invalid,
-      ...field,
-      ...child.props,
-    },
-    child.props?.children,
-  );
 };
 
 export const CreateNestedElement = ({ children }: { children: React.ReactNode }) => {

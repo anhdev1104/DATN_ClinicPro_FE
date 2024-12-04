@@ -6,8 +6,8 @@ import { changePassword } from '@/services/auth.service';
 import yup from '@/helpers/locate';
 import { Container, Paper, Stack, Title } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
-import { toast } from 'react-toastify';
 import { resolveErrorResponse } from '@/helpers/utils';
+import toast from 'react-hot-toast';
 
 export const passwordSchema = yup.object({
   password: yup.string().min(8).required(),
@@ -37,7 +37,7 @@ const formElement = [
 // eslint-disable-next-line react-refresh/only-export-components
 const ChangePassword = () => {
   const {
-    formState: { disabled },
+    formState: { isSubmitting },
     reset,
     setError,
   } = useFormContext<PasswordProps>();
@@ -45,9 +45,7 @@ const ChangePassword = () => {
   const handleChangePassword = async (data: PasswordProps) => {
     try {
       const formData = passwordSchema.omit(['confirmNewPassword']).safeParse(data);
-      console.log(formData);
       const response = await changePassword<{ message: string }>(formData);
-      console.log(formData);
       toast.success(response?.message);
       reset();
     } catch (error) {
@@ -61,7 +59,11 @@ const ChangePassword = () => {
         <Title order={1} lineClamp={1} className="capitalize text-center">
           thay đổi mật khẩu
         </Title>
-        <Form onSubmit={handleChangePassword} className="space-y-2 flex flex-col my-10 justify-center items-center">
+        <Form
+          withAutoValidate
+          onSubmit={handleChangePassword}
+          className="space-y-2 flex flex-col my-10 justify-center items-center"
+        >
           <Stack gap="md" justify="center" align="center" className="w-full lg:w-3/4">
             {formElement.map(element => (
               <BaseInput.Password
@@ -74,7 +76,7 @@ const ChangePassword = () => {
                 autoComplete={element.name}
               />
             ))}
-            <BaseButton fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
+            <BaseButton fullWidth loading={isSubmitting} disabled={isSubmitting} className="my-4" type="submit">
               Gửi
             </BaseButton>
           </Stack>

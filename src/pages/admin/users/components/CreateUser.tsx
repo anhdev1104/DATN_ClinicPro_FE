@@ -28,7 +28,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
   const [roles, setRoles] = useState<IRole[]>([]);
   const {
     setError,
-    formState: { disabled },
+    formState: { isSubmitting },
   } = useFormContext<CreateUserProps>();
 
   const { data: department } = useGetDepartmentsQuery();
@@ -50,7 +50,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
       user_info: {
         ...user_info,
         avatar: url?.data?.url,
-        dob: user_info.dob && dayjs(user_info.dob).format('YYYY-MM-DD'),
+        dob: user_info?.dob && (dayjs(user_info.dob).format('YYYY-MM-DD') as any),
       },
     });
     if (result.data) {
@@ -70,7 +70,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
 
   return (
     <>
-      <Form onSubmit={handleCreateUser}>
+      <Form withAutoValidate onSubmit={handleCreateUser}>
         <Grid>
           <Grid.Col className="flex space-x-6 items-center">
             <Avatar size={100} src={upload.image} alt="avatar" />
@@ -79,7 +79,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
               accept="image/png,image/jpeg"
             >
               {props => (
-                <BaseButton {...props} disabled={disabled} size="xs" rightSection={<BaseIcon icon={IconUpload} />}>
+                <BaseButton {...props} disabled={isSubmitting} size="xs" rightSection={<BaseIcon icon={IconUpload} />}>
                   Upload
                 </BaseButton>
               )}
@@ -144,7 +144,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
             />
           </Grid.Col>
         </Grid>
-        <BaseButton type="submit" className="flex ml-auto">
+        <BaseButton disabled={isSubmitting} loading={isSubmitting} type="submit" className="flex ml-auto">
           Thêm
         </BaseButton>
       </Form>
@@ -168,7 +168,7 @@ export const createUserSChema = yup.object({
       .string()
       .oneOf(Object.values(GENDER) as `${GENDER}`[])
       .default(GENDER.OTHER),
-    dob: yup.string().nullable().default(null),
+    dob: yup.date().nullable().default(null),
     department_id: yup.string().nullable(),
   }),
 });
