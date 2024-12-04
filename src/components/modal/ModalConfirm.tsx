@@ -26,7 +26,7 @@ const ModalConfirm = ({ title, description, isOpen, isClose, submit, isLoading, 
             disabled={disabled}
             onClick={submit}
             type="submit"
-            className={`text-white  px-4 py-2 rounded-md transition-all min-w-[104px] ${className}`}
+            className={`text-white  px-4 py-2 rounded-md transition-all min-w-[104px] ${className} `}
           >
             Xác nhận
           </Button>

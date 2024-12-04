@@ -15,6 +15,7 @@ export interface IUserProfile {
   updated_at: Date;
   identity_card?: string | null;
   identity_card_id?: string | null;
+  patient_id?: string;
 }
 
 export interface IUserInfo {
