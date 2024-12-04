@@ -8,7 +8,7 @@ import Select from '@/components/select';
 import { createPrescription, getCategoryMedication, getMedication } from '@/services/prescriptions.service';
 import { useEffect, useState } from 'react';
 import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
-import { IMedications, IPrescription } from '@/types/prescription.type';
+import { IMedications } from '@/types/prescription.type';
 import ModalMedication from '@/components/modal/ModalMedication';
 import convertToOptions from '@/helpers/convertToOptions';
 import DirectRoute from '@/components/direct';
@@ -16,6 +16,8 @@ import { toast } from 'react-toastify';
 import FormPatient from '../../medical_histories/components/FormPatient';
 import { IPatientSelect } from '../../medical_histories/components/AddMedicalHistories';
 import MessageForm from '@/components/message';
+import renderMessageError from '@/helpers/renderMessageErrror';
+import { Stack } from '@mui/material';
 
 interface AddPrescripton {
   navigate: () => void;
@@ -27,6 +29,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectPatient, setSelectPatient] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState<IPatientSelect | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     form: {
@@ -54,33 +57,38 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   useEffect(() => {
     if (!selectedCategoryId) return;
     (async () => {
-      const res = await getMedication(selectedCategoryId);
-      setMedications(res.data);
+      try {
+        setLoading(true);
+        const res = await getMedication(selectedCategoryId);
+        setMedications(res.data);
+      } catch (error: any) {
+        throw new Error(error);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [selectedCategoryId]);
 
   const handleCreateMedication: SubmitHandler<any> = async data => {
-    console.log('🚀 ~ AddPrescriptions ~ data:', data);
     if (!isValid) return;
     const newPrescription = {
       patient_id: data.patient_id,
-      user_id: '3119acf9-b33c-4de6-9b51-0275be8ea689',
+      user_id: '281a55be-1aa1-4c82-8712-7d76ea7d0ae8',
       name: data.name,
       description: data.description,
       medications: data.medications,
+      medical_history_id: '',
     };
-    console.log('🚀 ~ AddPrescriptions ~ newPrescription:', newPrescription);
-    const data1 = await createPrescription({
-      medication_id: '828d04ca-111d-49ee-8043-611648cb5f65',
-      ...newPrescription,
-    } as IPrescription);
-    console.log(data1);
 
+    const res = await createPrescription(newPrescription);
+    if (res.success === false) {
+      return toast.error(renderMessageError(res.errors));
+    }
     toast.success('Tạo đơn thuốc thành công !');
-    handleResetForm();
+    // handleResetForm();
   };
 
-  const handleResetForm = () =>
+  const handleResetForm = () => {
     reset({
       patient_id: '',
       user_id: '',
@@ -96,9 +104,13 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
       ],
       isCategory: '',
     });
+    setSelectedPatientId(null);
+  };
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
+    setValue('isCategory', '');
+    setValue('medications', undefined);
   };
 
   const handleSelectedPatientId = (id: string | null, name: string | null) => {
@@ -182,23 +194,32 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                 </div>
               </div>
 
-              <div className="mb-7">
-                <Label htmlFor="description">Lời dặn</Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <textarea
-                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
-                        placeholder="Nhập lời dặn ..."
-                        id="description"
-                        {...field}
-                      ></textarea>
-                    );
-                  }}
-                />
-              </div>
+              <Stack direction="row" gap={'20px'}>
+                <div className="w-2/5">
+                  <Label htmlFor="description">Bệnh án</Label>
+                  <Button className="text-black h-[42px] w-full bg-[#F3F4F7]" type="button" styled="normal">
+                    Chọn bệnh án
+                  </Button>
+                  <MessageForm error={errors.medical_history_id?.message} />
+                </div>
+                <div className="mb-7 flex-1">
+                  <Label htmlFor="description">Lời dặn</Label>
+                  <Controller
+                    name="description"
+                    control={control}
+                    render={({ field }) => {
+                      return (
+                        <textarea
+                          className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]"
+                          placeholder="Nhập lời dặn ..."
+                          id="description"
+                          {...field}
+                        ></textarea>
+                      );
+                    }}
+                  />
+                </div>
+              </Stack>
 
               <div className="flex items-center gap-7 w-1/4 justify-end ml-auto pt-3">
                 <Button
@@ -208,7 +229,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >
-                  Xác nhận
+                  Tạo đơn
                 </Button>
                 <Button type="button" styled="normal" onClick={handleResetForm}>
                   Nhập lại
@@ -224,6 +245,8 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
         handleCloseDialog={handleCloseDialog}
         medications={medications}
         medicationCategory={medicationCategory}
+        loading={loading}
+        setIsDialogOpen={setIsDialogOpen}
       />
 
       {selectPatient && (

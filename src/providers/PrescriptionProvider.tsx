@@ -17,6 +17,7 @@ const prescriptionSchema = yup.object().shape({
   name: yup.string().required('Tên đơn thuốc là bắt buộc'),
   description: yup.string(),
   medications: yup.array().of(medicationSchema),
+  medical_history_id: yup.string().required('Bệnh án là bắt buộc'),
   isCategory: yup.string().required('Cần có ít nhất một thuốc trong đơn thuốc'),
 });
 
