@@ -12,6 +12,7 @@ import { numberRegex } from '@/constants/regex';
 import { Button } from '@/components/button';
 import { resolveErrorResponse } from '@/helpers/utils';
 import toast from 'react-hot-toast';
+import { useSelector } from '@/hooks/redux';
 
 const resetPasswordSchema = yup.object({
   otp: yup.string().length(6).required(),
@@ -26,8 +27,9 @@ interface ResetPasswordProps {
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
+  const { loading } = useSelector(state => state.global);
   const {
-    formState: { isSubmitting, disabled },
+    formState: { isSubmitting },
     setError,
   } = useFormContext<ResetPassword>();
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
     }
   };
   const handleResendOtp = async () => {
-    if (!disabled) {
+    if (!loading) {
       handleSendEmail({ email });
     }
   };

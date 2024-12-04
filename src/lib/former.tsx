@@ -1,7 +1,7 @@
 import yup from '@/helpers/locate';
 import { useSelector } from '@/hooks/redux';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { ComponentType } from 'react';
+import React, { ComponentType, useEffect, useState } from 'react';
 import { FormProvider, useForm, UseFormProps } from 'react-hook-form';
 
 export type OptionsWithForm = Omit<UseFormProps, 'resolver' | 'disabled'>;
@@ -12,13 +12,20 @@ const former = <T extends object>(
   options?: OptionsWithForm,
 ) => {
   const Component: React.FC<T> = props => {
-    const { loading: disabled } = useSelector(state => state.global);
+    const { loading } = useSelector(state => state.global);
+    const [disabled, setDisabled] = useState(false);
     const form = useForm({
       disabled,
       resolver: Schema && yupResolver(Schema),
       defaultValues: Schema ? options?.defaultValues || Schema.getDefault() : options?.defaultValues,
       ...options,
     });
+
+    useEffect(() => {
+      if (form.formState.isSubmitting || form.formState.isSubmitSuccessful) {
+        setDisabled(loading);
+      }
+    }, [loading]);
 
     return (
       <FormProvider {...form}>

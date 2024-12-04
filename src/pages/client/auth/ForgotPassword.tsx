@@ -24,19 +24,22 @@ const ForgotPassword = () => {
   const {
     formState: { isSubmitting },
     setError,
+    reset,
     getValues,
   } = useFormContext<ForgotPassword>();
   const [isSend, setIsSend] = useState(false);
   const navigate = useNavigate();
-  const handleSendEmail = async (data: ForgotPassword) => {
+  const handleSendEmail = async ({ email }: ForgotPassword) => {
     try {
-      const response = await forgotPassword<{ message: string }>(data);
+      const response = await forgotPassword<{ message: string }>({ email });
+      reset({ email });
       toast.success(response.message);
       setIsSend(true);
     } catch (errors) {
       resolveErrorResponse(errors as ErrorResponse, setError);
     }
   };
+
   return (
     <>
       <div className="w-screen h-screen flex justify-center items-center bg-[#f2f2f4]">

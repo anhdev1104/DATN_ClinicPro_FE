@@ -50,7 +50,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
       user_info: {
         ...user_info,
         avatar: url?.data?.url,
-        dob: user_info?.dob && dayjs(user_info.dob).format('YYYY-MM-DD'),
+        dob: user_info?.dob && (dayjs(user_info.dob).format('YYYY-MM-DD') as any),
       },
     });
     if (result.data) {
@@ -168,7 +168,7 @@ export const createUserSChema = yup.object({
       .string()
       .oneOf(Object.values(GENDER) as `${GENDER}`[])
       .default(GENDER.OTHER),
-    dob: yup.string().nullable().default(null),
+    dob: yup.date().nullable().default(null),
     department_id: yup.string().nullable(),
   }),
 });

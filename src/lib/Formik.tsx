@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { FieldValues, FormProvider, useForm, UseFormProps, UseFormReturn } from 'react-hook-form';
 import yup from '@/helpers/locate';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -26,12 +26,19 @@ const Formik = <Schema extends yup.AnyObjectSchema, T extends FieldValues = yup.
   ref: React.Ref<HTMLFormElement>,
 ) => {
   const { loading } = useSelector(state => state.global);
+  const [disabled, setDisabled] = useState(false);
   const form = useForm({
-    disabled: loading,
+    disabled,
     resolver: schema && yupResolver(schema),
     defaultValues: schema ? options?.defaultValues || schema.getDefault() : options?.defaultValues,
     ...options,
   });
+
+  useEffect(() => {
+    if (form.formState.isSubmitting || form.formState.isSubmitSuccessful) {
+      setDisabled(loading);
+    }
+  }, [loading]);
 
   return (
     <FormProvider {...form}>

@@ -40,9 +40,13 @@ export const resolveErrorResponse = <T extends FieldValues = FieldValues>(
   errorResolve: ErrorResponse,
   setError?: UseFormSetError<T>,
 ) => {
+  if (!errorResolve) {
+    toast.error('Lỗi hệ thống vui lòng tải lại trang');
+    return;
+  }
   const { errors, message } = errorResolve;
   if (!errors && !message) {
-    toast.error('Lỗi hệ thống vui lòng đợi trong giây lát.');
+    toast.error('Có lỗi xảy ra vui lòng đợi trong giây lát.');
     return;
   }
   if (message) toast.error(message);
