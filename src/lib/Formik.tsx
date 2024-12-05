@@ -6,20 +6,6 @@ import { cn } from '@/helpers/utils';
 import { useSelector } from '@/hooks/redux';
 import { CreateNestedElement } from './controller';
 
-/**
- * @idea Formik library
- * @example
- * <Formik
- * schema={Schema}
- * onSubmit={onSubmit}
- * options={{defaultValues}}
- * >
- * {({formState,...methods}) => (
- *  <div>
- *  </div>
- * )}
- * </Formik>
- */
 export type FormikHandler<TFieldValues extends FieldValues> = (
   data: TFieldValues,
   form: UseFormReturn<TFieldValues>,
@@ -28,7 +14,7 @@ export type FormikHandler<TFieldValues extends FieldValues> = (
 
 interface FormikProps<T extends FieldValues, Schema>
   extends Omit<React.HTMLProps<HTMLFormElement>, 'children' | 'onSubmit'> {
-  onSubmit: FormikHandler<T>;
+  onSubmit?: FormikHandler<T>;
   schema?: Schema;
   children: (props: UseFormReturn<T>) => React.ReactNode;
   options?: UseFormProps<T>;
@@ -42,21 +28,23 @@ const Formik = <Schema extends yup.AnyObjectSchema, T extends FieldValues = yup.
   const { loading } = useSelector(state => state.global);
   const [disabled, setDisabled] = useState(false);
   const form = useForm({
-    ...options,
     disabled,
     resolver: schema && yupResolver(schema),
     defaultValues: schema ? options?.defaultValues || schema.getDefault() : options?.defaultValues,
+    ...options,
   });
 
   useEffect(() => {
-    if (form.formState.isSubmitting || form.formState.isSubmitSuccessful) setDisabled(loading);
+    if (form.formState.isSubmitting || form.formState.isSubmitSuccessful) {
+      setDisabled(loading);
+    }
   }, [loading]);
 
   return (
     <FormProvider {...form}>
       <form
         ref={ref}
-        onSubmit={form.handleSubmit((data, event) => onSubmit(data, form, event))}
+        onSubmit={form.handleSubmit((data, event) => onSubmit?.(data, form, event))}
         className={cn('space-y-6', className)}
         {...props}
       >

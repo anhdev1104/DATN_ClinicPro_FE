@@ -21,7 +21,10 @@ const CustomeInput = styled(TextField)(() => ({
 }));
 
 const Medication: React.FC<TMedication> = ({ id, name, index }) => {
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<{ quantity: boolean; duration: boolean }>({
+    quantity: false,
+    duration: false,
+  });
   const {
     form: { control, setValue },
   } = usePrescriptionContextForm();
@@ -83,15 +86,28 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
               render={({ field }) => (
                 <CustomeInput
                   value={
-                    error
-                      ? ''
+                    error.quantity
+                      ? (field.value = '' as any)
                       : !!idMedication
                         ? medications.find(item => item?.medication_id === id && item.quantity)?.quantity
                         : ''
                   }
-                  onChange={field.onChange}
-                  onInput={(e: ChangeEvent<HTMLInputElement>) => {
-                    checkIsNumberic(e) ? setError(true) : setError(false);
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    checkIsNumberic(e)
+                      ? setError(prev => ({ ...prev, quantity: true }))
+                      : setError(prev => ({ ...prev, quantity: false }));
+                    if (+e.target.value > 99) {
+                      e.target.value = '99';
+                    }
+                    field.onChange(e);
+                  }}
+                  onBlur={() => {
+                    setError(prev => ({ ...prev, quantity: false }));
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: error.quantity ? 'red' : '',
+                    },
                   }}
                 />
               )}
@@ -113,15 +129,33 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
               render={({ field }) => (
                 <CustomeInput
                   value={
-                    !!idMedication
-                      ? medications.find(item => item?.medication_id === id && item.duration)?.duration
-                      : ''
+                    error.duration
+                      ? (field.value = '' as any)
+                      : !!idMedication
+                        ? medications.find(item => item?.medication_id === id && item.duration)?.duration
+                        : ''
                   }
-                  onChange={field.onChange}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    checkIsNumberic(e)
+                      ? setError(prev => ({ ...prev, duration: true }))
+                      : setError(prev => ({ ...prev, duration: false }));
+                    if (+e.target.value > 99) {
+                      e.target.value = '99';
+                    }
+                    field.onChange(e);
+                  }}
+                  onBlur={() => {
+                    setError(prev => ({ ...prev, duration: false }));
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: error.duration ? 'red' : '',
+                    },
+                  }}
                 />
               )}
             />
-            <Box sx={{ margin: '0px !important', fontSize: 12 }}>Ngày</Box>
+            <Box sx={{ margin: '0px !important', fontSize: 12 }}>Lần</Box>
           </Stack>
           <Box
             sx={{

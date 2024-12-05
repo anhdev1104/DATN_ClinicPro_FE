@@ -20,7 +20,7 @@ export type CreateDepartmentProps = yup.InferType<typeof createDepartmentSchema>
 const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
   const {
     setError,
-    formState: { disabled },
+    formState: { isSubmitting },
   } = useFormContext<CreateDepartmentProps>();
   const { data: users } = useGetUsersQuery();
   const managers = useMemo(() => formatUserSelect(filterOutManagers(users?.data || [])), [users]);
@@ -36,7 +36,7 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
     resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
   };
   return (
-    <Form onSubmit={handleCreateDepartment}>
+    <Form withAutoValidate onSubmit={handleCreateDepartment}>
       <Stack>
         <BaseInput.Group autoComplete="name" name="name" label="Tên phòng ban" placeholder="Phòng IT..." />
         <BaseInput.Textarea autoComplete="description" name="description" label="Mô tả" />
@@ -64,7 +64,7 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
           renderOption={renderOption}
           nothingFoundMessage="Không tìm thấy người dùng"
         />
-        <BaseButton loading={disabled} disabled={disabled} type="submit">
+        <BaseButton loading={isSubmitting} disabled={isSubmitting} type="submit">
           Lưu
         </BaseButton>
       </Stack>

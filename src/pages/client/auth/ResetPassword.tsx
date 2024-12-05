@@ -29,7 +29,7 @@ interface ResetPasswordProps {
 const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email }) => {
   const { loading } = useSelector(state => state.global);
   const {
-    formState: { disabled },
+    formState: { isSubmitting },
     setError,
   } = useFormContext<ResetPassword>();
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
             <p className="ml-3 text-[13px] text-third">Nhập OTP và mật khẩu mới để đặt lại mật khẩu</p>
           </div>
         </div>
-        <Form onSubmit={handleSendRequest} className="w-3/4 flex flex-col mx-auto space-y-2">
+        <Form withAutoValidate onSubmit={handleSendRequest} className="w-3/4 flex flex-col mx-auto space-y-2">
           <BaseInput.Pin
             name="otp"
             autoComplete="otp"
@@ -83,8 +83,8 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ handleSendEmail, email })
           <Button
             type="submit"
             className="bg-third rounded-md w-full mt-3 h-[40px]"
-            isLoading={disabled}
-            disabled={disabled}
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
           >
             Đặt lại mật khẩu
           </Button>

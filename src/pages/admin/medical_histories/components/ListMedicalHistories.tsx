@@ -89,7 +89,7 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
   return (
     <div>
       <DirectRoute nav="Quản lý bệnh án" subnav="Bệnh án" />
-      <div className="bg-white size-full p-[20px] rounded-[26px]">
+      <div className="bg-white size-full p-[20px] rounded-[26px] min-h-[500px]">
         <div className="mb-6 w-full flex items-center justify-between gap-5">
           <div>
             <h1 className="text-[18px] text-black font-medium">Danh sách bệnh án</h1>
@@ -113,7 +113,7 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
             <div className="flex-[0_0_17%]">Ngày khám</div>
             <div className="flex-[0_0_5%]"></div>
           </div>
-          <div className="w-full border-b-[2px] border-borderColor text-left">
+          <div className="w-full text-left">
             {loading ? (
               <div className="mx-auto text-center pt-10">
                 <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
@@ -122,7 +122,7 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
               medicalRecords?.map((record, index) => (
                 <div
                   key={index}
-                  className={`py-4 text-black flex items-center justify-between w-full text-left cursor-pointer ${index % 2 === 1 ? ' bg-[#f5f5f5]' : 'bg-white'} px-2 transition-all hover:bg-yellow-50/45`}
+                  className={`py-4 text-black flex items-center justify-between w-full text-left cursor-pointer ${index % 2 === 1 ? ' bg-[#f5f5f5]' : 'bg-white'} px-2 hover:bg-yellow-50/45`}
                 >
                   <div className="flex-[0_0_21%]">{record.id}</div>
                   <div className="flex-[0_0_11%] font-semibold">{record.diagnosis}</div>
@@ -145,7 +145,7 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
                     <div className="relative inline-block text-left">
                       <button
                         type="button"
-                        className="inline-flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
+                        className="flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
                         onClick={() => handleToggle(record.id)}
                       >
                         <MoreHorizIcon />
@@ -194,12 +194,12 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
         </div>
         <ModalConfirm
           description="Dữ liệu sẽ không thể khôi phục"
-          title="Bạn có chắc muốn xóa"
+          title="Bạn có chắc muốn xóa ?"
           isClose={handleCloseModal}
           isOpen={activeModal}
           submit={() => handleDelete(idMedical)}
           isLoading={isLoading}
-          className="bg-primaryAdmin hover:bg-primaryAdmin/50"
+          className="bg-red-500 hover:bg-red-600 text-white"
         />
       </div>
       {open.status && <DetailMedicalHistories close={handleClose} statusLog={open.status} id={open.id} />}

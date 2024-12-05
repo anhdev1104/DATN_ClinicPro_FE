@@ -35,8 +35,6 @@ const UpdateUser = React.lazy(() => import('@/pages/admin/users/UpdateUser'));
 const MedicalHistories = React.lazy(() => import('@/pages/admin/medical_histories/MedicalHistories'));
 const PrivacyPage = React.lazy(() => import('@/pages/client/privacy/privacyPage'));
 const Specialties = React.lazy(() => import('@/pages/admin/specialties/Specialties'));
-const AddSpecialties = React.lazy(() => import('@/pages/admin/specialties/components/AddSpecialties'));
-const EditSpecialties = React.lazy(() => import('@/pages/admin/specialties/components/EditSpecialties'));
 const Patients = React.lazy(() => import('@/pages/admin/patient/Patients'));
 const DetailPatient = React.lazy(() => import('@/pages/admin/patient/components/DetailPatient'));
 const AddPatient = React.lazy(() => import('@/pages/admin/patient/components/AddPatient'));
@@ -180,16 +178,6 @@ const adminRouter: IRouter[] = [
   {
     path: '/specialties',
     element: <Specialties />,
-    title: 'Trang chuyên khoa',
-  },
-  {
-    path: '/add-specialties',
-    element: <AddSpecialties />,
-    title: 'Trang chuyên khoa',
-  },
-  {
-    path: '/edit-specialties/:id',
-    element: <EditSpecialties />,
     title: 'Trang chuyên khoa',
   },
   {
