@@ -1,14 +1,6 @@
 import ListAppointment from './Compontents/ListAppointment';
 const Appointment = () => {
-  return (
-    <div>
-      <div>
-        <h1>
-          <ListAppointment />
-        </h1>
-      </div>
-    </div>
-  );
+  return <ListAppointment />;
 };
 
 export default Appointment;
