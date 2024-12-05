@@ -18,6 +18,8 @@ import { Manager } from './components/Manager';
 import { Mock } from '@/components/base/Link/Mock';
 import { Divider } from '@mui/material';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
+import BaseButton from '@/components/base/button';
+import { modals } from '@mantine/modals';
 
 export default function GetDepartment() {
   const navigate = useNavigate();
@@ -112,7 +114,20 @@ export default function GetDepartment() {
             />
           </div>
           <div className="flex justify-end items-center space-x-4 my-4">
-            <DeleteDepartment />
+            <BaseButton
+              size="xs"
+              leftSection={<BaseIcon icon={IconTrash} />}
+              onClick={() => {
+                modals.open({
+                  title: 'Xóa Phòng Ban',
+                  children: <DeleteDepartment id={id!} close={modals.closeAll} />,
+                  size: 'md',
+                });
+              }}
+              color="red"
+            >
+              Xóa Phòng Ban
+            </BaseButton>
           </div>
         </div>
       </Paper>

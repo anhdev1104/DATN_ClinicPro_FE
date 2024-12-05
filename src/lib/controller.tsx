@@ -15,7 +15,6 @@ const InputWithController = ({
     [error]: fieldState.error?.message || fieldState.invalid,
     'aria-invalid': fieldState.invalid,
     ...field,
-    value: field?.value === undefined ? '' : field.value,
     ...child.props,
   });
 };

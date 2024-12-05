@@ -5,7 +5,18 @@ import { useGetUserQuery, useUpdateUserMutation } from '@/redux/api/users';
 import { getAllRole } from '@/services/roles.service';
 import { IRole } from '@/types/role.type';
 import { Avatar, Flex, Grid } from '@mantine/core';
-import { IconCalendar, IconUpload } from '@tabler/icons-react';
+import {
+  IconBuildingSkyscraper,
+  IconCalendar,
+  IconGenderTransgender,
+  IconMail,
+  IconMobiledata,
+  IconPencilCheck,
+  IconPhoneCall,
+  IconShieldLock,
+  IconUpload,
+  IconUser,
+} from '@tabler/icons-react';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -58,28 +69,32 @@ export default function UpdateUser() {
   const rolesOption = useMemo(() => formatRoleSelect(roles || []), [roles]);
 
   const handleUpdateUser: FormikHandler<UpdateUserProps> = async (data, { setError }) => {
-    const { user_info, ...props } = data;
-    let url;
-    if (upload.file) {
-      const formData = new FormData();
-      formData.append('file', upload.file as File);
-      url = await uploadFile(formData);
+    try {
+      const { user_info, ...props } = data;
+      let url;
+      if (upload.file) {
+        const formData = new FormData();
+        formData.append('file', upload.file as File);
+        url = await uploadFile(formData);
+      }
+      const result = await updateUser({
+        ...props,
+        id: userId!,
+        user_info: {
+          ...user_info,
+          avatar: url?.data?.url,
+          dob: user_info?.dob && (dayjs(user_info.dob).format('YYYY-MM-DD') as any),
+        },
+      });
+      if (result.data) {
+        toast.success(result.data.message);
+        navigate(`/users/${userId}`);
+        return;
+      }
+      resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
+    } catch (errorrs) {
+      resolveErrorResponse(errorrs as ErrorResponse, setError);
     }
-    const result = await updateUser({
-      ...props,
-      id: userId!,
-      user_info: {
-        ...user_info,
-        avatar: url?.data?.url,
-        dob: user_info?.dob && (dayjs(user_info.dob).format('YYYY-MM-DD') as any),
-      },
-    });
-    if (result.data) {
-      toast.success(result.data.message);
-      navigate(`/users/${userId}`);
-      return;
-    }
-    resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
   };
 
   useEffect(() => {
@@ -126,17 +141,29 @@ export default function UpdateUser() {
                     </BaseButton.File>
                   </Grid.Col>
                   <Grid.Col span={4}>
-                    <BaseInput.Group name="user_info.fullname" autoComplete="fullname" label="Họ và Tên" />
-                  </Grid.Col>
-                  <Grid.Col span={4}>
-                    <BaseInput.Group name="email" autoComplete="email" label="Email" />
+                    <BaseInput.Group
+                      name="user_info.fullname"
+                      autoComplete="fullname"
+                      leftSection={<BaseIcon icon={IconUser} />}
+                      label="Họ và Tên"
+                    />
                   </Grid.Col>
                   <Grid.Col span={4}>
                     <BaseInput.Group
-                      type="number"
+                      name="email"
+                      autoComplete="email"
+                      leftSection={<BaseIcon icon={IconMail} />}
+                      label="Email"
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={4}>
+                    <BaseInput.Number
                       name="user_info.phone_number"
                       autoComplete="phone_number"
                       label="Số Điện Thoại"
+                      leftSection={<BaseIcon icon={IconPhoneCall} />}
+                      trimLeadingZeroesOnBlur={false}
+                      thousandSeparator=" "
                     />
                   </Grid.Col>
                   <Grid.Col>
@@ -145,6 +172,7 @@ export default function UpdateUser() {
                       autoComplete="role_id"
                       data={rolesOption}
                       label="Role"
+                      leftSection={<BaseIcon icon={IconShieldLock} />}
                       placeholder="Role"
                     />
                   </Grid.Col>
@@ -153,6 +181,7 @@ export default function UpdateUser() {
                       name="user_info.department_id"
                       autoComplete="department_id"
                       data={deparmentsOption}
+                      leftSection={<BaseIcon icon={IconBuildingSkyscraper} />}
                       nothingFoundMessage="không tìm thấy phòng ban"
                       label="Phòng Ban"
                     />
@@ -162,6 +191,7 @@ export default function UpdateUser() {
                       name="user_info.gender"
                       autoComplete="gender"
                       data={Object.values(GENDER)}
+                      leftSection={<BaseIcon icon={IconGenderTransgender} />}
                       allowDeselect={false}
                       label="Giới tính"
                     />
@@ -181,6 +211,7 @@ export default function UpdateUser() {
                       name="status"
                       autoComplete="status"
                       data={Object.values(STATUS)}
+                      leftSection={<BaseIcon icon={IconMobiledata} />}
                       allowDeselect={false}
                       label="Status"
                     />
@@ -193,7 +224,12 @@ export default function UpdateUser() {
                   <BaseButton onClick={() => navigate(-1)} color="gray">
                     Hủy
                   </BaseButton>
-                  <BaseButton disabled={isSubmitting} loading={isSubmitting} type="submit">
+                  <BaseButton
+                    disabled={isSubmitting}
+                    loading={isSubmitting}
+                    leftSection={<BaseIcon icon={IconPencilCheck} />}
+                    type="submit"
+                  >
                     Cập Nhật
                   </BaseButton>
                 </Flex>

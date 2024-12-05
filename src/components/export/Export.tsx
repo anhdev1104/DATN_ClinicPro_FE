@@ -23,9 +23,9 @@ const flattenObject = (obj: any, parentKey = '', result = {} as any) => {
 export const ExportFile = <T,>({ rows }: ExportFileProps<T>) => {
   const excelRow = useMemo(() => rows.map(row => flattenObject(row.original)), [rows]);
   return (
-    <Menu shadow="md" width={100} position="bottom-end" radius="md">
+    <Menu withinPortal={false} shadow="md" width={100} position="bottom-end" radius="md">
       <Menu.Target>
-        <Tooltip label="Xuất File">
+        <Tooltip withinPortal={false} label="Xuất File">
           <BaseButton.Icon variant="outline">
             <BaseIcon icon={IconDatabaseExport} />
           </BaseButton.Icon>

@@ -12,6 +12,8 @@ import toast from 'react-hot-toast';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import { useMemo } from 'react';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
+import { IconBuilding, IconUsers, IconUsersGroup } from '@tabler/icons-react';
+import BaseIcon from '@/components/base/BaseIcon';
 
 const updateDepartmentSchema = yup.object({
   name: yup.string().trim().omit([null]),
@@ -60,14 +62,20 @@ export default function UpdateDepartment() {
           return (
             <>
               <Stack>
-                <BaseInput.Group name="name" autoComplete="name" label="Tên phòng ban" placeholder="Phòng IT..." />
-                <BaseInput.Textarea name="description" autoComplete="description" label="Mô tả" />
+                <BaseInput.Group
+                  name="name"
+                  autoComplete="name"
+                  leftSection={<BaseIcon icon={IconBuilding} />}
+                  label="Tên phòng ban"
+                  placeholder="Phòng IT..."
+                />
                 <BaseInput.Select
                   name="manager_id"
                   autoComplete="manager_id"
                   label="Chọn Quản lý"
                   data={managers}
                   renderOption={renderOption}
+                  leftSection={<BaseIcon icon={IconUsers} />}
                   clearable
                   searchable
                   allowDeselect={false}
@@ -79,11 +87,13 @@ export default function UpdateDepartment() {
                   onRemove={value => setValue('users_delete', [...(getValues('users_delete') || ''), value])}
                   data={listUsers}
                   renderOption={renderOption}
+                  leftSection={<BaseIcon icon={IconUsersGroup} />}
                   label="Chọn Nhân Viên"
                   searchable
                   hidePickedOptions
                   nothingFoundMessage="không tìm thấy nhân viên nào"
                 />
+                <BaseInput.Textarea name="description" autoComplete="description" resize="vertical" label="Mô tả" />
               </Stack>
               <Flex gap={10} justify="end">
                 <BaseButton color="gray" onClick={() => navigate(-1)}>

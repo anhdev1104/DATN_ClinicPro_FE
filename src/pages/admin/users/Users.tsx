@@ -5,19 +5,18 @@ import TableAction from '@/components/table/TableAction';
 import { useColumn } from '@/hooks/useColumn';
 import { useGetUsersQuery } from '@/redux/api/users';
 import { IUserInfo } from '@/types/user.type';
-import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
+import { useDebouncedCallback } from '@mantine/hooks';
 import { IconPlus } from '@tabler/icons-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import CreateUser from './components/CreateUser';
-import BaseModal from '@/components/base/modal';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import { Badge, Pagination } from '@mantine/core';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import BaseInput from '@/components/base/input';
 import { useState } from 'react';
+import { modals } from '@mantine/modals';
 
 export default function User() {
-  const [opened, { close, open }] = useDisclosure();
   const [params, setParams] = useSearchParams();
   const [limit] = useState(5);
   const {
@@ -80,7 +79,17 @@ export default function User() {
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
           toolbar={
-            <BaseButton.Icon onClick={open} variant="subtle" radius="lg">
+            <BaseButton.Icon
+              onClick={() => {
+                modals.open({
+                  title: 'Tạo Mới User',
+                  children: <CreateUser close={modals.closeAll} />,
+                  size: 'auto',
+                });
+              }}
+              variant="subtle"
+              radius="lg"
+            >
               <BaseIcon icon={IconPlus} />
             </BaseButton.Icon>
           }
@@ -115,9 +124,6 @@ export default function User() {
           highlightOnHover
         />
       </div>
-      <BaseModal title="Tạo Mới User" opened={opened} onClose={close}>
-        <CreateUser close={close} />
-      </BaseModal>
     </>
   );
 }
