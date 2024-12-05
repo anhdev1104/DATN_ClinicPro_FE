@@ -3,15 +3,10 @@ import { Package } from './Package';
 export const AdvisePackage = () => {
   return (
     <>
-      <div className="container-page px-4 sm:mx-auto pb-16">
-        <h1 className="sm:pb-10 my-10 sm:border-b-2 sm:border-b-[#abdfe1] sm:border-solid text-third text-2xl md:text-3xl font-semibold">
-          Khám Sức Khỏe
-        </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-flow-row gap-14">
-          <Package />
-          <Package />
-          <Package />
-        </div>
+      <div className=" container-page px-4 sm:mx-auto pb-16">
+        <Package categoryId="eba4e4c2-1605-4db9-91f2-6bbb2b26c49d" />
+        <Package categoryId="43a71d44-920f-4c4f-b293-f45c87875d97" />
+        <Package categoryId="4fd772e0-efd7-4515-8ea9-8bbf9749e842" />
       </div>
     </>
   );

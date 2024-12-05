@@ -32,9 +32,9 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
         const categoryResponse = await getCategory();
         setPackages(packageResponse.data || []);
         setCategories(categoryResponse || []);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setError('Không thể tải danh sách gói khám. Vui lòng thử lại sau.');
+        return error;
       } finally {
         setLoading(false);
       }
@@ -88,64 +88,65 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
           </div>
         )}
         <div className="grid grid-cols-4 gap-2 py-7 px-5">
-          {currentPackages.map((pkg, index) => (
-            <div className="max-w-sm mx-auto border rounded-lg shadow-md p-4 bg-white" key={index}>
-              <div className="relative">
-                <img src={pkg.image} alt={pkg.name} className="w-full h-52 object-cover rounded-md" />
+          {currentPackages.length > 0 &&
+            currentPackages.map((pkg, index) => (
+              <div className="max-w-sm mx-auto border rounded-lg shadow-md p-4 bg-white" key={index}>
+                <div className="relative">
+                  <img src={pkg.image} alt={pkg.name} className="w-full h-52 object-cover rounded-md" />
+                </div>
+                <div className="mt-4 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Tên gói</label>
+                    <input
+                      type="text"
+                      value={pkg.name}
+                      className="w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Danh mục</label>
+                    <input
+                      type="text"
+                      defaultValue={getCategoryName(pkg.category_id)}
+                      className="w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Nội dung </label>
+                    <textarea name="" id="" cols={25} rows={6} disabled className="w-full bg-white scroll-select">
+                      {pkg.content}
+                    </textarea>
+                  </div>
+                  <div className="relative inline-block text-left ml-52">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-2 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                      onClick={() => handleToggle(pkg.id)}
+                    >
+                      <MoreVertIcon />
+                    </button>
+                    {isOpen(pkg.id) && (
+                      <div className="absolute right-0 z-10 mt-[-115px] w-56 rounded-md shadow-lg bg-white overflow-hidden">
+                        <Link
+                          to={`/edit-package/${pkg.id}`}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => handleToggle(pkg.id)}
+                        >
+                          Sửa
+                        </Link>
+                        <Link
+                          to="#"
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => handleDelete(pkg.id)}
+                        >
+                          Xóa bỏ
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="mt-4 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Tên gói khám</label>
-                  <input
-                    type="text"
-                    value={pkg.name}
-                    className="w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Danh mục</label>
-                  <input
-                    type="text"
-                    defaultValue={getCategoryName(pkg.category_id)}
-                    className="w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Nội dung gói khám</label>
-                  <textarea name="" id="" cols={25} rows={6} disabled className="w-full bg-white">
-                    {pkg.content}
-                  </textarea>
-                </div>
-                <div className="relative inline-block text-left ml-52">
-                  <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-2 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    onClick={() => handleToggle(pkg.id)}
-                  >
-                    <MoreVertIcon />
-                  </button>
-                  {isOpen(pkg.id) && (
-                    <div className="absolute right-0 z-10 mt-[-115px] w-56 rounded-md shadow-lg bg-white overflow-hidden">
-                      <Link
-                        to={`/edit-package/${pkg.id}`}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => handleToggle(pkg.id)}
-                      >
-                        Sửa
-                      </Link>
-                      <Link
-                        to="#"
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => handleDelete(pkg.id)}
-                      >
-                        Xóa bỏ
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
         <div className="flex justify-center items-center gap-4 py-4">
           {[...Array(totalPages)].map((_, index) => (
