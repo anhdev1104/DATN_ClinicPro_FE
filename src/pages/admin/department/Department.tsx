@@ -108,13 +108,13 @@ export default function Department() {
           manualPagination
           pagination={
             <Pagination
-              total={Number(departments?.total_pages)}
+              total={Number(departments?.total_pages) || 1}
               onChange={value => {
                 params.set('page', value.toString());
                 setParams(params.toString());
               }}
+              value={Number(params.get('page')) || 1}
               radius="md"
-              defaultValue={Number(params.get('page')) || 1}
               className="w-full flex justify-center py-2"
             />
           }

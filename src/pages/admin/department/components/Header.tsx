@@ -17,7 +17,11 @@ export const Header = ({ department }: { department: DepartmentProps | null }) =
           <Title order={3} className="mt-0">
             {department?.name}
           </Title>
-          <BaseButton onClick={() => navigate('edit')} leftSection={<BaseIcon icon={IconPencil} />} size="xs">
+          <BaseButton
+            onClick={() => navigate(`/departments/${department?.id}/edit`)}
+            leftSection={<BaseIcon icon={IconPencil} />}
+            size="xs"
+          >
             Cập Nhật
           </BaseButton>
         </div>

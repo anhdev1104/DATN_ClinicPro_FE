@@ -43,6 +43,7 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
           name="name"
           leftSection={<BaseIcon icon={IconBuilding} />}
           label="Tên phòng ban"
+          withAsterisk
           placeholder="Phòng IT..."
         />
         <BaseInput.Select

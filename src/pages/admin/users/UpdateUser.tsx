@@ -4,7 +4,7 @@ import BaseInput from '@/components/base/input';
 import { useGetUserQuery, useUpdateUserMutation } from '@/redux/api/users';
 import { getAllRole } from '@/services/roles.service';
 import { IRole } from '@/types/role.type';
-import { Avatar, Flex, Grid } from '@mantine/core';
+import { Avatar, Flex, Grid, Radio } from '@mantine/core';
 import {
   IconBuildingSkyscraper,
   IconCalendar,
@@ -51,7 +51,6 @@ const updateUserSchema = yup.object({
   }),
 });
 export type UpdateUserProps = yup.InferType<typeof updateUserSchema>;
-
 export default function UpdateUser() {
   const navigate = useNavigate();
   const { userId } = useParams();
@@ -88,7 +87,7 @@ export default function UpdateUser() {
       });
       if (result.data) {
         toast.success(result.data.message);
-        navigate(`/users/${userId}`);
+        navigate(`/users/${userId}`, { replace: true });
         return;
       }
       resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
@@ -145,6 +144,7 @@ export default function UpdateUser() {
                       name="user_info.fullname"
                       autoComplete="fullname"
                       leftSection={<BaseIcon icon={IconUser} />}
+                      withAsterisk
                       label="Họ và Tên"
                     />
                   </Grid.Col>
@@ -153,6 +153,7 @@ export default function UpdateUser() {
                       name="email"
                       autoComplete="email"
                       leftSection={<BaseIcon icon={IconMail} />}
+                      withAsterisk
                       label="Email"
                     />
                   </Grid.Col>
@@ -162,11 +163,12 @@ export default function UpdateUser() {
                       autoComplete="phone_number"
                       label="Số Điện Thoại"
                       leftSection={<BaseIcon icon={IconPhoneCall} />}
+                      allowNegative={false}
                       trimLeadingZeroesOnBlur={false}
                       thousandSeparator=" "
                     />
                   </Grid.Col>
-                  <Grid.Col>
+                  <Grid.Col span={6}>
                     <BaseInput.Select
                       name="role_id"
                       autoComplete="role_id"
@@ -174,9 +176,10 @@ export default function UpdateUser() {
                       label="Role"
                       leftSection={<BaseIcon icon={IconShieldLock} />}
                       placeholder="Role"
+                      withAsterisk
                     />
                   </Grid.Col>
-                  <Grid.Col>
+                  <Grid.Col span={6}>
                     <BaseInput.Select
                       name="user_info.department_id"
                       autoComplete="department_id"
@@ -191,6 +194,9 @@ export default function UpdateUser() {
                       name="user_info.gender"
                       autoComplete="gender"
                       data={Object.values(GENDER)}
+                      renderOption={({ option, checked }) => (
+                        <Radio checked={checked} onChange={() => {}} value={option.value} label={option.value} />
+                      )}
                       leftSection={<BaseIcon icon={IconGenderTransgender} />}
                       allowDeselect={false}
                       label="Giới tính"
@@ -204,6 +210,7 @@ export default function UpdateUser() {
                       valueFormat="YYYY/MM/DD"
                       placeholder="Chọn ngày sinh"
                       label="Ngày Sinh"
+                      withAsterisk
                     />
                   </Grid.Col>
                   <Grid.Col span={4}>

@@ -1,18 +1,18 @@
 import { useGetDepartmentQuery, useUpdateDepartmentMutation } from '@/redux/api/department';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, Paper } from '@mantine/core';
+import { Badge, Paper, Stack } from '@mantine/core';
 import { Text } from '@mantine/core';
 import BaseIcon from '@/components/base/BaseIcon';
 import Table from '@/components/table/Table';
 import ActionWithRow from '@/components/table/TableAction';
-import { IconTrash } from '@tabler/icons-react';
+import { IconPlus, IconTrash, IconUsersGroup } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
 import { DeleteDepartment } from './components/DeleteDepartment';
 import { UserProps } from '@/types/department.type';
 import { Header } from './components/Header';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import toast from 'react-hot-toast';
-import { resolveErrorResponse } from '@/helpers/utils';
+import { formatUserSelect, resolveErrorResponse } from '@/helpers/utils';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import { Manager } from './components/Manager';
 import { Mock } from '@/components/base/Link/Mock';
@@ -20,12 +20,22 @@ import { Divider } from '@mui/material';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import BaseButton from '@/components/base/button';
 import { modals } from '@mantine/modals';
-
+import BaseInput from '@/components/base/input';
+import { useGetUsersQuery } from '@/redux/api/users';
+import { useMemo } from 'react';
+import { renderOption } from '@/helpers/format';
+import Formik from '@/lib/Formik';
+import yup from '@/helpers/locate';
+const schema = yup.object({
+  users: yup.array().of(yup.string()).default([]),
+});
 export default function GetDepartment() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [handleUpdate] = useUpdateDepartmentMutation();
   const { data: department, isFetching } = useGetDepartmentQuery(id!);
+  const { data: users } = useGetUsersQuery();
+  const listUsers = useMemo(() => formatUserSelect(users?.data || []), [users]);
   const columns = useColumn<UserProps>([
     {
       key: 'fullname',
@@ -107,6 +117,51 @@ export default function GetDepartment() {
           <div id="table-user" className="space-y-2">
             <Mock href="#table-user" name="Nhân viên phòng ban" />
             <Table
+              highlightOnHover
+              toolbar={
+                <BaseButton.Icon
+                  onClick={() => {
+                    modals.open({
+                      title: `Thêm User Vào ${department.name}`,
+                      children: (
+                        <Formik
+                          withAutoValidate
+                          schema={schema}
+                          onSubmit={async ({ users }, { setError }) => {
+                            const response = await handleUpdate({ id: id!, users });
+                            if (response.data) {
+                              toast.success(response.data.message);
+                              modals.closeAll();
+                              return;
+                            }
+                            resolveErrorResponse((response.error as AxiosBaseQueryError).data, setError);
+                          }}
+                        >
+                          {({ formState: { isSubmitting } }) => (
+                            <Stack>
+                              <BaseInput.MultiSelect
+                                name="users"
+                                autoComplete="users"
+                                data={listUsers}
+                                renderOption={renderOption}
+                                leftSection={<BaseIcon icon={IconUsersGroup} />}
+                                searchable
+                                hidePickedOptions
+                              />
+                              <BaseButton disabled={isSubmitting} loading={isSubmitting} type="submit">
+                                Thêm
+                              </BaseButton>
+                            </Stack>
+                          )}
+                        </Formik>
+                      ),
+                      size: 'md',
+                    });
+                  }}
+                >
+                  <BaseIcon icon={IconPlus} />
+                </BaseButton.Icon>
+              }
               onRowClick={value => navigate(`/users/${value.id}`)}
               columns={columns}
               data={department?.users || []}

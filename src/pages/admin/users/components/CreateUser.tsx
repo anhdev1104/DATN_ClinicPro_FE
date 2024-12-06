@@ -105,6 +105,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
               name="user_info.fullname"
               autoComplete="fullname"
               leftSection={<BaseIcon icon={IconUser} />}
+              withAsterisk
               label="Họ và Tên"
             />
           </Grid.Col>
@@ -113,6 +114,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
               name="email"
               autoComplete="email"
               leftSection={<BaseIcon icon={IconMail} />}
+              withAsterisk
               label="Email"
             />
           </Grid.Col>
@@ -121,6 +123,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
               name="user_info.phone_number"
               autoComplete="phone_number"
               label="Số Điện Thoại"
+              allowNegative={false}
               trimLeadingZeroesOnBlur={false}
               thousandSeparator=" "
               leftSection={<BaseIcon icon={IconPhoneCall} />}
@@ -131,6 +134,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
               name="password"
               autoComplete="password"
               leftSection={<BaseIcon icon={IconBrandSamsungpass} />}
+              withAsterisk
               label="Password"
             />
           </Grid.Col>
@@ -152,11 +156,23 @@ const CreateUser = ({ close }: BaseModalProps) => {
               name="user_info.dob"
               autoComplete="dob"
               leftSection={<BaseIcon icon={IconCalendar} />}
+              withAsterisk
               placeholder="Chọn ngày sinh"
               label="Ngày Sinh"
             />
           </Grid.Col>
-          <Grid.Col span={6}>
+          <Grid.Col span={4}>
+            <BaseInput.Select
+              name="role_id"
+              autoComplete="role_id"
+              data={rolesOption}
+              label="Role"
+              leftSection={<BaseIcon icon={IconShieldLock} />}
+              placeholder="Role"
+              withAsterisk
+            />
+          </Grid.Col>
+          <Grid.Col span={4}>
             <BaseInput.Select
               name="user_info.department_id"
               autoComplete="department_id"
@@ -165,19 +181,6 @@ const CreateUser = ({ close }: BaseModalProps) => {
               nothingFoundMessage="Chưa có phòng ban nào"
               label="Phòng Ban"
             />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <BaseInput.Select
-              name="role_id"
-              autoComplete="role_id"
-              data={rolesOption}
-              label="Role"
-              leftSection={<BaseIcon icon={IconShieldLock} />}
-              placeholder="Role"
-            />
-          </Grid.Col>
-          <Grid.Col span={8}>
-            <BaseInput.Textarea name="user_info.address" autoComplete="address" resize="vertical" label="Địa Chỉ" />
           </Grid.Col>
           <Grid.Col span={4}>
             <BaseInput.Select
@@ -188,6 +191,9 @@ const CreateUser = ({ close }: BaseModalProps) => {
               leftSection={<BaseIcon icon={IconMobiledata} />}
               label="Status"
             />
+          </Grid.Col>
+          <Grid.Col>
+            <BaseInput.Textarea name="user_info.address" autoComplete="address" resize="vertical" label="Địa Chỉ" />
           </Grid.Col>
         </Grid>
         <BaseButton
@@ -220,7 +226,7 @@ export const createUserSChema = yup.object({
       .string()
       .oneOf(Object.values(GENDER) as `${GENDER}`[])
       .default(GENDER.OTHER),
-    dob: yup.date().nullable().default(null),
+    dob: yup.date().nullable().required().default(null),
     department_id: yup.string().nullable(),
   }),
 });

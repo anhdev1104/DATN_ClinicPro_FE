@@ -19,6 +19,7 @@ interface BaseTableProps<T, D> extends Omit<TableProps, 'data'> {
   data: T[];
   columns: ColumnDef<T, D>[];
   isFetching?: boolean;
+  isLoading?: boolean;
   onRowClick?: (data: T, event: React.MouseEvent) => void;
   toolbar?: React.ReactNode | boolean;
   manualPagination?: boolean;
@@ -31,6 +32,7 @@ const Table = <T, D>({
   data,
   columns,
   isFetching,
+  isLoading,
   toolbar,
   onRowClick,
   rowCount,
@@ -90,8 +92,8 @@ const Table = <T, D>({
             ))}
           </BaseTable.Header>
 
-          <BaseTable.Body>
-            {isFetching ? (
+          <BaseTable.Body className="relative">
+            {isLoading ? (
               <BaseTable.Row>
                 {columns.map((_, index) => {
                   return (
@@ -103,7 +105,11 @@ const Table = <T, D>({
               </BaseTable.Row>
             ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map(row => (
-                <BaseTable.Row key={row.id} data-state={row.getIsSelected() && 'selected'} className="cursor-pointer">
+                <BaseTable.Row
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                  className={`cursor-pointer ${isFetching && 'opacity-40 cursor-pointer select-none'}`}
+                >
                   {row.getVisibleCells().map(({ id, column, row, getContext }) => {
                     return (
                       <BaseTable.Cell

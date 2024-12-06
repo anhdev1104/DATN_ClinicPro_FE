@@ -66,6 +66,7 @@ export default function UpdateDepartment() {
                   name="name"
                   autoComplete="name"
                   leftSection={<BaseIcon icon={IconBuilding} />}
+                  withAsterisk
                   label="Tên phòng ban"
                   placeholder="Phòng IT..."
                 />
