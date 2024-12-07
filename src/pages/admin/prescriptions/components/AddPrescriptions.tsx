@@ -9,7 +9,6 @@ import { createPrescription, getCategoryMedication, getMedication } from '@/serv
 import { useEffect, useState } from 'react';
 import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
 import { IMedications } from '@/types/prescription.type';
-import ModalMedication from '@/components/modal/ModalMedication';
 import convertToOptions from '@/helpers/convertToOptions';
 import DirectRoute from '@/components/direct';
 import { toast } from 'react-toastify';
@@ -18,6 +17,8 @@ import { IPatientSelect } from '../../medical_histories/components/AddMedicalHis
 import MessageForm from '@/components/message';
 import renderMessageError from '@/helpers/renderMessageErrror';
 import { Stack } from '@mui/material';
+import { ModalMedicalHistories, ModalMedication } from '@/components/modal';
+import useToggle from '@/hooks/useToggle';
 
 interface AddPrescripton {
   navigate: () => void;
@@ -30,6 +31,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   const [selectPatient, setSelectPatient] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState<IPatientSelect | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const { show: isMedicalHistories, handleToggle } = useToggle();
 
   const {
     form: {
@@ -156,7 +158,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                 </Field>
                 <div className="min-w-[400px] w-1/2 relative">
                   <Label>Tên bệnh nhân</Label>
-                  {selectedPatientId ? (
+                  {selectedPatientId?.name ? (
                     <>
                       <div
                         className="absolute right-0 -top-1 cursor-pointer text-primaryAdmin"
@@ -165,7 +167,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                       >
                         <ChangeCircleIcon className="font-bold" />
                       </div>
-                      <div className="text-black h-[42px] w-full bg-white border flex justify-center items-center rounded-md">
+                      <div className="text-black h-[42px] w-full bg-primaryAdmin/5 border flex justify-center items-center rounded-md">
                         {selectedPatientId.name}
                       </div>
                     </>
@@ -196,8 +198,13 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
 
               <Stack direction="row" gap={'20px'}>
                 <div className="w-2/5">
-                  <Label htmlFor="description">Bệnh án</Label>
-                  <Button className="text-black h-[42px] w-full bg-[#F3F4F7]" type="button" styled="normal">
+                  <Label>Bệnh án</Label>
+                  <Button
+                    className="text-black h-[42px] w-full bg-[#F3F4F7]"
+                    type="button"
+                    styled="normal"
+                    onClick={handleToggle}
+                  >
                     Chọn bệnh án
                   </Button>
                   <MessageForm error={errors.medical_history_id?.message} />
@@ -248,7 +255,6 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
         loading={loading}
         setIsDialogOpen={setIsDialogOpen}
       />
-
       {selectPatient && (
         <FormPatient
           onSelectPatient={handleSelectedPatientId}
@@ -257,6 +263,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
           selectedPatientId={selectedPatientId?.id}
         />
       )}
+      <ModalMedicalHistories open={isMedicalHistories} onClose={handleToggle} />
     </>
   );
 };
