@@ -18,7 +18,7 @@ const Information = () => {
               1. Mục đích và phạm vi thu thập thông tin
             </h3>
             <p className="text-[16px] leading-[25px] font-light  block mb-[15px]">
-              Các thông tin thu thập thông qua website www.hoanmy.com sẽ giúp chúng tôi:
+              Các thông tin thu thập thông qua website {Domain} sẽ giúp chúng tôi:
             </p>
             <p className="text-[16px] leading-[25px] font-light  block mb-[15px]">
               Hỗ trợ khách hàng khi khám bệnh, chữa bệnh tại đây
@@ -32,11 +32,11 @@ const Information = () => {
               Xem xét và nâng cấp nội dung và giao diện của Website
             </p>
             <p className="text-[16px] leading-[25px] font-light  block mb-[15px]">
-              Thực hiện các hoạt động quảng bá pên quan đến các gói khám của www.hoanmy.com
+              Thực hiện các hoạt động quảng bá pên quan đến các gói khám của {Domain}
             </p>
             <p className="text-[16px] leading-[25px] font-light  block mb-[15px]">
-              Để truy cập và sử dụng một số dịch vụ khám chữa bệnh tại www.hoanmy.com , quý khách có thể sẽ được yêu cầu
-              đăng ký với chúng tôi thông tin cá nhân (Email, Họ tên, Số ĐT liên lạc…).
+              Để truy cập và sử dụng một số dịch vụ khám chữa bệnh tại {Domain} , quý khách có thể sẽ được yêu cầu đăng
+              ký với chúng tôi thông tin cá nhân (Email, Họ tên, Số ĐT liên lạc…).
             </p>
           </div>
 
@@ -70,10 +70,9 @@ const Information = () => {
             </h3>
             <p className="text-[16px] leading-[25px] font-light  block mb-[15px]">Công ty Cổ phần Y khoa Clinic Pro</p>
             <p className="text-[16px] leading-[25px] font-light  block mb-[15px]">
-              Địa chỉ: Phòng 1101, Lầu 11, Tòa nhà Friendship, 31 Lê Duẩn, Phường Bến Nghé, Quận 1, TP Hồ Chí Minh, Việt
-              Nam.
+              Địa chỉ: 575 Tôn Đức Thắng, Phường Hoà Khánh Nam, Quận Liên Chiển, TP Đà Nẵng, Việt Nam.
             </p>
-            <p className="text-[16px] leading-[25px] font-light  block mb-[15px]">Điện thoại: (028) 3820 6001.</p>
+            <p className="text-[16px] leading-[25px] font-light  block mb-[15px]">Điện thoại: (039) 578 7557.</p>
             <p className="text-[16px] leading-[25px] font-light  block mb-[15px]">
               Email: <a href="mailto:contactus@hoanmy.com">contactus@clinicpro.com</a>
             </p>
@@ -94,7 +93,7 @@ const Information = () => {
             </h3>
             <p className="text-[16px] leading-[25px] font-light  block mb-[15px]">
               Trường hợp bạn nghi ngờ tài khoản người dùng hoặc mật khẩu bị tiết lộ, bạn phải thay đổi mật khẩu mới,
-              hoặc báo ngay với Ban quản trị website www.hoanmy.com qua mail contactus@clinicpro.com để được hỗ trợ.
+              hoặc báo ngay với Ban quản trị website {Domain} qua mail contactus@clinicpro.com để được hỗ trợ.
             </p>
             <p className="text-[16px] leading-[25px] font-light  block mb-[15px]">CÔNG TY CỔ PHẦN Y KHOA CLINIC PRO</p>
           </div>

@@ -15,14 +15,16 @@ const UploadFile: React.FC<UploadFileProps> = ({ onUploadSuccess }) => {
         const formData = new FormData();
         formData.append('file', file);
         const response = await uploadFile(formData);
-        const imageUrl = response?.url;
+        const imageUrl = response?.data?.url;
         if (imageUrl) {
           onUploadSuccess(imageUrl);
         } else {
-          console.error('Không tìm thấy URL ảnh trong phản hồi:', response);
+          // eslint-disable-next-line no-console
+          console.log('Không tìm thấy URL ảnh trong phản hồi:', response);
         }
       } catch (error) {
-        console.error('Lỗi khi tải lên:', error);
+        // eslint-disable-next-line no-console
+        console.log('Lỗi khi tải lên:', error);
         toast.error('Upload thất bại!');
       } finally {
         setLoading(false);

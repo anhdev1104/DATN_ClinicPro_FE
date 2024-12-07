@@ -6,7 +6,7 @@ import Input from '@/components/input';
 import Label from '@/components/label';
 import yup from '@/helpers/locate';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { List } from '@mui/material';
+import { List } from '@/components/icons';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { INewPatient } from '@/types/patient.type';
@@ -107,7 +107,7 @@ const AddPatient = () => {
                 name="user_info.fullname"
                 control={control}
                 placeholder="Họ và tên ..."
-                className="h-[44px] text-primaryAdmin"
+                className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
               />
               {errors.user_info?.fullname && <MessageForm error={errors.user_info.fullname.message} />}
             </Field>
@@ -117,7 +117,7 @@ const AddPatient = () => {
                 name="user_info.phone_number"
                 control={control}
                 placeholder="Số điện thoại ..."
-                className="h-[44px] text-primaryAdmin"
+                className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
               />
               {errors.user_info?.phone_number && <MessageForm error={errors.user_info.phone_number.message} />}
             </Field>
@@ -127,7 +127,7 @@ const AddPatient = () => {
                 name="user_info.email"
                 control={control}
                 placeholder="Email ..."
-                className="h-[44px] text-primaryAdmin"
+                className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
               />
               {errors.user_info?.email && <MessageForm error={errors.user_info.email.message} />}
             </Field>
@@ -138,7 +138,7 @@ const AddPatient = () => {
                 control={control}
                 options={GENDER_OPTIONS}
                 placeholder="Chọn giới tính"
-                className="text-primaryAdmin"
+                className="!font-normal !text-dark"
               />
               {errors.user_info?.gender && <MessageForm error={errors.user_info.gender.message} />}
             </Field>
@@ -152,7 +152,7 @@ const AddPatient = () => {
                 control={control}
                 type="date"
                 placeholder="Ngày sinh ..."
-                className="h-[44px] text-primaryAdmin"
+                className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
               />
               {errors.user_info?.dob && <MessageForm error={errors.user_info.dob.message} />}
             </Field>
@@ -162,7 +162,7 @@ const AddPatient = () => {
                 name="user_info.address"
                 control={control}
                 placeholder="Địa chỉ ..."
-                className="h-[44px] text-primaryAdmin"
+                className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
               />
               {errors.user_info?.address && <MessageForm error={errors.user_info.address.message} />}
             </Field>
@@ -175,7 +175,7 @@ const AddPatient = () => {
                 name="identity_card.type_name"
                 control={control}
                 placeholder="Loại giấy tờ ..."
-                className="h-[44px] text-primaryAdmin"
+                className="h-[40px] !font-normal !text-dark rounded-md focus:border-third"
                 options={identity_card_options}
               />
               {errors.identity_card?.type_name && <MessageForm error={errors.identity_card.type_name.message} />}
@@ -186,7 +186,7 @@ const AddPatient = () => {
                 name="identity_card.identity_card_number"
                 control={control}
                 placeholder="Số giấy tờ ..."
-                className="h-[44px] text-primaryAdmin"
+                className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
               />
               {errors.identity_card?.identity_card_number && (
                 <MessageForm error={errors.identity_card.identity_card_number.message} />
@@ -201,7 +201,7 @@ const AddPatient = () => {
                 name="insurance_number"
                 control={control}
                 placeholder="Số bảo hiểm ..."
-                className="h-[44px] text-primaryAdmin"
+                className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
               />
               {errors.insurance_number && <MessageForm error={errors.insurance_number.message} />}
             </Field>
@@ -212,7 +212,7 @@ const AddPatient = () => {
                 control={control}
                 options={STATUS_OPTIONS}
                 placeholder="Chọn trạng thái"
-                className="text-primaryAdmin"
+                className="!font-normal !text-dark"
               />
               {errors.status && <MessageForm error={errors.status.message} />}
             </Field>

@@ -75,3 +75,11 @@ export const getPackageBySpecialty = async (id: string) => {
     return error;
   }
 };
+export const getPackageByCategory = async (id: string) => {
+  try {
+    const response = await http.get(`/packages/categories/${id}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};

@@ -48,8 +48,6 @@ const AdvisePage = () => {
       </div>
       <div>
         <AdvisePackage />
-        <AdvisePackage />
-        <AdvisePackage />
       </div>
     </>
   );
