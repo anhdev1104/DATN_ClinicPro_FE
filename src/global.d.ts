@@ -3,6 +3,7 @@ import { ROLE } from './constants/define';
 declare module 'yup' {
   interface StringSchema {
     omit(omitValue: Array<null | undefined | string>): this;
+    password(): this;
   }
   interface ObjectSchema {
     safeParse(value: any): any;

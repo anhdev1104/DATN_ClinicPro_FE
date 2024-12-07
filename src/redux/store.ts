@@ -3,7 +3,6 @@ import authReducer from './auth/authSlice';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { departmentApi } from './api/department';
-import { departmentSlice } from './department/departmentSlice';
 import { globalSlice } from './globalStore';
 import { usersApi } from './api/users';
 import { setupListeners } from '@reduxjs/toolkit/query';
@@ -16,7 +15,6 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  [departmentSlice.name]: departmentSlice.reducer,
   [departmentApi.reducerPath]: departmentApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
   [globalSlice.name]: globalSlice.reducer,

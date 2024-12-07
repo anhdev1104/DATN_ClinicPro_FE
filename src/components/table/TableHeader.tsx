@@ -18,7 +18,7 @@ const TableHeader = <T, D>({ column, title }: TableHeaderProps<T, D>) => {
     );
   }
   return (
-    <Menu width={150} position="bottom-start" radius="md">
+    <Menu withinPortal={false} width={150} position="bottom-start" radius="md">
       <Menu.Target>
         <BaseButton
           variant="subtle"
@@ -38,7 +38,7 @@ const TableHeader = <T, D>({ column, title }: TableHeaderProps<T, D>) => {
           {title}
         </BaseButton>
       </Menu.Target>
-      <Menu.Dropdown>
+      <Menu.Dropdown className="font-normal">
         <Menu.Item
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           leftSection={

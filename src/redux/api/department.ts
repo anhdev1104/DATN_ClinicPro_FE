@@ -43,7 +43,7 @@ export const departmentApi = createApi({
       }),
       invalidatesTags: result => (result ? [{ type: 'Department', id: 'DEPARTMENT-LIST' }] : []),
     }),
-    updateDepartment: builder.mutation<{ message: string }, UpdateDepartmentProps & { id: string }>({
+    updateDepartment: builder.mutation<{ message: string }, { id: string } & Partial<UpdateDepartmentProps>>({
       query: ({ id, ...data }) => ({
         url: `departments/${id}`,
         method: 'PUT',

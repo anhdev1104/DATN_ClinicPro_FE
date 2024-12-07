@@ -8,7 +8,7 @@ import { useCreateDepartmentMutation } from '@/redux/api/department';
 import { useGetUsersQuery } from '@/redux/api/users';
 import { Stack } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
-import { IconUsersGroup } from '@tabler/icons-react';
+import { IconBuilding, IconUsers, IconUsersGroup } from '@tabler/icons-react';
 import yup from '@/helpers/locate';
 import { useMemo } from 'react';
 import { filterOutManagers, formatUserSelect, resolveErrorResponse } from '@/helpers/utils';
@@ -38,14 +38,21 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
   return (
     <Form withAutoValidate onSubmit={handleCreateDepartment}>
       <Stack>
-        <BaseInput.Group autoComplete="name" name="name" label="Tên phòng ban" placeholder="Phòng IT..." />
-        <BaseInput.Textarea autoComplete="description" name="description" label="Mô tả" />
+        <BaseInput.Group
+          autoComplete="name"
+          name="name"
+          leftSection={<BaseIcon icon={IconBuilding} />}
+          label="Tên phòng ban"
+          withAsterisk
+          placeholder="Phòng IT..."
+        />
         <BaseInput.Select
           autoComplete="manager_id"
           name="manager_id"
           label="Chọn Quản lý"
           data={managers}
           renderOption={renderOption}
+          leftSection={<BaseIcon icon={IconUsers} />}
           clearable
           searchable
           nothingFoundMessage="không tìm thấy quản lý"
@@ -55,15 +62,14 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
           autoComplete="users"
           label="Chọn nhân viên trong phòng ban"
           placeholder="Pick value"
-          maxDropdownHeight={200}
           hidePickedOptions
           searchable
           leftSection={<BaseIcon icon={IconUsersGroup} />}
-          comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
           data={listUser}
           renderOption={renderOption}
           nothingFoundMessage="Không tìm thấy người dùng"
         />
+        <BaseInput.Textarea autoComplete="description" name="description" label="Mô tả" />
         <BaseButton loading={isSubmitting} disabled={isSubmitting} type="submit">
           Lưu
         </BaseButton>
