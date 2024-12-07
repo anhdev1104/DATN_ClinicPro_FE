@@ -58,7 +58,7 @@ const ModalMedicalHistories: FC<IModalMedicalHistories> = ({ open, onClose }) =>
         </div>
       </div>
       <DialogContent sx={{ p: 0, pr: '15px' }} className="scroll-select">
-        <MedicalRecords />
+        <MedicalRecords closeModalMedicalRecords={onClose} />
       </DialogContent>
     </Dialog>
   );

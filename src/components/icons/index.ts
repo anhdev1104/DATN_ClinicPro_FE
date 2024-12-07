@@ -33,3 +33,4 @@ export { default as StarIcon } from '@mui/icons-material/Star';
 export { default as CalendarMonthIcon } from '@mui/icons-material/CalendarMonth';
 export { default as Patient } from '@mui/icons-material/SupervisedUserCircle';
 export { default as ChangeCircleIcon } from '@mui/icons-material/ChangeCircle';
+export { default as PersonRemoveIcon } from '@mui/icons-material/PersonRemove';

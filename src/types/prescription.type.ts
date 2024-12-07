@@ -21,6 +21,6 @@ export interface IPrescription {
   name: string;
   description?: string;
   medications: IMedication[];
-  medical_history_id: string;
+  medical_histories_id: string;
   created_at?: string;
 }
