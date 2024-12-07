@@ -4,7 +4,8 @@ import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import ProtectedRoute from '@/components/auth';
-const Appointment = React.lazy(() => import('@/pages/admin/appointments/Compontents/ListAppointment'));
+const Appointment = React.lazy(() => import('@/pages/admin/appointments/Appointment'));
+const AppointmentDetail = React.lazy(() => import('@/pages/admin/appointments/Compontents/AppointmentDetail'));
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
 const Department = React.lazy(() => import('@/pages/admin/department/Department'));
 const GetDepartment = React.lazy(() => import('@/pages/admin/department/GetDepartment'));
@@ -114,6 +115,11 @@ const adminRouter: IRouter[] = [
     path: '/appointments',
     element: <Appointment />,
     title: 'Danh sách lịch hẹn',
+  },
+  {
+    path: '/appointments/:id',
+    element: <AppointmentDetail />,
+    title: 'Lịch hẹn chi tiết',
   },
   {
     path: '/medical-record',

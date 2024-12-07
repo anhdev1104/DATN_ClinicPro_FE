@@ -8,7 +8,7 @@ import DirectRoute from '@/components/direct';
 import { getAppointments, deleteAppointment } from '@/services/appointments.service';
 import { Dialog } from '@mui/material';
 import convertTime from '@/helpers/convertTime';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 interface ModalDetail {
   close: () => void;
   statusLog: boolean;
@@ -134,7 +134,7 @@ const ListAppointment = () => {
                               Chi tiết
                             </Link>
                             <Link
-                              to={`/edit-package/${pkg.id}`}
+                              to={`/appointments/${pkg.id}`}
                               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                               onClick={() => handleToggle(pkg.id)}
                             >

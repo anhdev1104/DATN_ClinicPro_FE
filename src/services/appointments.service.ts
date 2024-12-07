@@ -10,6 +10,14 @@ export const getAppointments = async () => {
     return error;
   }
 };
+export const getAppointmentbyId = async (id: string) => {
+  try {
+    const response = await http.get(`/appointments/${id}`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
 export const deleteAppointment = async (id: string) => {
   try {
     const response = await http.delete(`/appointments`, id);
