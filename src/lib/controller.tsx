@@ -9,7 +9,9 @@ const InputWithController = ({
   if (!child.props?.name) throw new TypeError('Field name of input expected a string!');
   const { fieldState, field } = useController({ name: child.props.name });
 
-  const error = (child.type as React.ComponentType).displayName?.startsWith('@mantine') ? 'error' : 'aria-errormessage';
+  const error = (child.type as React.ComponentType)?.displayName?.startsWith('@mantine')
+    ? 'error'
+    : 'aria-errormessage';
 
   return createElement(child.type, {
     [error]: fieldState.error?.message || fieldState.invalid,
