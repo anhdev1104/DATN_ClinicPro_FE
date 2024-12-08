@@ -5,6 +5,7 @@ import BaseButton from '../base/button';
 import BaseIcon from '../base/BaseIcon';
 import { IconAdjustmentsHorizontal, IconCheck } from '@tabler/icons-react';
 import { ExportFile } from '../export';
+import { useDebouncedCallback } from '@mantine/hooks';
 interface TableToolbarProps<T> {
   table: Table<T>;
   toolbar?: React.ReactNode;
@@ -12,19 +13,14 @@ interface TableToolbarProps<T> {
 }
 
 const TableToolbar = <T,>({ table, toolbar, filterItem }: TableToolbarProps<T>) => {
+  const handleSearch = useDebouncedCallback(e => {
+    table.setGlobalFilter(e.target.value);
+  }, 500);
   return (
     <>
       <Box className="flex items-center py-2 space-x-2 justify-between">
         <Box className="flex space-x-2 flex-1 items-center">
-          {filterItem || (
-            <BaseInput
-              value={table.getState().globalFilter}
-              onChange={e => table.setGlobalFilter(e.target.value)}
-              size="xs"
-              radius="md"
-              placeholder="tìm kiếm..."
-            />
-          )}
+          {filterItem || <BaseInput onChange={handleSearch} size="xs" radius="md" placeholder="tìm kiếm..." />}
           {toolbar}
         </Box>
         <ExportFile rows={table.getRowModel().rows} />
@@ -53,7 +49,7 @@ const TableToolbar = <T,>({ table, toolbar, filterItem }: TableToolbarProps<T>) 
                     className="capitalize overflow-hidden"
                   >
                     <Text lineClamp={1} fw={400} size="xs" className="text-gray-700">
-                      {column.id}
+                      {column.columnDef.meta?.label || column.id}
                     </Text>
                   </Menu.Item>
                 );

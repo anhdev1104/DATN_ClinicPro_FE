@@ -36,31 +36,43 @@ export default function User() {
   const navigate = useNavigate();
   const columns = useColumn<IUserInfo>([
     {
-      label: 'Tên',
+      header: 'Tên',
       key: 'user_info.fullname',
-      cell: ({ value, original }) => (
-        <UserInfo avatar={original?.user_info.fullname} fullname={value} email={original.email} />
+      cell: ({ value, row }) => (
+        <UserInfo avatar={row.original?.user_info.fullname} fullname={value} email={row.original.email} />
       ),
+      meta: {
+        label: 'Tên',
+      },
     },
     {
-      label: 'Địa Chỉ',
+      header: 'Địa Chỉ',
       key: 'user_info.address',
+      meta: {
+        label: 'Địa Chỉ',
+      },
       sortable: false,
     },
     {
-      label: 'date of birth',
+      header: 'Ngày sinh',
       key: 'user_info.dob',
+      meta: {
+        label: 'Ngày sinh',
+      },
       sortable: false,
     },
     {
-      label: 'số điện thoại',
+      header: 'số điện thoại',
       key: 'user_info.phone_number',
+      meta: {
+        label: 'số điện thoại',
+      },
       sortable: false,
     },
     {
-      label: 'Status',
+      header: 'Status',
       key: 'status',
-      cell: ({ value, original }) => (
+      cell: ({ value, row }) => (
         <BaseInput.Select
           variant="unstyled"
           data={Object.values(STATUS)}
@@ -68,7 +80,7 @@ export default function User() {
           className="max-w-32"
           allowDeselect={false}
           onChange={async value => {
-            const response = await handleUpdate({ id: original.id, status: value as `${STATUS}` });
+            const response = await handleUpdate({ id: row.original.id, status: value as `${STATUS}` });
             if (response.data) {
               toast.success(response.data.message);
               return;
@@ -77,12 +89,15 @@ export default function User() {
           }}
         />
       ),
+      meta: {
+        label: 'Status',
+      },
       sortable: false,
     },
     {
       id: 'actions',
-      cell: ({ row, original }) => (
-        <TableAction row={row} data={[{ label: 'Xem Chi Tiết', onClick: () => navigate(original.id) }]} />
+      cell: ({ row }) => (
+        <TableAction row={row} data={[{ label: 'Xem Chi Tiết', onClick: () => navigate(row.original.id) }]} />
       ),
     },
   ]);

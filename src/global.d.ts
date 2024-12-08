@@ -1,12 +1,20 @@
+import { Row } from '@tanstack/react-table';
 import { ROLE } from './constants/define';
+
+declare module '@tanstack/react-table' {
+  interface ColumnMeta<TData extends RowData, TValue> {
+    label?: string;
+    data?: Row<TData, TValue>;
+  }
+}
 
 declare module 'yup' {
   interface StringSchema {
     omit(omitValue: Array<null | undefined | string>): this;
-    password(): this;
+    password(message: string): this;
   }
-  interface ObjectSchema {
-    safeParse(value: any): any;
+  interface ObjectSchema<T> {
+    safeParse(value: T): T;
   }
 }
 

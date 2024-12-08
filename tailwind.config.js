@@ -33,11 +33,29 @@ export default {
             transform: 'translateY(-10px)',
           },
         },
+        'accordion-down': {
+          from: {
+            height: '0'
+          },
+          to: {
+            height: 'var(--radix-accordion-content-height)'
+          }
+        },
+        'accordion-up': {
+          from: {
+            height: 'var(--radix-accordion-content-height)'
+          },
+          to: {
+            height: '0'
+          }
+        }
       },
       animation: {
         'slide-in-right': 'slideInRight 0.5s ease-in-out forwards',
         move: 'move 2.5s infinite',
         bounce: 'bounce 1s infinite',
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out'
       },
       spacing: {
         '65p': '65%',
