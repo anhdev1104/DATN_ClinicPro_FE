@@ -39,52 +39,67 @@ export default function GetDepartment() {
   const columns = useColumn<UserProps>([
     {
       key: 'fullname',
-      label: 'Nhân Viên',
-      cell: ({ value, original }) => {
-        return <UserInfo avatar={original.avatar} email={original.email} fullname={value} />;
+      header: 'Nhân Viên',
+      cell: ({ value, row }) => {
+        return <UserInfo avatar={row.original.avatar} email={row.original.email} fullname={value} />;
+      },
+      meta: {
+        label: 'Nhân Viên',
       },
     },
     {
       key: 'email',
-      label: 'Email',
+      header: 'Email',
       cell: ({ value }) => (
         <Text fz="xs" c="dimmed">
           {value}
         </Text>
       ),
+      meta: {
+        label: 'Email',
+      },
       sortable: false,
     },
     {
       key: 'status',
-      label: 'Trạng Thái',
+      header: 'Trạng Thái',
       cell: ({ value }) => <Badge size="xs">{value}</Badge>,
+      meta: {
+        label: 'Trạng Thái',
+      },
       sortable: false,
     },
     {
       key: 'gender',
-      label: 'Giới tính',
+      header: 'Giới tính',
       cell: ({ value }) => (
         <Badge color="grape" size="xs">
           {value}
         </Badge>
       ),
+      meta: {
+        label: 'Giới tính',
+      },
       sortable: false,
     },
     {
       key: 'phone_number',
-      label: 'Số Điện Thoại',
+      header: 'Số Điện Thoại',
+      meta: {
+        label: 'Số Điện Thoại',
+      },
       sortable: false,
     },
     {
       id: 'actions',
-      cell: ({ row, original }) => {
+      cell: ({ row }) => {
         return (
           <ActionWithRow
             data={[
               {
                 label: 'Xóa',
                 onClick: async () => {
-                  const result = await handleUpdate({ id: id!, users_delete: [original.id] });
+                  const result = await handleUpdate({ id: id!, users_delete: [row.original.id] });
                   if (result.data) {
                     toast.success(result.data.message);
                     return;
@@ -162,7 +177,7 @@ export default function GetDepartment() {
                   <BaseIcon icon={IconPlus} />
                 </BaseButton.Icon>
               }
-              onRowClick={value => navigate(`/users/${value.id}`)}
+              onRowClick={row => navigate(`/users/${row.original.id}`)}
               columns={columns}
               data={department?.users || []}
               isFetching={isFetching}

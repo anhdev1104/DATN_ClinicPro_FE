@@ -9,12 +9,12 @@ import BaseIcon from '@/components/base/BaseIcon';
 import { useDebouncedCallback } from '@mantine/hooks';
 import NewDepartment from './components/CreateDepartment';
 import { IconPlus } from '@tabler/icons-react';
-import { useColumn } from '@/hooks/useColumn';
 import { useState } from 'react';
 import BaseInput from '@/components/base/input';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import dayjs from 'dayjs';
 import { modals } from '@mantine/modals';
+import { useColumn } from '@/hooks/useColumn';
 
 export default function Department() {
   const navigate = useNavigate();
@@ -35,33 +35,42 @@ export default function Department() {
   const columns = useColumn<DepartmentProps>([
     {
       key: 'name',
-      label: 'Tên Phòng Ban',
+      header: 'Tên Phòng Ban',
       cell: ({ value }) => <div className="capitalize">{value}</div>,
+      meta: {
+        label: 'Tên Phòng Ban',
+      },
     },
     {
       key: 'manager',
-      label: 'Quản Lý',
+      header: 'Quản Lý',
       cell: ({ value }: { value: ManagerProps }) => {
         return <UserInfo avatar={value?.avatar} email={value?.email} fullname={value?.fullname} />;
+      },
+      meta: {
+        label: 'Quản Lý',
       },
       sortable: false,
     },
     {
       key: 'users_count',
-      label: 'Nhân viên',
-      cell: ({ value, original }) => (
+      header: 'Nhân viên',
+      cell: ({ value, row }) => (
         <>
           <Avatar.Group>
-            {original.users?.slice(0, 3).map(user => <Avatar key={user.id} src={user.avatar} />)}
+            {row.original.users?.slice(0, 3).map(user => <Avatar key={user.id} src={user.avatar} />)}
             <Avatar>{value}</Avatar>
           </Avatar.Group>
         </>
       ),
+      meta: {
+        label: 'Nhân viên',
+      },
       sortable: false,
     },
     {
       key: 'created_at',
-      label: 'Ngày tạo',
+      header: 'Ngày tạo',
       cell: ({ value }) => {
         const date = dayjs(value).format('DD-MM-YYYY');
         return (
@@ -72,28 +81,29 @@ export default function Department() {
           </>
         );
       },
+      meta: {
+        label: 'Ngày tạo',
+      },
     },
     {
       id: 'actions',
-      cell: ({ row, original }) => (
+      cell: ({ row }) => (
         <ActionWithRow
           data={[
             {
               label: 'Xem chi tiết',
-              onClick: () => navigate(`/departments/${original.id}`),
+              onClick: () => navigate(`/departments/${row.original.id}`),
             },
           ]}
           row={row}
         />
       ),
-      placeholder: true,
     },
   ]);
   return (
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
-          className="ml-2"
           highlightOnHover
           manualFiltering
           filterItem={
@@ -118,7 +128,7 @@ export default function Department() {
               className="w-full flex justify-center py-2"
             />
           }
-          onRowClick={data => navigate(`/departments/${data.id}`)}
+          onRowClick={row => navigate(`/departments/${row.original.id}`)}
           isFetching={isFetching}
           data={departments?.data || []}
           columns={columns}
