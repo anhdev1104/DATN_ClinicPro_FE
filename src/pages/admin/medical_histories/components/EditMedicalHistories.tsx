@@ -169,7 +169,7 @@ const EditMedicalHistories = () => {
               <Field className="flex gap-3 flex-col">
                 <Label htmlFor="diagnosis">Bệnh chấn đoán:</Label>
                 <Input
-                  className="h-[48px] text-primaryAdmin"
+                  className="h-[40px] !font-normal !text-dark rounded-md bg-white focus:border-third"
                   placeholder="Chẩn đoán ..."
                   name="diagnosis"
                   type="text"
@@ -188,7 +188,7 @@ const EditMedicalHistories = () => {
                     </div>
                     <Button
                       onClick={() => setSelectPatient(true)}
-                      className="text-black mt-2 bg-[#F3F4F7] border"
+                      className="text-black mt-2 bg-white border"
                       type="button"
                       styled="normal"
                     >
@@ -216,7 +216,7 @@ const EditMedicalHistories = () => {
                   render={({ field }) => {
                     return (
                       <textarea
-                        className="scroll-select block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
+                        className="scroll-select block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] t !font-normal !text-dark  bg-white "
                         placeholder="Phương pháp điều trị  ..."
                         id="treatment"
                         {...field}
@@ -233,7 +233,7 @@ const EditMedicalHistories = () => {
                   render={({ field }) => {
                     return (
                       <textarea
-                        className="scroll-select block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
+                        className="scroll-select block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] t !font-normal !text-dark  bg-white "
                         placeholder="Mô tả bệnh án ..."
                         id="description"
                         {...field}

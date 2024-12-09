@@ -1,5 +1,5 @@
 import DirectRoute from '@/components/direct';
-import { AddIcon, MoreHorizIcon } from '@/components/icons';
+import { AddIcon, DeleteIcon, SettingsIcon, VisibilityIcon } from '@/components/icons';
 import Input from '@/components/input';
 import { useForm } from 'react-hook-form';
 import Select from '@/components/select';
@@ -44,7 +44,6 @@ interface ModalDetailSpecial {
 
 const Specialtie = () => {
   const [specialties, setSpecialties] = useState<ISpecialties[]>([]);
-  const [showDropdown, setShowDropdown] = useState<string | undefined | null>(null);
   const [idSpecial, setIdSpecial] = useState<string | null | undefined>('');
   const [activeModal, setActiveModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -56,11 +55,6 @@ const Specialtie = () => {
     action: false,
     iUpdate: false,
   });
-
-  const handleToggle = (id: string | null | undefined) => {
-    setShowDropdown(showDropdown === id ? null : id);
-    setIdSpecial(id);
-  };
 
   useEffect(() => {
     (async () => {
@@ -136,48 +130,30 @@ const Specialtie = () => {
                       <td className="py-2 px-5 text-gray-800 font-semibold max-w-[250px]">{item.name}</td>
                       <td className="py-2 px-5 text-gray-600">{item.description}</td>
                       <td className="py-2 px-5 text-gray-600 max-w-[300px]">{convertTime(item.created_at || '')}</td>
-                      <td className="py-2 px-5 text-end">
-                        <div className="relative inline-block text-left">
-                          <button
-                            type="button"
-                            className="flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
-                            onClick={() => handleToggle(item.id)}
-                          >
-                            <MoreHorizIcon />
-                          </button>
-                          {showDropdown === item.id && (
-                            <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white">
-                              <div
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                onClick={() => {
-                                  handleToggle(item.id);
-                                  handleClickOpen(item);
-                                }}
-                              >
-                                Chi tiết
-                              </div>
-                              <button
-                                type="button"
-                                className="block w-full text-start px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                onClick={() => {
-                                  handleToggle(item.id);
-                                  handleClickOpen(item, true, true);
-                                }}
-                              >
-                                Sửa
-                              </button>
-                              <div
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                onClick={() => {
-                                  handleToggle(item.id);
-                                  setActiveModal(true);
-                                }}
-                              >
-                                Xóa bỏ
-                              </div>
-                            </div>
-                          )}
-                        </div>
+                      <td className="py-2 px-5 text-end flex gap-1 justify-end">
+                        <button
+                          onClick={() => {
+                            handleClickOpen(item);
+                          }}
+                          className="flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
+                        >
+                          <VisibilityIcon className="text-blue-500" />
+                        </button>
+                        <button
+                          onClick={() => handleClickOpen(item, true, true)}
+                          className="flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
+                        >
+                          <SettingsIcon className="text-yellow-400" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setActiveModal(true);
+                            setIdSpecial(item.id);
+                          }}
+                          className="text-red-500 flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
+                        >
+                          <DeleteIcon />
+                        </button>
                       </td>
                     </tr>
                   ))}

@@ -63,7 +63,7 @@ const MedicalRecords = ({ layout = 3 }: { layout?: string | number }) => {
   );
 };
 
-const MedicalRecordSekeleton = () => {
+export const MedicalRecordSekeleton = () => {
   return (
     <div className="border-2 border-gray-300 p-3 rounded-md cursor-pointer hover:bg-primaryAdmin/5 transition-all ease-linear">
       <div className="flex gap-4 items-center">
