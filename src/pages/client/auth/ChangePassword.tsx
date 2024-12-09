@@ -1,7 +1,6 @@
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
-import former from '@/lib/former';
-import Form from '@/lib/Form';
+import { Form, former } from '@/lib/form';
 import { changePassword } from '@/services/auth.service';
 import yup from '@/helpers/locate';
 import { Container, Paper, Stack, Title } from '@mantine/core';

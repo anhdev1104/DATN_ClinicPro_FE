@@ -1,4 +1,4 @@
-import TableHeader from '@/components/table/TableHeader';
+import { TableHeader } from '@/lib/table';
 import {
   AccessorFn,
   Cell,

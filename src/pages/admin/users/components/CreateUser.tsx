@@ -7,8 +7,7 @@ import { GENDER, STATUS } from '@/constants/define';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import yup from '@/helpers/locate';
 import { formatDepartmentSelect, resolveErrorResponse } from '@/helpers/utils';
-import Form from '@/lib/Form';
-import former from '@/lib/former';
+import { Form, former } from '@/lib/form';
 import { useGetDepartmentsQuery } from '@/redux/api/department';
 import { useCreateUserMutation } from '@/redux/api/users';
 import { getAllRole } from '@/services/roles.service';
@@ -39,7 +38,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
   const [roles, setRoles] = useState<IRole[]>([]);
   const {
     setError,
-    formState: { isSubmitting },
+    formState: { disabled },
   } = useFormContext<CreateUserProps>();
 
   const { data: department } = useGetDepartmentsQuery();
@@ -94,7 +93,7 @@ const CreateUser = ({ close }: BaseModalProps) => {
               accept="image/png,image/jpeg"
             >
               {props => (
-                <BaseButton {...props} disabled={isSubmitting} size="xs" rightSection={<BaseIcon icon={IconUpload} />}>
+                <BaseButton {...props} disabled={disabled} size="xs" rightSection={<BaseIcon icon={IconUpload} />}>
                   Upload
                 </BaseButton>
               )}
@@ -197,8 +196,8 @@ const CreateUser = ({ close }: BaseModalProps) => {
           </Grid.Col>
         </Grid>
         <BaseButton
-          disabled={isSubmitting}
-          loading={isSubmitting}
+          disabled={disabled}
+          loading={disabled}
           leftSection={<BaseIcon icon={IconPlus} />}
           type="submit"
           className="flex ml-auto"

@@ -4,7 +4,7 @@ import { useGetDepartmentQuery, useUpdateDepartmentMutation } from '@/redux/api/
 import { Flex, Stack } from '@mantine/core';
 import yup from '@/helpers/locate';
 import { renderOption } from '@/helpers/format';
-import Formik, { FormikHandler } from '@/lib/Formik';
+import { Formik, FormikHandler } from '@/lib/form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { filterOutManagers, formatUserSelect, resolveErrorResponse } from '@/helpers/utils';
 import { useGetUsersQuery } from '@/redux/api/users';

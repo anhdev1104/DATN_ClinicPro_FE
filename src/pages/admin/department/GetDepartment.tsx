@@ -3,8 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, Paper, Stack } from '@mantine/core';
 import { Text } from '@mantine/core';
 import BaseIcon from '@/components/base/BaseIcon';
-import Table from '@/components/table/Table';
-import ActionWithRow from '@/components/table/TableAction';
 import { IconPlus, IconTrash, IconUsersGroup } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
 import { DeleteDepartment } from './components/DeleteDepartment';
@@ -24,8 +22,9 @@ import BaseInput from '@/components/base/input';
 import { useGetUsersQuery } from '@/redux/api/users';
 import { useMemo } from 'react';
 import { renderOption } from '@/helpers/format';
-import Formik from '@/lib/Formik';
 import yup from '@/helpers/locate';
+import { Formik } from '@/lib/form';
+import { Table, ActionWithRow } from '@/lib/table';
 const schema = yup.object({
   users: yup.array().of(yup.string()).default([]),
 });

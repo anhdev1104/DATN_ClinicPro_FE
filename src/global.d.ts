@@ -21,14 +21,14 @@ declare module 'yup' {
 declare global {
   interface ResponseTypes<T> {
     data: T;
-    next_page_url: string;
-    prev_page_url: string;
-    total: string;
-    total_pages: string;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+    total: number;
+    total_pages: number;
   }
   interface QueryParams {
-    limit?: string;
-    page?: string;
+    limit?: number;
+    page?: number;
     q?: string;
   }
 
