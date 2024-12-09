@@ -1,4 +1,4 @@
-import BaseTable from '../base/table';
+import BaseTable from '@/components/base/table';
 import {
   ColumnDef,
   flexRender,
@@ -7,16 +7,14 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
-  VisibilityState,
 } from '@tanstack/react-table';
-import { Pagination, TableProps } from '@mantine/core';
-import TableSkeleton from '../skeleton/TableSkeleton';
+import { TableProps } from '@mantine/core';
+import TableSkeleton from '@/components/skeleton/TableSkeleton';
 import TableToolbar from './TableToolbar';
-import { Fragment, useState } from 'react';
-import { ExpandedState } from '@tanstack/react-table';
+import { Fragment } from 'react';
 import { Row } from '@tanstack/react-table';
+import TablePagination from './TablePagination';
 interface BaseTableProps<T, D> extends Omit<TableProps, 'data'> {
   data: T[];
   columns: ColumnDef<T, D>[];
@@ -24,14 +22,12 @@ interface BaseTableProps<T, D> extends Omit<TableProps, 'data'> {
   isLoading?: boolean;
   onRowClick?: (row: Row<T>, event: React.MouseEvent) => void;
   toolbar?: React.ReactNode | boolean;
-  manualPagination?: boolean;
   rowCount?: number;
-  manualFiltering?: boolean;
   filterItem?: JSX.Element;
   pagination?: JSX.Element | boolean;
   detailPanel?: (row: Row<T>) => React.ReactNode;
 }
-const Table = <T, D>({
+export default function Table<T, D>({
   data,
   columns,
   isFetching,
@@ -39,43 +35,23 @@ const Table = <T, D>({
   toolbar,
   onRowClick,
   rowCount,
-  manualFiltering,
   filterItem,
-  manualPagination,
   pagination,
   detailPanel,
   ...props
-}: BaseTableProps<T, D>) => {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = useState<any>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
-  const [expanded, setExpanded] = useState<ExpandedState>({});
-
+}: BaseTableProps<T, D>) {
   const table = useReactTable({
     data,
     columns,
-    state: {
-      sorting,
-      expanded,
-      rowSelection,
-      globalFilter,
-      columnVisibility,
-    },
     getRowCanExpand: () => (detailPanel ? true : false),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    onSortingChange: setSorting,
-    onRowSelectionChange: setRowSelection,
-    onGlobalFilterChange: setGlobalFilter,
-    onColumnVisibilityChange: setColumnVisibility,
-    onExpandedChange: setExpanded,
-    manualPagination,
+    manualPagination: pagination ? true : false,
+    manualFiltering: filterItem ? true : false,
     rowCount,
-    manualFiltering,
   });
 
   return (
@@ -146,18 +122,7 @@ const Table = <T, D>({
           </BaseTable.Body>
         </BaseTable>
       </BaseTable.Scroll>
-      {pagination !== false &&
-        (pagination ||
-          (table.getPageCount() > 1 && (
-            <Pagination
-              onChange={value => table.setPageIndex(value - 1)}
-              total={table.getPageCount()}
-              radius="md"
-              className="w-full flex justify-center py-2"
-            />
-          )))}
+      {pagination || <TablePagination table={table} />}
     </div>
   );
-};
-
-export default Table;
+}

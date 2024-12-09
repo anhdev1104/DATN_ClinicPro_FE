@@ -26,7 +26,7 @@ import { formatDepartmentSelect, formatRoleSelect, resolveErrorResponse } from '
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import { GENDER, STATUS } from '@/constants/define';
 import dayjs from 'dayjs';
-import Formik, { FormikHandler } from '@/lib/Formik';
+import { Formik, FormikHandler } from '@/lib/form';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import yup from '@/helpers/locate';
 

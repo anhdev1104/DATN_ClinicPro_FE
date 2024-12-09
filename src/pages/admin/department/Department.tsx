@@ -1,9 +1,7 @@
 import { Avatar, Pagination, Text } from '@mantine/core';
 import { useGetDepartmentsQuery } from '@/redux/api/department';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { DepartmentProps, ManagerProps } from '@/types/department.type';
-import Table from '@/components/table/Table';
-import ActionWithRow from '@/components/table/TableAction';
 import BaseButton from '@/components/base/button';
 import BaseIcon from '@/components/base/BaseIcon';
 import { useDebouncedCallback } from '@mantine/hooks';
@@ -15,23 +13,19 @@ import { UserInfo } from '@/components/user-info/UserInfo';
 import dayjs from 'dayjs';
 import { modals } from '@mantine/modals';
 import { useColumn } from '@/hooks/useColumn';
+import { NumberParam, StringParam, useQueryParams, withDefault } from 'use-query-params';
+import { Table, ActionWithRow } from '@/lib/table';
 
 export default function Department() {
   const navigate = useNavigate();
-  const [params, setParams] = useSearchParams();
   const [limit] = useState(5);
-  const { data: departments, isFetching } = useGetDepartmentsQuery({
-    q: params.get('q')!,
-    limit: params.get('limit') || limit.toString(),
-    page: params.get('page')!,
+  const [query, setQuery] = useQueryParams({
+    limit: withDefault(NumberParam, limit),
+    q: withDefault(StringParam, ''),
+    page: withDefault(NumberParam, 1),
   });
-  const handleSearch = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value) params.set('q', value);
-    else params.delete('q');
-    params.set('page', '1');
-    setParams(params.toString());
-  }, 500);
+  const { data: departments, isFetching } = useGetDepartmentsQuery(query as QueryParams);
+
   const columns = useColumn<DepartmentProps>([
     {
       key: 'name',
@@ -105,25 +99,20 @@ export default function Department() {
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
           highlightOnHover
-          manualFiltering
           filterItem={
             <BaseInput
-              defaultValue={params.get('q') ?? ''}
-              onChange={handleSearch}
+              defaultValue={query.q}
+              onChange={useDebouncedCallback(e => setQuery({ q: e.target.value, page: 1 }), 500)}
               size="xs"
               radius="md"
               placeholder="tìm kiếm..."
             />
           }
-          manualPagination
           pagination={
             <Pagination
-              total={Number(departments?.total_pages) || 1}
-              onChange={value => {
-                params.set('page', value.toString());
-                setParams(params.toString());
-              }}
-              value={Number(params.get('page')) || 1}
+              total={departments?.total_pages || 1}
+              onChange={page => setQuery({ page })}
+              value={query.page || 1}
               radius="md"
               className="w-full flex justify-center py-2"
             />

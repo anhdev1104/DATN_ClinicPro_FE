@@ -1,37 +1,32 @@
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
-import Table from '@/components/table/Table';
-import TableAction from '@/components/table/TableAction';
 import { useColumn } from '@/hooks/useColumn';
 import { useGetUsersQuery, useUpdateUserMutation } from '@/redux/api/users';
 import { IUserInfo } from '@/types/user.type';
 import { useDebouncedCallback } from '@mantine/hooks';
 import { IconPlus } from '@tabler/icons-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import CreateUser from './components/CreateUser';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import { Pagination } from '@mantine/core';
 import BaseInput from '@/components/base/input';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { modals } from '@mantine/modals';
 import { STATUS } from '@/constants/define';
 import { resolveErrorResponse } from '@/helpers/utils';
 import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
 import toast from 'react-hot-toast';
-
+import { NumberParam, StringParam, useQueryParams, withDefault } from 'use-query-params';
+import { Table, ActionWithRow } from '@/lib/table';
 export default function User() {
-  const [params, setParams] = useSearchParams();
   const [limit] = useState(5);
-  const queryKey = useMemo(
-    () => ({
-      q: params.get('q')!,
-      limit: params.get('limit') || limit.toString(),
-      page: params.get('page')!,
-    }),
-    [params],
-  );
+  const [query, setQuery] = useQueryParams({
+    q: withDefault(StringParam, ''),
+    limit: withDefault(NumberParam, limit),
+    page: withDefault(NumberParam, 1),
+  });
 
-  const { data: users, isFetching, isLoading } = useGetUsersQuery(queryKey);
+  const { data: users, isFetching, isLoading } = useGetUsersQuery(query as QueryParams);
   const [handleUpdate, { isLoading: isUpdateLoading }] = useUpdateUserMutation();
   const navigate = useNavigate();
   const columns = useColumn<IUserInfo>([
@@ -97,17 +92,10 @@ export default function User() {
     {
       id: 'actions',
       cell: ({ row }) => (
-        <TableAction row={row} data={[{ label: 'Xem Chi Tiết', onClick: () => navigate(row.original.id) }]} />
+        <ActionWithRow row={row} data={[{ label: 'Xem Chi Tiết', onClick: () => navigate(row.original.id) }]} />
       ),
     },
   ]);
-  const handleSearch = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value) params.set('q', value);
-    else params.delete('q');
-    params.set('page', '1');
-    setParams(params.toString());
-  }, 500);
 
   return (
     <>
@@ -128,25 +116,20 @@ export default function User() {
               <BaseIcon icon={IconPlus} />
             </BaseButton.Icon>
           }
-          manualFiltering
           filterItem={
             <BaseInput
-              defaultValue={params.get('q') ?? ''}
-              onChange={handleSearch}
+              defaultValue={query.q}
+              onChange={useDebouncedCallback(e => setQuery({ q: e.target.value, page: 1 }), 500)}
               size="xs"
               radius="md"
               placeholder="tìm kiếm..."
             />
           }
-          manualPagination
           pagination={
             <Pagination
-              total={Number(users?.total_pages) || 1}
-              onChange={value => {
-                params.set('page', value.toString());
-                setParams(params.toString());
-              }}
-              value={Number(params.get('page')) || 1}
+              total={users?.total_pages || 1}
+              onChange={page => setQuery({ page })}
+              value={query.page || 1}
               radius="md"
               className="w-full flex justify-center py-2"
             />
@@ -155,7 +138,7 @@ export default function User() {
           data={users?.data || []}
           isFetching={isFetching || isUpdateLoading}
           isLoading={isLoading}
-          className="mx-2"
+          rowCount={10}
         />
       </div>
     </>

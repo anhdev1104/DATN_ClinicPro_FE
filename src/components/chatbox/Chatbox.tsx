@@ -3,7 +3,7 @@ import BaseButton from '../base/button';
 import {
   Avatar,
   ChatContainer,
-  Conversation,
+  ConversationHeader,
   MainContainer,
   Message,
   MessageInput,
@@ -13,9 +13,12 @@ import {
 } from '@chatscope/chat-ui-kit-react';
 import { useState } from 'react';
 import { chatAi } from '@/services/chat.service';
+import BaseIcon from '../base/BaseIcon';
+import { IconMessageCircleFilled } from '@tabler/icons-react';
 export default function Chatbox() {
   const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState<MessageModel[]>([]);
+
   const handleSend = async (message: string) => {
     const newMsg = {
       message,
@@ -36,6 +39,7 @@ export default function Chatbox() {
     <>
       <Affix position={{ bottom: 20, right: 20 }}>
         <Popover
+          radius="md"
           onOpen={() =>
             messages.length
               ? ''
@@ -51,20 +55,33 @@ export default function Chatbox() {
           }
         >
           <Popover.Target>
-            <BaseButton>Chat With Ai</BaseButton>
+            <BaseButton.Icon size="xl" radius="xl">
+              <BaseIcon icon={IconMessageCircleFilled} size="xl" />
+            </BaseButton.Icon>
           </Popover.Target>
-          <Popover.Dropdown w={500} className="p-0 border-none">
-            <Conversation name="Admin">
+          <Popover.Dropdown w={500} className="p-0 border-none rounded-md">
+            <ConversationHeader>
               <Avatar
+                status="available"
                 name="admin"
                 src="https://t4.ftcdn.net/jpg/04/75/00/99/360_F_475009987_zwsk4c77x3cTpcI3W1C1LU4pOSyPKaqi.jpg"
               />
-            </Conversation>
+              <ConversationHeader.Content userName="Chat Bot" />
+            </ConversationHeader>
             <MainContainer>
-              <ChatContainer>
-                <MessageList typingIndicator={typing ? <TypingIndicator content="chatbot in typing..." /> : null}>
+              <ChatContainer className="rounded-md h-[500px]">
+                <MessageList
+                  autoScrollToBottomOnMount={true}
+                  autoScrollToBottom={true}
+                  scrollBehavior="smooth"
+                  typingIndicator={typing ? <TypingIndicator /> : null}
+                >
                   {messages.map((message, index) => {
-                    return <Message key={index} model={message} />;
+                    return (
+                      <Message key={index} model={message}>
+                        <Avatar name="Emily" src="https://chatscope.io/storybook/react/assets/emily-xzL8sDL2.svg" />
+                      </Message>
+                    );
                   })}
                 </MessageList>
                 <MessageInput placeholder="Type something..." onSend={handleSend} />

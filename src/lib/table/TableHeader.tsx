@@ -1,8 +1,8 @@
 import { Column } from '@tanstack/react-table';
-import BaseIcon from '../base/BaseIcon';
-import BaseButton from '../base/button';
 import { Box, Menu } from '@mantine/core';
 import { IconArrowDown, IconArrowsUpDown, IconArrowUp, IconEyeOff } from '@tabler/icons-react';
+import BaseButton from '@/components/base/button';
+import BaseIcon from '@/components/base/BaseIcon';
 
 interface TableHeaderProps<TData, TValue> {
   column: Column<TData, TValue>;

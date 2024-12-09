@@ -21,7 +21,7 @@ const BaseTable = factory<TableProps>(({ withTableBorder, ...props }, ref) => {
         {
           'border rounded-md': withTableBorder,
         },
-        'overflow-x-hidden',
+        'overflow-x-hidden px-2',
       )}
     >
       <Table ref={ref} {...props} />

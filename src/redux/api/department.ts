@@ -25,13 +25,7 @@ export const departmentApi = createApi({
     }),
     getDepartment: builder.query<DepartmentProps, string>({
       query: id => ({ url: `departments/${id}` }),
-      providesTags: result =>
-        result
-          ? [
-              { type: 'Department', id: result.id },
-              { type: 'Department', id: 'DEPARTMENT-DETAIL' },
-            ]
-          : [{ type: 'Department', id: 'DEPARTMENT-DETAIL' }],
+      providesTags: result => (result ? [{ type: 'Department', id: result.id }] : []),
       transformResponse: (response: { data: DepartmentProps }) => response.data,
       keepUnusedDataFor: 90,
     }),
@@ -56,13 +50,7 @@ export const departmentApi = createApi({
         url: `departments/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, _, id) =>
-        result
-          ? [
-              { type: 'Department', id },
-              { type: 'Department', id: 'DEPARTMENT-LIST' },
-            ]
-          : [],
+      invalidatesTags: result => (result ? [{ type: 'Department', id: 'DEPARTMENT-LIST' }] : []),
     }),
   }),
 });
