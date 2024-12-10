@@ -1,20 +1,32 @@
-import { Row } from '@tanstack/react-table';
 import { ROLE } from './constants/define';
+import {
+  FilterFunction,
+  ManualFiltering,
+  ManualPaginationProps,
+  PaginationFunction,
+  RowPerPageFunction,
+} from './@types/table';
 
 declare module '@tanstack/react-table' {
-  interface ColumnMeta<TData extends RowData, TValue> {
+  interface ColumnMeta {
     label?: string;
-    data?: Row<TData, TValue>;
+  }
+  interface TableMeta {
+    paginationFunction?: PaginationFunction;
+    filterFunction?: FilterFunction;
+    rowPerPageFunction?: RowPerPageFunction;
+    manualFiltering?: ManualFiltering;
+    manualPagination?: ManualPaginationProps;
   }
 }
 
 declare module 'yup' {
   interface StringSchema {
-    omit(omitValue: Array<null | undefined | string>): this;
+    omit(omit: Array<null | undefined | string>): this;
     password(message: string): this;
   }
   interface ObjectSchema<T> {
-    safeParse(value: T): T;
+    safeParse(data: T): T;
   }
 }
 
@@ -39,6 +51,6 @@ declare global {
   interface ErrorResponse {
     errors?: { [k: string]: string | string[] };
     message: string;
-    success: boolean;
+    success?: boolean;
   }
 }

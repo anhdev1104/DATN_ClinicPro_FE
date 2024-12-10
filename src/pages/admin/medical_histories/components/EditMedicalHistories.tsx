@@ -7,7 +7,7 @@ import Label from '@/components/label';
 import { Controller, useForm } from 'react-hook-form';
 import UploadFiles from './UploadFiles';
 import { useEffect, useRef, useState } from 'react';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadImages } from '@/services/uploadFile.service';
 import { getDetailMedicalHistorie, updateMedicalHistorie } from '@/services/medicalHistories.service';

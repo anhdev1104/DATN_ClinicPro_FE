@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useFormContext } from 'react-hook-form';
 import { ForgotPassword } from './ForgotPassword';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { resetPassword } from '@/services/auth.service';
 import BaseInput from '@/components/base/input';
 import { Form, former } from '@/lib/form';

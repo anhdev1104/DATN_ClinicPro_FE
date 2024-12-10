@@ -1,4 +1,5 @@
-import { TableHeader } from '@/lib/table';
+import { TableHeader } from '@/components/common/table/primary';
+import { AggregationFnOption } from '@tanstack/react-table';
 import {
   AccessorFn,
   Cell,
@@ -15,11 +16,15 @@ import { useMemo, useState } from 'react';
 /**
  * @warning during development, notify me if you get the bug
  */
-export interface ColumnProps<TData, TValue> {
+export type ColumnProps<TData, TValue> = {
   key?: (string & {}) | keyof TData;
   keyFn?: AccessorFn<TData, TValue>;
   id?: string;
   columns?: ColumnDef<TData>[];
+  aggregationFn?: AggregationFnOption<TData>;
+  aggregatedCell?: ColumnDefTemplate<ReturnType<Cell<TData, TValue>['getContext']>>;
+  enableGrouping?: boolean;
+  getGroupingValue?: (row: TData) => any;
   header?: string;
   footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>;
   cell?: (props: {
@@ -31,15 +36,16 @@ export interface ColumnProps<TData, TValue> {
   }) => unknown;
   sortable?: boolean;
   filterable?: boolean;
-  hiding?: boolean;
+  hidable?: boolean;
   meta?: ColumnMeta<TData, TValue>;
-}
+};
+
 type UseColumnsProps<TData, TValue> = (() => ColumnProps<TData, TValue>[]) | ColumnProps<TData, TValue>[];
 export const useColumn = <TData, TValue = unknown>(props: UseColumnsProps<TData, TValue>) => {
   const [columnsData] = useState(props);
   const columns = useMemo(() => {
     return columnsData.map(
-      ({ keyFn, header, cell, key, filterable = true, hiding = true, sortable = true, ...props }) => ({
+      ({ keyFn, header, cell, key, filterable = true, hidable = true, sortable = true, ...props }) => ({
         accessorKey: key,
         accessorFn: keyFn,
         header: ({ column }) => (header ? <TableHeader title={header} column={column} /> : undefined),
@@ -47,7 +53,7 @@ export const useColumn = <TData, TValue = unknown>(props: UseColumnsProps<TData,
           cell ? cell({ value: renderValue(), ...props }) : renderValue() || getValue(),
         enableSorting: sortable,
         enableGlobalFilter: filterable,
-        enableHiding: hiding,
+        enableHiding: hidable,
         ...props,
       }),
     ) as ColumnDef<TData>[];

@@ -68,13 +68,6 @@ const dumpCategory = [
     pathActive: ['/prescriptions'],
   },
   {
-    id: 7,
-    categoryName: 'Gói khám',
-    path: '/packages',
-    icon: AssignmentIcon,
-    pathActive: ['/packages'],
-  },
-  {
     id: 8,
     categoryName: 'Phòng Ban',
     path: '/departments',
@@ -90,6 +83,20 @@ const dumpCategory = [
   },
   {
     id: 10,
+    categoryName: 'Services',
+    path: '/services',
+    icon: SpecialtiesIcon,
+    pathActive: ['/services'],
+  },
+  {
+    id: 7,
+    categoryName: 'Gói khám',
+    path: '/packages',
+    icon: AssignmentIcon,
+    pathActive: ['/packages'],
+  },
+  {
+    id: 11,
     categoryName: 'Chuyên khoa',
     path: '/specialties',
     icon: SpecialtiesIcon,

@@ -2,7 +2,7 @@ import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
 import { Form, former } from '@/lib/form';
 import { changePassword } from '@/services/auth.service';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { Container, Paper, Stack, Title } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { resolveErrorResponse } from '@/helpers/utils';

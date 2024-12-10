@@ -20,7 +20,7 @@ import { Button } from '@/components/button';
 import Label from '@/components/label';
 import Field from '@/components/field';
 import { yupResolver } from '@hookform/resolvers/yup';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 
 const SearchOptions = [
   {

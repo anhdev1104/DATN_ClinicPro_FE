@@ -2,7 +2,6 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
-import '@mantine/spotlight/styles.css';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import './index.scss';
 import { ToastContainer } from 'react-toastify';

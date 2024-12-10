@@ -1,4 +1,4 @@
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { useSelector } from '@/hooks/redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { ComponentType, useEffect, useState } from 'react';
@@ -25,7 +25,7 @@ const former = <T extends object>(
       if (form.formState.isSubmitting || form.formState.isSubmitSuccessful) {
         setDisabled(loading);
       }
-    }, [loading]);
+    }, [loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
       <FormProvider {...form}>

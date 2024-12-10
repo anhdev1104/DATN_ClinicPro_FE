@@ -1,6 +1,6 @@
 import { Skeleton, Stack } from '@mantine/core';
 
-const TableSkeleton = () => {
+export default function TableSkeleton() {
   return (
     <>
       <Stack gap={30}>
@@ -13,5 +13,4 @@ const TableSkeleton = () => {
       </Stack>
     </>
   );
-};
-export default TableSkeleton;
+}
