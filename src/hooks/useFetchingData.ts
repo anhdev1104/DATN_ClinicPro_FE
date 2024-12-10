@@ -28,5 +28,6 @@ export default function useFetchingData<IData>({ serviceFetching, initialData }:
     isLoading,
     error,
     data,
+    setData,
   };
 }

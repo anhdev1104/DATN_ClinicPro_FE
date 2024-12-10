@@ -42,7 +42,6 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
     medicalRecord,
     setMedicalRecord,
   } = usePrescriptionContextForm();
-  console.log('🚀 ~ AddPrescriptions ~ medicalRecord:', medicalRecord);
 
   const selectedCategoryId = useWatch({
     control,

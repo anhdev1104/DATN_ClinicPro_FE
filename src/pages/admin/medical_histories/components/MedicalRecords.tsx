@@ -93,7 +93,12 @@ const MedicalRecords = ({
                   {convertTime(item.created_at)}
                 </div>
               </div>
-              <div className="text-xs mt-3 bg-primaryAdmin text-white rounded-sm py-2 px-5 text-center transition-all ease-linear hover:bg-opacity-75">
+              <div
+                className="text-xs mt-3 bg-primaryAdmin text-white rounded-sm py-2 px-5 text-center transition-all ease-linear hover:bg-opacity-75"
+                onClick={e => {
+                  e.stopPropagation();
+                }}
+              >
                 Chi tiết
               </div>
             </div>
