@@ -4,7 +4,7 @@ import DirectRoute from '@/components/direct';
 import Field from '@/components/field';
 import Input from '@/components/input';
 import Label from '@/components/label';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { List } from '@/components/icons';
 import { SubmitHandler, useForm } from 'react-hook-form';

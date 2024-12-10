@@ -4,6 +4,7 @@ import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import ProtectedRoute from '@/components/auth';
+const ServicesPage = React.lazy(() => import('@/pages/admin/services/Services'));
 const Appointment = React.lazy(() => import('@/pages/admin/appointments/Compontents/ListAppointment'));
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
 const Department = React.lazy(() => import('@/pages/admin/department/Department'));
@@ -174,6 +175,11 @@ const adminRouter: IRouter[] = [
     path: '/users/:userId/edit',
     element: <UpdateUser />,
     title: 'Danh Sách Người Dùng',
+  },
+  {
+    path: '/services',
+    element: <ServicesPage />,
+    title: 'Dịch Vụ',
   },
   {
     path: '/specialties',

@@ -1,14 +1,14 @@
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
 import { Form, former } from '@/lib/form';
 import { useCreateDepartmentMutation } from '@/redux/api/department';
 import { useGetUsersQuery } from '@/redux/api/users';
 import { Stack } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { IconBuilding, IconUsers, IconUsersGroup } from '@tabler/icons-react';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { useMemo } from 'react';
 import { filterOutManagers, formatUserSelect, resolveErrorResponse } from '@/helpers/utils';
 import { renderOption } from '@/helpers/format';
@@ -76,12 +76,14 @@ const CreateDepartment = ({ handleClose }: { handleClose: () => void }) => {
     </Form>
   );
 };
+
 const createDepartmentSchema = yup.object({
   name: yup.string().trim().required(),
   description: yup.string(),
   manager_id: yup.string().nullable(),
   users: yup.array().of(yup.string()).default([]),
 });
-export default former(CreateDepartment, createDepartmentSchema, {
+const CreateDepartmentComp = former(CreateDepartment, createDepartmentSchema, {
   mode: 'onChange',
 });
+export default CreateDepartmentComp;

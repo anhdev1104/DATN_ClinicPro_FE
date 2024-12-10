@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useState } from 'react';
 import { FieldValues, FormProvider, useForm, UseFormProps, UseFormReturn } from 'react-hook-form';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { cn } from '@/helpers/utils';
 import { useSelector } from '@/hooks/redux';
@@ -38,7 +38,7 @@ const Formik = <Schema extends yup.AnyObjectSchema, T extends FieldValues = yup.
     if (form.formState.isSubmitting || form.formState.isSubmitSuccessful) {
       setDisabled(loading);
     }
-  }, [loading]);
+  }, [loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <FormProvider {...form}>

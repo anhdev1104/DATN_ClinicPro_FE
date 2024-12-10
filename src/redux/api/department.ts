@@ -1,4 +1,4 @@
-import { axiosBaseQuery } from '@/helpers/axiosBaseQuery';
+import { axiosBaseQuery } from '@/lib/utils/axiosBaseQuery';
 import { CreateDepartmentProps } from '@/pages/admin/department/components/CreateDepartment';
 import { UpdateDepartmentProps } from '@/pages/admin/department/UpdateDepartment';
 import { DepartmentProps } from '@/types/department.type';

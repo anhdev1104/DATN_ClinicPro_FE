@@ -10,7 +10,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Select from '@/components/select';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@/components/button';
 import convertTime from '@/helpers/convertTime';

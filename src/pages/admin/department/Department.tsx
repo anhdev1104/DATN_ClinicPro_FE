@@ -1,30 +1,28 @@
-import { Avatar, Pagination, Text } from '@mantine/core';
+import { Avatar, Text } from '@mantine/core';
 import { useGetDepartmentsQuery } from '@/redux/api/department';
 import { useNavigate } from 'react-router-dom';
 import type { DepartmentProps, ManagerProps } from '@/types/department.type';
 import BaseButton from '@/components/base/button';
 import BaseIcon from '@/components/base/BaseIcon';
-import { useDebouncedCallback } from '@mantine/hooks';
 import NewDepartment from './components/CreateDepartment';
 import { IconPlus } from '@tabler/icons-react';
-import { useState } from 'react';
-import BaseInput from '@/components/base/input';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import dayjs from 'dayjs';
 import { modals } from '@mantine/modals';
 import { useColumn } from '@/hooks/useColumn';
 import { NumberParam, StringParam, useQueryParams, withDefault } from 'use-query-params';
-import { Table, ActionWithRow } from '@/lib/table';
+import { ActionWithRow } from '@/components/common/table';
+import { Table } from '@/components/common/table/primary';
+import { ROW_PER_PAGE } from '@/constants/config';
 
 export default function Department() {
   const navigate = useNavigate();
-  const [limit] = useState(5);
   const [query, setQuery] = useQueryParams({
-    limit: withDefault(NumberParam, limit),
+    limit: withDefault(NumberParam, ROW_PER_PAGE),
     q: withDefault(StringParam, ''),
     page: withDefault(NumberParam, 1),
   });
-  const { data: departments, isFetching } = useGetDepartmentsQuery(query as QueryParams);
+  const { data: departments, isFetching, isLoading } = useGetDepartmentsQuery(query as QueryParams);
 
   const columns = useColumn<DepartmentProps>([
     {
@@ -98,27 +96,19 @@ export default function Department() {
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
-          highlightOnHover
-          filterItem={
-            <BaseInput
-              defaultValue={query.q}
-              onChange={useDebouncedCallback(e => setQuery({ q: e.target.value, page: 1 }), 500)}
-              size="xs"
-              radius="md"
-              placeholder="tìm kiếm..."
-            />
-          }
-          pagination={
-            <Pagination
-              total={departments?.total_pages || 1}
-              onChange={page => setQuery({ page })}
-              value={query.page || 1}
-              radius="md"
-              className="w-full flex justify-center py-2"
-            />
-          }
+          manualFiltering
+          filterFunction={e => setQuery({ q: e.target.value, page: 1 })}
+          manualPagination={{
+            rowCount: departments?.data.length,
+            pageCount: departments?.total_pages,
+            pageIndex: query.page - 1,
+            pageSize: query.limit,
+          }}
+          paginationFunction={page => setQuery({ page })}
+          rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
           onRowClick={row => navigate(`/departments/${row.original.id}`)}
           isFetching={isFetching}
+          isLoading={isLoading}
           data={departments?.data || []}
           columns={columns}
           toolbar={
@@ -135,6 +125,9 @@ export default function Department() {
               <BaseIcon icon={IconPlus} size="md" />
             </BaseButton.Icon>
           }
+          tableProps={{
+            highlightOnHover: true,
+          }}
         />
       </div>
     </>

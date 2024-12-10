@@ -11,7 +11,7 @@ import { Header } from './components/Header';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import toast from 'react-hot-toast';
 import { formatUserSelect, resolveErrorResponse } from '@/helpers/utils';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
 import { Manager } from './components/Manager';
 import { Mock } from '@/components/base/Link/Mock';
 import { Divider } from '@mui/material';
@@ -22,9 +22,10 @@ import BaseInput from '@/components/base/input';
 import { useGetUsersQuery } from '@/redux/api/users';
 import { useMemo } from 'react';
 import { renderOption } from '@/helpers/format';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { Formik } from '@/lib/form';
-import { Table, ActionWithRow } from '@/lib/table';
+import { ActionWithRow } from '@/components/common/table';
+import { Table } from '@/components/common/table/primary';
 const schema = yup.object({
   users: yup.array().of(yup.string()).default([]),
 });
@@ -131,7 +132,6 @@ export default function GetDepartment() {
           <div id="table-user" className="space-y-2">
             <Mock href="#table-user" name="Nhân viên phòng ban" />
             <Table
-              highlightOnHover
               toolbar={
                 <BaseButton.Icon
                   onClick={() => {
@@ -180,6 +180,7 @@ export default function GetDepartment() {
               columns={columns}
               data={department?.users || []}
               isFetching={isFetching}
+              tableProps={{ highlightOnHover: true }}
             />
           </div>
           <div className="flex justify-end items-center space-x-4 my-4">

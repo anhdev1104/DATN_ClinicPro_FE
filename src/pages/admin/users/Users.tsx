@@ -3,26 +3,25 @@ import BaseButton from '@/components/base/button';
 import { useColumn } from '@/hooks/useColumn';
 import { useGetUsersQuery, useUpdateUserMutation } from '@/redux/api/users';
 import { IUserInfo } from '@/types/user.type';
-import { useDebouncedCallback } from '@mantine/hooks';
 import { IconPlus } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import CreateUser from './components/CreateUser';
 import { UserInfo } from '@/components/user-info/UserInfo';
-import { Pagination } from '@mantine/core';
 import BaseInput from '@/components/base/input';
-import { useState } from 'react';
 import { modals } from '@mantine/modals';
 import { STATUS } from '@/constants/define';
 import { resolveErrorResponse } from '@/helpers/utils';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
 import toast from 'react-hot-toast';
 import { NumberParam, StringParam, useQueryParams, withDefault } from 'use-query-params';
-import { Table, ActionWithRow } from '@/lib/table';
+import { ActionWithRow } from '@/components/common/table';
+import { Table } from '@/components/common/table/primary';
+import { ROW_PER_PAGE } from '@/constants/config';
+
 export default function User() {
-  const [limit] = useState(5);
   const [query, setQuery] = useQueryParams({
     q: withDefault(StringParam, ''),
-    limit: withDefault(NumberParam, limit),
+    limit: withDefault(NumberParam, ROW_PER_PAGE),
     page: withDefault(NumberParam, 1),
   });
 
@@ -31,8 +30,8 @@ export default function User() {
   const navigate = useNavigate();
   const columns = useColumn<IUserInfo>([
     {
-      header: 'Tên',
       key: 'user_info.fullname',
+      header: 'Tên',
       cell: ({ value, row }) => (
         <UserInfo avatar={row.original?.user_info.fullname} fullname={value} email={row.original.email} />
       ),
@@ -41,32 +40,32 @@ export default function User() {
       },
     },
     {
-      header: 'Địa Chỉ',
       key: 'user_info.address',
+      header: 'Địa Chỉ',
       meta: {
         label: 'Địa Chỉ',
       },
       sortable: false,
     },
     {
-      header: 'Ngày sinh',
       key: 'user_info.dob',
+      header: 'Ngày sinh',
       meta: {
         label: 'Ngày sinh',
       },
       sortable: false,
     },
     {
-      header: 'số điện thoại',
       key: 'user_info.phone_number',
+      header: 'số điện thoại',
       meta: {
         label: 'số điện thoại',
       },
       sortable: false,
     },
     {
-      header: 'Status',
       key: 'status',
+      header: 'Status',
       cell: ({ value, row }) => (
         <BaseInput.Select
           variant="unstyled"
@@ -116,29 +115,20 @@ export default function User() {
               <BaseIcon icon={IconPlus} />
             </BaseButton.Icon>
           }
-          filterItem={
-            <BaseInput
-              defaultValue={query.q}
-              onChange={useDebouncedCallback(e => setQuery({ q: e.target.value, page: 1 }), 500)}
-              size="xs"
-              radius="md"
-              placeholder="tìm kiếm..."
-            />
-          }
-          pagination={
-            <Pagination
-              total={users?.total_pages || 1}
-              onChange={page => setQuery({ page })}
-              value={query.page || 1}
-              radius="md"
-              className="w-full flex justify-center py-2"
-            />
-          }
+          manualFiltering
+          filterFunction={e => setQuery({ q: e.target.value, page: 1 })}
+          manualPagination={{
+            rowCount: users?.data.length,
+            pageCount: users?.total_pages,
+            pageIndex: query.page - 1,
+            pageSize: query.limit,
+          }}
+          paginationFunction={page => setQuery({ page })}
+          rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
           columns={columns}
           data={users?.data || []}
           isFetching={isFetching || isUpdateLoading}
           isLoading={isLoading}
-          rowCount={10}
         />
       </div>
     </>
