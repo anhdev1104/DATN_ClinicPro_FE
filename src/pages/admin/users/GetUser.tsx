@@ -1,6 +1,6 @@
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import { useGetUserQuery } from '@/redux/api/users';
 import { Avatar, Divider, Grid, Text } from '@mantine/core';

@@ -1,4 +1,4 @@
-import { axiosBaseQuery } from '@/helpers/axiosBaseQuery';
+import { axiosBaseQuery } from '@/lib/utils/axiosBaseQuery';
 import { CreateDepartmentProps } from '@/pages/admin/department/components/CreateDepartment';
 import { UpdateDepartmentProps } from '@/pages/admin/department/UpdateDepartment';
 import { DepartmentProps } from '@/types/department.type';
@@ -25,13 +25,7 @@ export const departmentApi = createApi({
     }),
     getDepartment: builder.query<DepartmentProps, string>({
       query: id => ({ url: `departments/${id}` }),
-      providesTags: result =>
-        result
-          ? [
-              { type: 'Department', id: result.id },
-              { type: 'Department', id: 'DEPARTMENT-DETAIL' },
-            ]
-          : [{ type: 'Department', id: 'DEPARTMENT-DETAIL' }],
+      providesTags: result => (result ? [{ type: 'Department', id: result.id }] : []),
       transformResponse: (response: { data: DepartmentProps }) => response.data,
       keepUnusedDataFor: 90,
     }),
@@ -43,7 +37,7 @@ export const departmentApi = createApi({
       }),
       invalidatesTags: result => (result ? [{ type: 'Department', id: 'DEPARTMENT-LIST' }] : []),
     }),
-    updateDepartment: builder.mutation<{ message: string }, UpdateDepartmentProps & { id: string }>({
+    updateDepartment: builder.mutation<{ message: string }, { id: string } & Partial<UpdateDepartmentProps>>({
       query: ({ id, ...data }) => ({
         url: `departments/${id}`,
         method: 'PUT',
@@ -56,13 +50,7 @@ export const departmentApi = createApi({
         url: `departments/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, _, id) =>
-        result
-          ? [
-              { type: 'Department', id },
-              { type: 'Department', id: 'DEPARTMENT-LIST' },
-            ]
-          : [],
+      invalidatesTags: result => (result ? [{ type: 'Department', id: 'DEPARTMENT-LIST' }] : []),
     }),
   }),
 });

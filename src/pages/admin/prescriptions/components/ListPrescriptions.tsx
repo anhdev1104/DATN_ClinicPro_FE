@@ -1,15 +1,20 @@
 import Input from '@/components/input';
 import { useForm } from 'react-hook-form';
-import { AddIcon, MoreHorizIcon } from '@/components/icons';
-import { useState } from 'react';
+import { AddIcon, DeleteIcon, EditNoteIcon, VisibilityIcon } from '@/components/icons';
+import { useRef, useState } from 'react';
 import Select from '@/components/select';
 import DirectRoute from '@/components/direct';
-// import PrescriptionItem from './PrescriptionItem';
-import { getPrescription } from '@/services/prescriptions.service';
-import { IPrescription } from '@/types/prescription.type';
+import { deletePrescription, getPrescription, getPrescriptionDetails } from '@/services/prescriptions.service';
+import { IPrescriptions } from '@/types/prescription.type';
 import useFetchingData from '@/hooks/useFetchingData';
 import LoadingSpin from '@/components/loading';
 import convertTime from '@/helpers/convertTime';
+import { Box } from '@mui/material';
+import { ModalConfirm, ModalPrescription } from '@/components/modal';
+import useToggle from '@/hooks/useToggle';
+import { toast } from 'react-toastify';
+import renderMessageError from '@/helpers/renderMessageErrror';
+import prettyId from '@/helpers/prettyId';
 
 const SearchOptions = [
   {
@@ -27,26 +32,49 @@ interface ListPrescriptons {
 }
 
 const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
-  const [showDropdown, setShowDropdown] = useState<string | undefined | null>(null);
-  const { isLoading, data: prescription } = useFetchingData<IPrescription[]>({
+  const {
+    isLoading,
+    data: prescription,
+    setData: setPrescription,
+  } = useFetchingData<IPrescriptions[]>({
     serviceFetching: getPrescription,
     initialData: [],
   });
 
-  // const [prescriptionDetails, setPrescriptionDetails] = useState<any[]>([]);
+  const { show: showConfirm, handleToggle: handleToggleConfirm } = useToggle();
+  const { show: prescriptionDetail, handleToggle: setPrescriptionDetail } = useToggle();
+  const [detailMedication, setDetailMedication] = useState<IPrescriptions>({} as IPrescriptions);
+  const [idPrescription, setIdPrescription] = useState<string | undefined>('');
 
-  const handleToggle = (id: string | null | undefined) => {
-    setShowDropdown(showDropdown === id ? null : id);
+  const contentRef = useRef<any>(null);
+  const handleRemovePrescription = async () => {
+    handleToggleConfirm();
+    if (!idPrescription) return;
+    try {
+      await deletePrescription(idPrescription);
+      setPrescription(prev => prev.filter(item => item.id !== idPrescription));
+      toast.success('Xoá đơn thuốc thành công');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  // const handlePrescriptionDetails = (id: string) => {
-  //   (async () => {
-  //     const data = await getPrescriptionDetails(id);
-  //   })();
-  // };
+  const getPrescriptionDetail = async (id: string | undefined) => {
+    if (!id) return;
+    try {
+      const res = await getPrescriptionDetails(id);
+      if (res.message === false) {
+        return toast.error(renderMessageError(res.errors));
+      }
+      setDetailMedication(res);
+      setPrescriptionDetail();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
-    <div>
+    <>
       <DirectRoute nav="Quản lý đơn thuốc" subnav="Đơn thuốc" />
       <div className="bg-white size-full p-[20px] rounded-[26px] min-h-[500px]">
         <div className={`mb-6 flex items-center justify-between gap-5 w-[${window.screen.width}px]`}>
@@ -61,78 +89,84 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
             <PrescriptionSearch />
           </div>
         </div>
+
+        <table className="min-w-full table-auto border-collapse">
+          <thead className="border-b-2 border-primaryAdmin/20 bg-primaryAdmin/5">
+            <tr className=" text-gray-700">
+              <th className="p-4 font-medium">Mã đơn thuốc</th>
+              <th className="p-4 font-medium">Tên đơn thuốc</th>
+              <th className="p-4 font-medium">Bệnh nhân</th>
+              <th className="p-4 font-medium">Lời dặn</th>
+              <th className="p-4 font-medium">Bác sĩ kê đơn</th>
+              <th className="p-4 font-medium">Ngày tạo</th>
+              <th className="p-4 font-medium"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {!isLoading &&
+              prescription.length > 0 &&
+              prescription.map(item => (
+                <tr className="even:bg-[#f5f5f5]" key={item.id}>
+                  <td className="py-2 px-5">{item.id && prettyId(item.id)}</td>
+                  <td className="py-2 px-5 text-gray-800 font-semibold">{item.name}</td>
+                  <td className="py-2 px-5 text-gray-600">{item.patient.patient_info?.fullname}</td>
+                  <td className="py-2 px-5 text-gray-600">{item.description}</td>
+                  <td className="py-2 px-5 text-gray-800">{item.user.user_info.fullname}</td>
+                  <td className="py-2 px-5 text-gray-800">{item.created_at && convertTime(item.created_at)}</td>
+                  <td className="py-2 px-5 flex gap-4 mt-2">
+                    <div
+                      className="text-primaryAdmin/70 transition-all hover:text-primaryAdmin/50 cursor-pointer"
+                      onClick={() => getPrescriptionDetail(item.id)}
+                    >
+                      <VisibilityIcon />
+                    </div>
+                    <div className="text-yellow-400 transition-all hover:text-yellow-300 cursor-pointer">
+                      <EditNoteIcon />
+                    </div>
+                    <div
+                      className="text-red-400 transition-all hover:text-red-300 cursor-pointer"
+                      onClick={() => {
+                        setIdPrescription(item.id);
+                        handleToggleConfirm();
+                      }}
+                    >
+                      <DeleteIcon />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
         {isLoading && (
-          <div className="mx-auto text-center pt-10">
+          <div className="mx-auto text-center pt-6">
             <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
           </div>
         )}
-        {!isLoading && (
-          <table className="min-w-full table-auto border-collapse">
-            <thead className="border-b-2 border-primaryAdmin/20 bg-primaryAdmin/5">
-              <tr className=" text-gray-700">
-                <th className="p-4 font-medium">Mã đơn thuốc</th>
-                <th className="p-4 font-medium">Tên đơn thuốc</th>
-                <th className="p-4 font-medium">Bệnh nhân</th>
-                <th className="p-4 font-medium">Lời dặn</th>
-                <th className="p-4 font-medium">Người kê đơn</th>
-                <th className="p-4 font-medium">Ngày tạo</th>
-                <th className="p-4 font-medium"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {prescription &&
-                prescription?.map(item => (
-                  <tr className="even:bg-[#f5f5f5]" key={item.id}>
-                    <td className="py-2 px-5">{item.id}</td>
-                    <td className="py-2 px-5 text-gray-800 font-semibold max-w-[250px]">{item.name}</td>
-                    <td className="py-2 px-5 text-gray-600">{item.patient_id}</td>
-                    <td className="py-2 px-5 text-gray-600 max-w-[300px]">{item.description}</td>
-                    <td className="py-2 px-5 text-gray-800">{item.user_id}</td>
-                    <td className="py-2 px-5 text-gray-800">{item.created_at && convertTime(item.created_at)}</td>
-                    <td className="py-2 px-5 text-end">
-                      <div className="relative inline-block text-left">
-                        <button
-                          type="button"
-                          className="flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
-                          onClick={() => handleToggle(item.id)}
-                        >
-                          <MoreHorizIcon />
-                        </button>
-                        {showDropdown === item.id && (
-                          <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white">
-                            <div
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={() => {
-                                handleToggle(item.id);
-                                // handleClickOpen(item);
-                              }}
-                            >
-                              Chi tiết
-                            </div>
-                            <div
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={() => handleToggle(item.id)}
-                            >
-                              Sửa
-                            </div>
-                            <div
-                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={() => handleToggle(item.id)}
-                            >
-                              Xóa bỏ
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+        {!isLoading && prescription.length <= 0 && (
+          <Box
+            sx={{
+              textAlign: 'center',
+              marginTop: '50px',
+            }}
+          >
+            Chưa có đơn thuốc nào !
+          </Box>
         )}
       </div>
-      {/* <PrescriptionItem /> */}
-    </div>
+      <ModalConfirm
+        isOpen={showConfirm}
+        isClose={handleToggleConfirm}
+        title="Xoá đơn thuốc ?"
+        description="Bạn muốn xoá đơn thuốc này vĩnh viễn?"
+        submit={handleRemovePrescription}
+      />
+      <ModalPrescription
+        open={prescriptionDetail}
+        onClose={setPrescriptionDetail}
+        detailMedication={detailMedication}
+        ref={contentRef}
+      />
+    </>
   );
 };
 

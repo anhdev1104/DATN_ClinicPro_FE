@@ -101,7 +101,7 @@ const EditPackage = () => {
     formData.append('content', data.content || packageData?.content || '');
     formData.append('image', data.image || packageData?.image || '');
     formData.append('category_id', data.category_id || packageData?.category_id || '');
-    formData.append('  specialty_id', data.specialty_id || packageData?.specialty_id || '');
+    formData.append('specialty_id', data.specialty_id || packageData?.specialty_id || '');
 
     try {
       const res = await updatePackage(String(id), formData);

@@ -4,16 +4,15 @@ import PosterAuth from './components/PosterAuth';
 import { motion } from 'framer-motion';
 import BaseInput from '@/components/base/input';
 import { useFormContext } from 'react-hook-form';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { forgotPassword } from '@/services/auth.service';
 import { useState } from 'react';
-import ResetPassword from './ResetPassword';
-import former from '@/lib/former';
-import Form from '@/lib/Form';
+import { Form, former } from '@/lib/form';
 import { ArrowLeft } from '@/components/icons';
 import { Button } from '@/components/button';
 import { resolveErrorResponse } from '@/helpers/utils';
 import toast from 'react-hot-toast';
+import ResetPassword from './ResetPassword';
 
 const forgotPasswordSchema = yup.object({
   email: yup.string().email().required(),
@@ -22,20 +21,21 @@ export type ForgotPassword = yup.InferType<typeof forgotPasswordSchema>;
 
 const ForgotPassword = () => {
   const {
-    formState: { disabled },
+    formState: { isSubmitting },
     setError,
+    reset,
     getValues,
   } = useFormContext<ForgotPassword>();
   const [isSend, setIsSend] = useState(false);
   const navigate = useNavigate();
-
-  const handleSendEmail = async (data: ForgotPassword) => {
+  const handleSendEmail = async ({ email }: ForgotPassword) => {
     try {
-      const response = await forgotPassword<{ message: string }>(data);
+      const response = await forgotPassword<{ message: string }>({ email });
+      reset({ email });
       toast.success(response.message);
       setIsSend(true);
-    } catch (error) {
-      resolveErrorResponse(error as ErrorResponse, setError);
+    } catch (errors) {
+      resolveErrorResponse(errors as ErrorResponse, setError);
     }
   };
 
@@ -49,27 +49,31 @@ const ForgotPassword = () => {
                 <img src="/images/logo.webp" alt="logo-clinicpro" className="size-3/4 object-cover" />
                 <h1 className="text-[#116aef] font-bold text-[18px]">ClinicPro</h1>
               </Link>
-              <div className="flex gap-2 items-center cursor-pointer" onClick={() => navigate(-1)}>
+              <div
+                className="flex gap-2 items-center cursor-pointer"
+                onClick={() => (isSend ? setIsSend(false) : navigate(-1))}
+              >
                 <ArrowLeft className="!size-[16px] !text-dark mt-[2px]" />
                 <p className="text-dark text-[16px]">Quay lại</p>
               </div>
             </div>
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0.7 }}
-              animate={{
-                scale: 1,
-                opacity: 1,
-              }}
-              className="my-10"
-            >
-              <div className="relative flex justify-center items-center gap-2 mb-2">
-                <div>
-                  <h1 className="text-third text-[25px] uppercase font-bold mb-2">Quên mật khẩu</h1>
-                  <p className="ml-3 text-[13px] text-third">Nhập Email để lấy lại mật khẩu.</p>
+            {!isSend ? (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.7 }}
+                animate={{
+                  scale: 1,
+                  opacity: 1,
+                }}
+                className="my-10"
+              >
+                <div className="relative flex justify-center items-center gap-2 mb-2">
+                  <div className="text-center">
+                    <h1 className="text-third text-[25px] uppercase font-bold mb-2">Quên Mật khẩu</h1>
+                    <p className="ml-3 text-[13px] text-third">Nhập Email để lấy lại mật khẩu</p>
+                  </div>
                 </div>
-              </div>
-              {!isSend ? (
-                <Form onSubmit={handleSendEmail} className="w-3/4 flex flex-col mx-auto space-y-2">
+
+                <Form withAutoValidate onSubmit={handleSendEmail} className="w-3/4 flex flex-col mx-auto space-y-2">
                   <BaseInput.Group
                     autoComplete="email"
                     name="email"
@@ -81,17 +85,16 @@ const ForgotPassword = () => {
                   <Button
                     type="submit"
                     className="bg-third rounded-md w-full mt-3 h-[40px]"
-                    isLoading={disabled}
-                    disabled={disabled}
-                    onClick={() => localStorage.setItem('email-reset', getValues('email'))}
+                    isLoading={isSubmitting}
+                    disabled={isSubmitting}
                   >
                     Gửi
                   </Button>
                 </Form>
-              ) : (
-                <ResetPassword handleSendEmail={handleSendEmail} />
-              )}
-            </motion.div>
+              </motion.div>
+            ) : (
+              <ResetPassword handleSendEmail={handleSendEmail} email={getValues('email')} />
+            )}
           </div>
           <PosterAuth />
         </div>

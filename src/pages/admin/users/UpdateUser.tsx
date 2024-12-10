@@ -4,20 +4,31 @@ import BaseInput from '@/components/base/input';
 import { useGetUserQuery, useUpdateUserMutation } from '@/redux/api/users';
 import { getAllRole } from '@/services/roles.service';
 import { IRole } from '@/types/role.type';
-import { Avatar, Flex, Grid } from '@mantine/core';
-import { IconCalendar, IconUpload } from '@tabler/icons-react';
+import { Avatar, Flex, Grid, Radio } from '@mantine/core';
+import {
+  IconBuildingSkyscraper,
+  IconCalendar,
+  IconGenderTransgender,
+  IconMail,
+  IconMobiledata,
+  IconPencilCheck,
+  IconPhoneCall,
+  IconShieldLock,
+  IconUpload,
+  IconUser,
+} from '@tabler/icons-react';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetDepartmentsQuery } from '@/redux/api/department';
 import { uploadFile } from '@/services/uploadFile.service';
 import { formatDepartmentSelect, formatRoleSelect, resolveErrorResponse } from '@/helpers/utils';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
 import { GENDER, STATUS } from '@/constants/define';
 import dayjs from 'dayjs';
-import Formik, { FormikHandler } from '@/lib/Formik';
+import { Formik, FormikHandler } from '@/lib/form';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 
 const updateUserSchema = yup.object({
   email: yup.string().email().trim().required(),
@@ -35,12 +46,11 @@ const updateUserSchema = yup.object({
       .string()
       .oneOf(Object.values(GENDER) as `${GENDER}`[])
       .default(GENDER.OTHER),
-    dob: yup.date(),
+    dob: yup.date().nullable(),
     department_id: yup.string().omit([null]),
   }),
 });
 export type UpdateUserProps = yup.InferType<typeof updateUserSchema>;
-
 export default function UpdateUser() {
   const navigate = useNavigate();
   const { userId } = useParams();
@@ -58,28 +68,32 @@ export default function UpdateUser() {
   const rolesOption = useMemo(() => formatRoleSelect(roles || []), [roles]);
 
   const handleUpdateUser: FormikHandler<UpdateUserProps> = async (data, { setError }) => {
-    const { user_info, ...props } = data;
-    let url;
-    if (upload.file) {
-      const formData = new FormData();
-      formData.append('file', upload.file as File);
-      url = await uploadFile(formData);
+    try {
+      const { user_info, ...props } = data;
+      let url;
+      if (upload.file) {
+        const formData = new FormData();
+        formData.append('file', upload.file as File);
+        url = await uploadFile(formData);
+      }
+      const result = await updateUser({
+        ...props,
+        id: userId!,
+        user_info: {
+          ...user_info,
+          avatar: url?.data?.url,
+          dob: user_info?.dob && (dayjs(user_info.dob).format('YYYY-MM-DD') as any),
+        },
+      });
+      if (result.data) {
+        toast.success(result.data.message);
+        navigate(`/users/${userId}`, { replace: true });
+        return;
+      }
+      resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
+    } catch (errorrs) {
+      resolveErrorResponse(errorrs as ErrorResponse, setError);
     }
-    const result = await updateUser({
-      ...props,
-      id: userId!,
-      user_info: {
-        ...user_info,
-        avatar: url,
-        dob: user_info?.dob ? (dayjs(user_info.dob).format('YYYY-MM-DD') as any) : null,
-      },
-    });
-    if (result.data) {
-      toast.success(result.data.message);
-      navigate(`/users/${userId}`);
-      return;
-    }
-    resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
   };
 
   useEffect(() => {
@@ -96,14 +110,14 @@ export default function UpdateUser() {
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Formik
           withAutoValidate
+          schema={updateUserSchema}
+          onSubmit={handleUpdateUser}
           options={{
             defaultValues: updateUserSchema.safeParse({ ...user, role_id: user?.role?.id }),
             mode: 'onChange',
           }}
-          schema={updateUserSchema}
-          onSubmit={handleUpdateUser}
         >
-          {({ formState: { disabled } }) => {
+          {({ formState: { isSubmitting } }) => {
             return (
               <>
                 <Grid>
@@ -116,7 +130,7 @@ export default function UpdateUser() {
                       {props => (
                         <BaseButton
                           {...props}
-                          disabled={disabled}
+                          disabled={isSubmitting}
                           size="xs"
                           rightSection={<BaseIcon icon={IconUpload} />}
                         >
@@ -126,33 +140,51 @@ export default function UpdateUser() {
                     </BaseButton.File>
                   </Grid.Col>
                   <Grid.Col span={4}>
-                    <BaseInput.Group name="user_info.fullname" autoComplete="fullname" label="Họ và Tên" />
-                  </Grid.Col>
-                  <Grid.Col span={4}>
-                    <BaseInput.Group name="email" autoComplete="email" label="Email" />
+                    <BaseInput.Group
+                      name="user_info.fullname"
+                      autoComplete="fullname"
+                      leftSection={<BaseIcon icon={IconUser} />}
+                      withAsterisk
+                      label="Họ và Tên"
+                    />
                   </Grid.Col>
                   <Grid.Col span={4}>
                     <BaseInput.Group
-                      type="number"
+                      name="email"
+                      autoComplete="email"
+                      leftSection={<BaseIcon icon={IconMail} />}
+                      withAsterisk
+                      label="Email"
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={4}>
+                    <BaseInput.Number
                       name="user_info.phone_number"
                       autoComplete="phone_number"
                       label="Số Điện Thoại"
+                      leftSection={<BaseIcon icon={IconPhoneCall} />}
+                      allowNegative={false}
+                      trimLeadingZeroesOnBlur={false}
+                      thousandSeparator=" "
                     />
                   </Grid.Col>
-                  <Grid.Col>
+                  <Grid.Col span={6}>
                     <BaseInput.Select
                       name="role_id"
                       autoComplete="role_id"
                       data={rolesOption}
                       label="Role"
+                      leftSection={<BaseIcon icon={IconShieldLock} />}
                       placeholder="Role"
+                      withAsterisk
                     />
                   </Grid.Col>
-                  <Grid.Col>
+                  <Grid.Col span={6}>
                     <BaseInput.Select
                       name="user_info.department_id"
                       autoComplete="department_id"
                       data={deparmentsOption}
+                      leftSection={<BaseIcon icon={IconBuildingSkyscraper} />}
                       nothingFoundMessage="không tìm thấy phòng ban"
                       label="Phòng Ban"
                     />
@@ -162,6 +194,10 @@ export default function UpdateUser() {
                       name="user_info.gender"
                       autoComplete="gender"
                       data={Object.values(GENDER)}
+                      renderOption={({ option, checked }) => (
+                        <Radio checked={checked} onChange={() => {}} value={option.value} label={option.value} />
+                      )}
+                      leftSection={<BaseIcon icon={IconGenderTransgender} />}
                       allowDeselect={false}
                       label="Giới tính"
                     />
@@ -174,6 +210,7 @@ export default function UpdateUser() {
                       valueFormat="YYYY/MM/DD"
                       placeholder="Chọn ngày sinh"
                       label="Ngày Sinh"
+                      withAsterisk
                     />
                   </Grid.Col>
                   <Grid.Col span={4}>
@@ -181,6 +218,7 @@ export default function UpdateUser() {
                       name="status"
                       autoComplete="status"
                       data={Object.values(STATUS)}
+                      leftSection={<BaseIcon icon={IconMobiledata} />}
                       allowDeselect={false}
                       label="Status"
                     />
@@ -193,7 +231,12 @@ export default function UpdateUser() {
                   <BaseButton onClick={() => navigate(-1)} color="gray">
                     Hủy
                   </BaseButton>
-                  <BaseButton disabled={disabled} loading={disabled} type="submit">
+                  <BaseButton
+                    disabled={isSubmitting}
+                    loading={isSubmitting}
+                    leftSection={<BaseIcon icon={IconPencilCheck} />}
+                    type="submit"
+                  >
                     Cập Nhật
                   </BaseButton>
                 </Flex>

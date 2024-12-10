@@ -4,7 +4,8 @@ import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import ProtectedRoute from '@/components/auth';
-
+const ServicesPage = React.lazy(() => import('@/pages/admin/services/Services'));
+const Appointment = React.lazy(() => import('@/pages/admin/appointments/Compontents/ListAppointment'));
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
 const Department = React.lazy(() => import('@/pages/admin/department/Department'));
 const GetDepartment = React.lazy(() => import('@/pages/admin/department/GetDepartment'));
@@ -35,8 +36,6 @@ const UpdateUser = React.lazy(() => import('@/pages/admin/users/UpdateUser'));
 const MedicalHistories = React.lazy(() => import('@/pages/admin/medical_histories/MedicalHistories'));
 const PrivacyPage = React.lazy(() => import('@/pages/client/privacy/privacyPage'));
 const Specialties = React.lazy(() => import('@/pages/admin/specialties/Specialties'));
-const AddSpecialties = React.lazy(() => import('@/pages/admin/specialties/components/AddSpecialties'));
-const EditSpecialties = React.lazy(() => import('@/pages/admin/specialties/components/EditSpecialties'));
 const Patients = React.lazy(() => import('@/pages/admin/patient/Patients'));
 const DetailPatient = React.lazy(() => import('@/pages/admin/patient/components/DetailPatient'));
 const AddPatient = React.lazy(() => import('@/pages/admin/patient/components/AddPatient'));
@@ -113,6 +112,11 @@ const adminRouter: IRouter[] = [
     title: 'Trang quản lý',
   },
   {
+    path: '/appointments',
+    element: <Appointment />,
+    title: 'Danh sách lịch hẹn',
+  },
+  {
     path: '/medical-record',
     element: <MedicalHistories />,
     title: 'Danh sách bệnh án',
@@ -173,18 +177,13 @@ const adminRouter: IRouter[] = [
     title: 'Danh Sách Người Dùng',
   },
   {
+    path: '/services',
+    element: <ServicesPage />,
+    title: 'Dịch Vụ',
+  },
+  {
     path: '/specialties',
     element: <Specialties />,
-    title: 'Trang chuyên khoa',
-  },
-  {
-    path: '/add-specialties',
-    element: <AddSpecialties />,
-    title: 'Trang chuyên khoa',
-  },
-  {
-    path: '/edit-specialties/:id',
-    element: <EditSpecialties />,
     title: 'Trang chuyên khoa',
   },
   {

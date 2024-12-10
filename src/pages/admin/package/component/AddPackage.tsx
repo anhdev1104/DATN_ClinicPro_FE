@@ -114,7 +114,7 @@ const AddPackage = ({ navigate }: ListPackage) => {
                 <Input
                   name="name"
                   type="text"
-                  className=" w-1/2 border rounded-md p-2 focus:ring-2 outline-none !font-normal !text-dark bg-white focus:border-third"
+                  className=" border rounded-md p-2 focus:ring-2  outline-none !font-normal !text-dark bg-white focus:border-third"
                   placeholder="Nhập tên gói khám"
                   control={control}
                 />
@@ -125,14 +125,26 @@ const AddPackage = ({ navigate }: ListPackage) => {
               <Label htmlFor="categoryId">
                 Danh mục gói khám<span className="text-red-500">*</span>
               </Label>
-              <Select placeholder="Danh mục gói khám" name="category_id" control={control} options={packageCategory} />
+              <Select
+                placeholder="Danh mục gói khám"
+                name="category_id"
+                className="h-12"
+                control={control}
+                options={packageCategory}
+              />
               <MessageForm error={errors.category_id?.message} />
             </div>
             <div className="min-w-[380px] w-[45%]">
               <Label htmlFor="specialty_id" className="text-sm font-medium mb-1">
                 Chuyên khoa <span className="text-red-500">*</span>
               </Label>
-              <Select placeholder="Chọn chuyên khoa" name="specialty_id" control={control} options={Specialty} />
+              <Select
+                placeholder="Chọn chuyên khoa"
+                name="specialty_id"
+                className="h-12"
+                control={control}
+                options={Specialty}
+              />
               <MessageForm error={errors.specialty_id?.message} />
             </div>
           </div>
@@ -180,7 +192,7 @@ const AddPackage = ({ navigate }: ListPackage) => {
             <div className="flex justify-end space-x-4">
               <button
                 type="submit"
-                className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition duration-200"
+                className="bg-primaryAdmin text-white hover:bg-primaryAdmin/50 px-6 py-2 rounded-md transition duration-200"
               >
                 {loading ? 'Đang tạo...' : 'Tạo gói khám'}
               </button>

@@ -7,7 +7,7 @@ import DirectRoute from '@/components/direct';
 import { getPackages, deletePackage, getCategory } from '@/services/package.service';
 import { IPackage, Category } from '@/types/package.type';
 import { toast } from 'react-toastify';
-
+import LoadingSpin from '@/components/loading';
 interface ListPackageProps {
   navigate: () => void;
 }
@@ -18,7 +18,7 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
+  const [currentPage, setCurrentPage] = useState(1);
   const handleToggle = (id: string) => {
     setSelectedId(prevId => (prevId === id ? null : id));
   };
@@ -32,9 +32,9 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
         const categoryResponse = await getCategory();
         setPackages(packageResponse.data || []);
         setCategories(categoryResponse || []);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setError('Không thể tải danh sách gói khám. Vui lòng thử lại sau.');
+        return error;
       } finally {
         setLoading(false);
       }
@@ -53,9 +53,16 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
     setPackages(prevPackages => prevPackages.filter(pkg => pkg.id !== id));
     toast.success('Xóa gói khám thành công!');
   };
-
-  if (loading || error) {
-    return <div>{loading ? 'Đang tải dữ liệu...' : 'Không thể lấy dữ liệu'}</div>;
+  const itemsPerPage = 4;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentPackages = packages.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(packages.length / itemsPerPage);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  if (error) {
+    return <div>{'Không thể lấy dữ liệu'}</div>;
   }
 
   return (
@@ -75,67 +82,84 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
             </div>
           </div>
         </div>
-        <div className="list-package p-4">
-          <table className="min-w-full table-auto border-collapse">
-            <thead>
-              <tr className="text-left text-gray-700">
-                <th className="p-4 font-medium">ID</th>
-                <th className="p-4 font-medium">Gói khám</th>
-                <th className="p-4 font-medium">Danh mục</th>
-                <th className="p-4 font-medium">Mô tả</th>
-                <th className="p-4 font-medium">Hình ảnh</th>
-                <th className="p-4 font-medium">Nội dung</th>
-                <th className="p-4 font-medium"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {packages.map((pkg, index) => (
-                <tr key={index} className="odd">
-                  <td className="p-4 w-1/12">{index + 1}</td>
-                  <td className="p-4 text-gray-800 w-[15%]">{pkg.name}</td>
-                  <td className="p-4 text-gray-600 w-[15%]">{getCategoryName(pkg.category_id)}</td>
-                  <td className="p-4 text-gray-600 w-2/12">{pkg.description}</td>
-                  <td className="p-4 profile-image w-[20%] h-32">
-                    <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover" />
-                  </td>
-                  <td className="p-4 text-gray-600 w-[30%]">
-                    <textarea name="" id="" cols={25} rows={6} disabled className="w-full">
+        {loading && (
+          <div className="mx-auto text-center pt-10">
+            <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
+          </div>
+        )}
+        <div className="grid grid-cols-4 gap-2 py-7 px-5">
+          {currentPackages.length > 0 &&
+            currentPackages.map((pkg, index) => (
+              <div className="max-w-sm mx-auto border rounded-lg shadow-md p-4 bg-white" key={index}>
+                <div className="relative">
+                  <img src={pkg.image} alt={pkg.name} className="w-full h-52 object-cover rounded-md" />
+                </div>
+                <div className="mt-4 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Tên gói</label>
+                    <input
+                      type="text"
+                      value={pkg.name}
+                      className="w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Danh mục</label>
+                    <input
+                      type="text"
+                      defaultValue={getCategoryName(pkg.category_id)}
+                      className="w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Nội dung </label>
+                    <textarea name="" id="" cols={25} rows={6} disabled className="w-full bg-white scroll-select">
                       {pkg.content}
                     </textarea>
-                  </td>
-                  <td className="p-4 w-4/12 flex items-center">
-                    <div className="relative inline-block text-left">
-                      <button
-                        type="button"
-                        className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-2 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                        onClick={() => handleToggle(pkg.id)}
-                      >
-                        <MoreVertIcon />
-                      </button>
-                      {isOpen(pkg.id) && (
-                        <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white overflow-hidden">
-                          <Link
-                            to={`/edit-package/${pkg.id}`}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => handleToggle(pkg.id)}
-                          >
-                            Sửa
-                          </Link>
-                          <Link
-                            to="#"
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => handleDelete(pkg.id)}
-                          >
-                            Xóa bỏ
-                          </Link>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                  <div className="relative inline-block text-left ml-52">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-2 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                      onClick={() => handleToggle(pkg.id)}
+                    >
+                      <MoreVertIcon />
+                    </button>
+                    {isOpen(pkg.id) && (
+                      <div className="absolute right-0 z-10 mt-[-115px] w-56 rounded-md shadow-lg bg-white overflow-hidden">
+                        <Link
+                          to={`/edit-package/${pkg.id}`}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => handleToggle(pkg.id)}
+                        >
+                          Sửa
+                        </Link>
+                        <Link
+                          to="#"
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => handleDelete(pkg.id)}
+                        >
+                          Xóa bỏ
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
+        <div className="flex justify-center items-center gap-4 py-4">
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              className={`px-4 py-2 rounded-lg ${
+                currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
+              }`}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
         </div>
       </div>
     </section>

@@ -1,3 +1,7 @@
+import { MedicalRecord } from './medicalHistories.type';
+import { IPatient } from './patient.type';
+import { IUserInfo } from './user.type';
+
 export interface IMedications {
   id: string;
   name: string;
@@ -21,5 +25,19 @@ export interface IPrescription {
   name: string;
   description?: string;
   medications: IMedication[];
+  medical_histories_id: string;
   created_at?: string;
+}
+
+type TMedicationsType = IMedication & {
+  medication_name: string;
+};
+
+export interface IPrescriptions extends Omit<IPrescription, 'patient_id' | 'user_id' | 'medical_histories_id'> {
+  patient: Omit<IPatient, 'user_id' | 'created_at' | 'updated_at'>;
+  user: Omit<IUserInfo, 'email'>;
+  medical_histories: Omit<MedicalRecord, 'files' | 'doctor' | 'patient' | 'created_at' | 'updated_at'>;
+  medications: TMedicationsType[];
+  created_at?: string;
+  updated_at?: string;
 }

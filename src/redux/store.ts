@@ -3,10 +3,10 @@ import authReducer from './auth/authSlice';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { departmentApi } from './api/department';
-import { departmentSlice } from './department/departmentSlice';
 import { globalSlice } from './globalStore';
 import { usersApi } from './api/users';
 import { setupListeners } from '@reduxjs/toolkit/query';
+import { servicesApi } from './api/services';
 const persistConfig = {
   key: 'root',
   version: 1,
@@ -16,10 +16,10 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  [departmentSlice.name]: departmentSlice.reducer,
   [departmentApi.reducerPath]: departmentApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
   [globalSlice.name]: globalSlice.reducer,
+  [servicesApi.reducerPath]: servicesApi.reducer,
 });
 const persisted = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
@@ -29,7 +29,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(departmentApi.middleware, usersApi.middleware),
+    }).concat(departmentApi.middleware, usersApi.middleware, servicesApi.middleware),
 });
 
 const persistor = persistStore(store);

@@ -7,7 +7,7 @@ import Label from '@/components/label';
 import { Controller, useForm } from 'react-hook-form';
 import UploadFiles from './UploadFiles';
 import { useEffect, useRef, useState } from 'react';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadImages } from '@/services/uploadFile.service';
 import { getDetailMedicalHistorie, updateMedicalHistorie } from '@/services/medicalHistories.service';
@@ -129,7 +129,7 @@ const EditMedicalHistories = () => {
       const finalData = {
         ...data,
         patient_id: selectedPatientId?.id,
-        user_id: '8a9c264e-d283-4550-a14c-cf932199f2dc',
+        user_id: '885acee8-3042-4f9f-a306-923991dee831',
         files: [...newImages],
         file_deletes: [...filesDelete],
       };
@@ -151,16 +151,17 @@ const EditMedicalHistories = () => {
     <div>
       <DirectRoute nav="Quản lý bệnh án" subnav="Bệnh án" targetnav="Tạo bệnh án" />
       <div className="bg-white size-full p-[20px] rounded-[26px]">
-        <div className="mb-6 flex items-center justify-start gap-5">
+        <div className="mb-6 flex items-center justify-between gap-5">
           <div>
             <h1 className="text-[18px] text-black font-medium">Sửa bệnh án</h1>
           </div>
-          <Link
-            to={'/medical-record'}
-            className="text-[18px] font-medium gap-3 border-borderColor border p-2 rounded-lg bg-[#f3f4f7]"
-          >
-            <List className="text-primaryAdmin" />
-          </Link>
+
+          <div className="border-borderColor border px-3 py-2 rounded-lg bg-[#f3f4f7] transition-all ease-linear hover:bg-white cursor-pointer">
+            <Link to={'/medical-record'} className="text-dark font-medium flex items-center gap-3">
+              <List className="text-primaryAdmin" />
+              Danh sách bệnh án
+            </Link>
+          </div>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col">
           <div className="flex w-full gap-10 mb-5">
@@ -215,7 +216,7 @@ const EditMedicalHistories = () => {
                   render={({ field }) => {
                     return (
                       <textarea
-                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
+                        className="scroll-select block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
                         placeholder="Phương pháp điều trị  ..."
                         id="treatment"
                         {...field}
@@ -232,7 +233,7 @@ const EditMedicalHistories = () => {
                   render={({ field }) => {
                     return (
                       <textarea
-                        className="block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
+                        className="scroll-select block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px] text-primaryAdmin"
                         placeholder="Mô tả bệnh án ..."
                         id="description"
                         {...field}

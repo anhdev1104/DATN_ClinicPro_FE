@@ -1,4 +1,4 @@
-import { axiosBaseQuery } from '@/helpers/axiosBaseQuery';
+import { axiosBaseQuery } from '@/lib/utils/axiosBaseQuery';
 import { CreateUserProps } from '@/pages/admin/users/components/CreateUser';
 import { UpdateUserProps } from '@/pages/admin/users/UpdateUser';
 import { IUserInfo } from '@/types/user.type';
@@ -36,7 +36,7 @@ export const usersApi = createApi({
       }),
       invalidatesTags: result => (result ? [{ type: 'Users', id: 'LIST-USERS' }] : []),
     }),
-    updateUser: builder.mutation<{ message: string }, { id: string } & UpdateUserProps>({
+    updateUser: builder.mutation<{ message: string }, { id: string } & Partial<UpdateUserProps>>({
       query: ({ id, ...data }) => {
         return {
           url: `users/${id}`,

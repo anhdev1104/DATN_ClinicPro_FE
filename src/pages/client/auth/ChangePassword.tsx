@@ -1,13 +1,12 @@
 import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
-import former from '@/lib/former';
-import Form from '@/lib/Form';
+import { Form, former } from '@/lib/form';
 import { changePassword } from '@/services/auth.service';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { Container, Paper, Stack, Title } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
-import { toast } from 'react-toastify';
 import { resolveErrorResponse } from '@/helpers/utils';
+import toast from 'react-hot-toast';
 
 export const passwordSchema = yup.object({
   password: yup.string().min(8).required(),
@@ -37,7 +36,7 @@ const formElement = [
 // eslint-disable-next-line react-refresh/only-export-components
 const ChangePassword = () => {
   const {
-    formState: { disabled },
+    formState: { isSubmitting },
     reset,
     setError,
   } = useFormContext<PasswordProps>();
@@ -59,7 +58,11 @@ const ChangePassword = () => {
         <Title order={1} lineClamp={1} className="capitalize text-center">
           thay đổi mật khẩu
         </Title>
-        <Form onSubmit={handleChangePassword} className="space-y-2 flex flex-col my-10 justify-center items-center">
+        <Form
+          withAutoValidate
+          onSubmit={handleChangePassword}
+          className="space-y-2 flex flex-col my-10 justify-center items-center"
+        >
           <Stack gap="md" justify="center" align="center" className="w-full lg:w-3/4">
             {formElement.map(element => (
               <BaseInput.Password
@@ -72,7 +75,7 @@ const ChangePassword = () => {
                 autoComplete={element.name}
               />
             ))}
-            <BaseButton fullWidth loading={disabled} disabled={disabled} className="my-4" type="submit">
+            <BaseButton fullWidth loading={isSubmitting} disabled={isSubmitting} className="my-4" type="submit">
               Gửi
             </BaseButton>
           </Stack>

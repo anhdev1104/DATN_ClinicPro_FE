@@ -1,123 +1,136 @@
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
-import Table from '@/components/table/Table';
-import TableAction from '@/components/table/TableAction';
 import { useColumn } from '@/hooks/useColumn';
-import { useGetUsersQuery } from '@/redux/api/users';
+import { useGetUsersQuery, useUpdateUserMutation } from '@/redux/api/users';
 import { IUserInfo } from '@/types/user.type';
-import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
 import { IconPlus } from '@tabler/icons-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import CreateUser from './components/CreateUser';
-import BaseModal from '@/components/base/modal';
 import { UserInfo } from '@/components/user-info/UserInfo';
-import { Badge, Pagination } from '@mantine/core';
-import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import BaseInput from '@/components/base/input';
-import { useState } from 'react';
+import { modals } from '@mantine/modals';
+import { STATUS } from '@/constants/define';
+import { resolveErrorResponse } from '@/helpers/utils';
+import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
+import toast from 'react-hot-toast';
+import { NumberParam, StringParam, useQueryParams, withDefault } from 'use-query-params';
+import { ActionWithRow } from '@/components/common/table';
+import { Table } from '@/components/common/table/primary';
+import { ROW_PER_PAGE } from '@/constants/config';
 
 export default function User() {
-  const [opened, { close, open }] = useDisclosure();
-  const [params, setParams] = useSearchParams();
-  const [limit] = useState(5);
-  const {
-    data: users,
-    isFetching,
-    error,
-  } = useGetUsersQuery({
-    q: params.get('q')!,
-    limit: params.get('limit') || limit.toString(),
-    page: params.get('page')!,
+  const [query, setQuery] = useQueryParams({
+    q: withDefault(StringParam, ''),
+    limit: withDefault(NumberParam, ROW_PER_PAGE),
+    page: withDefault(NumberParam, 1),
   });
+
+  const { data: users, isFetching, isLoading } = useGetUsersQuery(query as QueryParams);
+  const [handleUpdate, { isLoading: isUpdateLoading }] = useUpdateUserMutation();
   const navigate = useNavigate();
   const columns = useColumn<IUserInfo>([
     {
-      label: 'Tên',
       key: 'user_info.fullname',
-      cell: ({ value, original }) => (
-        <UserInfo avatar={original?.user_info.fullname} fullname={value} email={original.email} />
+      header: 'Tên',
+      cell: ({ value, row }) => (
+        <UserInfo avatar={row.original?.user_info.fullname} fullname={value} email={row.original.email} />
       ),
+      meta: {
+        label: 'Tên',
+      },
     },
     {
-      label: 'Địa Chỉ',
       key: 'user_info.address',
+      header: 'Địa Chỉ',
+      meta: {
+        label: 'Địa Chỉ',
+      },
       sortable: false,
     },
     {
-      label: 'date of birth',
       key: 'user_info.dob',
+      header: 'Ngày sinh',
+      meta: {
+        label: 'Ngày sinh',
+      },
       sortable: false,
     },
     {
-      label: 'số điện thoại',
       key: 'user_info.phone_number',
+      header: 'số điện thoại',
+      meta: {
+        label: 'số điện thoại',
+      },
       sortable: false,
     },
     {
-      label: 'Status',
       key: 'status',
-      cell: ({ value }) => <Badge size="sm">{value}</Badge>,
+      header: 'Status',
+      cell: ({ value, row }) => (
+        <BaseInput.Select
+          variant="unstyled"
+          data={Object.values(STATUS)}
+          defaultValue={value}
+          className="max-w-32"
+          allowDeselect={false}
+          onChange={async value => {
+            const response = await handleUpdate({ id: row.original.id, status: value as `${STATUS}` });
+            if (response.data) {
+              toast.success(response.data.message);
+              return;
+            }
+            resolveErrorResponse((response.error as AxiosBaseQueryError).data);
+          }}
+        />
+      ),
+      meta: {
+        label: 'Status',
+      },
       sortable: false,
     },
     {
       id: 'actions',
-      cell: ({ row, original }) => (
-        <TableAction row={row} data={[{ label: 'Xem Chi Tiết', onClick: () => navigate(original.id) }]} />
+      cell: ({ row }) => (
+        <ActionWithRow row={row} data={[{ label: 'Xem Chi Tiết', onClick: () => navigate(row.original.id) }]} />
       ),
     },
   ]);
-  const handleSearch = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value) params.set('q', value);
-    else params.delete('q');
-    params.set('page', '1');
-    setParams(params.toString());
-  }, 500);
 
-  if (error) return <NotFoundPage title="Có lỗi xảy ra! vui lòng tải lại trang" />;
   return (
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
           toolbar={
-            <BaseButton.Icon onClick={open} variant="subtle" radius="lg">
+            <BaseButton.Icon
+              onClick={() => {
+                modals.open({
+                  title: 'Tạo Mới User',
+                  children: <CreateUser close={modals.closeAll} />,
+                  size: 'auto',
+                });
+              }}
+              variant="subtle"
+              radius="lg"
+            >
               <BaseIcon icon={IconPlus} />
             </BaseButton.Icon>
           }
           manualFiltering
-          filterItem={
-            <BaseInput
-              defaultValue={params.get('q') ?? ''}
-              onChange={handleSearch}
-              size="xs"
-              radius="md"
-              placeholder="tìm kiếm..."
-            />
-          }
-          manualPagination
-          pagination={
-            <Pagination
-              total={Number(users?.totalPage) || 1}
-              onChange={value => {
-                params.set('page', value.toString());
-                setParams(params.toString());
-              }}
-              radius="md"
-              defaultValue={Number(params.get('page')) || 1}
-              className="w-full flex justify-center py-2"
-            />
-          }
+          filterFunction={e => setQuery({ q: e.target.value, page: 1 })}
+          manualPagination={{
+            rowCount: users?.data.length,
+            pageCount: users?.total_pages,
+            pageIndex: query.page - 1,
+            pageSize: query.limit,
+          }}
+          paginationFunction={page => setQuery({ page })}
+          rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
           columns={columns}
           data={users?.data || []}
-          isFetching={isFetching}
-          onRowClick={data => navigate(data.id)}
-          className="mx-2"
-          highlightOnHover
+          isFetching={isFetching || isUpdateLoading}
+          isLoading={isLoading}
         />
       </div>
-      <BaseModal title="Tạo Mới User" opened={opened} onClose={close}>
-        <CreateUser close={close} />
-      </BaseModal>
     </>
   );
 }
