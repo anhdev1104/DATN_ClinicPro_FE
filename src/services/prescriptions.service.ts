@@ -40,8 +40,7 @@ export const updatePrescription = async (id: string, prescription: IPrescription
 
 export const deletePrescription = async (id: string) => {
   try {
-    const response = await http.delete('/prescriptions/', id);
-
+    const response = await http.delete('/prescriptions', id);
     return response;
   } catch (error) {
     return error;
