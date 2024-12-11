@@ -28,6 +28,7 @@ const schema = yup.object().shape({
   diagnosis: yup.string().trim().required(),
   description: yup.string().trim().required(),
   treatment: yup.string().trim().required(),
+  indication: yup.string().trim().required(),
 });
 
 export interface IPatientSelect {
@@ -171,6 +172,23 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
                     Chọn bệnh nhân
                   </Button>
                 )}
+              </Field>
+              <Field className="flex gap-3 flex-col">
+                <Label htmlFor="indication">Chỉ định:</Label>
+                <Controller
+                  name="indication"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <textarea
+                        className="scroll-select block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]  !font-normal !text-dark bg-white "
+                        placeholder="Chỉ định ..."
+                        id="indication"
+                        {...field}
+                      ></textarea>
+                    );
+                  }}
+                />
               </Field>
             </div>
             <div className="w-1/2">
