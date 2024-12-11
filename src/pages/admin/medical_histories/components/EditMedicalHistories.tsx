@@ -18,7 +18,7 @@ import { toast } from 'react-toastify';
 import { ModalConfirm } from '@/components/modal';
 
 interface ImageWithDescription {
-  file: File | string;
+  file?: any;
   description: string;
 }
 
@@ -26,6 +26,7 @@ const schema = yup.object().shape({
   diagnosis: yup.string().trim().required(),
   description: yup.string().trim().required(),
   treatment: yup.string().trim().required(),
+  indication: yup.string().trim().required(),
 });
 
 interface IPatientSelect {
@@ -66,17 +67,15 @@ const EditMedicalHistories = () => {
     });
   };
   // Xử lý data Ảnh đã có
-  const handleRemoveFilesOld = (url: string, id: string) => {
-    const updatedFiles = initFiles?.filter(file => file.file !== url);
+  const handleRemoveFilesOld = (id: string) => {
+    const updatedFiles = initFiles?.filter(file => file.id !== id);
     const deleteId = [...filesDelete, id];
     setFilesDelete(deleteId);
     setInitFiles(updatedFiles);
   };
   // Xử lý data Ảnh đã có
-  const handleChangeDescriptionOld = (fileUrl: string, newDescription: string) => {
-    const updatedFiles = initFiles?.map(file =>
-      file.file === fileUrl ? { ...file, description: newDescription } : file,
-    );
+  const handleChangeDescriptionOld = (id: string, newDescription: string) => {
+    const updatedFiles = initFiles?.map(file => (file.id === id ? { ...file, description: newDescription } : file));
     setInitFiles(updatedFiles);
   };
 
@@ -98,6 +97,7 @@ const EditMedicalHistories = () => {
           diagnosis: data.diagnosis,
           description: data.description,
           treatment: data.treatment,
+          indication: data.indication,
         });
       } catch (error) {
         toast.error('Lỗi khi lấy dữ liệu bệnh án:', error ? error : '');
@@ -108,6 +108,7 @@ const EditMedicalHistories = () => {
   const onSubmit = async (data: any) => {
     const imagesNew = uploadFilesRef?.current?.getFiles() || [];
     let newImages = [];
+
     if (imagesNew.length > 0) {
       const formData = new FormData();
       imagesNew?.forEach((img: ImageWithDescription) => {
@@ -206,6 +207,23 @@ const EditMedicalHistories = () => {
                   </Button>
                 )}
               </Field>
+              <Field className="flex gap-3 flex-col">
+                <Label htmlFor="indication">Chỉ định:</Label>
+                <Controller
+                  name="indication"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <textarea
+                        className="scroll-select block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]  !font-normal !text-dark bg-white "
+                        placeholder="Chỉ định ..."
+                        id="indication"
+                        {...field}
+                      ></textarea>
+                    );
+                  }}
+                />
+              </Field>
             </div>
             <div className="w-1/2">
               <Field className="flex gap-3 flex-col">
@@ -251,7 +269,7 @@ const EditMedicalHistories = () => {
             ref={uploadFilesRef}
             handleChangeDescriptionOld={handleChangeDescriptionOld}
           />
-          <div className="flex gap-3 justify-end">
+          <div className="flex gap-3 justify-end mt-5">
             <Button
               type="button"
               onClick={() => setModalStatus(true)}

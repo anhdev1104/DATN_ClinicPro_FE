@@ -342,6 +342,15 @@ const DetailPatient = () => {
                     </div>
                   </div>
                   <div className="text-xs mt-3">
+                    <p>Chỉ định:</p>
+                    <div
+                      className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate"
+                      title={item?.indication}
+                    >
+                      {item?.indication}
+                    </div>
+                  </div>
+                  <div className="text-xs mt-3">
                     <p>Bác sĩ phụ trách:</p>
                     <div className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate">
                       BS: <span className="font-normal pl-1 text-primaryAdmin">{item?.doctor?.fullname}</span>
@@ -353,7 +362,7 @@ const DetailPatient = () => {
                       className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate"
                       title=""
                     >
-                      {convertTime(item?.created_at)}
+                      {convertTime(item.created_at || '')}
                     </div>
                   </div>
                   <div

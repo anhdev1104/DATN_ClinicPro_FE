@@ -100,66 +100,75 @@ const ListMedicalHistories = ({ navigate }: ListMedicalRecord) => {
             </tr>
           </thead>
           <tbody>
-            {loading ? (
-              <div className="mx-auto text-center pt-10">
-                <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
-              </div>
-            ) : medicalRecords?.length > 0 ? (
-              medicalRecords?.map(record => (
-                <tr className="even:bg-[#f5f5f5] hover:bg-yellow-50/45 py-3" key={record.id}>
-                  <td className="py-2 px-5 text-gray-800 max-w-[250px] truncate">{record.id}</td>
-                  <td className="py-2 px-5 text-gray-800 max-w-[200px] truncate">{record.diagnosis}</td>
-                  <td className="py-2 px-5 text-gray-800">
-                    <div className="flex gap-2">
-                      <img className="size-[30px] rounded-full" src={record.doctor.avatar} alt="" />
-                      <div className="flex flex-col">
-                        <span className="text-[14px] font-semibold">{record.doctor.fullname}</span>
-                        <span className="text-[12px] opacity-70 truncate max-w-[180px]">{record.doctor.email}</span>
+            {!loading ? (
+              medicalRecords?.length > 0 ? (
+                medicalRecords.map(record => (
+                  <tr className="even:bg-[#f5f5f5] hover:bg-yellow-50/45 py-3" key={record.id}>
+                    <td className="py-2 px-5 text-gray-800 max-w-[250px] truncate">{record.id}</td>
+                    <td className="py-2 px-5 text-gray-800 max-w-[200px] truncate">{record.diagnosis}</td>
+                    <td className="py-2 px-5 text-gray-800">
+                      <div className="flex gap-2">
+                        <img className="size-[30px] rounded-full" src={record.doctor.avatar} alt="" />
+                        <div className="flex flex-col">
+                          <span className="text-[14px] font-semibold">{record.doctor.fullname}</span>
+                          <span className="text-[12px] opacity-70 truncate max-w-[180px]">{record.doctor.email}</span>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="py-2 px-5 text-gray-800 ">
-                    <div className="flex gap-2">
-                      <img className="size-[30px] rounded-full" src={record.patient.avatar} alt="" />
-                      <div className="flex flex-col">
-                        <span className="text-[14px] font-semibold">{record.patient.fullname}</span>
-                        <span className="text-[12px] opacity-70 truncate max-w-[180px]">{record.patient.email}</span>
+                    </td>
+                    <td className="py-2 px-5 text-gray-800">
+                      <div className="flex gap-2">
+                        <img className="size-[30px] rounded-full" src={record.patient.avatar} alt="" />
+                        <div className="flex flex-col">
+                          <span className="text-[14px] font-semibold">{record.patient.fullname}</span>
+                          <span className="text-[12px] opacity-70 truncate max-w-[180px]">{record.patient.email}</span>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="py-2 px-5 text-gray-800 max-w-[170px] truncate">{convertTime(record.created_at)}</td>
-                  <td className="py-2 px-5 text-gray-800 flex gap-1  max-w-[150px]">
-                    <button
-                      onClick={() => {
-                        handleClickOpen(record.id);
-                      }}
-                      className="flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
-                    >
-                      <VisibilityIcon className="text-blue-500" />
-                    </button>
-                    <Link
-                      to={`/dashboard/medical-histories/${record.id}`}
-                      className="flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
-                    >
-                      <SettingsIcon className="text-yellow-400" />
-                    </Link>
-                    <button
-                      onClick={() => {
-                        setActiveModal(true);
-                        setIdMedical(record.id);
-                      }}
-                      className="text-red-500 flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
-                    >
-                      <DeleteIcon />
-                    </button>
+                    </td>
+                    <td className="py-2 px-5 text-gray-800 max-w-[170px] truncate">
+                      {convertTime(record.created_at || '', true)}
+                    </td>
+                    <td className="py-2 px-5 text-gray-800 flex gap-1 max-w-[150px]">
+                      <button
+                        onClick={() => handleClickOpen(record.id)}
+                        className="flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
+                      >
+                        <VisibilityIcon className="text-blue-500" />
+                      </button>
+                      <Link
+                        to={`/dashboard/medical-histories/${record.id}`}
+                        className="flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
+                      >
+                        <SettingsIcon className="text-yellow-400" />
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setActiveModal(true);
+                          setIdMedical(record.id);
+                        }}
+                        className="text-red-500 flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
+                      >
+                        <DeleteIcon />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="text-center py-4 text-gray-800">
+                    Không có bệnh án nào
                   </td>
                 </tr>
-              ))
+              )
             ) : (
-              <div className="text-center py-5 font-bold">Không có bệnh án nào</div>
+              <tr>
+                <td colSpan={6} className="text-center py-4">
+                  <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
+                </td>
+              </tr>
             )}
           </tbody>
         </table>
+
         <ModalConfirm
           description="Dữ liệu sẽ không thể khôi phục"
           title="Bạn có chắc muốn xóa ?"

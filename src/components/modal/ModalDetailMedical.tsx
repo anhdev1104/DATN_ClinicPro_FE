@@ -2,10 +2,10 @@ import { getDetailMedicalHistorie } from '@/services/medicalHistories.service';
 import { MedicalRecord } from '@/types/medicalHistories.type';
 import { Dialog } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { CloseIcon } from '../icons';
 import convertTime from '@/helpers/convertTime';
 import LightBox from '../lightbox';
 import convertLightBox from '@/helpers/convertLightBox';
+import convertGender from '@/helpers/convertToGender';
 
 interface DetailMedicalHistories {
   close: () => void;
@@ -44,7 +44,7 @@ const ModalDetailMedical = ({ close, statusLog, id }: DetailMedicalHistories) =>
       PaperProps={{
         style: {
           backgroundColor: '#f5f5f5',
-          width: '700px',
+          width: '600px',
           height: '100vh',
           maxWidth: '95vh',
           maxHeight: '95vh',
@@ -55,83 +55,99 @@ const ModalDetailMedical = ({ close, statusLog, id }: DetailMedicalHistories) =>
         },
       }}
     >
-      <div className="relative h-full bg-gray-50 py-8 px-2 rounded-3xl shadow-lg max-w-[1000px] mx-auto scroll-select size-full overflow-y-auto">
-        {/* Nút đóng */}
-        <button
-          className="absolute top-5 right-5 bg-gray-100 hover:bg-gray-200 rounded-full p-2 shadow-md"
-          onClick={close}
-        >
-          <CloseIcon />
-        </button>
+      <div
+        className="relative h-full bg-gray-50 py-8 px-6 mx-auto scroll-select
+      scroll-select-hidden size-full overflow-y-auto"
+      >
+        <div className="flex items-center justify-between w-full mb-10">
+          <div className="flex items-center gap-2">
+            <img className="size-[40px]" src="/images/logo.png" alt="" />
+            <div className="flex items-center gap-1 font-medium">
+              Phòng khám <h1 className="text-primaryAdmin font-bold">ClinicPro</h1>
+            </div>
+          </div>
 
-        {/* Tiêu đề */}
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-10 tracking-wide uppercase">Chi tiết bệnh án</h1>
-
-        {/* Card: Thông tin người bệnh */}
-        <div className="mb-8 bg-white shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Thông tin người bệnh</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="text-[11px]">
             <div>
-              <p className="font-medium text-gray-600">Tên người bệnh:</p>
-              <p className="text-gray-800 uppercase">{medicalRecord?.patient?.fullname}</p>
+              <span className="mr-2">Mã bệnh án:</span>
+              <span className="font-medium">{medicalRecord.id}</span>
             </div>
             <div>
-              <p className="font-medium text-gray-600">Giới tính:</p>
-              <p className="text-gray-800 capitalize">{medicalRecord?.patient?.gender}</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-600">Số điện thoại:</p>
-              <p className="text-gray-800">{medicalRecord?.patient?.phone_number}</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-600">Ngày khám:</p>
-              <p className="text-gray-800">{convertTime(medicalRecord?.created_at || '')}</p>
+              <span className="mr-2">Ngày khám:</span>
+              <span className="font-medium">{convertTime(medicalRecord.created_at || '')}</span>
             </div>
           </div>
         </div>
 
-        {/* Card: Thông tin bác sĩ */}
-        <div className="mb-8 bg-white shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Thông tin bác sĩ</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="font-medium text-gray-600">Tên bác sĩ:</p>
-              <p className="text-gray-800 uppercase">{medicalRecord?.doctor?.fullname}</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-600">Số điện thoại:</p>
-              <p className="text-gray-800">{medicalRecord?.doctor?.phone_number}</p>
-            </div>
+        <h1 className="text-[22px] font-semibold text-gray-700 text-center mb-14">Chi tiết bệnh án</h1>
+
+        <div className="mb-6 bg-white">
+          <h2 className="text-[15px] font-semibold mb-2 pb-1 border-b-2 text-gray-700 border-gray-300 w-max">
+            I - Thông tin người bệnh
+          </h2>
+          <div className="flex gap-4 mb-1">
+            <p className="font-medium text-gray-500">Tên người bệnh:</p>
+            <p className="uppercase text-gray-700">{medicalRecord?.patient?.fullname}</p>
+          </div>
+          <div className="flex gap-4 mb-1">
+            <p className="font-medium text-gray-500">Giới tính:</p>
+            <p className="capitalize text-gray-700">{convertGender(medicalRecord?.patient?.gender)}</p>
+          </div>
+          <div className="flex gap-4 mb-1">
+            <p className="font-medium text-gray-500">Số điện thoại:</p>
+            <p className="text-gray-700">{medicalRecord?.patient?.phone_number}</p>
+          </div>
+        </div>
+        <div className="mb-6 bg-white">
+          <h2 className="text-[15px] font-semibold mb-2 pb-1 border-b-2 text-gray-700 border-gray-300 w-max">
+            II - Thông tin bác sĩ
+          </h2>
+          <div className="flex gap-4 mb-1">
+            <p className="font-medium text-gray-500">Tên bác sĩ:</p>
+            <p className="uppercase text-gray-700">{medicalRecord?.doctor?.fullname}</p>
+          </div>
+          <div className="flex gap-4 mb-1">
+            <p className="font-medium text-gray-500">Giới tính:</p>
+            <p className="capitalize text-gray-700">{convertGender(medicalRecord?.doctor?.gender)}</p>
+          </div>
+          <div className="flex gap-4 mb-1">
+            <p className="font-medium text-gray-500">Số điện thoại:</p>
+            <p className="text-gray-700">{medicalRecord?.doctor?.phone_number}</p>
           </div>
         </div>
 
-        {/* Card: Chi tiết bệnh án */}
-        <div className="mb-8 bg-white shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Chi tiết bệnh án</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="font-medium text-gray-600">Mã bệnh án:</p>
-              <p className="text-gray-800 uppercase">{medicalRecord?.id}</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-600">Chẩn đoán sơ bộ:</p>
-              <p className="text-gray-800">{medicalRecord?.diagnosis}</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-600">Phương pháp điều trị:</p>
-              <p className="text-gray-800">{medicalRecord?.treatment}</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-600">Nội dung bệnh án:</p>
-              <p className="text-gray-800">{medicalRecord?.description}</p>
-            </div>
+        <div className="mb-6 bg-white">
+          <h2 className="text-[15px] font-semibold mb-2 pb-1 border-b-2 text-gray-700 border-gray-300 w-max">
+            III - Thông tin bệnh án
+          </h2>
+          <div className="flex gap-4 mb-1">
+            <p className="font-medium text-gray-500">Mã bệnh án:</p>
+            <p className="uppercase text-gray-700">{medicalRecord?.id}</p>
+          </div>
+          <div className="flex gap-4 mb-1">
+            <p className="font-medium text-gray-500">Chẩn đoán sơ bộ:</p>
+            <p className="text-gray-700">{medicalRecord?.diagnosis}</p>
+          </div>
+          <div className="flex gap-4 mb-1">
+            <p className="font-medium text-gray-500">Phương pháp điều trị:</p>
+            <p className="text-gray-700">{medicalRecord?.treatment}</p>
+          </div>
+          <div className="flex gap-4 mb-1">
+            <p className="font-medium text-gray-500">Nội dung bệnh án:</p>
+            <p className="text-gray-700">{medicalRecord?.description}</p>
+          </div>
+          <div className="flex gap-4 mb-1">
+            <p className="font-medium text-gray-500">Chỉ định:</p>
+            <p className="text-gray-700">{medicalRecord?.indication}</p>
           </div>
         </div>
 
         {/* Card: Ảnh chụp X-Quang */}
         {medicalRecord?.files?.length > 0 && (
-          <div className="bg-white shadow-md p-6">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Ảnh chụp X-QUANG</h2>
+          <div className="bg-white mb-6">
+            <h2 className="text-[15px] font-semibold mb-2 pb-1 border-b-2 text-gray-700 border-gray-300 w-max">
+              IV - Ảnh X-Quang
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {medicalRecord.files.map((file, index) => (
                 <div
@@ -153,7 +169,13 @@ const ModalDetailMedical = ({ close, statusLog, id }: DetailMedicalHistories) =>
           </div>
         )}
 
-        {/* Lightbox */}
+        <div className="border-t-[2px] border-gray-400 border-dashed pt-6  flex justify-end">
+          <div className="w-max text-center pb-20">
+            <h1 className="text-[14px] font-light">Đà nẵng , 01-01-2025</h1>
+            <h1 className="font-medium">Bác sĩ điều trị</h1>
+          </div>
+        </div>
+
         {isLightBoxOpen && (
           <LightBox
             images={convertLightBox(medicalRecord?.files || [])}
