@@ -51,7 +51,10 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
     handleToggleConfirm();
     if (!idPrescription) return;
     try {
-      await deletePrescription(idPrescription);
+      const res = await deletePrescription(idPrescription);
+      if (res.message === false) {
+        return toast.error(renderMessageError(res.errors));
+      }
       setPrescription(prev => prev.filter(item => item.id !== idPrescription));
       toast.success('Xoá đơn thuốc thành công');
     } catch (error) {
@@ -159,6 +162,8 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
         title="Xoá đơn thuốc ?"
         description="Bạn muốn xoá đơn thuốc này vĩnh viễn?"
         submit={handleRemovePrescription}
+        textApprove="Xoá"
+        className="bg-red-500 hover:bg-red-400"
       />
       <ModalPrescription
         open={prescriptionDetail}
