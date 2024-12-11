@@ -1,21 +1,13 @@
 import { useEffect, useState } from 'react';
-import { CachedIcon, CloseIcon, CompareArrows } from '@/components/icons';
-import { Dialog } from '@mui/material';
-import { getDetailMedicalHistorie, getMedicalHistoriesById } from '@/services/medicalHistories.service';
+import { CachedIcon, CompareArrows } from '@/components/icons';
+import { getMedicalHistoriesById } from '@/services/medicalHistories.service';
 import { MedicalRecord } from '@/types/medicalHistories.type';
 import convertTime from '@/helpers/convertTime';
-import LightBox from '@/components/lightbox';
-import convertLightBox from '@/helpers/convertLightBox';
-import LoadingSpin from '@/components/loading';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { IUser } from '@/types/user.type';
-
-interface DetailMedicalHistories {
-  close: () => void;
-  statusLog: boolean;
-  id?: string;
-}
+import { MedicalRecordSekeleton } from '@/pages/admin/medical_histories/components/MedicalRecords';
+import ModalDetailMedical from '@/components/modal/ModalDetailMedical';
 
 const MedicalHistoriesPage = () => {
   const auth = useSelector((state: RootState) => state.auth.data) as IUser;
@@ -23,18 +15,17 @@ const MedicalHistoriesPage = () => {
   const [listMedicalRecords, setListMedicalRecords] = useState<MedicalRecord[]>([]);
   const [resetKey, setResetKey] = useState(0);
   const [loading, setLoading] = useState(false);
-
-  const handleClose = () => {
-    setOpen({ status: false, id: '#' });
-  };
-
-  const [open, setOpen] = useState<{ status: boolean; id: string }>({
+  const [open, setOpen] = useState<{ status: boolean; item: MedicalRecord | null }>({
     status: false,
-    id: '#',
+    item: null,
   });
 
-  const handleClickOpen = (id: string) => {
-    setOpen({ status: true, id });
+  const handleClose = () => {
+    setOpen({ status: false, item: null });
+  };
+
+  const handleClickOpen = (item: MedicalRecord | null) => {
+    setOpen({ status: true, item });
   };
 
   useEffect(() => {
@@ -68,195 +59,63 @@ const MedicalHistoriesPage = () => {
           </button>
         </div>
       </div>
-      <div className="w-full">
-        <div className="w-full flex justify-between border-b border-borderColor text-left py-4 font-semibold px-2">
-          <div className="flex-[0_0_17%]">Mã bệnh án</div>
-          <div className="flex-[0_0_17%]">Chẩn đoán</div>
-          <div className="flex-[0_0_17%]">Bác sĩ</div>
-          <div className="flex-[0_0_17%]">Người bệnh</div>
-          <div className="flex-[0_0_17%]">Ngày khám</div>
-          <div className="flex-[0_0_9%]"></div>
-        </div>
-        <div className="w-full border-b border-borderColor text-left">
-          {loading ? (
-            <div className="w-full flex justify-center items-center py-10">
-              <LoadingSpin className="!size-16" color="border-primaryAdmin" />
-            </div>
-          ) : Array.isArray(listMedicalRecords) && listMedicalRecords.length > 0 ? (
-            listMedicalRecords.map((record, index) => (
-              <div
-                key={index}
-                className={`py-6 flex justify-between w-full text-left hover:opacity-100 opacity-75 cursor-pointer ${index % 2 === 1 ? 'bg-white' : 'bg-gray-100'} px-2`}
-              >
-                <div className="flex-[0_0_17%] truncate font-semibold">{record.id}</div>
-                <div className="flex-[0_0_17%] truncate">{record.treatment}</div>
-                <div className="flex-[0_0_17%] truncate font-semibold">{record.doctor.fullname}</div>
-                <div className="flex-[0_0_17%] truncate font-semibold">{record.patient.fullname}</div>
-                <div className="flex-[0_0_17%]">{convertTime(record.created_at)}</div>
-                <div
-                  onClick={() => handleClickOpen(record.id)}
-                  className="flex-[0_0_9%] text-blue-600 hover:underline cursor-pointer"
-                >
-                  Xem chi tiết
+      <div className={`grid grid-cols-3 gap-5`}>
+        {loading && new Array(6).fill(0).map((_, index) => <MedicalRecordSekeleton key={index} />)}
+        {!loading && (listMedicalRecords || []).length > 0 ? (
+          listMedicalRecords.map(item => (
+            <div
+              className="border-2 border-gray-300 p-3 rounded-md cursor-pointer hover:bg-primaryAdmin/5 transition-all ease-linear"
+              key={item.id}
+            >
+              <div className="flex gap-4 items-center">
+                <div className="w-12 h-12 rounded-full overflow-hidden">
+                  <img src={item?.doctor.avatar} alt="" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h3 className="font-medium">{item?.doctor?.fullname}</h3>
+                  <span className="font-light text-xs">{item?.doctor?.phone_number}</span>
                 </div>
               </div>
-            ))
-          ) : (
-            <div className="text-center font-bold text-[20px] py-8">Không tìm thấy bản ghi nào</div>
-          )}
-        </div>
+              <div className="text-xs mt-3">
+                <p>Mã bệnh án:</p>
+                <div className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm">{item?.id}</div>
+              </div>
+              <div className="text-xs mt-3">
+                <p>Chuẩn đoán bệnh:</p>
+                <div
+                  className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate"
+                  title={item?.diagnosis}
+                >
+                  {item?.diagnosis}
+                </div>
+              </div>
+              <div className="text-xs mt-3">
+                <p>Bác sĩ phụ trách:</p>
+                <div className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate">
+                  BS: <span className="font-normal pl-1 text-primaryAdmin">{item?.doctor?.fullname}</span>
+                </div>
+              </div>
+              <div className="text-xs mt-3">
+                <p>Ngày khám bệnh:</p>
+                <div className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate" title="">
+                  {convertTime(item?.created_at)}
+                </div>
+              </div>
+              <div
+                onClick={() => handleClickOpen(item)}
+                className="text-xs mt-3 bg-primaryAdmin text-white rounded-sm py-2 px-5 text-center transition-all ease-linear hover:bg-opacity-75"
+              >
+                Chi tiết
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center font-bold text-[20px] py-8">Không tìm thấy bản ghi nào</div>
+        )}
       </div>
-      {open.status && <DetailMedicalHistories close={handleClose} statusLog={open.status} id={open.id} />}
+      {open.status && <ModalDetailMedical close={handleClose} statusLog={open.status} id={open.item?.id} />}
     </div>
   );
 };
-
-function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories) {
-  const [medicalRecord, setMedicalRecord] = useState<MedicalRecord>({} as MedicalRecord);
-
-  useEffect(() => {
-    (async () => {
-      const response = await getDetailMedicalHistorie(id);
-      setMedicalRecord(response);
-    })();
-  }, [id]);
-
-  const [isLightBoxOpen, setIsLightBoxOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const openLightBox = (index: number) => {
-    if (index >= 0 && index < medicalRecord?.files?.length) {
-      setCurrentImageIndex(index);
-      setIsLightBoxOpen(true);
-    }
-  };
-
-  const closeLightBox = () => {
-    setIsLightBoxOpen(false);
-  };
-
-  return (
-    <Dialog
-      open={statusLog}
-      onClose={close}
-      className="!z-[999]"
-      PaperProps={{
-        style: {
-          backgroundColor: '#f5f5f5',
-          width: '700px',
-          height: 'auto',
-          maxWidth: '700px',
-          borderRadius: '8px',
-          overflowY: 'hidden',
-          gap: '20px',
-        },
-      }}
-    >
-      <div className="scroll-select size-full overflow-y-auto py-10">
-        <div style={{ position: 'absolute', top: '0', right: '0', padding: '10px', cursor: 'pointer' }} onClick={close}>
-          <CloseIcon />
-        </div>
-        <div>
-          <h1 className="uppercase text-center text-[30px] font-bold mb-14">Chi tiết bệnh án</h1>
-          <div className="px-5">
-            <div className="mb-12">
-              <div className="font-bold mb-5 flex items-center gap-3">
-                <h1 className="text-[24px]">I.</h1>
-                <p className="text-[20px]">Thông tin cơ bản:</p>
-              </div>
-              <div className="flex flex-col gap-2 text-[15px] mb-7">
-                <div className="mb-2">
-                  <h1 className="text-[16px] font-semibold">1. Thông tin người bệnh:</h1>
-                </div>
-                <div className="flex gap-4">
-                  <h1 className="font-medium">Tên người bệnh:</h1>
-                  <span className="uppercase font-light">{medicalRecord?.patient?.fullname}</span>
-                </div>
-                <div className="flex gap-4">
-                  <h1 className="font-medium">Giới tính:</h1>
-                  <span className="font-light">{medicalRecord?.patient?.gender}</span>
-                </div>
-                <div className="flex gap-4">
-                  <h1 className="font-medium">Số điện thoại:</h1>
-                  <span className="font-light">{medicalRecord?.patient?.phone_number}</span>
-                </div>
-                <div className="flex gap-4">
-                  <h1 className="font-medium">Ngày khám:</h1>
-                  <span className="font-light">{convertTime(medicalRecord?.created_at)}</span>
-                </div>
-              </div>
-              <div className="flex flex-col gap-2 text-[15px]">
-                <div className="mb-2">
-                  <h1 className="text-[16px] font-semibold">2. Thông tin bác sĩ:</h1>
-                </div>
-                <div className="flex gap-4">
-                  <h1 className="font-medium">Tên bác sĩ:</h1>
-                  <span className="uppercase font-light">{medicalRecord?.doctor?.fullname}</span>
-                </div>
-                <div className="flex gap-4">
-                  <h1 className="font-medium">Giới tính:</h1>
-                  <span className="font-light">{medicalRecord?.doctor?.gender}</span>
-                </div>
-                <div className="flex gap-4">
-                  <h1 className="font-medium">Số điện thoại:</h1>
-                  <span className="font-light">{medicalRecord?.doctor?.phone_number}</span>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="font-bold mb-5 flex items-center gap-3">
-                <h1 className="text-[24px]">II.</h1>
-                <p className="text-[20px]">Chi tiết bệnh án:</p>
-              </div>
-              <div className="flex flex-col gap-2 text-[15px]">
-                <div className="flex gap-4">
-                  <h1 className="font-medium">Mã bệnh án:</h1>
-                  <span className="uppercase font-light">{medicalRecord?.id}</span>
-                </div>
-                <div className="flex gap-4">
-                  <h1 className="font-medium">Chẩn đoán sơ bộ:</h1>
-                  <span className="uppercase font-light">{medicalRecord?.diagnosis}</span>
-                </div>
-                <div className="flex gap-4">
-                  <h1 className="font-medium">Phương pháp điều trị:</h1>
-                  <span className="uppercase font-light">{medicalRecord?.treatment}</span>
-                </div>
-
-                <div className="flex gap-4">
-                  <h1 className="font-medium">Nội dung bệnh án:</h1>
-                  <span className="uppercase font-light">{medicalRecord?.description}</span>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <h1 className="font-medium">Ảnh chụp X-QUANG:</h1>
-                  <div className="">
-                    {medicalRecord?.files?.map((file, index) => (
-                      <div
-                        onClick={() => openLightBox(index)}
-                        key={file.id}
-                        className="h-fit w-[48%] inline-block m-1 float-start cursor-pointer"
-                      >
-                        <img className="object-cover w-full mb-2 max-h-[180px]" src={file.file} alt="" />
-                        <div className="text-center">
-                          <span className="uppercase font-light">{file.description}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {isLightBoxOpen && (
-          <LightBox
-            images={convertLightBox(medicalRecord.files)}
-            currentIndex={currentImageIndex} // Hình ảnh hiện tại
-            onClose={closeLightBox} // Hàm để đóng LightBox
-          />
-        )}
-      </div>
-    </Dialog>
-  );
-}
 
 export default MedicalHistoriesPage;

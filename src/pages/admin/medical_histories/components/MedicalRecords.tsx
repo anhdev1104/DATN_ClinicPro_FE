@@ -90,7 +90,7 @@ const MedicalRecords = ({
               <div className="text-xs mt-3">
                 <p>Ngày khám bệnh:</p>
                 <div className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate" title="">
-                  {convertTime(item.created_at)}
+                  {item.created_at && convertTime(item.created_at)}
                 </div>
               </div>
               <div
@@ -115,7 +115,7 @@ const MedicalRecords = ({
   );
 };
 
-const MedicalRecordSekeleton = () => {
+export const MedicalRecordSekeleton = () => {
   return (
     <div className="border-2 border-gray-300 p-3 rounded-md cursor-pointer hover:bg-primaryAdmin/5 transition-all ease-linear">
       <div className="flex gap-4 items-center">
