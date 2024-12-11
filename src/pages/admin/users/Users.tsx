@@ -117,12 +117,7 @@ export default function User() {
           }
           manualFiltering
           filterFunction={e => setQuery({ q: e.target.value, page: 1 })}
-          manualPagination={{
-            rowCount: users?.data.length,
-            pageCount: users?.total_pages,
-            pageIndex: query.page - 1,
-            pageSize: query.limit,
-          }}
+          manualPagination={{ pageCount: users?.total_pages }}
           paginationFunction={page => setQuery({ page })}
           rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
           columns={columns}

@@ -13,7 +13,7 @@ export interface UserProps {
 export type ManagerProps = UserProps;
 export interface DepartmentProps {
   id: string;
-  description?: string | null;
+  description?: string;
   manager: ManagerProps | null;
   name: string;
   users_count: string;

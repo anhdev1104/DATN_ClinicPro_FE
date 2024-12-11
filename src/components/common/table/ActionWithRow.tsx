@@ -25,7 +25,6 @@ export default function TableAction<T>({ data }: ActionWithRowProps<T>) {
         item: 'min-w-[100px] flex justify-between items-center',
         itemLabel: 'capitalize',
       }}
-      withinPortal={false}
       transitionProps={{ transition: 'pop-top-right' }}
       position="bottom-end"
     >

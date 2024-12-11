@@ -3,19 +3,14 @@ export type FilterFunction = (event: React.ChangeEvent<HTMLInputElement>) => Pro
 export type PaginationFunction = (page: number) => Promise<void> | void;
 export type RowPerPageFunction = (value: number) => Promise<void> | void;
 export type ManualFiltering = { timeOut: number } | boolean;
-export type ManualPaginationProps = {
-  pageIndex?: number;
-  pageSize?: number;
-  rowCount?: number;
-  pageCount?: number;
-};
+export type ManualPaginationProps = { pageCount?: number };
 
-export interface PaginationBase {
+interface PaginationBase {
   manualPagination: ManualPaginationProps;
   paginationFunction: PaginationFunction;
   rowPerPageFunction: RowPerPageFunction;
 }
-export interface GlobalFilterBase {
+interface GlobalFilterBase {
   manualFiltering: ManualFiltering;
   filterFunction: FilterFunction;
 }

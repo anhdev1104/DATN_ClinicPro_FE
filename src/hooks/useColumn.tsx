@@ -48,7 +48,7 @@ export const useColumn = <TData, TValue = unknown>(props: UseColumnsProps<TData,
       ({ keyFn, header, cell, key, filterable = true, hidable = true, sortable = true, ...props }) => ({
         accessorKey: key,
         accessorFn: keyFn,
-        header: ({ column }) => (header ? <TableHeader title={header} column={column} /> : undefined),
+        header: ({ column }) => header && <TableHeader title={header} column={column} />,
         cell: ({ renderValue, getValue, ...props }) =>
           cell ? cell({ value: renderValue(), ...props }) : renderValue() || getValue(),
         enableSorting: sortable,

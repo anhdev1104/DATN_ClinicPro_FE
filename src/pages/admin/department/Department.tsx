@@ -99,10 +99,7 @@ export default function Department() {
           manualFiltering
           filterFunction={e => setQuery({ q: e.target.value, page: 1 })}
           manualPagination={{
-            rowCount: departments?.data.length,
             pageCount: departments?.total_pages,
-            pageIndex: query.page - 1,
-            pageSize: query.limit,
           }}
           paginationFunction={page => setQuery({ page })}
           rowPerPageFunction={limit => setQuery({ limit, page: 1 })}

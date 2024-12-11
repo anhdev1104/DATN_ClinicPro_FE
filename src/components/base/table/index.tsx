@@ -14,14 +14,15 @@ interface TableProps extends Omit<TableFactory, 'staticComponents'> {
     Scroll: typeof TableScrollContainer;
   };
 }
-const BaseTable = factory<TableProps>(({ withTableBorder, ...props }, ref) => {
+const BaseTable = factory<TableProps>(({ withTableBorder, className, ...props }, ref) => {
   return (
     <div
       className={cn(
         {
           'border rounded-md': withTableBorder,
         },
-        'overflow-x-hidden px-2',
+        'px-2',
+        className,
       )}
     >
       <Table ref={ref} {...props} />

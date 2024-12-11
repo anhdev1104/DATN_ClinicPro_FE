@@ -17,6 +17,9 @@ declare module '@tanstack/react-table' {
     rowPerPageFunction?: RowPerPageFunction;
     manualFiltering?: ManualFiltering;
     manualPagination?: ManualPaginationProps;
+    page: number;
+    limit: number;
+    q: string;
   }
 }
 
@@ -25,8 +28,8 @@ declare module 'yup' {
     omit(omit: Array<null | undefined | string>): this;
     password(message: string): this;
   }
-  interface ObjectSchema<T> {
-    safeParse(data: T): T;
+  interface ObjectSchema {
+    safeParse<T>(data: T): T;
   }
 }
 

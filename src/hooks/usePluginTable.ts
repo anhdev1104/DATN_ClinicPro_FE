@@ -6,6 +6,7 @@ import { getFilteredRowModel } from '@tanstack/react-table';
 import { getPaginationRowModel } from '@tanstack/react-table';
 import { useReactTable } from '@tanstack/react-table';
 import { useState } from 'react';
+import { NumberParam, StringParam, useQueryParams, withDefault } from 'use-query-params';
 
 export const usePluginTable = <T, D>({
   manualPagination,
@@ -16,9 +17,14 @@ export const usePluginTable = <T, D>({
   filterFunction,
   manualFiltering,
 }: TablePlugin<T, D>) => {
+  const [query] = useQueryParams({
+    q: withDefault(StringParam, ''),
+    limit: withDefault(NumberParam, ROW_PER_PAGE),
+    page: withDefault(NumberParam, 1),
+  });
   const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: manualPagination?.pageIndex || 0,
-    pageSize: manualPagination?.pageSize || ROW_PER_PAGE,
+    pageIndex: manualPagination ? query.page - 1 : 0,
+    pageSize: manualPagination ? query.limit : ROW_PER_PAGE,
   });
   const table = useReactTable({
     data,
@@ -32,6 +38,9 @@ export const usePluginTable = <T, D>({
       filterFunction,
       manualFiltering,
       manualPagination,
+      q: query.q,
+      limit: query.limit,
+      page: query.page,
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -40,7 +49,7 @@ export const usePluginTable = <T, D>({
     getFilteredRowModel: getFilteredRowModel(),
     onPaginationChange: setPagination,
     manualPagination: manualPagination && true,
-    rowCount: manualPagination && (manualPagination?.rowCount ?? data.length),
+    rowCount: manualPagination && data.length,
     pageCount: manualPagination?.pageCount,
     manualFiltering: manualFiltering && true,
   });
