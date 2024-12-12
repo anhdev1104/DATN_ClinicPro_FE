@@ -1,8 +1,11 @@
-import { factory, Table, TableFactory, TableScrollContainer } from '@mantine/core';
+import { factory, Table, TableFactory, TableProps, TableScrollContainer } from '@mantine/core';
 import { TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from './Table';
 import { cn } from '@/helpers/utils';
 
-interface TableProps extends Omit<TableFactory, 'staticComponents'> {
+interface BaseTableProps extends Omit<TableFactory, 'staticComponents' | 'props'> {
+  props: TableProps & {
+    parentProps?: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+  };
   staticComponents: Pick<TableFactory['staticComponents'], 'DataRenderer'> & {
     Header: typeof TableHeader;
     Body: typeof TableBody;
@@ -14,16 +17,13 @@ interface TableProps extends Omit<TableFactory, 'staticComponents'> {
     Scroll: typeof TableScrollContainer;
   };
 }
-const BaseTable = factory<TableProps>(({ withTableBorder, className, ...props }, ref) => {
+const BaseTable = factory<BaseTableProps>(({ withTableBorder, parentProps, ...props }, ref) => {
   return (
     <div
-      className={cn(
-        {
-          'border rounded-md': withTableBorder,
-        },
-        'px-2',
-        className,
-      )}
+      className={cn('px-2', parentProps?.className, {
+        'border rounded-md': withTableBorder,
+      })}
+      {...parentProps}
     >
       <Table ref={ref} {...props} />
     </div>

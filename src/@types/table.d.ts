@@ -5,12 +5,12 @@ export type RowPerPageFunction = (value: number) => Promise<void> | void;
 export type ManualFiltering = { timeOut: number } | boolean;
 export type ManualPaginationProps = { pageCount?: number };
 
-interface PaginationBase {
+export interface PaginationBase {
   manualPagination: ManualPaginationProps;
   paginationFunction: PaginationFunction;
   rowPerPageFunction: RowPerPageFunction;
 }
-interface GlobalFilterBase {
+export interface GlobalFilterBase {
   manualFiltering: ManualFiltering;
   filterFunction: FilterFunction;
 }

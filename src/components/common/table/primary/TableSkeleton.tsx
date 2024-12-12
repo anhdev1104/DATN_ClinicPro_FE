@@ -4,12 +4,7 @@ export default function TableSkeleton() {
   return (
     <>
       <Stack gap={30}>
-        <Skeleton height={22} radius={4} />
-        <Skeleton height={22} radius={4} />
-        <Skeleton height={22} radius={4} />
-        <Skeleton height={22} radius={4} />
-        <Skeleton height={22} radius={4} />
-        <Skeleton height={22} radius={4} />
+        <Skeleton height={22} className="rounded-md" />
       </Stack>
     </>
   );

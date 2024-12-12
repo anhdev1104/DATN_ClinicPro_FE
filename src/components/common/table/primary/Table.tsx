@@ -1,7 +1,6 @@
-import { TableSkeleton } from '.';
 import { TableToolbar, TablePagination } from '..';
 import { Row, flexRender } from '@tanstack/react-table';
-import { TableProps } from '@mantine/core';
+import { Skeleton, TableProps } from '@mantine/core';
 import { TablePlugin } from '@/@types/table';
 import BaseTable from '@/components/base/table';
 import { usePluginTable } from '@/hooks/usePluginTable';
@@ -43,20 +42,21 @@ export default function Table<T, D>({
 
           <BaseTable.Body className="relative">
             {isLoading ? (
-              <BaseTable.Row>
-                {props.columns.map((_, index) => {
-                  return (
-                    <BaseTable.Cell key={index}>
-                      <TableSkeleton />
-                    </BaseTable.Cell>
-                  );
-                })}
-              </BaseTable.Row>
+              props.columns.map((_, index) => {
+                return (
+                  <BaseTable.Row h={40} key={index}>
+                    {props.columns.map((_, index) => (
+                      <BaseTable.Cell key={index}>
+                        <Skeleton height={14} radius={6} />
+                      </BaseTable.Cell>
+                    ))}
+                  </BaseTable.Row>
+                );
+              })
             ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map(row => (
                 <BaseTable.Row
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
                   className={`cursor-pointer ${isFetching && 'opacity-40 cursor-pointer select-none'}`}
                 >
                   {row.getVisibleCells().map(({ id, column, row, getContext }) => {

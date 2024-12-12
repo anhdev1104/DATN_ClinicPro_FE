@@ -14,7 +14,7 @@ export default function Table<T, D>(props: TablePlugin<T, D>) {
           {table.getRowModel().rows.map(row => {
             return row.getAllCells().map(cell => {
               return (
-                <Grid.Col span={4} key={cell.id} className="z-50">
+                <Grid.Col span={4} key={cell.id} className="z-10">
                   <motion.div
                     drag
                     dragConstraints={{ left: 5, right: 5, top: 5, bottom: 5 }}

@@ -1,26 +1,10 @@
+import { GlobalFilterBase, PaginationBase } from './@types/table';
 import { ROLE } from './constants/define';
-import {
-  FilterFunction,
-  ManualFiltering,
-  ManualPaginationProps,
-  PaginationFunction,
-  RowPerPageFunction,
-} from './@types/table';
-
 declare module '@tanstack/react-table' {
   interface ColumnMeta {
     label?: string;
   }
-  interface TableMeta {
-    paginationFunction?: PaginationFunction;
-    filterFunction?: FilterFunction;
-    rowPerPageFunction?: RowPerPageFunction;
-    manualFiltering?: ManualFiltering;
-    manualPagination?: ManualPaginationProps;
-    page: number;
-    limit: number;
-    q: string;
-  }
+  interface TableMeta extends Required<QueryParams>, PaginationBase, GlobalFilterBase {}
 }
 
 declare module 'yup' {
@@ -28,8 +12,8 @@ declare module 'yup' {
     omit(omit: Array<null | undefined | string>): this;
     password(message: string): this;
   }
-  interface ObjectSchema {
-    safeParse<T>(data: T): T;
+  interface ObjectSchema<T = any> {
+    safeParse(data: any): ObjectSchema<T>;
   }
 }
 

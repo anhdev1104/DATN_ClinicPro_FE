@@ -19,7 +19,7 @@ yup.addMethod(yup.string, 'omit', function (compare: Array<null | undefined | st
   return this.transform(value => (compare.includes(value) ? undefined : value));
 });
 
-yup.addMethod(yup.object, 'safeParse', function (value) {
+yup.addMethod<yup.AnyObjectSchema>(yup.object, 'safeParse', function (value) {
   return this.cast(value, { stripUnknown: true, assert: false });
 });
 yup.addMethod(yup.string, 'email', function (message) {
