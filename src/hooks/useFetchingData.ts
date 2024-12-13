@@ -1,14 +1,15 @@
+import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 
-interface IUseFetchingDataProps<IData> {
-  serviceFetching: () => Promise<IData>;
-  initialData?: IData;
+interface IUseFetchingDataProps<T> {
+  serviceFetching: () => Promise<T>;
+  initialData?: T;
 }
 
-export default function useFetchingData<IData>({ serviceFetching, initialData }: IUseFetchingDataProps<IData>) {
+export default function useFetchingData<T>({ serviceFetching, initialData }: IUseFetchingDataProps<T>) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<IData | []>(initialData || []);
+  const [data, setData] = useState<T | []>(initialData || []);
 
   useEffect(() => {
     (async () => {
@@ -16,8 +17,9 @@ export default function useFetchingData<IData>({ serviceFetching, initialData }:
         setIsLoading(true);
         const result = await serviceFetching();
         setData(result);
-      } catch (err: any) {
-        setError(err.message || 'Có gì đó không ổn !');
+      } catch (err) {
+        const error = err as AxiosError;
+        setError(error.message || 'Có gì đó không ổn !');
       } finally {
         setIsLoading(false);
       }

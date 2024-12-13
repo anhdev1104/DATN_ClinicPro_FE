@@ -37,4 +37,5 @@ export { default as PersonRemoveIcon } from '@mui/icons-material/PersonRemove';
 export { default as EditNoteIcon } from '@mui/icons-material/EditNote';
 export { default as DeleteIcon } from '@mui/icons-material/Delete';
 export { default as FileDownloadIcon } from '@mui/icons-material/FileDownload';
+export { default as MedicalServicesIcon } from '@mui/icons-material/MedicalServices';
 export { default as SettingsIcon } from '@mui/icons-material/Settings';

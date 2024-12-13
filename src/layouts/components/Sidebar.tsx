@@ -9,6 +9,7 @@ import {
   SpecialtiesIcon,
   CalendarMonthIcon,
   Patient,
+  MedicalServicesIcon,
 } from '@/components/icons';
 import { cn } from '@/helpers/utils';
 import { useEffect, useState } from 'react';
@@ -84,7 +85,7 @@ const dumpCategory = [
     id: 10,
     categoryName: 'Services',
     path: '/services',
-    icon: SpecialtiesIcon,
+    icon: MedicalServicesIcon,
     pathActive: ['/services'],
   },
   {
