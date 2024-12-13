@@ -83,7 +83,7 @@ const dumpCategory = [
   },
   {
     id: 10,
-    categoryName: 'Services',
+    categoryName: 'Dịch vụ',
     path: '/services',
     icon: MedicalServicesIcon,
     pathActive: ['/services'],

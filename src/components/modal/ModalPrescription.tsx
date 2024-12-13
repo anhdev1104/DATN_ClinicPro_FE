@@ -121,10 +121,10 @@ const ModalPrescription = React.forwardRef(({ open, onClose, detailMedication }:
           </Typography>
         </DialogContent>
         <Typography sx={{ mt: '15px', fontSize: '14px' }}>
-          Chẩn đoán: <b className="italic">{detailMedication?.medical_histories?.diagnosis}abcd</b>
+          Chẩn đoán: <b className="italic">{detailMedication?.medical_histories?.diagnosis}</b>
         </Typography>
         <DialogContent sx={{ height: '130px', overflowY: 'auto', pt: 0, mt: '20px' }} className="scroll-select">
-          {detailMedication?.medications.length > 0 &&
+          {detailMedication?.medications &&
             detailMedication?.medications?.map((med, index) => (
               <Stack direction="row" justifyContent="space-between" marginBottom={'8px'} key={med?.id}>
                 <Box sx={{ maxWidth: '68%' }}>

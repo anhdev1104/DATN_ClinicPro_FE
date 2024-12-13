@@ -12,7 +12,8 @@ const medicationSchema = yup.object().shape({
   duration: yup.number(),
 });
 
-const prescriptionSchema = yup.object().shape({
+// eslint-disable-next-line react-refresh/only-export-components
+export const prescriptionSchema = yup.object().shape({
   patient_id: yup.string().required('Bệnh nhân là trường bắt buộc'),
   user_id: yup.string(),
   name: yup.string().required('Tên đơn thuốc là bắt buộc'),

@@ -4,6 +4,7 @@ import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import ProtectedRoute from '@/components/auth';
+
 const ServicesPage = React.lazy(() => import('@/pages/admin/services/Services'));
 const Appointment = React.lazy(() => import('@/pages/admin/appointments/Compontents/ListAppointment'));
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));

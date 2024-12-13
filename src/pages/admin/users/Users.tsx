@@ -17,6 +17,7 @@ import { NumberParam, StringParam, useQueryParams, withDefault } from 'use-query
 import { ActionWithRow } from '@/components/common/table';
 import { Table } from '@/components/common/table/primary';
 import { ROW_PER_PAGE } from '@/constants/config';
+import DirectRoute from '@/components/direct';
 
 export default function User() {
   const [query, setQuery] = useQueryParams({
@@ -105,6 +106,7 @@ export default function User() {
 
   return (
     <>
+      <DirectRoute nav="Quản lý nhân viên" subnav="Danh sách thông tin nhân viên" />
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
           toolbar={

@@ -32,7 +32,7 @@ const TableToolbar = <T,>({ table, toolbar }: TableToolbarProps<T>) => {
             defaultValue={table.options.meta?.q}
             size="xs"
             radius="md"
-            placeholder="tìm kiếm..."
+            placeholder="Tìm kiếm..."
           />
           {toolbar}
         </Box>
