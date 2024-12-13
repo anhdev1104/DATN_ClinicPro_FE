@@ -23,7 +23,7 @@ export const getPrescription = async () => {
 export const getPrescriptionDetails = async (id: string) => {
   try {
     const response = await http.get(`/prescriptions/${id}`);
-    return response.data;
+    return response;
   } catch (error) {
     return error;
   }
@@ -50,15 +50,6 @@ export const deletePrescription = async (id: string) => {
 export const getPrescriptionsById = async (id: string) => {
   try {
     const response = await http.get(`/prescriptions/patient/${id}`);
-    return response;
-  } catch (error) {
-    return error;
-  }
-};
-
-export const getPrescriptionById = async (id: string) => {
-  try {
-    const response = await http.get(`/prescriptions/${id}`);
     return response;
   } catch (error) {
     return error;

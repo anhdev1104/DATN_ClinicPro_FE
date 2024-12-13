@@ -15,6 +15,7 @@ import useToggle from '@/hooks/useToggle';
 import { toast } from 'react-toastify';
 import renderMessageError from '@/helpers/renderMessageErrror';
 import prettyId from '@/helpers/prettyId';
+import UpdatePrescription from './UpdatePrescription';
 
 const SearchOptions = [
   {
@@ -43,6 +44,7 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
 
   const { show: showConfirm, handleToggle: handleToggleConfirm } = useToggle();
   const { show: prescriptionDetail, handleToggle: setPrescriptionDetail } = useToggle();
+  const { show: openUpdatePrescription, handleToggle: setOpenUpdatePrescription } = useToggle();
   const [detailMedication, setDetailMedication] = useState<IPrescriptions>({} as IPrescriptions);
   const [idPrescription, setIdPrescription] = useState<string | undefined>('');
 
@@ -69,7 +71,7 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
       if (res.message === false) {
         return toast.error(renderMessageError(res.errors));
       }
-      setDetailMedication(res);
+      setDetailMedication(res.data);
       setPrescriptionDetail();
     } catch (error) {
       console.log(error);
@@ -123,7 +125,13 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
                     >
                       <VisibilityIcon />
                     </div>
-                    <div className="text-yellow-400 transition-all hover:text-yellow-300 cursor-pointer">
+                    <div
+                      className="text-yellow-400 transition-all hover:text-yellow-300 cursor-pointer"
+                      onClick={() => {
+                        setIdPrescription(item.id);
+                        setOpenUpdatePrescription();
+                      }}
+                    >
                       <EditNoteIcon />
                     </div>
                     <div
@@ -171,6 +179,11 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
         detailMedication={detailMedication}
         ref={contentRef}
       />
+      <UpdatePrescription
+        open={openUpdatePrescription}
+        onClose={setOpenUpdatePrescription}
+        idPrescription={idPrescription}
+      />
     </>
   );
 };
@@ -183,7 +196,7 @@ function PrescriptionSearch() {
     <form className="relative flex gap-5 items-center">
       <Input
         name="searchadmin"
-        className="border-none !h-10 !font-light text-primaryAdmin"
+        className="border-none !h-10 !font-light !text-dark"
         isGlass
         colorGlass="text-primaryAdmin top-[9px]"
         placeholder="Tìm kiếm đơn thuốc ..."

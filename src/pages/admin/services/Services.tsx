@@ -14,6 +14,7 @@ import { resolveErrorResponse } from '@/helpers/utils';
 import CreateServices from './CreateService';
 import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
 import UpdateService from './UpdateService';
+import DirectRoute from '@/components/direct';
 
 export default function ServicesPage() {
   const [query, setQuery] = useQueryParams({
@@ -80,19 +81,23 @@ export default function ServicesPage() {
   ]);
   return (
     <>
+      <DirectRoute nav="Quản lý dịch vụ" subnav="Dịch vụ" />
       <div className="bg-white rounded-3xl w-full shadow-xl p-4 space-y-4">
-        <BaseButton.Icon
-          onClick={() => {
-            modals.open({
-              title: 'Tạo Mới Dịch Vụ',
-              children: <CreateServices close={modals.closeAll} />,
-            });
-          }}
-          className="flex ml-auto"
-          size="lg"
-        >
-          <BaseIcon size="lg" icon={IconPlus} />
-        </BaseButton.Icon>
+        <div className="flex items-center">
+          <h3 className="font-medium text-lg">Danh sách dịch vụ</h3>
+          <BaseButton.Icon
+            onClick={() => {
+              modals.open({
+                title: 'Tạo mới dịch vụ',
+                children: <CreateServices close={modals.closeAll} />,
+              });
+            }}
+            className="flex ml-auto"
+            size="lg"
+          >
+            <BaseIcon size="lg" icon={IconPlus} />
+          </BaseButton.Icon>
+        </div>
         <Table
           manualPagination={{
             rowCount: data?.data.length,

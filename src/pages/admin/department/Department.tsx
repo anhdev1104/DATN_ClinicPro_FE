@@ -14,6 +14,7 @@ import { NumberParam, StringParam, useQueryParams, withDefault } from 'use-query
 import { ActionWithRow } from '@/components/common/table';
 import { Table } from '@/components/common/table/primary';
 import { ROW_PER_PAGE } from '@/constants/config';
+import DirectRoute from '@/components/direct';
 
 export default function Department() {
   const navigate = useNavigate();
@@ -94,6 +95,8 @@ export default function Department() {
   ]);
   return (
     <>
+      <DirectRoute nav="Quản lý phòng ban" subnav="Danh sách phòng ban" />
+
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
           manualFiltering

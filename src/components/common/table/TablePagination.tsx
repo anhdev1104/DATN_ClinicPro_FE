@@ -15,7 +15,7 @@ export default function TablePagination<T>({ table }: TablePaginationProps<T>) {
   return (
     <Flex justify="space-between" className="relative p-2 min-h-12">
       <Flex className="absolute left-2 top-2/4 -translate-y-2/4 space-x-2 items-center">
-        <div>Row per page</div>
+        <div>Hàng mỗi trang</div>
         <BaseInput.Select
           value={`${table.getState().pagination.pageSize}`}
           onChange={value => {

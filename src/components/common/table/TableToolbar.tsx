@@ -29,7 +29,7 @@ const TableToolbar = <T,>({ table, toolbar }: TableToolbarProps<T>) => {
     <>
       <Box className="flex items-center py-2 space-x-2 justify-between">
         <Box className="flex space-x-2 flex-1 items-center">
-          <BaseInput onChange={handleSearch} defaultValue={query} size="xs" radius="md" placeholder="tìm kiếm..." />
+          <BaseInput onChange={handleSearch} defaultValue={query} size="xs" radius="md" placeholder="Tìm kiếm..." />
           {toolbar}
         </Box>
         <ExportFile rows={table.getRowModel().rows} />
