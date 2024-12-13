@@ -3,12 +3,7 @@ export type FilterFunction = (event: React.ChangeEvent<HTMLInputElement>) => Pro
 export type PaginationFunction = (page: number) => Promise<void> | void;
 export type RowPerPageFunction = (value: number) => Promise<void> | void;
 export type ManualFiltering = { timeOut: number } | boolean;
-export type ManualPaginationProps = {
-  pageIndex?: number;
-  pageSize?: number;
-  rowCount?: number;
-  pageCount?: number;
-};
+export type ManualPaginationProps = { pageCount?: number };
 
 export interface PaginationBase {
   manualPagination: ManualPaginationProps;

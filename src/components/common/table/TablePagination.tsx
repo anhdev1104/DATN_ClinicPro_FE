@@ -7,11 +7,6 @@ interface TablePaginationProps<T> {
   table: Table<T>;
 }
 export default function TablePagination<T>({ table }: TablePaginationProps<T>) {
-  const limit = `${table.options.meta?.manualPagination?.pageSize}`;
-  const data =
-    !ROW_PER_PAGE_SELECT.includes(limit) && table.options.meta?.manualPagination
-      ? [...ROW_PER_PAGE_SELECT, limit]
-      : ROW_PER_PAGE_SELECT;
   return (
     <Flex justify="space-between" className="relative p-2 min-h-12">
       <Flex className="absolute left-2 top-2/4 -translate-y-2/4 space-x-2 items-center">
@@ -19,20 +14,20 @@ export default function TablePagination<T>({ table }: TablePaginationProps<T>) {
         <BaseInput.Select
           value={`${table.getState().pagination.pageSize}`}
           onChange={value => {
-            table.options.meta?.rowPerPageFunction?.(Number(value));
             table.setPageSize(Number(value));
-            table.setPageIndex(0);
+            table.resetPageIndex();
+            table.options.meta?.rowPerPageFunction?.(Number(value));
           }}
-          data={data}
+          data={ROW_PER_PAGE_SELECT}
           comboboxProps={{
             width: 120,
             position: 'top-start',
             shadow: 'md',
             transitionProps: { transition: 'fade' },
           }}
-          checkIconPosition="right"
           allowDeselect={false}
-          placeholder="Row per page"
+          checkIconPosition="right"
+          placeholder="All"
           className="w-[80px]"
         />
       </Flex>

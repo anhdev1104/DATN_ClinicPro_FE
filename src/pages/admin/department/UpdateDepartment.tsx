@@ -17,7 +17,7 @@ import BaseIcon from '@/components/base/BaseIcon';
 
 const updateDepartmentSchema = yup.object({
   name: yup.string().trim().omit([null]),
-  description: yup.string().omit([null]),
+  description: yup.string(),
   manager_id: yup.string().nullable(),
   users: yup.array().of(yup.string()),
   users_delete: yup.array().of(yup.string()).default([]),

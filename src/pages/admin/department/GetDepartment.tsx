@@ -38,57 +38,57 @@ export default function GetDepartment() {
   const listUsers = useMemo(() => formatUserSelect(users?.data || []), [users]);
   const columns = useColumn<UserProps>([
     {
-      key: 'fullname',
+      accessorKey: 'fullname',
       header: 'Nhân Viên',
-      cell: ({ value, row }) => {
-        return <UserInfo avatar={row.original.avatar} email={row.original.email} fullname={value} />;
+      cell: ({ getValue, row }) => {
+        return <UserInfo avatar={row.original.avatar} email={row.original.email} fullname={getValue()} />;
       },
       meta: {
         label: 'Nhân Viên',
       },
     },
     {
-      key: 'email',
+      accessorKey: 'email',
       header: 'Email',
-      cell: ({ value }) => (
+      cell: ({ getValue }) => (
         <Text fz="xs" c="dimmed">
-          {value}
+          {getValue()}
         </Text>
       ),
       meta: {
         label: 'Email',
       },
-      sortable: false,
+      enableSorting: false,
     },
     {
-      key: 'status',
+      accessorKey: 'status',
       header: 'Trạng Thái',
-      cell: ({ value }) => <Badge size="xs">{value}</Badge>,
+      cell: ({ getValue }) => <Badge size="xs">{getValue()}</Badge>,
       meta: {
         label: 'Trạng Thái',
       },
-      sortable: false,
+      enableSorting: false,
     },
     {
-      key: 'gender',
+      accessorKey: 'gender',
       header: 'Giới tính',
-      cell: ({ value }) => (
+      cell: ({ getValue }) => (
         <Badge color="grape" size="xs">
-          {value}
+          {getValue()}
         </Badge>
       ),
       meta: {
         label: 'Giới tính',
       },
-      sortable: false,
+      enableSorting: false,
     },
     {
-      key: 'phone_number',
+      accessorKey: 'phone_number',
       header: 'Số Điện Thoại',
       meta: {
         label: 'Số Điện Thoại',
       },
-      sortable: false,
+      enableSorting: false,
     },
     {
       id: 'actions',

@@ -30,63 +30,70 @@ export default function User() {
   const navigate = useNavigate();
   const columns = useColumn<IUserInfo>([
     {
-      key: 'user_info.fullname',
+      accessorFn: ({ user_info }) => user_info.fullname,
+      id: 'fullname',
       header: 'Tên',
-      cell: ({ value, row }) => (
-        <UserInfo avatar={row.original?.user_info.fullname} fullname={value} email={row.original.email} />
+      cell: ({ getValue, row }) => (
+        <UserInfo avatar={row.original?.user_info.fullname} fullname={getValue()} email={row.original.email} />
       ),
       meta: {
         label: 'Tên',
       },
     },
     {
-      key: 'user_info.address',
+      accessorFn: ({ user_info }) => user_info.address,
+      id: 'address',
       header: 'Địa Chỉ',
       meta: {
         label: 'Địa Chỉ',
       },
-      sortable: false,
+      enableSorting: false,
     },
     {
-      key: 'user_info.dob',
+      accessorFn: ({ user_info }) => user_info.dob,
+      id: 'dob',
       header: 'Ngày sinh',
       meta: {
         label: 'Ngày sinh',
       },
-      sortable: false,
+      enableSorting: false,
     },
     {
-      key: 'user_info.phone_number',
+      accessorFn: ({ user_info }) => user_info.phone_number,
+      id: 'phone_number',
       header: 'số điện thoại',
       meta: {
         label: 'số điện thoại',
       },
-      sortable: false,
+      enableSorting: false,
     },
     {
-      key: 'status',
+      accessorKey: 'status',
       header: 'Status',
-      cell: ({ value, row }) => (
-        <BaseInput.Select
-          variant="unstyled"
-          data={Object.values(STATUS)}
-          defaultValue={value}
-          className="max-w-32"
-          allowDeselect={false}
-          onChange={async value => {
-            const response = await handleUpdate({ id: row.original.id, status: value as `${STATUS}` });
-            if (response.data) {
-              toast.success(response.data.message);
-              return;
-            }
-            resolveErrorResponse((response.error as AxiosBaseQueryError).data);
-          }}
-        />
-      ),
+      cell: ({ getValue, row }) => {
+        const value = getValue();
+        return (
+          <BaseInput.Select
+            variant="unstyled"
+            data={Object.values(STATUS)}
+            defaultValue={value}
+            className="max-w-32"
+            allowDeselect={false}
+            onChange={async value => {
+              const response = await handleUpdate({ id: row.original.id, status: value as `${STATUS}` });
+              if (response.data) {
+                toast.success(response.data.message);
+                return;
+              }
+              resolveErrorResponse((response.error as AxiosBaseQueryError).data);
+            }}
+          />
+        );
+      },
       meta: {
         label: 'Status',
       },
-      sortable: false,
+      enableSorting: false,
     },
     {
       id: 'actions',
@@ -117,12 +124,7 @@ export default function User() {
           }
           manualFiltering
           filterFunction={e => setQuery({ q: e.target.value, page: 1 })}
-          manualPagination={{
-            rowCount: users?.data.length,
-            pageCount: users?.total_pages,
-            pageIndex: query.page - 1,
-            pageSize: query.limit,
-          }}
+          manualPagination={{ pageCount: users?.total_pages }}
           paginationFunction={page => setQuery({ page })}
           rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
           columns={columns}

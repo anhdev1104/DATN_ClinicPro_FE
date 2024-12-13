@@ -6,7 +6,6 @@ import { ExportFile } from '@/components/export';
 import BaseInput from '@/components/base/input';
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
-import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 interface TableToolbarProps<T> {
   table: Table<T>;
   toolbar?: React.ReactNode;
@@ -14,22 +13,27 @@ interface TableToolbarProps<T> {
 }
 
 const TableToolbar = <T,>({ table, toolbar }: TableToolbarProps<T>) => {
-  const [query] = useQueryParam('q', withDefault(StringParam, ''));
-  const timeOut = table.options.meta?.manualFiltering
-    ? typeof table.options.meta?.manualFiltering !== 'boolean'
-      ? table.options.meta?.manualFiltering.timeOut
-      : 500
-    : 0;
-  const handleSearch = useDebouncedCallback(e => {
-    table.options.meta?.filterFunction?.(e);
-    table.setGlobalFilter(e.target.value);
-    table.setPageIndex(0);
-  }, timeOut);
+  const handleSearch = useDebouncedCallback(
+    e => {
+      table.options.meta?.filterFunction?.(e);
+      table.setGlobalFilter(e.target.value);
+      table.setPageIndex(0);
+    },
+    table.options.meta?.manualFiltering
+      ? (table.options.meta?.manualFiltering as { timeOut: number })?.timeOut || 500
+      : 0,
+  );
   return (
     <>
       <Box className="flex items-center py-2 space-x-2 justify-between">
         <Box className="flex space-x-2 flex-1 items-center">
-          <BaseInput onChange={handleSearch} defaultValue={query} size="xs" radius="md" placeholder="tìm kiếm..." />
+          <BaseInput
+            onChange={handleSearch}
+            defaultValue={table.options.meta?.q}
+            size="xs"
+            radius="md"
+            placeholder="tìm kiếm..."
+          />
           {toolbar}
         </Box>
         <ExportFile rows={table.getRowModel().rows} />

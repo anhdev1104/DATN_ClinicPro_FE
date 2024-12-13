@@ -26,51 +26,47 @@ export default function Department() {
 
   const columns = useColumn<DepartmentProps>([
     {
-      key: 'name',
+      accessorKey: 'name',
       header: 'Tên Phòng Ban',
-      cell: ({ value }) => <div className="capitalize">{value}</div>,
       meta: {
         label: 'Tên Phòng Ban',
       },
     },
     {
-      key: 'manager',
+      accessorKey: 'manager',
       header: 'Quản Lý',
-      cell: ({ value }: { value: ManagerProps }) => {
+      cell: ({ getValue }) => {
+        const value = getValue() as ManagerProps;
         return <UserInfo avatar={value?.avatar} email={value?.email} fullname={value?.fullname} />;
       },
       meta: {
         label: 'Quản Lý',
       },
-      sortable: false,
+      enableSorting: false,
     },
     {
-      key: 'users_count',
+      accessorKey: 'users_count',
       header: 'Nhân viên',
-      cell: ({ value, row }) => (
-        <>
-          <Avatar.Group>
-            {row.original.users?.slice(0, 3).map(user => <Avatar key={user.id} src={user.avatar} />)}
-            <Avatar>{value}</Avatar>
-          </Avatar.Group>
-        </>
+      cell: ({ getValue, row }) => (
+        <Avatar.Group>
+          {row.original.users?.slice(0, 3).map(user => <Avatar key={user.id} src={user.avatar} />)}
+          <Avatar>{getValue()}</Avatar>
+        </Avatar.Group>
       ),
       meta: {
         label: 'Nhân viên',
       },
-      sortable: false,
+      enableSorting: false,
     },
     {
-      key: 'created_at',
+      accessorKey: 'created_at',
       header: 'Ngày tạo',
-      cell: ({ value }) => {
-        const date = dayjs(value).format('DD-MM-YYYY');
+      cell: ({ getValue }) => {
+        const date = dayjs(getValue()).format('DD-MM-YYYY');
         return (
-          <>
-            <Text size="sm" fw={400} c="dimmed">
-              {date}
-            </Text>
-          </>
+          <Text size="sm" fw={400} c="dimmed">
+            {date}
+          </Text>
         );
       },
       meta: {
@@ -99,10 +95,7 @@ export default function Department() {
           manualFiltering
           filterFunction={e => setQuery({ q: e.target.value, page: 1 })}
           manualPagination={{
-            rowCount: departments?.data.length,
             pageCount: departments?.total_pages,
-            pageIndex: query.page - 1,
-            pageSize: query.limit,
           }}
           paginationFunction={page => setQuery({ page })}
           rowPerPageFunction={limit => setQuery({ limit, page: 1 })}

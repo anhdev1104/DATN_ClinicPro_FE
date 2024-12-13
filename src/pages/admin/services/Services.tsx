@@ -32,12 +32,12 @@ export default function ServicesPage() {
             <Text size="sm" c="dimmed" lineClamp={3}>
               {row.original.description}
             </Text>
-            <Flex justify="space-between">
+            <Flex justify="space-between" align="center">
               <Group gap="xs">
                 <BaseButton.Icon
                   onClick={() => {
                     modals.openConfirmModal({
-                      title: `Bạn Chắn Chắn Muốn Xóa ${row.original.service_name}`,
+                      title: `Xóa ${row.original.service_name}`,
                       children: <Text size="sm">khi xóa bạn không thể khôi phục được nữa</Text>,
                       size: 'md',
                       confirmProps: { color: 'red' },
@@ -89,16 +89,13 @@ export default function ServicesPage() {
             });
           }}
           className="flex ml-auto"
-          size="lg"
+          size="md"
         >
-          <BaseIcon size="lg" icon={IconPlus} />
+          <BaseIcon size="md" icon={IconPlus} />
         </BaseButton.Icon>
         <Table
           manualPagination={{
-            rowCount: data?.data.length,
             pageCount: data?.total_pages,
-            pageIndex: query.page - 1,
-            pageSize: query.limit,
           }}
           paginationFunction={page => setQuery({ page })}
           rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
