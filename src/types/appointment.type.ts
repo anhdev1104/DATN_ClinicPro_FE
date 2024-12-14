@@ -19,42 +19,27 @@ export interface IListAppointment {
   total_amount: string | null;
   status: 'pending' | 'confirmed' | 'canceled';
   cancellation_reason: string | null;
+  package_id: string;
   patient: {
     id: string;
     insurance_number: string;
+    status: `${STATUS}`;
+    user_id: string;
     identity_card_id: string;
-    status: `${STATUS}`;
-  };
-  user: {
-    id: string;
-    status: `${STATUS}`;
-    role: {
+    created_at: string;
+    updated_at: string;
+    patient_info: {
       id: string;
-      name: string;
-      description: string;
-    };
-    user_info: {
-      id: string;
+      patient_id: string;
       fullname: string;
-      address: string;
       avatar: string;
+      email: string;
       phone_number: string;
-      gender: `${GENDER}`;
+      address: string;
       dob: string;
-      department_id: string;
+      gender: `${GENDER}`;
+      created_at: string;
+      updated_at: string;
     };
-  };
-  package: {
-    id: string;
-    name: string;
-    description: string;
-    content: string;
-    image: string;
-    slug: string;
-  };
-  specialty: {
-    id: string;
-    name: string;
-    description: string;
   };
 }

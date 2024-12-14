@@ -3,32 +3,37 @@ import BaseButton from '@/components/base/button';
 import Table from '@/components/table/Table';
 import TableAction from '@/components/table/TableAction';
 import { useColumn } from '@/hooks/useColumn';
-import { useGetUsersQuery } from '@/redux/api/users';
+import { useGetUsersQuery, useUpdateUserMutation } from '@/redux/api/users';
 import { IUserInfo } from '@/types/user.type';
-import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
+import { useDebouncedCallback } from '@mantine/hooks';
 import { IconPlus } from '@tabler/icons-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import CreateUser from './components/CreateUser';
-import BaseModal from '@/components/base/modal';
 import { UserInfo } from '@/components/user-info/UserInfo';
-import { Badge, Pagination } from '@mantine/core';
-import NotFoundPage from '@/pages/client/404/NotFoundPage';
+import { Pagination } from '@mantine/core';
 import BaseInput from '@/components/base/input';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { modals } from '@mantine/modals';
+import { STATUS } from '@/constants/define';
+import { resolveErrorResponse } from '@/helpers/utils';
+import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import toast from 'react-hot-toast';
 
 export default function User() {
-  const [opened, { close, open }] = useDisclosure();
   const [params, setParams] = useSearchParams();
   const [limit] = useState(5);
-  const {
-    data: users,
-    isFetching,
-    error,
-  } = useGetUsersQuery({
-    q: params.get('q')!,
-    limit: params.get('limit') || limit.toString(),
-    page: params.get('page')!,
-  });
+  const queryKey = useMemo(
+    () => ({
+      q: params.get('q')!,
+      limit: params.get('limit') || limit.toString(),
+      page: params.get('page')!,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [params],
+  );
+
+  const { data: users, isFetching, isLoading } = useGetUsersQuery(queryKey);
+  const [handleUpdate, { isLoading: isUpdateLoading }] = useUpdateUserMutation();
   const navigate = useNavigate();
   const columns = useColumn<IUserInfo>([
     {
@@ -56,7 +61,23 @@ export default function User() {
     {
       label: 'Status',
       key: 'status',
-      cell: ({ value }) => <Badge size="sm">{value}</Badge>,
+      cell: ({ value, original }) => (
+        <BaseInput.Select
+          variant="unstyled"
+          data={Object.values(STATUS)}
+          defaultValue={value}
+          className="max-w-32"
+          allowDeselect={false}
+          onChange={async value => {
+            const response = await handleUpdate({ id: original.id, status: value as `${STATUS}` });
+            if (response.data) {
+              toast.success(response.data.message);
+              return;
+            }
+            resolveErrorResponse((response.error as AxiosBaseQueryError).data);
+          }}
+        />
+      ),
       sortable: false,
     },
     {
@@ -74,13 +95,22 @@ export default function User() {
     setParams(params.toString());
   }, 500);
 
-  if (error) return <NotFoundPage title="Có lỗi xảy ra! vui lòng tải lại trang" />;
   return (
     <>
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
           toolbar={
-            <BaseButton.Icon onClick={open} variant="subtle" radius="lg">
+            <BaseButton.Icon
+              onClick={() => {
+                modals.open({
+                  title: 'Tạo Mới User',
+                  children: <CreateUser close={modals.closeAll} />,
+                  size: 'auto',
+                });
+              }}
+              variant="subtle"
+              radius="lg"
+            >
               <BaseIcon icon={IconPlus} />
             </BaseButton.Icon>
           }
@@ -102,22 +132,18 @@ export default function User() {
                 params.set('page', value.toString());
                 setParams(params.toString());
               }}
+              value={Number(params.get('page')) || 1}
               radius="md"
-              defaultValue={Number(params.get('page')) || 1}
               className="w-full flex justify-center py-2"
             />
           }
           columns={columns}
           data={users?.data || []}
-          isFetching={isFetching}
-          onRowClick={data => navigate(data.id)}
+          isFetching={isFetching || isUpdateLoading}
+          isLoading={isLoading}
           className="mx-2"
-          highlightOnHover
         />
       </div>
-      <BaseModal title="Tạo Mới User" opened={opened} onClose={close}>
-        <CreateUser close={close} />
-      </BaseModal>
     </>
   );
 }

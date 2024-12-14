@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Input from '@/components/input';
 import { MoreVertIcon, AddIcon } from '@/components/icons';
-import { IListAppointment } from '@/types/appointment.type';
+
 import DirectRoute from '@/components/direct';
 import { getAppointments, deleteAppointment } from '@/services/appointments.service';
 import { Dialog } from '@mui/material';
@@ -201,16 +201,14 @@ function ModalDetail({ close, statusLog, appointment }: ModalDetail) {
       <div className="p-6">
         <h2 className="text-xl font-bold text-center text-gray-800 mb-4">Chi tiết lịch hẹn </h2>
         <div className="card-box p-6 ">
-          <h3 className="card-title text-lg font-semibold text-gray-700 mb-4">
-            {appointment?.user?.user_info?.fullname}
-          </h3>
+          <h3 className="card-title text-lg font-semibold text-gray-700 mb-4">{appointment?.patient?.id}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="input-block">
               <label className="focus-label text-sm font-medium text-gray-600">ID Bệnh nhân</label>
               <input
                 type="text"
                 className="form-control floating w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
-                defaultValue={appointment?.patient?.id}
+                defaultValue={appointment?.user_id}
               />
             </div>
             <div className="input-block">
@@ -252,7 +250,7 @@ function ModalDetail({ close, statusLog, appointment }: ModalDetail) {
               />
             </div>
             <div className="input-block">
-              <label className="focus-label text-sm font-medium text-gray-600">Grade</label>
+              <label className="focus-label text-sm font-medium text-gray-600 ">Grade</label>
               <input
                 type="text"
                 className="form-control floating w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 focus:outline-none"

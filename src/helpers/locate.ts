@@ -1,4 +1,4 @@
-import { emailRegex } from '@/constants/regex';
+import { emailRegex, passwordRegex } from '@/constants/regex';
 import * as yup from 'yup';
 
 yup.setLocale({
@@ -22,9 +22,19 @@ yup.addMethod(yup.object, 'safeParse', function (value): any {
   return this.cast(value, { stripUnknown: true, assert: false });
 });
 yup.addMethod(yup.string, 'email', function (message) {
-  return this.test('email', message || 'Trường này phải là email !', value => {
-    if (!value) return false;
-    return emailRegex.test(value);
+  return this.required().test({
+    name: 'email',
+    message: message || 'Trường này phải là email !',
+    test: value => emailRegex.test(value),
   });
+});
+yup.addMethod(yup.string, 'password', function (message) {
+  return this.required()
+    .min(8)
+    .test({
+      name: 'password',
+      message: message || 'Giá trị phải chứa 1 ký tự in hoa và 1 ký tự đặc biệt',
+      test: value => passwordRegex.test(value),
+    });
 });
 export default yup;

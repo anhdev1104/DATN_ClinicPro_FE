@@ -1,25 +1,64 @@
-/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { getAppointmentbyId } from '@/services/appointments.service';
+import { getPatient } from '@/services/patient.service';
+import { getDoctors } from '@/services/user.service';
 import Input from '@/components/input';
 import Field from '@/components/field';
 import Label from '@/components/label';
-
+// import convertTime from '@/helpers/convertTime';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { GENDER } from '@/constants/define';
+import { IListAppointment } from '@/types/appointment.type';
+import Select from '@/components/select';
+import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 const AppointmentDetail = () => {
   const { id } = useParams();
-  const [appointment, setAppointment] = useState(null);
+  const [appointment, setAppointment] = useState<IListAppointment | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [patient, setPatient] = useState([]);
+  const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
+  const convertToOptions = users =>
+    users.map(user => ({
+      label: user.user_info.fullname,
+      value: user.id,
+    }));
   const {
     control,
     setValue,
     handleSubmit,
-    formState: { error },
+    formState: {},
   } = useForm();
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        setLoading(true);
+        const userRes = await getDoctors();
+        const patientRes = await getPatient();
+        setPatient(patientRes || []);
+        setUser(convertToOptions(userRes));
+      } catch (error) {
+        return error;
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOptions();
+  }, []);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const getPatientName = (patientId: string) => {
+    const patient = patient.find(patient => patient.id === patientId);
+    return patient ? patient.patient_infor.fullname : 'Không có danh mục';
+  };
+
   useEffect(() => {
     const fetchAppointment = async () => {
       try {
@@ -27,13 +66,14 @@ const AppointmentDetail = () => {
         setLoading(true);
         const response = await getAppointmentbyId(id);
         const appointmentData = response.data;
+        // eslint-disable-next-line no-console
         console.log('Appointment data:', appointmentData);
         setAppointment(appointmentData);
-        setValue('fullname', appointmentData?.user?.user_info?.fullname || 'null');
-        setValue('date', appointmentData?.appointment_date || '');
+        setValue('fullname', appointmentData?.patient?.id);
+        setValue('date', appointmentData?.appointment_date ? dayjs(appointmentData.appointment_date) : null);
       } catch (err) {
         setError('Không thể tải dữ liệu cuộc hẹn');
-        console.error(err);
+        return err;
       } finally {
         setLoading(false);
       }
@@ -42,6 +82,7 @@ const AppointmentDetail = () => {
     fetchAppointment();
   }, [id, setValue]);
   const onSubmit = data => {
+    // eslint-disable-next-line no-console
     console.log('Form data:', data);
     toast.success('Cập nhật thông tin thành công!');
   };
@@ -62,7 +103,7 @@ const AppointmentDetail = () => {
                 alt="User Profile"
               />
             </div>
-            <p class="text-2xl font-semibold truncate">{appointment?.user?.user_info?.fullname || 'N/A'}</p>
+            <p class="text-2xl font-semibold truncate">{appointment?.patient?.id || 'N/A'}</p>
           </div>
           <div className="grid grid-cols-3 gap-4  pb-4">
             <div>
@@ -78,32 +119,87 @@ const AppointmentDetail = () => {
                 />
               </Field>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Trạng thái</label>
-              <select className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option>Pending</option>
-                <option>Doctor A</option>
-                <option>Doctor B</option>
-              </select>
+            <div className="min-w-[380px] w-[45%]">
+              <Label htmlFor="Id">
+                Danh mục người dùng<span className="text-red-500">*</span>
+              </Label>
+
+              <Select placeholder="Danh mục người dùng" options={user} name="user_id" control={control} />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Giới tính</label>
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center space-x-2">
-                  <input type="radio" name="gender" className="focus:ring-blue-500" />
-                  <span>Male</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input type="radio" name="gender" className="focus:ring-blue-500" />
-                  <span>Female</span>
-                </label>
-              </div>
+              <Field>
+                <Label className="block text-sm font-medium mb-1">Giới tính</Label>
+                <div className="flex items-center space-x-4">
+                  <FormControl>
+                    <Controller
+                      control={control}
+                      name="gender"
+                      render={({ field }) => (
+                        <>
+                          <RadioGroup
+                            defaultValue={GENDER.MALE}
+                            {...field}
+                            sx={{
+                              flexDirection: 'row',
+                              pl: '15px',
+                              '& .MuiButtonBase-root': {
+                                width: '38px',
+                                height: '38px',
+                              },
+                            }}
+                          >
+                            <FormControlLabel
+                              value={GENDER.MALE}
+                              sx={{
+                                '& .MuiFormControlLabel-label': {
+                                  color: '#373737',
+                                  fontSize: '14px',
+                                },
+                              }}
+                              control={
+                                <Radio
+                                  sx={{
+                                    '&.Mui-checked': {
+                                      color: 'rgb(77, 182, 172)',
+                                    },
+                                  }}
+                                />
+                              }
+                              label="Nam"
+                            />
+                            <FormControlLabel
+                              value={GENDER.FEMALE}
+                              sx={{
+                                '& .MuiFormControlLabel-label': {
+                                  color: '#373737',
+                                  fontSize: '14px',
+                                },
+                              }}
+                              control={
+                                <Radio
+                                  sx={{
+                                    '&.Mui-checked': {
+                                      color: 'rgb(77, 182, 172)',
+                                    },
+                                  }}
+                                />
+                              }
+                              label="Nữ"
+                            />
+                          </RadioGroup>
+                        </>
+                      )}
+                    />
+                  </FormControl>
+                </div>
+              </Field>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4  pb-4">
             <div>
               <label className="block text-sm font-medium mb-1">Số điện thoại</label>
               <input
+                name="name"
                 type="text"
                 className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -132,11 +228,52 @@ const AppointmentDetail = () => {
                 <Label htmlFor="date" className="block text-sm font-medium mb-1">
                   Date of Appointment *
                 </Label>
-                <Input
+                <Controller
                   name="date"
-                  type="text"
-                  className="w-full h-[37px] border rounded-md p-2 outline-none !font-normal !text-dark bg-white  focus:ring-2 focus:ring-blue-500 border-gray-300 focus:outline-none  "
                   control={control}
+                  defaultValue={dayjs()}
+                  render={({ field: { onChange, value } }) => (
+                    <LocalizationProvider
+                      dateAdapter={AdapterDayjs}
+                      className="w-full h-[37px]  border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <DateTimePicker
+                        value={value}
+                        onChange={newValue => {
+                          onChange(newValue);
+                        }}
+                        sx={{
+                          width: '100%',
+                          '& .MuiInputBase-input': {
+                            padding: '',
+                            height: '6px',
+                          },
+                          '& .MuiInputBase-root': {
+                            color: '#797979',
+                            backgroundColor: 'white',
+                            fontSize: '14px',
+                            radius: '0.375rem',
+                            outline: '1px solid #d1d5db',
+                            offset: '2px',
+                          },
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            border: 'none',
+                          },
+                          '& .MuiIconButton-root': {
+                            color: 'rgb(77, 182, 172)',
+                          },
+                          '& .css-113d811-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+                            color: 'rgb(77, 182, 172)',
+                          },
+                          '& .css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root': {
+                            fontSize: '12px',
+                            transform: 'translate(14px, 10px) scale(1)',
+                            color: '#797979',
+                          },
+                        }}
+                      />
+                    </LocalizationProvider>
+                  )}
                 />
               </Field>
             </div>

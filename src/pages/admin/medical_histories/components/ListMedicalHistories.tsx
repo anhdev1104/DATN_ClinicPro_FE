@@ -226,7 +226,7 @@ function MedicalRecordSearch() {
   );
 }
 
-function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories) {
+export function DetailMedicalHistories({ close, statusLog, id }: DetailMedicalHistories) {
   const [medicalRecord, setMedicalRecord] = useState<MedicalRecord>({} as MedicalRecord);
   useEffect(() => {
     (async () => {

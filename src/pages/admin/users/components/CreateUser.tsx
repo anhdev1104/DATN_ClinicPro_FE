@@ -14,13 +14,24 @@ import { useCreateUserMutation } from '@/redux/api/users';
 import { getAllRole } from '@/services/roles.service';
 import { uploadFile } from '@/services/uploadFile.service';
 import { IRole } from '@/types/role.type';
-import { Avatar, Grid } from '@mantine/core';
-import { IconCalendar, IconUpload } from '@tabler/icons-react';
+import { Avatar, Grid, Radio } from '@mantine/core';
+import {
+  IconBrandSamsungpass,
+  IconBuildingSkyscraper,
+  IconCalendar,
+  IconGenderTransgender,
+  IconMail,
+  IconMobiledata,
+  IconPhoneCall,
+  IconPlus,
+  IconShieldLock,
+  IconUpload,
+  IconUser,
+} from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-
 export type CreateUserProps = yup.InferType<typeof createUserSChema>;
 
 const CreateUser = ({ close }: BaseModalProps) => {
@@ -38,27 +49,31 @@ const CreateUser = ({ close }: BaseModalProps) => {
   const rolesOption = useMemo(() => roles.map(role => ({ label: role.name, value: role.id })), [roles]);
 
   const handleCreateUser = async (data: CreateUserProps) => {
-    const { user_info, ...rest } = data;
-    let url;
-    if (upload.file) {
-      const formData = new FormData();
-      formData.append('file', upload.file as File);
-      url = await uploadFile(formData);
+    try {
+      const { user_info, ...rest } = data;
+      let url;
+      if (upload.file) {
+        const formData = new FormData();
+        formData.append('file', upload.file as File);
+        url = await uploadFile(formData);
+      }
+      const result = await createUser({
+        ...rest,
+        user_info: {
+          ...user_info,
+          avatar: url?.data?.url,
+          dob: user_info?.dob && (dayjs(user_info.dob).format('YYYY-MM-DD') as any),
+        },
+      });
+      if (result.data) {
+        toast.success(result.data.message);
+        close();
+        return;
+      }
+      resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
+    } catch (errors) {
+      resolveErrorResponse(errors as ErrorResponse, setError);
     }
-    const result = await createUser({
-      ...rest,
-      user_info: {
-        ...user_info,
-        avatar: url?.data?.url,
-        dob: user_info?.dob && (dayjs(user_info.dob).format('YYYY-MM-DD') as any),
-      },
-    });
-    if (result.data) {
-      toast.success(result.data.message);
-      close();
-      return;
-    }
-    resolveErrorResponse((result.error as AxiosBaseQueryError)?.data, setError);
   };
   useEffect(() => {
     const controller = new AbortController();
@@ -86,28 +101,54 @@ const CreateUser = ({ close }: BaseModalProps) => {
             </BaseButton.File>
           </Grid.Col>
           <Grid.Col span={4}>
-            <BaseInput.Group name="user_info.fullname" autoComplete="fullname" label="Họ và Tên" />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <BaseInput.Group name="email" autoComplete="email" label="Email" />
-          </Grid.Col>
-          <Grid.Col span={4}>
             <BaseInput.Group
-              name="user_info.phone_number"
-              type="number"
-              autoComplete="phone_number"
-              label="Số Điện Thoại"
+              name="user_info.fullname"
+              autoComplete="fullname"
+              leftSection={<BaseIcon icon={IconUser} />}
+              withAsterisk
+              label="Họ và Tên"
             />
           </Grid.Col>
           <Grid.Col span={4}>
-            <BaseInput.Password name="password" autoComplete="password" label="Password" />
+            <BaseInput.Group
+              name="email"
+              autoComplete="email"
+              leftSection={<BaseIcon icon={IconMail} />}
+              withAsterisk
+              label="Email"
+            />
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <BaseInput.Number
+              name="user_info.phone_number"
+              autoComplete="phone_number"
+              label="Số Điện Thoại"
+              allowNegative={false}
+              trimLeadingZeroesOnBlur={false}
+              thousandSeparator=" "
+              leftSection={<BaseIcon icon={IconPhoneCall} />}
+            />
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <BaseInput.Password
+              name="password"
+              autoComplete="password"
+              leftSection={<BaseIcon icon={IconBrandSamsungpass} />}
+              withAsterisk
+              label="Password"
+            />
           </Grid.Col>
           <Grid.Col span={4}>
             <BaseInput.Select
               name="user_info.gender"
-              data={Object.values(GENDER)}
               autoComplete="gender"
+              data={Object.values(GENDER)}
+              renderOption={({ option, checked }) => (
+                <Radio checked={checked} onChange={() => {}} value={option.value} label={option.value} />
+              )}
+              leftSection={<BaseIcon icon={IconGenderTransgender} />}
               label="Giới tính"
+              allowDeselect={false}
             />
           </Grid.Col>
           <Grid.Col span={4}>
@@ -115,36 +156,53 @@ const CreateUser = ({ close }: BaseModalProps) => {
               name="user_info.dob"
               autoComplete="dob"
               leftSection={<BaseIcon icon={IconCalendar} />}
+              withAsterisk
               placeholder="Chọn ngày sinh"
               label="Ngày Sinh"
             />
           </Grid.Col>
-          <Grid.Col span={8}>
-            <BaseInput.Textarea name="user_info.address" autoComplete="address" label="Địa Chỉ" />
-          </Grid.Col>
           <Grid.Col span={4}>
-            <BaseInput.Select data={Object.values(STATUS)} name="status" autoComplete="status" label="Status" />
-          </Grid.Col>
-          <Grid.Col>
-            <BaseInput.Select
-              name="user_info.department_id"
-              autoComplete="department_id"
-              data={departmentsOption}
-              nothingFoundMessage="Chưa có phòng ban nào"
-              label="Phòng Ban"
-            />
-          </Grid.Col>
-          <Grid.Col>
             <BaseInput.Select
               name="role_id"
               autoComplete="role_id"
               data={rolesOption}
               label="Role"
+              leftSection={<BaseIcon icon={IconShieldLock} />}
               placeholder="Role"
+              withAsterisk
             />
           </Grid.Col>
+          <Grid.Col span={4}>
+            <BaseInput.Select
+              name="user_info.department_id"
+              autoComplete="department_id"
+              data={departmentsOption}
+              leftSection={<BaseIcon icon={IconBuildingSkyscraper} />}
+              nothingFoundMessage="Chưa có phòng ban nào"
+              label="Phòng Ban"
+            />
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <BaseInput.Select
+              name="status"
+              autoComplete="status"
+              data={Object.values(STATUS)}
+              allowDeselect={false}
+              leftSection={<BaseIcon icon={IconMobiledata} />}
+              label="Status"
+            />
+          </Grid.Col>
+          <Grid.Col>
+            <BaseInput.Textarea name="user_info.address" autoComplete="address" resize="vertical" label="Địa Chỉ" />
+          </Grid.Col>
         </Grid>
-        <BaseButton disabled={isSubmitting} loading={isSubmitting} type="submit" className="flex ml-auto">
+        <BaseButton
+          disabled={isSubmitting}
+          loading={isSubmitting}
+          leftSection={<BaseIcon icon={IconPlus} />}
+          type="submit"
+          className="flex ml-auto"
+        >
           Thêm
         </BaseButton>
       </Form>
@@ -168,7 +226,7 @@ export const createUserSChema = yup.object({
       .string()
       .oneOf(Object.values(GENDER) as `${GENDER}`[])
       .default(GENDER.OTHER),
-    dob: yup.date().nullable().default(null),
+    dob: yup.date().nullable().required().default(null),
     department_id: yup.string().nullable(),
   }),
 });

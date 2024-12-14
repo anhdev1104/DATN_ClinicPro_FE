@@ -1,4 +1,4 @@
-import { Avatar, Modal, Pagination, Text } from '@mantine/core';
+import { Avatar, Pagination, Text } from '@mantine/core';
 import { useGetDepartmentsQuery } from '@/redux/api/department';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { DepartmentProps, ManagerProps } from '@/types/department.type';
@@ -6,7 +6,7 @@ import Table from '@/components/table/Table';
 import ActionWithRow from '@/components/table/TableAction';
 import BaseButton from '@/components/base/button';
 import BaseIcon from '@/components/base/BaseIcon';
-import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
+import { useDebouncedCallback } from '@mantine/hooks';
 import NewDepartment from './components/CreateDepartment';
 import { IconPlus } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
@@ -14,11 +14,11 @@ import { useState } from 'react';
 import BaseInput from '@/components/base/input';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import dayjs from 'dayjs';
+import { modals } from '@mantine/modals';
 
 export default function Department() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
-  const [opened, { close, open }] = useDisclosure(false);
   const [limit] = useState(5);
   const { data: departments, isFetching } = useGetDepartmentsQuery({
     q: params.get('q')!,
@@ -108,13 +108,13 @@ export default function Department() {
           manualPagination
           pagination={
             <Pagination
-              total={Number(departments?.total_pages)}
+              total={Number(departments?.total_pages) || 1}
               onChange={value => {
                 params.set('page', value.toString());
                 setParams(params.toString());
               }}
+              value={Number(params.get('page')) || 1}
               radius="md"
-              defaultValue={Number(params.get('page')) || 1}
               className="w-full flex justify-center py-2"
             />
           }
@@ -123,14 +123,20 @@ export default function Department() {
           data={departments?.data || []}
           columns={columns}
           toolbar={
-            <BaseButton.Icon onClick={open} variant="subtle" radius="lg">
+            <BaseButton.Icon
+              onClick={() => {
+                modals.open({
+                  title: 'Tạo Mới Phòng Ban',
+                  children: <NewDepartment handleClose={modals.closeAll} />,
+                });
+              }}
+              variant="subtle"
+              radius="lg"
+            >
               <BaseIcon icon={IconPlus} size="md" />
             </BaseButton.Icon>
           }
         />
-        <Modal radius="md" size="xl" centered opened={opened} onClose={close} title="Tạo Mới Phòng Ban">
-          <NewDepartment handleClose={close} />
-        </Modal>
       </div>
     </>
   );

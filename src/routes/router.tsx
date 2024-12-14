@@ -19,7 +19,6 @@ const RegisterPage = React.lazy(() => import('@/pages/client/auth/RegisterPage')
 const BranchsPage = React.lazy(() => import('@/pages/client/branchs/BranchsPage'));
 const CommunityPage = React.lazy(() => import('@/pages/client/community/CommunityPage'));
 const HomePage = React.lazy(() => import('@/pages/client/home/HomePage'));
-const PackageDetail = React.lazy(() => import('@/pages/admin/package/component/PackageDetail'));
 const Prescription = React.lazy(() => import('@/pages/admin/prescriptions/Prescription'));
 const ProfilePage = React.lazy(() => import('@/pages/client/profile/ProfilePage'));
 const ChangePassword = React.lazy(() => import('@/pages/client/auth/ChangePassword'));
@@ -154,11 +153,6 @@ const adminRouter: IRouter[] = [
   {
     path: '/packages',
     element: <Package />,
-    title: 'Danh sách gói khám',
-  },
-  {
-    path: '/package/:id',
-    element: <PackageDetail />,
     title: 'Danh sách gói khám',
   },
   {

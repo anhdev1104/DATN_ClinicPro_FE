@@ -83,6 +83,7 @@ BaseInput.MultiSelect = MultiSelect;
 BaseInput.Tag = TagsInput;
 BaseInput.Pill = PillsInput;
 BaseInput.Date = BaseDateInput;
+BaseInput.Number = NumberInput;
 BaseInput.displayName = '@mantine/core/Input';
 
 export default BaseInput;
