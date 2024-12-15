@@ -19,7 +19,7 @@ import { Table } from '@/components/common/table/primary';
 import { ROW_PER_PAGE } from '@/constants/config';
 import DirectRoute from '@/components/direct';
 
-const makeData = (array: any[]) => {
+export const makeData = (array: any[]) => {
   let i;
   let target = [];
   for (i = 0; i < 100; i++) {
@@ -137,7 +137,7 @@ export default function User() {
           paginationFunction={page => setQuery({ page })}
           rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
           columns={columns}
-          data={makeData(users?.data || [])}
+          data={users?.data || []}
           isFetching={isFetching || isUpdateLoading}
           isLoading={isLoading}
         />

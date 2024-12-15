@@ -7,6 +7,7 @@ import { usePluginTable } from '@/hooks/usePluginTable';
 import { useMemo, useRef } from 'react';
 import { TableVirtualize } from './TableVirtualize';
 import { cn } from '@/helpers/utils';
+import { ROW_PER_PAGE_SELECT } from '@/constants/config';
 
 export type BaseTableProps<T, D> = TablePlugin<T, D> & {
   isFetching?: boolean;
@@ -25,7 +26,10 @@ export default function Table<T, D>({
 }: BaseTableProps<T, D>) {
   const table = usePluginTable(props);
   const parentRef = useRef<HTMLDivElement>(null);
-  const isVirtual = useMemo(() => table.getState().pagination.pageSize < 9999, [table.getState().pagination.pageSize]); // eslint-disable react-hooks/exhaustive-deps
+  const isVirtual = useMemo(
+    () => table.getState().pagination.pageSize < +ROW_PER_PAGE_SELECT[ROW_PER_PAGE_SELECT.length - 1],
+    [table.getState().pagination.pageSize],
+  ); // eslint-disable react-hooks/exhaustive-deps
   return (
     <div className="w-full">
       <TableToolbar toolbar={toolbar} table={table} />
