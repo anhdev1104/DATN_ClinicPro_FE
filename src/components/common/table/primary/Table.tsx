@@ -4,6 +4,9 @@ import { Skeleton, TableProps } from '@mantine/core';
 import { TablePlugin } from '@/@types/table';
 import BaseTable from '@/components/base/table';
 import { usePluginTable } from '@/hooks/usePluginTable';
+import { useMemo, useRef } from 'react';
+import { TableVirtualize } from './TableVirtualize';
+import { cn } from '@/helpers/utils';
 
 export type BaseTableProps<T, D> = TablePlugin<T, D> & {
   isFetching?: boolean;
@@ -21,25 +24,36 @@ export default function Table<T, D>({
   ...props
 }: BaseTableProps<T, D>) {
   const table = usePluginTable(props);
+  const parentRef = useRef<HTMLDivElement>(null);
+  const isVirtual = useMemo(() => table.getState().pagination.pageSize < 9999, [table.getState().pagination.pageSize]); // eslint-disable react-hooks/exhaustive-deps
   return (
     <div className="w-full">
       <TableToolbar toolbar={toolbar} table={table} />
       <BaseTable.Scroll minWidth={800}>
-        <BaseTable withTableBorder {...tableProps}>
+        <BaseTable
+          parentProps={{
+            ref: parentRef,
+            className: 'max-h-[560px] overflow-y-auto scrollbar-thin',
+            style: {
+              transform: 'translate3d(0, 0, 0)',
+            },
+          }}
+          withTableBorder
+          {...tableProps}
+        >
           <BaseTable.Header>
             {table.getHeaderGroups().map(({ headers, id }) => (
               <BaseTable.Row key={id}>
-                {headers.map(({ id, column, getContext, isPlaceholder }) => {
+                {headers.map(header => {
                   return (
-                    <BaseTable.Head key={id} className="font-normal text-xs">
-                      {isPlaceholder ? null : flexRender(column.columnDef.header, getContext())}
+                    <BaseTable.Head key={header.id} className="font-normal text-xs">
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </BaseTable.Head>
                   );
                 })}
               </BaseTable.Row>
             ))}
           </BaseTable.Header>
-
           <BaseTable.Body className="relative">
             {isLoading ? (
               props.columns.map((_, index) => {
@@ -54,24 +68,29 @@ export default function Table<T, D>({
                 );
               })
             ) : table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map(row => (
-                <BaseTable.Row
-                  key={row.id}
-                  className={`cursor-pointer ${isFetching && 'opacity-40 cursor-pointer select-none'}`}
-                >
-                  {row.getVisibleCells().map(({ id, column, row, getContext }) => {
-                    return (
-                      <BaseTable.Cell
-                        className="duration-1000 transition-all animate-accordion-down"
-                        onClick={e => column.columnDef.id !== 'actions' && onRowClick && onRowClick(row, e)}
-                        key={id}
-                      >
-                        {flexRender(column.columnDef.cell, getContext())}
-                      </BaseTable.Cell>
-                    );
-                  })}
-                </BaseTable.Row>
-              ))
+              isVirtual ? (
+                table.getRowModel().rows.map(row => (
+                  <BaseTable.Row
+                    key={row.id}
+                    className={cn('cursor-pointer', {
+                      'opacity-40 cursor-pointer select-none': isFetching,
+                    })}
+                  >
+                    {row.getVisibleCells().map(cell => {
+                      return (
+                        <BaseTable.Cell
+                          onClick={e => cell.column.columnDef.id !== 'actions' && onRowClick && onRowClick(row, e)}
+                          key={cell.id}
+                        >
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </BaseTable.Cell>
+                      );
+                    })}
+                  </BaseTable.Row>
+                ))
+              ) : (
+                <TableVirtualize table={table} parentRef={parentRef} onRowClick={onRowClick} />
+              )
             ) : (
               <BaseTable.Row>
                 <BaseTable.Cell colSpan={props.columns.length} className="h-24 text-center">

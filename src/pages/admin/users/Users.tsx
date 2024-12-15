@@ -19,6 +19,14 @@ import { Table } from '@/components/common/table/primary';
 import { ROW_PER_PAGE } from '@/constants/config';
 import DirectRoute from '@/components/direct';
 
+const makeData = (array: any[]) => {
+  let i;
+  let target = [];
+  for (i = 0; i < 100; i++) {
+    target.push(...array);
+  }
+  return target;
+};
 export default function User() {
   const [query, setQuery] = useQueryParams({
     q: withDefault(StringParam, ''),
@@ -103,7 +111,6 @@ export default function User() {
       ),
     },
   ]);
-
   return (
     <>
       <DirectRoute nav="Quản lý nhân viên" subnav="Danh sách thông tin nhân viên" />
@@ -130,7 +137,7 @@ export default function User() {
           paginationFunction={page => setQuery({ page })}
           rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
           columns={columns}
-          data={users?.data || []}
+          data={makeData(users?.data || [])}
           isFetching={isFetching || isUpdateLoading}
           isLoading={isLoading}
         />
