@@ -12,6 +12,7 @@ export const TableVirtualize = <T extends unknown>({ table, parentRef, onRowClic
     count: table.getRowModel().rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 34,
+    overscan: 5,
     debug: true,
   });
   return virtualizer.getVirtualItems().map((virtualRow, index) => {
