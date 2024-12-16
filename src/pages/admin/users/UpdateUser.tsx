@@ -23,12 +23,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useGetDepartmentsQuery } from '@/redux/api/department';
 import { uploadFile } from '@/services/uploadFile.service';
 import { formatDepartmentSelect, formatRoleSelect, resolveErrorResponse } from '@/helpers/utils';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
 import { GENDER, STATUS } from '@/constants/define';
 import dayjs from 'dayjs';
-import Formik, { FormikHandler } from '@/lib/Formik';
+import { Formik, FormikHandler } from '@/lib/form';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 
 const updateUserSchema = yup.object({
   email: yup.string().email().trim().required(),

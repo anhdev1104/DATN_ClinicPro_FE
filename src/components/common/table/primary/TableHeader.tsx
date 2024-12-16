@@ -1,16 +1,16 @@
 import { Column } from '@tanstack/react-table';
-import BaseIcon from '../base/BaseIcon';
-import BaseButton from '../base/button';
 import { Box, Menu } from '@mantine/core';
 import { IconArrowDown, IconArrowsUpDown, IconArrowUp, IconEyeOff } from '@tabler/icons-react';
+import BaseButton from '@/components/base/button';
+import BaseIcon from '@/components/base/BaseIcon';
 
 interface TableHeaderProps<TData, TValue> {
   column: Column<TData, TValue>;
-  title: any;
+  title?: string;
 }
 
 const TableHeader = <T, D>({ column, title }: TableHeaderProps<T, D>) => {
-  if (!column.getCanSort()) {
+  if (!column.getCanSort() && !column.getCanHide()) {
     return (
       <Box component="div" color="gray" className="text-gray-400 text-xs">
         {title}
@@ -39,18 +39,22 @@ const TableHeader = <T, D>({ column, title }: TableHeaderProps<T, D>) => {
         </BaseButton>
       </Menu.Target>
       <Menu.Dropdown className="font-normal">
-        <Menu.Item
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          leftSection={
-            column.getIsSorted() === 'asc' ? <BaseIcon icon={IconArrowUp} /> : <BaseIcon icon={IconArrowDown} />
-          }
-        >
-          {column.getIsSorted() || 'Sort'}
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item onClick={() => column.toggleVisibility(false)} leftSection={<BaseIcon icon={IconEyeOff} />}>
-          Hide
-        </Menu.Item>
+        {column.getCanSort() && (
+          <Menu.Item
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            leftSection={
+              column.getIsSorted() === 'asc' ? <BaseIcon icon={IconArrowUp} /> : <BaseIcon icon={IconArrowDown} />
+            }
+          >
+            {column.getIsSorted() || 'Sort'}
+          </Menu.Item>
+        )}
+        <Menu.Divider hidden={!column.getCanSort()} />
+        {column.getCanHide() && (
+          <Menu.Item onClick={() => column.toggleVisibility(false)} leftSection={<BaseIcon icon={IconEyeOff} />}>
+            Hide
+          </Menu.Item>
+        )}
       </Menu.Dropdown>
     </Menu>
   );

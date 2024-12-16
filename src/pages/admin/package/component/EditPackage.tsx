@@ -159,7 +159,7 @@ const EditPackage = () => {
               <MessageForm error={errors.category_id?.message} />
             </div>
             <div className="min-w-[380px] w-[45%]">
-              <Label htmlFor="specialty_id" className="text-sm font-medium mb-1">
+              <Label htmlFor="" className="text-sm font-medium mb-1">
                 Chuyên khoa <span className="text-red-500">*</span>
               </Label>
               <Select placeholder="Chọn chuyên khoa" name="specialty_id" control={control} options={Specialty} />

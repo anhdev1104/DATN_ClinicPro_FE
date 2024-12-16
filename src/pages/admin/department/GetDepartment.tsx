@@ -3,8 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, Paper, Stack } from '@mantine/core';
 import { Text } from '@mantine/core';
 import BaseIcon from '@/components/base/BaseIcon';
-import Table from '@/components/table/Table';
-import ActionWithRow from '@/components/table/TableAction';
 import { IconPlus, IconTrash, IconUsersGroup } from '@tabler/icons-react';
 import { useColumn } from '@/hooks/useColumn';
 import { DeleteDepartment } from './components/DeleteDepartment';
@@ -13,7 +11,7 @@ import { Header } from './components/Header';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import toast from 'react-hot-toast';
 import { formatUserSelect, resolveErrorResponse } from '@/helpers/utils';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
 import { Manager } from './components/Manager';
 import { Mock } from '@/components/base/Link/Mock';
 import { Divider } from '@mui/material';
@@ -24,8 +22,10 @@ import BaseInput from '@/components/base/input';
 import { useGetUsersQuery } from '@/redux/api/users';
 import { useMemo } from 'react';
 import { renderOption } from '@/helpers/format';
-import Formik from '@/lib/Formik';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
+import { Formik } from '@/lib/form';
+import { ActionWithRow } from '@/components/common/table';
+import { Table } from '@/components/common/table/primary';
 const schema = yup.object({
   users: yup.array().of(yup.string()).default([]),
 });
@@ -38,53 +38,68 @@ export default function GetDepartment() {
   const listUsers = useMemo(() => formatUserSelect(users?.data || []), [users]);
   const columns = useColumn<UserProps>([
     {
-      key: 'fullname',
-      label: 'Nhân Viên',
-      cell: ({ value, original }) => {
-        return <UserInfo avatar={original.avatar} email={original.email} fullname={value} />;
+      accessorKey: 'fullname',
+      header: 'Nhân Viên',
+      cell: ({ getValue, row }) => {
+        return <UserInfo avatar={row.original.avatar} email={row.original.email} fullname={getValue()} />;
+      },
+      meta: {
+        label: 'Nhân Viên',
       },
     },
     {
-      key: 'email',
-      label: 'Email',
-      cell: ({ value }) => (
+      accessorKey: 'email',
+      header: 'Email',
+      cell: ({ getValue }) => (
         <Text fz="xs" c="dimmed">
-          {value}
+          {getValue()}
         </Text>
       ),
-      sortable: false,
+      meta: {
+        label: 'Email',
+      },
+      enableSorting: false,
     },
     {
-      key: 'status',
-      label: 'Trạng Thái',
-      cell: ({ value }) => <Badge size="xs">{value}</Badge>,
-      sortable: false,
+      accessorKey: 'status',
+      header: 'Trạng Thái',
+      cell: ({ getValue }) => <Badge size="xs">{getValue()}</Badge>,
+      meta: {
+        label: 'Trạng Thái',
+      },
+      enableSorting: false,
     },
     {
-      key: 'gender',
-      label: 'Giới tính',
-      cell: ({ value }) => (
+      accessorKey: 'gender',
+      header: 'Giới tính',
+      cell: ({ getValue }) => (
         <Badge color="grape" size="xs">
-          {value}
+          {getValue()}
         </Badge>
       ),
-      sortable: false,
+      meta: {
+        label: 'Giới tính',
+      },
+      enableSorting: false,
     },
     {
-      key: 'phone_number',
-      label: 'Số Điện Thoại',
-      sortable: false,
+      accessorKey: 'phone_number',
+      header: 'Số Điện Thoại',
+      meta: {
+        label: 'Số Điện Thoại',
+      },
+      enableSorting: false,
     },
     {
       id: 'actions',
-      cell: ({ row, original }) => {
+      cell: ({ row }) => {
         return (
           <ActionWithRow
             data={[
               {
                 label: 'Xóa',
                 onClick: async () => {
-                  const result = await handleUpdate({ id: id!, users_delete: [original.id] });
+                  const result = await handleUpdate({ id: id!, users_delete: [row.original.id] });
                   if (result.data) {
                     toast.success(result.data.message);
                     return;
@@ -117,7 +132,6 @@ export default function GetDepartment() {
           <div id="table-user" className="space-y-2">
             <Mock href="#table-user" name="Nhân viên phòng ban" />
             <Table
-              highlightOnHover
               toolbar={
                 <BaseButton.Icon
                   onClick={() => {
@@ -162,10 +176,11 @@ export default function GetDepartment() {
                   <BaseIcon icon={IconPlus} />
                 </BaseButton.Icon>
               }
-              onRowClick={value => navigate(`/users/${value.id}`)}
+              onRowClick={row => navigate(`/users/${row.original.id}`)}
               columns={columns}
               data={department?.users || []}
               isFetching={isFetching}
+              tableProps={{ highlightOnHover: true }}
             />
           </div>
           <div className="flex justify-end items-center space-x-4 my-4">

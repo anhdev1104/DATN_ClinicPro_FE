@@ -14,7 +14,7 @@ interface ImageItem {
 interface UploadFilesProps {
   initData?: ImageItem[];
   setInitData?: Dispatch<SetStateAction<FileMidecal[] | []>>;
-  handleRemoveFilesOld?: (url: string, id: string) => void;
+  handleRemoveFilesOld?: (id: string) => void;
   handleChangeDescriptionOld?: (url: string, newDescription: string) => void;
 }
 
@@ -123,11 +123,11 @@ const UploadFiles = forwardRef((_props: UploadFilesProps, ref) => {
             <textarea
               placeholder="Mô tả ảnh..."
               value={file.description || ''}
-              onChange={e => handleChangeDescriptionOld?.(file.file, e.target.value)}
+              onChange={e => handleChangeDescriptionOld?.(file.id, e.target.value)}
               className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 h-full"
             />
             <button
-              onClick={() => handleRemoveFilesOld?.(file.file, file?.id)}
+              onClick={() => handleRemoveFilesOld?.(file?.id)}
               type="button"
               className="absolute top-0 right-0 text-white bg-black size-[20px] flex justify-center items-center rounded-full shadow p-1 hover:bg-red-100"
             >

@@ -6,6 +6,7 @@ yup.setLocale({
     required: 'Trường này là bắt buộc !',
     oneOf: ({ values }) => `Giá trị phải bắt buộc trong nhưng giá trị sau: ${values}`,
     notNull: () => 'Giá trị này không thể null',
+    notType: () => 'Giá trị không hợp lệ',
   },
   string: {
     min: ({ min }) => `Trường này phải tối thiểu ${min} ký tự.`,
@@ -18,7 +19,7 @@ yup.addMethod(yup.string, 'omit', function (compare: Array<null | undefined | st
   return this.transform(value => (compare.includes(value) ? undefined : value));
 });
 
-yup.addMethod(yup.object, 'safeParse', function (value): any {
+yup.addMethod<yup.AnyObjectSchema>(yup.object, 'safeParse', function (value) {
   return this.cast(value, { stripUnknown: true, assert: false });
 });
 yup.addMethod(yup.string, 'email', function (message) {

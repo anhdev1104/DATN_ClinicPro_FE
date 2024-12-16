@@ -33,8 +33,8 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isSelected = event.target.checked;
-    medications.forEach(med => {
-      flatMedications.set(med.medication_id, med as IMedication);
+    medications.forEach((med: IMedication) => {
+      flatMedications.set(med.medication_id, med);
     });
     flatMedications.delete(undefined);
     const isCheckedArr = Array.from(flatMedications.values());
@@ -57,8 +57,8 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
     }
   };
 
-  const indexMedication = medications.findIndex(item => item?.medication_id === id);
-  const idMedication = medications.find(item => item?.medication_id === id);
+  const indexMedication = medications.findIndex((item: { medication_id: string }) => item?.medication_id === id);
+  const idMedication = medications.find((item: { medication_id: string }) => item?.medication_id === id);
   const isChecked = medications.some((med: { medication_id?: string }) => med.medication_id === id);
 
   return (
@@ -89,7 +89,10 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
                     error.quantity
                       ? (field.value = '' as any)
                       : !!idMedication
-                        ? medications.find(item => item?.medication_id === id && item.quantity)?.quantity
+                        ? medications.find(
+                            (item: { medication_id: string; quantity: any }) =>
+                              item?.medication_id === id && item.quantity,
+                          )?.quantity
                         : ''
                   }
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -132,7 +135,10 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
                     error.duration
                       ? (field.value = '' as any)
                       : !!idMedication
-                        ? medications.find(item => item?.medication_id === id && item.duration)?.duration
+                        ? medications.find(
+                            (item: { medication_id: string; duration: any }) =>
+                              item?.medication_id === id && item.duration,
+                          )?.duration
                         : ''
                   }
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -173,7 +179,10 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
                 <CustomeInput
                   value={
                     !!idMedication
-                      ? medications.find(item => item?.medication_id === id && item.instructions)?.instructions
+                      ? medications.find(
+                          (item: { medication_id: string; instructions: any }) =>
+                            item?.medication_id === id && item.instructions,
+                        )?.instructions
                       : ''
                   }
                   onChange={field.onChange}

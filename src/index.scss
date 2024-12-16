@@ -100,10 +100,12 @@
     transform: translateX(-50%);
     z-index: 9999999;
   }
-
   .scroll-select::-webkit-scrollbar {
     width: 12px;
     height: 12px;
+  }
+  .scroll-select-hidden::-webkit-scrollbar {
+    display: none !important;
   }
   .scroll-select::-webkit-scrollbar-track {
     background: #f1f1f1;
@@ -116,15 +118,28 @@
     cursor: pointer;
   }
 
+  .scroll-sidebar::-webkit-scrollbar-thumb {
+    background-color: #d8e5fc;
+    border-radius: 10px;
+    border: 3px solid #f1f1f1;
+    cursor: pointer;
+  }
+  .scroll-sidebar::-webkit-scrollbar {
+    width: 10px;
+    height: 5px;
+  }
   .scroll-select::-webkit-scrollbar-thumb:hover {
     background-color: #999;
+  }
+  .scroll-sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: #c7dcff;
+  }
+  .scroll-select::-webkit-scrollbar-corner {
+    background: #f1f1f1;
   }
   slick-dots li button:before {
     font-family: 'slick';
     font-size: 20px;
-  }
-  .scroll-select::-webkit-scrollbar-corner {
-    background: #f1f1f1;
   }
   .loader {
     width: 65px;

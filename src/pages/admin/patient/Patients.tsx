@@ -110,7 +110,7 @@ const Patients = () => {
                             to={`/patient/${item.id}`}
                             className="flex justify-center w-1/2 rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
                           >
-                            <VisibilityIcon className="text-green-500" />
+                            <VisibilityIcon className="text-blue-500" />
                           </Link>
                         </div>
                       </td>

@@ -2,14 +2,14 @@ import BaseButton from '@/components/base/button';
 import BaseInput from '@/components/base/input';
 import { useGetDepartmentQuery, useUpdateDepartmentMutation } from '@/redux/api/department';
 import { Flex, Stack } from '@mantine/core';
-import yup from '@/helpers/locate';
+import yup from '@/lib/utils/yup';
 import { renderOption } from '@/helpers/format';
-import Formik, { FormikHandler } from '@/lib/Formik';
+import { Formik, FormikHandler } from '@/lib/form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { filterOutManagers, formatUserSelect, resolveErrorResponse } from '@/helpers/utils';
 import { useGetUsersQuery } from '@/redux/api/users';
 import toast from 'react-hot-toast';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
 import { useMemo } from 'react';
 import NotFoundPage from '@/pages/client/404/NotFoundPage';
 import { IconBuilding, IconUsers, IconUsersGroup } from '@tabler/icons-react';
@@ -17,7 +17,7 @@ import BaseIcon from '@/components/base/BaseIcon';
 
 const updateDepartmentSchema = yup.object({
   name: yup.string().trim().omit([null]),
-  description: yup.string().omit([null]),
+  description: yup.string(),
   manager_id: yup.string().nullable(),
   users: yup.array().of(yup.string()),
   users_delete: yup.array().of(yup.string()).default([]),

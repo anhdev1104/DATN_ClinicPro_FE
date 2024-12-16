@@ -1,10 +1,10 @@
 import { Menu, MenuItemProps } from '@mantine/core';
-import BaseButton from '../base/button';
-import BaseIcon from '../base/BaseIcon';
 import { Row } from '@tanstack/react-table';
 
 import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 import { IconDots } from '@tabler/icons-react';
+import BaseButton from '@/components/base/button';
+import BaseIcon from '@/components/base/BaseIcon';
 
 interface ActionWithRowProps<T> {
   row: Row<T>;
@@ -16,7 +16,7 @@ interface ActionWithRowProps<T> {
       MenuItemProps & { label: string }
   >;
 }
-const ActionWithRow = <T,>({ data }: ActionWithRowProps<T>) => {
+export default function TableAction<T>({ data }: ActionWithRowProps<T>) {
   return (
     <Menu
       radius="md"
@@ -25,7 +25,6 @@ const ActionWithRow = <T,>({ data }: ActionWithRowProps<T>) => {
         item: 'min-w-[100px] flex justify-between items-center',
         itemLabel: 'capitalize',
       }}
-      withinPortal={false}
       transitionProps={{ transition: 'pop-top-right' }}
       position="bottom-end"
     >
@@ -47,5 +46,4 @@ const ActionWithRow = <T,>({ data }: ActionWithRowProps<T>) => {
       </Menu.Dropdown>
     </Menu>
   );
-};
-export default ActionWithRow;
+}

@@ -1,4 +1,4 @@
-import { ChangeCircleIcon, List } from '@/components/icons';
+import { List, PersonRemoveIcon } from '@/components/icons';
 import Input from '@/components/input';
 import Field from '@/components/field';
 import Label from '@/components/label';
@@ -12,13 +12,12 @@ import { IMedications } from '@/types/prescription.type';
 import convertToOptions from '@/helpers/convertToOptions';
 import DirectRoute from '@/components/direct';
 import { toast } from 'react-toastify';
-import FormPatient from '../../medical_histories/components/FormPatient';
-import { IPatientSelect } from '../../medical_histories/components/AddMedicalHistories';
 import MessageForm from '@/components/message';
 import renderMessageError from '@/helpers/renderMessageErrror';
 import { Stack } from '@mui/material';
 import { ModalMedicalHistories, ModalMedication } from '@/components/modal';
 import useToggle from '@/hooks/useToggle';
+import { MedicalRecord } from '@/types/medicalHistories.type';
 
 interface AddPrescripton {
   navigate: () => void;
@@ -28,8 +27,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
   const [medicationCategory, setMedicationCategory] = useState([]);
   const [medications, setMedications] = useState<IMedications[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectPatient, setSelectPatient] = useState(false);
-  const [selectedPatientId, setSelectedPatientId] = useState<IPatientSelect | null>(null);
+
   const [loading, setLoading] = useState<boolean>(false);
   const { show: isMedicalHistories, handleToggle } = useToggle();
 
@@ -41,6 +39,8 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
       handleSubmit,
       setValue,
     },
+    medicalRecord,
+    setMedicalRecord,
   } = usePrescriptionContextForm();
 
   const selectedCategoryId = useWatch({
@@ -79,15 +79,17 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
       name: data.name,
       description: data.description,
       medications: data.medications,
-      medical_history_id: '',
+      medical_histories_id: data.medical_histories_id,
     };
 
     const res = await createPrescription(newPrescription);
     if (res.success === false) {
       return toast.error(renderMessageError(res.errors));
     }
+    handleResetForm();
+    setMedicalRecord({} as MedicalRecord);
     toast.success('Tạo đơn thuốc thành công !');
-    // handleResetForm();
+    navigate();
   };
 
   const handleResetForm = () => {
@@ -96,17 +98,10 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
       user_id: '',
       description: '',
       name: '',
-      medications: [
-        {
-          instructions: '',
-          quantity: undefined,
-          duration: undefined,
-          medication_id: '',
-        },
-      ],
+      medications: undefined,
       isCategory: '',
+      medical_histories_id: undefined,
     });
-    setSelectedPatientId(null);
   };
 
   const handleCloseDialog = () => {
@@ -115,19 +110,11 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
     setValue('medications', undefined);
   };
 
-  const handleSelectedPatientId = (id: string | null, name: string | null) => {
-    setSelectedPatientId({
-      id,
-      name,
-    });
+  const removeTargetMedicalRecord = () => {
+    setMedicalRecord({} as MedicalRecord);
+    setValue('medical_histories_id', '');
+    setValue('patient_id', '');
   };
-
-  useEffect(() => {
-    if (selectedPatientId) {
-      selectedPatientId.id && setValue('patient_id', selectedPatientId.id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedPatientId]);
 
   return (
     <>
@@ -156,34 +143,39 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                   />
                   <MessageForm error={errors.name?.message} />
                 </Field>
-                <div className="min-w-[400px] w-1/2 relative">
-                  <Label>Tên bệnh nhân</Label>
-                  {selectedPatientId?.name ? (
+                <div className="min-w-[400px] relative">
+                  <Label>Bệnh án</Label>
+                  {medicalRecord.id ? (
                     <>
-                      <div
-                        className="absolute right-0 -top-1 cursor-pointer text-primaryAdmin"
-                        onClick={() => setSelectPatient(true)}
-                        title="Thay đổi bệnh nhân"
+                      <Button
+                        className="text-[13px] h-[42px] w-full bg-[#F3F4F7] cursor-default"
+                        type="button"
+                        styled="normal"
                       >
-                        <ChangeCircleIcon className="font-bold" />
-                      </div>
-                      <div className="text-black h-[42px] w-full bg-primaryAdmin/5 border flex justify-center items-center rounded-md">
-                        {selectedPatientId.name}
+                        Bệnh nhân <span className="ml-1 text-primaryAdmin/70">{medicalRecord.patient.fullname}</span>
+                      </Button>
+                      <div
+                        className="absolute top-0 right-0 cursor-pointer text-red-500 transition-all hover:text-red-300"
+                        onClick={removeTargetMedicalRecord}
+                      >
+                        <PersonRemoveIcon className="text-xl" />
                       </div>
                     </>
                   ) : (
                     <Button
-                      onClick={() => setSelectPatient(true)}
                       className="text-black h-[42px] w-full bg-[#F3F4F7]"
                       type="button"
                       styled="normal"
+                      onClick={handleToggle}
                     >
-                      Chọn bệnh nhân
+                      Chọn bệnh án
                     </Button>
                   )}
-                  {!selectedPatientId && <MessageForm error={errors.patient_id?.message} />}
+                  {Object.keys(medicalRecord).length <= 0 && (
+                    <MessageForm error={errors.medical_histories_id?.message} />
+                  )}
                 </div>
-                <div className="min-w-[400px] w-1/2">
+                <div className="min-w-[400px]">
                   <Label htmlFor="categoryId">Danh mục thuốc</Label>
                   <Select
                     placeholder="Đơn thuốc chỉ định"
@@ -195,20 +187,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                   <MessageForm error={errors.isCategory?.message} />
                 </div>
               </div>
-
               <Stack direction="row" gap={'20px'}>
-                <div className="w-2/5">
-                  <Label>Bệnh án</Label>
-                  <Button
-                    className="text-black h-[42px] w-full bg-[#F3F4F7]"
-                    type="button"
-                    styled="normal"
-                    onClick={handleToggle}
-                  >
-                    Chọn bệnh án
-                  </Button>
-                  <MessageForm error={errors.medical_history_id?.message} />
-                </div>
                 <div className="mb-7 flex-1">
                   <Label htmlFor="description">Lời dặn</Label>
                   <Controller
@@ -226,6 +205,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
                     }}
                   />
                 </div>
+                <div></div>
               </Stack>
 
               <div className="flex items-center gap-7 w-1/4 justify-end ml-auto pt-3">
@@ -255,14 +235,7 @@ const AddPrescriptions = ({ navigate }: AddPrescripton) => {
         loading={loading}
         setIsDialogOpen={setIsDialogOpen}
       />
-      {selectPatient && (
-        <FormPatient
-          onSelectPatient={handleSelectedPatientId}
-          isDialogOpen={selectPatient}
-          handleCloseDialog={() => setSelectPatient(false)}
-          selectedPatientId={selectedPatientId?.id}
-        />
-      )}
+
       <ModalMedicalHistories open={isMedicalHistories} onClose={handleToggle} />
     </>
   );

@@ -1,5 +1,5 @@
 import BaseButton from '@/components/base/button';
-import { AxiosBaseQueryError } from '@/helpers/axiosBaseQuery';
+import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
 import { resolveErrorResponse } from '@/helpers/utils';
 import { useDeleteDepartmentMutation } from '@/redux/api/department';
 import { Stack, Text } from '@mantine/core';

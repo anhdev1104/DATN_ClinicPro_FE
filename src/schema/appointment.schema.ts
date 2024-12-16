@@ -1,3 +1,4 @@
+import { emailRegex } from '@/constants/regex';
 import * as yup from 'yup';
 
 export const appointmentSchema = yup.object({
@@ -6,7 +7,7 @@ export const appointmentSchema = yup.object({
     .string()
     .trim()
     .required('Vui lòng điền email của bạn !')
-    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'Email không dúng định dạng.' }),
+    .matches(emailRegex, { message: 'Email không dúng định dạng.' }),
   phone_number: yup
     .string()
     .trim()

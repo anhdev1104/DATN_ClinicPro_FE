@@ -4,3 +4,4 @@ export { default as ModalAppointment } from './ModalAppointment';
 export { default as ModalUploadFile } from './ModalUploadFile';
 export { default as ModalMedication } from './ModalMedication';
 export { default as ModalMedicalHistories } from './ModalMedicalHistories';
+export { default as ModalPrescription } from './ModalPrescription';

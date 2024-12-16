@@ -1,125 +1,110 @@
-import { Avatar, Pagination, Text } from '@mantine/core';
+import { Avatar, Text } from '@mantine/core';
 import { useGetDepartmentsQuery } from '@/redux/api/department';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { DepartmentProps, ManagerProps } from '@/types/department.type';
-import Table from '@/components/table/Table';
-import ActionWithRow from '@/components/table/TableAction';
 import BaseButton from '@/components/base/button';
 import BaseIcon from '@/components/base/BaseIcon';
-import { useDebouncedCallback } from '@mantine/hooks';
 import NewDepartment from './components/CreateDepartment';
 import { IconPlus } from '@tabler/icons-react';
-import { useColumn } from '@/hooks/useColumn';
-import { useState } from 'react';
-import BaseInput from '@/components/base/input';
 import { UserInfo } from '@/components/user-info/UserInfo';
 import dayjs from 'dayjs';
 import { modals } from '@mantine/modals';
+import { useColumn } from '@/hooks/useColumn';
+import { NumberParam, StringParam, useQueryParams, withDefault } from 'use-query-params';
+import { ActionWithRow } from '@/components/common/table';
+import { Table } from '@/components/common/table/primary';
+import { ROW_PER_PAGE } from '@/constants/config';
+import DirectRoute from '@/components/direct';
 
 export default function Department() {
   const navigate = useNavigate();
-  const [params, setParams] = useSearchParams();
-  const [limit] = useState(5);
-  const { data: departments, isFetching } = useGetDepartmentsQuery({
-    q: params.get('q')!,
-    limit: params.get('limit') || limit.toString(),
-    page: params.get('page')!,
+  const [query, setQuery] = useQueryParams({
+    limit: withDefault(NumberParam, ROW_PER_PAGE),
+    q: withDefault(StringParam, ''),
+    page: withDefault(NumberParam, 1),
   });
-  const handleSearch = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value) params.set('q', value);
-    else params.delete('q');
-    params.set('page', '1');
-    setParams(params.toString());
-  }, 500);
+  const { data: departments, isFetching, isLoading } = useGetDepartmentsQuery(query as QueryParams);
+
   const columns = useColumn<DepartmentProps>([
     {
-      key: 'name',
-      label: 'Tên Phòng Ban',
-      cell: ({ value }) => <div className="capitalize">{value}</div>,
+      accessorKey: 'name',
+      header: 'Tên Phòng Ban',
+      meta: {
+        label: 'Tên Phòng Ban',
+      },
     },
     {
-      key: 'manager',
-      label: 'Quản Lý',
-      cell: ({ value }: { value: ManagerProps }) => {
+      accessorKey: 'manager',
+      header: 'Quản Lý',
+      cell: ({ getValue }) => {
+        const value = getValue() as ManagerProps;
         return <UserInfo avatar={value?.avatar} email={value?.email} fullname={value?.fullname} />;
       },
-      sortable: false,
+      meta: {
+        label: 'Quản Lý',
+      },
+      enableSorting: false,
     },
     {
-      key: 'users_count',
-      label: 'Nhân viên',
-      cell: ({ value, original }) => (
-        <>
-          <Avatar.Group>
-            {original.users?.slice(0, 3).map(user => <Avatar key={user.id} src={user.avatar} />)}
-            <Avatar>{value}</Avatar>
-          </Avatar.Group>
-        </>
+      accessorKey: 'users_count',
+      header: 'Nhân viên',
+      cell: ({ getValue, row }) => (
+        <Avatar.Group>
+          {row.original.users?.slice(0, 3).map(user => <Avatar key={user.id} src={user.avatar} />)}
+          <Avatar>{getValue()}</Avatar>
+        </Avatar.Group>
       ),
-      sortable: false,
+      meta: {
+        label: 'Nhân viên',
+      },
+      enableSorting: false,
     },
     {
-      key: 'created_at',
-      label: 'Ngày tạo',
-      cell: ({ value }) => {
-        const date = dayjs(value).format('DD-MM-YYYY');
+      accessorKey: 'created_at',
+      header: 'Ngày tạo',
+      cell: ({ getValue }) => {
+        const date = dayjs(getValue()).format('DD-MM-YYYY');
         return (
-          <>
-            <Text size="sm" fw={400} c="dimmed">
-              {date}
-            </Text>
-          </>
+          <Text size="sm" fw={400} c="dimmed">
+            {date}
+          </Text>
         );
+      },
+      meta: {
+        label: 'Ngày tạo',
       },
     },
     {
       id: 'actions',
-      cell: ({ row, original }) => (
+      cell: ({ row }) => (
         <ActionWithRow
           data={[
             {
               label: 'Xem chi tiết',
-              onClick: () => navigate(`/departments/${original.id}`),
+              onClick: () => navigate(`/departments/${row.original.id}`),
             },
           ]}
           row={row}
         />
       ),
-      placeholder: true,
     },
   ]);
   return (
     <>
+      <DirectRoute nav="Quản lý phòng ban" subnav="Danh sách phòng ban" />
+
       <div className="bg-white rounded-3xl w-full shadow-xl p-4">
         <Table
-          className="ml-2"
-          highlightOnHover
           manualFiltering
-          filterItem={
-            <BaseInput
-              defaultValue={params.get('q') ?? ''}
-              onChange={handleSearch}
-              size="xs"
-              radius="md"
-              placeholder="tìm kiếm..."
-            />
-          }
-          manualPagination
-          pagination={
-            <Pagination
-              total={Number(departments?.total_pages) || 1}
-              onChange={value => {
-                params.set('page', value.toString());
-                setParams(params.toString());
-              }}
-              value={Number(params.get('page')) || 1}
-              radius="md"
-              className="w-full flex justify-center py-2"
-            />
-          }
-          onRowClick={data => navigate(`/departments/${data.id}`)}
+          filterFunction={e => setQuery({ q: e.target.value, page: 1 })}
+          manualPagination={{
+            pageCount: departments?.total_pages,
+          }}
+          paginationFunction={page => setQuery({ page })}
+          rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
+          onRowClick={row => navigate(`/departments/${row.original.id}`)}
           isFetching={isFetching}
+          isLoading={isLoading}
           data={departments?.data || []}
           columns={columns}
           toolbar={
@@ -136,6 +121,9 @@ export default function Department() {
               <BaseIcon icon={IconPlus} size="md" />
             </BaseButton.Icon>
           }
+          tableProps={{
+            highlightOnHover: true,
+          }}
         />
       </div>
     </>

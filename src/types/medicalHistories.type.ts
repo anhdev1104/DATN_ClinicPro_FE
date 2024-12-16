@@ -26,6 +26,7 @@ interface Patient {
 
 export interface FileMidecal {
   file: string;
+  id?: string | null;
   description: string;
 }
 
@@ -34,6 +35,7 @@ export interface NewMedical {
   description: string;
   patient_id: string;
   treatment: string;
+  indication: string;
   user_id: string;
   files: FileMidecal[];
 }
@@ -43,8 +45,9 @@ export interface MedicalRecord {
   description: string;
   diagnosis: string;
   treatment: string;
-  created_at: string;
-  updated_at: string;
+  indication: string;
+  created_at?: string;
+  updated_at?: string;
   files: MedicalFile[];
   doctor: Doctor;
   patient: Patient;

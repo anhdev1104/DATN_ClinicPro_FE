@@ -6,6 +6,8 @@ import MainLayout from '@/layouts/MainLayout';
 import ProtectedRoute from '@/components/auth';
 const Appointment = React.lazy(() => import('@/pages/admin/appointments/Appointment'));
 const AppointmentDetail = React.lazy(() => import('@/pages/admin/appointments/Compontents/AppointmentDetail'));
+
+const ServicesPage = React.lazy(() => import('@/pages/admin/services/Services'));
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
 const Department = React.lazy(() => import('@/pages/admin/department/Department'));
 const GetDepartment = React.lazy(() => import('@/pages/admin/department/GetDepartment'));
@@ -174,6 +176,11 @@ const adminRouter: IRouter[] = [
     path: '/users/:userId/edit',
     element: <UpdateUser />,
     title: 'Danh Sách Người Dùng',
+  },
+  {
+    path: '/services',
+    element: <ServicesPage />,
+    title: 'Dịch Vụ',
   },
   {
     path: '/specialties',

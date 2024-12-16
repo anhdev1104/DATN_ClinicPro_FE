@@ -1,5 +1,4 @@
 import {
-  ChevronRightIcon,
   GroupIcon,
   LocalHospitalIcon,
   SpaceDashboardIcon,
@@ -10,6 +9,7 @@ import {
   SpecialtiesIcon,
   CalendarMonthIcon,
   Patient,
+  MedicalServicesIcon,
 } from '@/components/icons';
 import { cn } from '@/helpers/utils';
 import { useEffect, useState } from 'react';
@@ -68,13 +68,6 @@ const dumpCategory = [
     pathActive: ['/prescriptions'],
   },
   {
-    id: 7,
-    categoryName: 'Gói khám',
-    path: '/packages',
-    icon: AssignmentIcon,
-    pathActive: ['/packages'],
-  },
-  {
     id: 8,
     categoryName: 'Phòng Ban',
     path: '/departments',
@@ -90,6 +83,20 @@ const dumpCategory = [
   },
   {
     id: 10,
+    categoryName: 'Dịch vụ',
+    path: '/services',
+    icon: MedicalServicesIcon,
+    pathActive: ['/services'],
+  },
+  {
+    id: 7,
+    categoryName: 'Gói khám',
+    path: '/packages',
+    icon: AssignmentIcon,
+    pathActive: ['/packages'],
+  },
+  {
+    id: 11,
     categoryName: 'Chuyên khoa',
     path: '/specialties',
     icon: SpecialtiesIcon,
@@ -123,49 +130,47 @@ const Sidebar = ({ show }: { show: boolean }) => {
   return (
     <aside
       className={cn(
-        'bg-white h-screen fixed left-0 bottom-0 top-24 rounded-r-[26px] hidden md:block transition-all duration-300 ease-linear',
+        'bg-white fixed left-0 bottom-0 top-24 rounded-se-[26px] hidden md:block transition-all duration-300 ease-linear pr-[0.5px] overflow-hidden',
         show ? '-translate-x-[250px]' : 'w-[250px]',
       )}
       style={{ boxShadow: '5px 20px 14px rgba(46, 55, 164, 0.05)' }}
     >
-      <div>
+      <div className="h-full overflow-auto scroll-select scroll-sidebar pb-5">
         <div className="text-base font-medium text-black px-5 py-[14px]">Main</div>
-        <div>
-          <ul className="p-0">
-            {categoryManagement.map(category => {
-              const isActive = tabActive === category.id || handleActiveTab(category.pathActive, pathname);
+        <ul className="p-0">
+          {categoryManagement.map(category => {
+            const isActive = tabActive === category.id || handleActiveTab(category.pathActive, pathname);
 
-              return (
-                <li
-                  className={cn(
-                    'px-5 py-2 flex items-center cursor-pointer border-l-[3px] border-transparent transition-all ease-linear group',
-                    isActive ? 'border-l-primaryAdmin bg-primaryAdmin/5' : ' hover:bg-primaryAdmin/5',
-                  )}
-                  key={category.id}
-                  onClick={() => handleCategory(category.id, category.path)}
-                >
-                  <div className="flex gap-3 flex-1 items-center">
-                    <span
+            return (
+              <li
+                className={cn(
+                  'px-5 py-2 flex items-center cursor-pointer border-l-[3px] border-transparent transition-all ease-linear group',
+                  isActive ? 'border-l-primaryAdmin bg-primaryAdmin/5' : ' hover:bg-primaryAdmin/5',
+                )}
+                key={category.id}
+                onClick={() => handleCategory(category.id, category.path)}
+              >
+                <div className="flex gap-3 flex-1 items-center">
+                  <span
+                    className={cn(
+                      'p-2 rounded-md transition-all ease-linear group-hover:bg-white',
+                      isActive ? '!bg-white' : 'bg-primaryAdmin/5',
+                    )}
+                  >
+                    <category.icon
                       className={cn(
-                        'p-2 rounded-md transition-all ease-linear group-hover:bg-white',
-                        isActive ? '!bg-white' : 'bg-primaryAdmin/5',
+                        'transition-all ease-linear text-gray-500 group-hover:text-primaryAdmin',
+                        isActive && '!text-primaryAdmin',
                       )}
-                    >
-                      <category.icon
-                        className={cn(
-                          'transition-all ease-linear text-gray-500 group-hover:text-primaryAdmin',
-                          isActive && '!text-primaryAdmin',
-                        )}
-                      />
-                    </span>
-                    <span>{category.categoryName}</span>
-                  </div>
-                  <ChevronRightIcon fontSize="small" />
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+                    />
+                  </span>
+                  <span>{category.categoryName}</span>
+                </div>
+                {/* <ChevronRightIcon fontSize="small" /> */}
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </aside>
   );
