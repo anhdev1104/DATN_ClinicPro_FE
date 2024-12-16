@@ -39,3 +39,7 @@ export { default as DeleteIcon } from '@mui/icons-material/Delete';
 export { default as FileDownloadIcon } from '@mui/icons-material/FileDownload';
 export { default as MedicalServicesIcon } from '@mui/icons-material/MedicalServices';
 export { default as SettingsIcon } from '@mui/icons-material/Settings';
+export { default as ChatIcon } from '@mui/icons-material/Chat';
+export { default as DescriptionIcon } from '@mui/icons-material/Description';
+export { default as RefreshIcon } from '@mui/icons-material/Refresh';
+export { default as SendIcon } from '@mui/icons-material/Send';
