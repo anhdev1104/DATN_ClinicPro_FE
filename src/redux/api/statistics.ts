@@ -16,6 +16,7 @@ export const statisticsApi = createApi({
         params,
       }),
       transformResponse: (result: { data: StatisticsPatient }) => result.data,
+      keepUnusedDataFor: 180,
     }),
     getStatisticAppointments: builder.query<StatisticsPatient, { year?: number } | void>({
       query: params => ({
@@ -23,6 +24,7 @@ export const statisticsApi = createApi({
         params,
       }),
       transformResponse: (result: { data: StatisticsPatient }) => result.data,
+      keepUnusedDataFor: 180,
     }),
     getStatisticAppointmentsByMonth: builder.query<StatisticAppointmentsByMonth[], number | void>({
       query: endPoint => {
@@ -40,6 +42,7 @@ export const statisticsApi = createApi({
         params,
       }),
       transformResponse: (result: { data: StatisticAppointmentsByStatus[] }) => result.data,
+      keepUnusedDataFor: 180,
     }),
   }),
 });

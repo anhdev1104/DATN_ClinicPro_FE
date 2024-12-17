@@ -137,7 +137,7 @@ export default function User() {
           paginationFunction={page => setQuery({ page })}
           rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
           columns={columns}
-          data={makeData(users?.data || [])}
+          data={users?.data || []}
           isFetching={isFetching || isUpdateLoading}
           isLoading={isLoading}
         />

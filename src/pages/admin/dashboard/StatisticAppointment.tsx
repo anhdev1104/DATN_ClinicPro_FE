@@ -27,7 +27,7 @@ export const StatisticAppointment = () => {
             <Text>Trạng Thái Lịch Hẹn</Text>
           </Group>
           <BarChart
-            data={convertToMonth(status || [])}
+            data={status || []}
             dataKey="status"
             series={[{ name: 'total', color: 'violet' }]}
             tooltipAnimationDuration={400}
