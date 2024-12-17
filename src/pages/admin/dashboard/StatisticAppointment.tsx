@@ -4,41 +4,23 @@ import {
   useGetStatisticAppointmentsByStatusQuery,
   useGetStatisticAppointmentsQuery,
 } from '@/redux/api/statistics';
-import { Card, Flex, Group, SimpleGrid, Space, Stack, Text } from '@mantine/core';
-import { YearPickerInput } from '@mantine/dates';
-import {
-  IconArrowsDownUp,
-  IconCalendar,
-  IconCalendarMonth,
-  IconCalendarStats,
-  IconCalendarWeek,
-  IconLayoutList,
-} from '@tabler/icons-react';
-import { DateParam, useQueryParam, withDefault } from 'use-query-params';
+import { Card, Group, SimpleGrid, Space, Stack, Text } from '@mantine/core';
+import { IconCalendar, IconCalendarMonth, IconCalendarWeek, IconLayoutList } from '@tabler/icons-react';
 import { BarChart } from '@mantine/charts';
 import { convertToMonth } from '@/helpers/utils';
 export const StatisticAppointment = () => {
-  const [year, setYear] = useQueryParam('year', withDefault(DateParam, new Date()));
   const { data: appointmentMonth } = useGetStatisticAppointmentsByMonthQuery();
   const { data: status } = useGetStatisticAppointmentsByStatusQuery();
   const { data: appointment } = useGetStatisticAppointmentsQuery();
   return (
     <>
       <Stack>
-        <Flex justify="space-between" align="center">
-          <Text>Thống Kê Lịch Hẹn</Text>
-          <YearPickerInput
-            defaultValue={year}
-            onChange={value => setYear(value)}
-            rightSection={<BaseIcon icon={IconArrowsDownUp} />}
-          />
-        </Flex>
-        <SimpleGrid cols={5}>
-          <ListAppointment title="Ngày" value={appointment?.day} icon={IconLayoutList} />
-          <ListAppointment title="Tuần" value={appointment?.week} icon={IconCalendarWeek} />
-          <ListAppointment title="Tháng" value={appointment?.month} icon={IconCalendarMonth} />
-          <ListAppointment title="Năm" value={appointment?.year} icon={IconCalendar} />
-          <ListAppointment title="Tổng Cộng" value={appointment?.total} icon={IconCalendarStats} />
+        <Text>Thống Kê Lịch Hẹn Năm {new Date().getFullYear()}</Text>
+        <SimpleGrid cols={4}>
+          <ListAppointment title="Hôm Nay" value={appointment?.day} icon={IconLayoutList} />
+          <ListAppointment title="Tuần Này" value={appointment?.week} icon={IconCalendarWeek} />
+          <ListAppointment title="Tháng Này" value={appointment?.month} icon={IconCalendarMonth} />
+          <ListAppointment title="Năm Này" value={appointment?.year} icon={IconCalendar} />
         </SimpleGrid>
         <Card withBorder>
           <Group justify="space-between" mb="md">
