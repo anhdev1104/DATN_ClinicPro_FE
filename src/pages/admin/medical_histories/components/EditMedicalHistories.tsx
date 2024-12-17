@@ -106,6 +106,7 @@ const EditMedicalHistories = () => {
   }, [id, reset]);
 
   const onSubmit = async (data: any) => {
+    console.log('Data to submit:', data);
     const imagesNew = uploadFilesRef?.current?.getFiles() || [];
     let newImages = [];
 
@@ -134,7 +135,7 @@ const EditMedicalHistories = () => {
         files: [...newImages],
         file_deletes: [...filesDelete],
       };
-
+      console.log('Final data being sent:', finalData);
       const idDoctor = id ? id : '';
       const response = await updateMedicalHistorie(idDoctor, finalData);
       toast.success(response.message, { position: 'top-right' });

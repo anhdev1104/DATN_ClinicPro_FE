@@ -1,3 +1,4 @@
+import { APPOINTMENT_STATUS } from './../constants/define';
 export interface IAppointment {
   fullname: string;
   email: string;
@@ -9,7 +10,7 @@ export interface IAppointment {
   appointment_date: string | null;
   specialty_id?: string;
 }
-import { STATUS, GENDER } from '@/constants/define';
+import { STATUS, GENDER, APPOINTMENT_STATUS } from '@/constants/define';
 export interface IListAppointment {
   id: string;
   appointment_date: string;
@@ -17,7 +18,7 @@ export interface IListAppointment {
   booking_type: 'online' | 'offline';
   appointment_type: string | null;
   total_amount: string | null;
-  status: 'pending' | 'confirmed' | 'canceled';
+  status: `${APPOINTMENT_STATUS}`;
   cancellation_reason: string | null;
   package_id: string;
   patient: {

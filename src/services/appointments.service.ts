@@ -26,7 +26,7 @@ export const deleteAppointment = async (id: string) => {
     return error;
   }
 };
-export const updateApointment = async (id: string, data: FormData) => {
+export const updateApointment = async (id: string, data: IAppointment) => {
   try {
     const response = await http.update(`/appointments/${id}`, data);
     return response;

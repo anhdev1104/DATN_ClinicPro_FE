@@ -1,108 +1,44 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { getAppointmentbyId, updateApointment } from '@/services/appointments.service';
-import { emailRegex } from '@/constants/regex';
-import { getPatient } from '@/services/patient.service';
+import { getPatientById } from '@/services/patient.service';
 import { getDoctors } from '@/services/user.service';
-import { getPackageBySpecialty } from '@/services/package.service';
-import { IPackage } from '@/types/package.type';
-import { getSpecialties } from '@/services/specialties.service';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { ISpecialties } from '@/types/specialties.type';
-import Input from '@/components/input';
 import Field from '@/components/field';
 import Label from '@/components/label';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { GENDER } from '@/constants/define';
 import { IListAppointment } from '@/types/appointment.type';
 import SelectUsers from '@/components/select';
-import { FormControl, FormControlLabel, Radio, RadioGroup, MenuItem, Select } from '@mui/material';
-import * as yup from 'yup';
-import MessageForm from '@/components/message';
+import { APPOINTMENT_STATUS, BOOKING_TYPE } from '@/constants/define';
+import yup from '@/lib/utils/yup';
 const schema = yup.object().shape({
-  fullname: yup.string().trim().required('Họ và tên là trường bắt buộc.'),
-  email: yup
-    .string()
-    .trim()
-    .required('Vui lòng điền email của bạn !')
-    .matches(emailRegex, { message: 'Email không dúng định dạng.' }),
-  phone_number: yup
-    .string()
-    .trim()
-    .required('Vui lòng nhập số điện thoại.')
-    .matches(/^\d+$/, 'Số điện thoại chỉ được chứa ký tự số.')
-    .length(10, 'Số điện thoại phải gồm 10 chữ số.'),
-  address: yup.string().trim().required('Vui lòng điền vào địa chỉ.'),
-  gender: yup.string().default('male'),
-  description: yup.string(),
-  dob: yup.date().typeError('Ngày sinh không hợp lệ.').required('Vui lòng điền ngày sinh.'),
-  appointment_date: yup
-    .date()
-    .typeError('Ngày và giờ khám không hợp lệ.')
-    .required('Vui lòng chọn ngày và giờ khám bệnh.'),
-  specialty_id: yup
-    .string()
-    .test('specialty_id', 'Vui lòng chọn chuyên khoa.', val => val !== '0')
-    .required('Vui lòng chọn chuyên khoa.'),
-  package_id: yup
-    .string()
-    .test('package_id', 'Vui lòng chọn gói khám.', val => val !== '0')
-    .required('Vui lòng chọn gói khám.'),
+  booking_type: yup.string().trim().required(),
+  user_id: yup.string().trim().required(),
+  status: yup.string().trim().required(),
 });
+``;
 const AppointmentDetail = () => {
-  const { id } = useParams();
-  const [appointment, setAppointment] = useState<IListAppointment | null>(null);
-  const [patients, setPatient] = useState([]);
+  const [PatientById, setPatientById] = useState<any | null>(null);
+  const [AppointmentDetail, setAppointmentDetail] = useState<IListAppointment | null>(null);
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [specialties, setSpecialties] = useState<ISpecialties[]>([]);
-  const [packages, setPackages] = useState<IPackage[]>([]);
   const convertToOption = users =>
     users.map(user => ({
       label: user.user_info.fullname,
       value: user.id,
     }));
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isValid },
-    setValue,
-    formState: {},
-    watch,
-  } = useForm({
+  const { control, handleSubmit, register } = useForm({
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
-  console.log(errors);
-
-  const idSpecialty = watch('specialty_id');
-  useEffect(() => {
-    (async () => {
-      const data = await getSpecialties();
-      setSpecialties(data);
-    })();
-  }, []);
-  useEffect(() => {
-    (async () => {
-      if (!idSpecialty || idSpecialty === '0') return;
-      const dataPackage = await getPackageBySpecialty(idSpecialty);
-      setPackages(dataPackage);
-    })();
-  }, [idSpecialty]);
-
   useEffect(() => {
     const fetchOptions = async () => {
       try {
         setLoading(true);
         const userRes = await getDoctors();
-        const patientRes = await getPatient();
-        setPatient(patientRes || []);
         const doctorOptions = convertToOption(userRes);
         setUser(doctorOptions);
       } catch (error) {
@@ -115,102 +51,45 @@ const AppointmentDetail = () => {
     fetchOptions();
   }, []);
 
-  const getPatientInfo = (patientId: string) => {
-    const patient = patients.find(pa => pa.id === patientId);
-    return patient
-      ? {
-          fullname: patient.patient_info.fullname,
-          phone_number: patient.patient_info.phone_number,
-          email: patient.patient_info.email,
-          address: patient.patient_info.address,
-          avatar: patient.patient_info.avatar,
-          gender: patient.patient_info.gender,
-          dob: patient.patient_info.dob,
-        }
-      : {};
-  };
-
+  const { id } = useParams();
   useEffect(() => {
-    const fetchAppointment = async () => {
-      try {
-        if (!id) return;
-        setLoading(true);
-        const response = await getAppointmentbyId(id);
-        const appointmentData = response.data;
-        if (!appointmentData) {
-          setError('Không tìm thấy dữ liệu cuộc hẹn');
-          return;
-        }
-        setAppointment(appointmentData);
-        const patientInfo = await getPatientInfo(appointmentData?.patient?.id);
-        if (!patientInfo) {
-          setError('Không tìm thấy thông tin bệnh nhân');
-          return;
-        }
-        setValue('fullname', patientInfo.fullname || '');
-        setValue('email', patientInfo.email || '');
-        setValue('phone_number', patientInfo.phone_number || '');
-        setValue('address', patientInfo.address || '');
-        setValue('gender', patientInfo.gender || '');
-        setValue('description', appointmentData?.description || '');
-        setValue('dob', patientInfo.dob ? dayjs(patientInfo.dob) : null);
-        setValue('date', appointmentData?.appointment_date ? dayjs(appointmentData.appointment_date) : null);
-        setValue('specialty_id', appointmentData?.specialty?.id || '');
-        setValue('package_id', appointmentData?.package?.id || '');
-      } catch (err) {
-        setError('Không thể tải dữ liệu cuộc hẹn');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAppointment();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, setValue]);
-  const handleUpdate: SubmitHandler<any> = async data => {
-    console.log(data);
-
-    if (!isValid) {
-      console.error(errors);
-      toast.error('Dữ liệu nhập không hợp lệ!');
-      return;
-    }
-    if (!id) {
-      toast.error('Không có ID để cập nhật!');
-      return;
-    }
-    setLoading(true);
-    const formData = new FormData();
-    formData.append('fullname', data.fullname || appointmentData?.fullname || '');
-    formData.append('email', data.email || appointmentData?.email || '');
-    formData.append('phone_number', data.phone_number || appointmentData?.phone_number || '');
-    formData.append('address', data.address || appointmentData?.address || '');
-    formData.append('gender', data.gender || appointmentData?.gender || '');
-    formData.append('description', data.description || appointmentData?.description || '');
-    if (data.dob) {
-      formData.append('dob', dayjs(data.dob).format('YYYY-MM-DD'));
-    }
-    if (data.appointment_date) {
-      formData.append(
-        'appointment_date',
-        dayjs(data.appointment_date).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
-      );
-    }
-    formData.append('specialty_id', data.specialty_id || appointmentData?.specialty_id || '0');
-    formData.append('package_id', data.package_id || appointmentData?.package_id || '0');
-    const selectedUserId = watch('user_id');
-    if (selectedUserId) {
-      formData.append('user_id', selectedUserId);
-    }
+    (async () => {
+      if (!id) return;
+      setLoading(true);
+      const response = await getAppointmentbyId(id);
+      const appointmentData = response.data;
+      setAppointmentDetail(appointmentData);
+    })();
+  }, [id]);
+  useEffect(() => {
+    (async () => {
+      if (!AppointmentDetail?.patient?.id) return;
+      const dataPatient = await getPatientById(AppointmentDetail?.patient?.id);
+      setPatientById(dataPatient);
+    })();
+  }, [AppointmentDetail?.patient?.id]);
+  const handleUpdate = async (data: any) => {
     try {
-      const res = await updateApointment(String(id), formData);
-      console.log('Kết quả API:', res);
+      console.log('Data to submit:', data);
+      const finalData = {
+        ...data,
+        user_id: data.user_id,
+        booking_type: data.booking_type,
+        status: data.status,
+        patient_id: PatientById?.id,
+        appointment_date: AppointmentDetail?.appointment_date,
+        specialty_id: AppointmentDetail?.specialty?.id,
+        package_id: AppointmentDetail?.package?.id,
+        cancellation_reason: AppointmentDetail?.cancellation || null,
+        total_amount: AppointmentDetail?.total_amount || null,
+        deposit_amount: AppointmentDetail?.deposit_amount || null,
+        appointment_type: AppointmentDetail?.appointment_type | null,
+      };
+      console.log('Final data being sent:', finalData);
+      const res = await updateApointment(String(id), finalData);
+      console.log('Response from API:', res);
       if (res.errors) {
         toast.error('Cập nhật gói khám thất bại');
-      } else {
-        toast.success('Cập nhật gói khám thành công');
-        navigate('/packages');
-        reset();
       }
     } catch (error) {
       console.error('Chi tiết lỗi:', error);
@@ -221,240 +100,74 @@ const AppointmentDetail = () => {
   };
 
   return (
-    <form className="max-w-6xl mx-auto p-6 bg-white shadow-md rounded-lg" onSubmit={handleSubmit(handleUpdate)}>
+    <form className="bg-white rounded-2xl p-6" onSubmit={handleSubmit(handleUpdate)}>
       <div>
         <div className="mb-8">
-          <h2 className="text-lg font-bold mb-4">
-            Lịch hẹn của bệnh nhân {getPatientInfo(appointment?.patient?.id || 'N/A').fullname}
-          </h2>
           <div class="flex items-center gap-5 pb-4 ">
             <div class="w-20 h-20 overflow-hidden">
-              <img
-                class="w-full h-full object-cover"
-                src={getPatientInfo(appointment?.patient?.id || 'N/A').avatar}
-                alt="User Profile"
-              />
+              <img class="w-full h-full object-cover" src={PatientById?.patient_info?.avatar} alt="User Profile" />
             </div>
-            <p class="text-2xl font-semibold truncate">{getPatientInfo(appointment?.patient?.id || 'N/A').fullname}</p>
+            <h2 className="text-lg font-bold mb-4">Lịch hẹn của bệnh nhân {PatientById?.patient_info?.fullname}</h2>
           </div>
           <div className="grid grid-cols-3 gap-4  pb-4">
-            <Field>
-              <Label className="block text-sm font-medium mb-1" htmlFor="fullname">
-                Họ và tên
-              </Label>
-              <Input
-                name="fullname"
-                type="text"
-                className="w-full h-[37px]  border border-gray-300 rounded-md p-2 focus:outline-none text-[#797979] text-[14px]"
-                control={control}
-              />
-              <MessageForm error={errors.fullname?.message} />
-            </Field>
-            <Field>
-              <Label htmlFor="dob" className="">
-                Ngày sinh
-                <span className="text-red-500">*</span>
-              </Label>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Controller
-                  name="dob"
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <DatePicker
-                      value={value || null}
-                      onChange={newValue => onChange(newValue)}
-                      sx={{
-                        width: '100%',
-                        '& .MuiInputBase-input': {
-                          padding: '0 15px',
-                          height: 35,
-                        },
-                        '& .MuiInputBase-root': {
-                          color: '#797979',
-                          backgroundColor: '#f3f4f7',
-                          fontSize: '14px',
-                          border: '1px #dadde2 solid',
-                        },
-                        '& .MuiOutlinedInput-notchedOutline': {
-                          border: 'none',
-                        },
-                        '& .MuiIconButton-root': {
-                          color: 'rgb(77, 182, 172)',
-                        },
-                        '& .css-113d811-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
-                          color: 'rgb(77, 182, 172)',
-                        },
-                        '& .css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root': {
-                          fontSize: '12px',
-                          transform: 'translate(14px, 10px) scale(1)',
-                          color: '#797979',
-                        },
-                      }}
-                    />
-                  )}
-                />
-              </LocalizationProvider>
-            </Field>
-            <div>
-              <Field>
-                <Label className="block text-sm font-medium mb-1">Giới tính</Label>
-                <div className="flex items-center space-x-4">
-                  <FormControl>
-                    <Controller
-                      control={control}
-                      name="gender"
-                      render={({ field }) => (
-                        <>
-                          <RadioGroup
-                            defaultValue={GENDER.MALE}
-                            {...field}
-                            sx={{
-                              flexDirection: 'row',
-                              pl: '15px',
-                              '& .MuiButtonBase-root': {
-                                width: '38px',
-                                height: '38px',
-                              },
-                            }}
-                          >
-                            <FormControlLabel
-                              value={GENDER.MALE}
-                              sx={{
-                                '& .MuiFormControlLabel-label': {
-                                  color: '#373737',
-                                  fontSize: '14px',
-                                },
-                              }}
-                              control={
-                                <Radio
-                                  sx={{
-                                    '&.Mui-checked': {
-                                      color: 'rgb(77, 182, 172)',
-                                    },
-                                  }}
-                                />
-                              }
-                              label="Nam"
-                            />
-                            <FormControlLabel
-                              value={GENDER.FEMALE}
-                              sx={{
-                                '& .MuiFormControlLabel-label': {
-                                  color: '#373737',
-                                  fontSize: '14px',
-                                },
-                              }}
-                              control={
-                                <Radio
-                                  sx={{
-                                    '&.Mui-checked': {
-                                      color: 'rgb(77, 182, 172)',
-                                    },
-                                  }}
-                                />
-                              }
-                              label="Nữ"
-                            />
-                          </RadioGroup>
-                        </>
-                      )}
-                    />
-                  </FormControl>
+            <div className="w-full max-w-md">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
+              <div className="block w-full rounded-md border border-gray-300 bg-gray-100 p-2 h-10">
+                {PatientById?.patient_info?.fullname}
+              </div>
+            </div>
+            <div className="w-full max-w-md">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
+              <div className="block w-full rounded-md border border-gray-300 bg-gray-100 p-2 h-10">
+                {dayjs(PatientById?.patient_info?.dob).format('DD/MM/YYYY')}
+              </div>
+            </div>
+            <div className="flex flex-col items-start">
+              {/* Tiêu đề */}
+              <label className="block text-sm font-medium text-gray-700 mb-2">Giới tính</label>
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <div className="relative">
+                  <input type="radio" name="gender" className="hidden peer" defaultChecked />
+                  <div className="w-5 h-5 border-2 border-teal-400 rounded-full flex items-center justify-center peer-checked:bg-teal-400">
+                    <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
+                  </div>
                 </div>
-              </Field>
+                <span className="text-gray-700 text-sm">{PatientById?.patient_info?.gender}</span>
+              </label>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4  pb-4">
-            <Field>
-              <Label className="block text-sm font-medium mb-1" htmlFor="phone_number">
-                Số điện thoại
-              </Label>
-              <Input
-                name="phone_number"
-                type="text"
-                className="w-full h-[37px]  border border-gray-300 rounded-md p-2 focus:outline-none text-[#797979] text-[14px]"
-                control={control}
-              />
-            </Field>
-            <Field>
-              <Label className="block text-sm font-medium mb-1" htmlFor="email">
-                Email
-              </Label>
-              <Input
-                name="email"
-                type="text"
-                className="w-full h-[37px]  border border-gray-300 rounded-md p-2 focus:outline-none text-[#797979] text-[14px]"
-                control={control}
-              />
-            </Field>
-            <Field>
-              <Label className="block text-sm font-medium mb-1" htmlFor="email">
-                Địa chỉ
-              </Label>
-              <Input
-                name="address"
-                type="text"
-                className="w-full h-[37px] text-pr  border border-gray-300 rounded-md p-2 focus:outline-none text-[#797979] text-[14px]"
-                control={control}
-              />
-            </Field>
+            <div className="w-full max-w-md">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
+              <div className="block w-full rounded-md border border-gray-300 bg-gray-100 p-2 h-10">
+                {' '}
+                {PatientById?.patient_info?.phone_number}
+              </div>
+            </div>
+            <div className="w-full max-w-md">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <div className="block w-full rounded-md border border-gray-300 bg-gray-100 p-2 h-10">
+                {' '}
+                {PatientById?.patient_info?.email}
+              </div>
+            </div>
+            <div className="w-full max-w-md">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Địa chỉ</label>
+              <div className="block w-full rounded-md border border-gray-300 bg-gray-100 p-2 h-10">
+                {' '}
+                {PatientById?.patient_info?.address}
+              </div>
+            </div>
           </div>
         </div>
         <div>
           <div className="grid grid-cols-4 gap-4 pb-4">
-            <Field>
-              <Label htmlFor="date" className="block text-sm font-medium mb-1">
-                Thời gian hẹn khám
-              </Label>
-              <Controller
-                name="date"
-                control={control}
-                defaultValue={dayjs()}
-                render={({ field: { onChange, value } }) => (
-                  <LocalizationProvider
-                    dateAdapter={AdapterDayjs}
-                    // className="w-full h-[37px]  border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <DateTimePicker
-                      value={value}
-                      onChange={newValue => {
-                        onChange(newValue);
-                      }}
-                      sx={{
-                        width: '100%',
-                        '& .MuiInputBase-input': {
-                          padding: '',
-                          height: '5px',
-                        },
-                        '& .MuiInputBase-root': {
-                          color: '#797979',
-                          backgroundColor: 'rgb(243 244 247)',
-                          fontSize: '14px',
-                          fontWeight: '500',
-                          radius: '0.375rem',
-                          outline: '1px solid #d1d5db',
-                          offset: '2px',
-                        },
-                        '& .MuiOutlinedInput-notchedOutline': {
-                          border: 'none',
-                        },
-                        '& .MuiIconButton-root': {
-                          color: 'rgb(77, 182, 172)',
-                        },
-                        '& .css-113d811-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
-                          color: 'rgb(77, 182, 172)',
-                        },
-                        '& .css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root': {
-                          fontSize: '12px',
-                          transform: 'translate(14px, 10px) scale(1)',
-                          color: '#797979',
-                        },
-                      }}
-                    />
-                  </LocalizationProvider>
-                )}
-              />
-            </Field>
+            <div className="w-full max-w-md">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Thời gian hẹn khám</label>
+              <div className="block w-full rounded-md border border-gray-300 bg-gray-100 p-2 h-10">
+                {dayjs(AppointmentDetail?.appointment_date).tz('Asia/Ho_Chi_Minh').format('HH:mm - DD/MM/YYYY ')}
+              </div>
+            </div>
             <Field>
               <Label htmlFor="user_id" className="text-sm font-medium mb-1">
                 Bác sĩ <span className="text-red-500">*</span>
@@ -467,135 +180,59 @@ const AppointmentDetail = () => {
                 className="w-full h-[37px]  border border-gray-300 rounded-md p-2 focus:outline-none text-[#797979] text-[14px]"
               />
             </Field>
-            <Field>
-              <Label htmlFor="" className="text-sm font-medium mb-1">
+            <div className="w-full max-w-md">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Chuyên khoa <span className="text-red-500">*</span>
-              </Label>
-              <FormControl fullWidth>
-                <Controller
-                  control={control}
-                  name="specialty_id"
-                  defaultValue="0"
-                  render={({ field }) => (
-                    <>
-                      <Select
-                        {...field}
-                        sx={{
-                          '& .MuiSelect-select': {
-                            padding: '8px 15px',
-                            fontSize: '14px',
-                            color: '#797979',
-                            backgroundColor: '#f5f5f5',
-                            fontWeight: '500',
-                          },
-                          '&:hover': {
-                            border: 'none',
-                          },
-                          '& .MuiOutlinedInput-notchedOutline': {
-                            border: 'none',
-                          },
-                        }}
-                        defaultValue="0"
-                      >
-                        <MenuItem
-                          value="0"
-                          disabled
-                          sx={{
-                            fontSize: '12px',
-                          }}
-                        >
-                          Chuyên khoa
-                        </MenuItem>
-                        {specialties.length > 0 &&
-                          specialties.map(item => (
-                            <MenuItem
-                              value={item.id}
-                              key={item.id}
-                              sx={{
-                                fontSize: '12px',
-                              }}
-                            >
-                              {item.description}
-                            </MenuItem>
-                          ))}
-                      </Select>
-                    </>
-                  )}
-                />
-              </FormControl>
-            </Field>
-            <Field>
-              <Label htmlFor="package_id" className="block text-sm font-medium mb-1">
-                Gói khám<span className="text-red-500">*</span>
-              </Label>
-              <FormControl fullWidth sx={{}}>
-                <Controller
-                  control={control}
-                  name="package_id"
-                  defaultValue="0"
-                  render={({ field }) => {
-                    const selectValue: string | undefined =
-                      field.value && packages && packages.map(pkg => pkg.id).includes(field.value) ? field.value : '0';
-
-                    return (
-                      <>
-                        <Select
-                          {...field}
-                          value={selectValue}
-                          sx={{
-                            '& .MuiSelect-select': {
-                              padding: '8px 15px',
-                              fontSize: '14px',
-                              color: '#797979',
-                              backgroundColor: '#f5f5f5',
-                            },
-                            '&:hover': {
-                              border: 'none',
-                            },
-                            '& .MuiOutlinedInput-notchedOutline': {
-                              border: 'none',
-                            },
-                          }}
-                          defaultValue="0"
-                        >
-                          <MenuItem
-                            value="0"
-                            disabled
-                            sx={{
-                              fontSize: '12px',
-                            }}
-                          >
-                            Gói khám
-                          </MenuItem>
-                          {packages &&
-                            packages.map(item => (
-                              <MenuItem
-                                value={item.id}
-                                key={item.id}
-                                sx={{
-                                  fontSize: '12px',
-                                }}
-                                className="!line-clamp-1"
-                              >
-                                {item.description}
-                              </MenuItem>
-                            ))}
-                        </Select>
-                      </>
-                    );
-                  }}
-                />
-              </FormControl>
-            </Field>
+              </label>
+              <div className="block w-full rounded-md border border-gray-300 bg-gray-100 p-2 h-10">
+                {AppointmentDetail?.specialty?.description}
+              </div>
+            </div>{' '}
+            <div className="w-full max-w-md">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Gói khám <span className="text-red-500">*</span>
+              </label>
+              <div className="block w-full rounded-md border border-gray-300 bg-gray-100 p-2 h-10">
+                {AppointmentDetail?.package?.name}
+              </div>
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="">
-              <label className="block text-sm font-medium mb-1">Notes *</label>
-              <Input
-                name="description"
-                control={control}
-                className="w-full h-24  border border-gray-300 rounded-md p-2 focus:outline-none text-[#797979] text-[14px]"
-              ></Input>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Chọn trạng thái cuộc hẹn:</label>
+              <select
+                {...register('status')}
+                defaultValue={AppointmentDetail?.status}
+                className="w-full border rounded-md p-2 text-gray-700 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {Object.values(APPOINTMENT_STATUS).map(status => (
+                  <option key={status} value={status}>
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Hình thức đặt lịch </label>
+              <select
+                {...register('booking_type')}
+                defaultValue={AppointmentDetail?.booking_type}
+                className="w-full border rounded-md p-2 text-gray-700 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {Object.values(BOOKING_TYPE).map(booking_type => (
+                  <option key={booking_type} value={booking_type}>
+                    {booking_type}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="w-full max-w-md">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Ghi chú <span className="text-red-500">*</span>
+              </label>
+              <div className="block w-full rounded-md border border-gray-300 bg-gray-100 p-2 h-10">
+                {AppointmentDetail?.description}
+              </div>
             </div>
           </div>
         </div>
