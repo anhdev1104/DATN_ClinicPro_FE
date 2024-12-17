@@ -22,7 +22,7 @@ import DirectRoute from '@/components/direct';
 export const makeData = (array: any[]) => {
   let i;
   let target = [];
-  for (i = 0; i < 100; i++) {
+  for (i = 0; i < 10; i++) {
     target.push(...array);
   }
   return target;
@@ -137,7 +137,7 @@ export default function User() {
           paginationFunction={page => setQuery({ page })}
           rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
           columns={columns}
-          data={users?.data || []}
+          data={makeData(users?.data || [])}
           isFetching={isFetching || isUpdateLoading}
           isLoading={isLoading}
         />

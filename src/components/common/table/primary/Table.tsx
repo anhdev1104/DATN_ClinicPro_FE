@@ -9,22 +9,24 @@ import { TableVirtualize } from './TableVirtualize';
 import { cn } from '@/helpers/utils';
 import { ROW_PER_PAGE_SELECT } from '@/constants/config';
 
-export type BaseTableProps<T, D> = TablePlugin<T, D> & {
-  isFetching?: boolean;
-  isLoading?: boolean;
-  onRowClick?: (row: Row<T>, event: React.MouseEvent) => void;
-  toolbar?: React.ReactNode;
-  tableProps?: Omit<TableProps, 'data'>;
-};
+export type BaseTableProps<T, D> = TablePlugin<T, D> &
+  Omit<TableProps, 'data'> & {
+    isFetching?: boolean;
+    isLoading?: boolean;
+    onRowClick?: (row: Row<T>, event: React.MouseEvent) => void;
+    toolbar?: React.ReactNode;
+    parentProps?: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+  };
 export default function Table<T, D>({
   toolbar,
-  tableProps,
   isFetching,
+  parentProps,
   isLoading,
   onRowClick,
+  data,
   ...props
 }: BaseTableProps<T, D>) {
-  const table = usePluginTable(props);
+  const table = usePluginTable({ data, ...props });
   const parentRef = useRef<HTMLDivElement>(null);
   const isVirtual = useMemo(
     () => table.getState().pagination.pageSize < +ROW_PER_PAGE_SELECT[ROW_PER_PAGE_SELECT.length - 1],
@@ -41,9 +43,10 @@ export default function Table<T, D>({
             style: {
               transform: 'translate3d(0, 0, 0)',
             },
+            ...parentProps,
           }}
           withTableBorder
-          {...tableProps}
+          {...props}
         >
           <BaseTable.Header>
             {table.getHeaderGroups().map(({ headers, id }) => (
@@ -83,6 +86,7 @@ export default function Table<T, D>({
                     {row.getVisibleCells().map(cell => {
                       return (
                         <BaseTable.Cell
+                          className="ml-3"
                           onClick={e => cell.column.columnDef.id !== 'actions' && onRowClick && onRowClick(row, e)}
                           key={cell.id}
                         >

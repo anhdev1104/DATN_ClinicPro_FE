@@ -121,9 +121,7 @@ export default function Department() {
               <BaseIcon icon={IconPlus} size="md" />
             </BaseButton.Icon>
           }
-          tableProps={{
-            highlightOnHover: true,
-          }}
+          highlightOnHover
         />
       </div>
     </>
