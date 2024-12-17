@@ -4,7 +4,7 @@ declare module '@tanstack/react-table' {
   interface ColumnMeta {
     label?: string;
   }
-  interface TableMeta extends Required<QueryParams>, PaginationBase, GlobalFilterBase {}
+  interface TableMeta extends Required<QueryParams>, Partial<PaginationBase>, Partial<GlobalFilterBase> {}
 }
 
 declare module 'yup' {
@@ -12,8 +12,9 @@ declare module 'yup' {
     omit(omit: Array<null | undefined | string>): this;
     password(message: string): this;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ObjectSchema<T = any> {
-    safeParse(data: any): ObjectSchema<T>;
+    safeParse(data: any): any;
   }
 }
 

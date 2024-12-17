@@ -21,14 +21,14 @@ export default function ServicesPage() {
     limit: withDefault(NumberParam, ROW_PER_PAGE),
     page: withDefault(NumberParam, 1),
   });
-  const { data } = useGetServicesQuery(query);
+  const { data, isLoading } = useGetServicesQuery(query);
   const [handleDelete] = useDeleteServiceMutation();
   const columns = useColumn<Services>([
     {
       id: 'services',
       cell: ({ row }) => (
         <Card shadow="md" padding="lg" radius="md" withBorder className="w-full h-full cursor-pointer">
-          <Stack className="text-start w-full items-stretch">
+          <Stack className="text-start w-full items-stretch justify-between h-full">
             <Text fw={500}>{row.original.service_name}</Text>
             <Text size="sm" c="dimmed" lineClamp={3}>
               {row.original.description}
@@ -102,6 +102,7 @@ export default function ServicesPage() {
           manualPagination={{
             pageCount: data?.total_pages,
           }}
+          isLoading={isLoading}
           paginationFunction={page => setQuery({ page })}
           rowPerPageFunction={limit => setQuery({ limit, page: 1 })}
           data={data?.data || []}
