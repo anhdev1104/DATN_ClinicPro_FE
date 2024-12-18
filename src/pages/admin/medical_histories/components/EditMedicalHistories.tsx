@@ -260,6 +260,20 @@ const EditMedicalHistories = () => {
                   }}
                 />
               </Field>
+              <Field>
+                <Button
+                  onClick={() => {
+                    localStorage.setItem('idMedical', JSON.stringify(id));
+                  }}
+                  styled="normal"
+                  type="button"
+                  className="w-full bg-[#F3F4F7] border border-borderColor"
+                >
+                  <Link to={'/prescriptions'} className="text-black">
+                    Tạo đơn thuốc cho bệnh án
+                  </Link>
+                </Button>
+              </Field>
             </div>
           </div>
           <UploadFiles
