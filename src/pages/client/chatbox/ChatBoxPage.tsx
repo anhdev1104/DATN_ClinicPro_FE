@@ -107,6 +107,7 @@ const ChatBoxPage = () => {
       return;
     }
     setLoadingDetail(true);
+    setLoadingMessageAI(null);
     const response = await getDetailConversation(id, userId);
     if (response) {
       setConversationDetail(response);
@@ -170,6 +171,7 @@ const ChatBoxPage = () => {
         <div className="w-64 bg-white border-r border-gray-200">
           <div className="py-4 pr-4 border-b border-gray-200 max-h-[65px]">
             <button
+              disabled={!LoadingMessageAI}
               onClick={() => {
                 setConversationDetail({} as IConversation);
                 setPreviousConversationId('');
