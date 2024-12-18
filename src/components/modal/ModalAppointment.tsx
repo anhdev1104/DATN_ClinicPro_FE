@@ -115,7 +115,6 @@ const ModalAppointment = ({ show, handleToggle }: { show: boolean; handleToggle:
           maxWidth: '65%',
           width: '100%',
         },
-        autoComplete: 'off',
       }}
     >
       <Stack

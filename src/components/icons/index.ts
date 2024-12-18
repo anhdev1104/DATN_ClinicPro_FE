@@ -39,3 +39,8 @@ export { default as DeleteIcon } from '@mui/icons-material/Delete';
 export { default as FileDownloadIcon } from '@mui/icons-material/FileDownload';
 export { default as MedicalServicesIcon } from '@mui/icons-material/MedicalServices';
 export { default as SettingsIcon } from '@mui/icons-material/Settings';
+export { default as AdminPanelSettingsIcon } from '@mui/icons-material/AdminPanelSettings';
+export { default as HandymanIcon } from '@mui/icons-material/Handyman';
+export { default as Diversity2Icon } from '@mui/icons-material/Diversity2';
+export { default as ReduceCapacityIcon } from '@mui/icons-material/ReduceCapacity';
+export { default as AddCircleOutlineIcon } from '@mui/icons-material/AddCircleOutline';

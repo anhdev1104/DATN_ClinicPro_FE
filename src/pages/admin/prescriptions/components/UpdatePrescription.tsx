@@ -1,13 +1,17 @@
-import { CloseIcon } from '@/components/icons';
+import { ChangeCircleIcon, CloseIcon } from '@/components/icons';
 import renderMessageError from '@/helpers/renderMessageErrror';
-import { prescriptionSchema } from '@/providers/PrescriptionProvider';
-import { getCategoryMedication, getMedication, getPrescriptionDetails } from '@/services/prescriptions.service';
-import { IMedications, IPrescriptions } from '@/types/prescription.type';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
+import { SchemaUpdate, useUpdatePrescriptionContextForm } from '@/providers/PrescriptionProvider';
+import {
+  getCategoryMedication,
+  getMedication,
+  getPrescriptionDetails,
+  updatePrescription,
+} from '@/services/prescriptions.service';
+import { IMedications, IPrescriptions, IPrescriptionUpdate, TMedicationsType } from '@/types/prescription.type';
+
+import { Box, Dialog, DialogContent, DialogTitle, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { Controller, SubmitHandler, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { ModalMedication } from '@/components/modal';
 import convertToOptions from '@/helpers/convertToOptions';
@@ -19,27 +23,25 @@ type TUpdatePrescription = {
   idPrescription: string | undefined;
 };
 
-const updatePrescriptionSchema = prescriptionSchema.omit(['patient_id', 'user_id', 'medical_histories_id']);
-
-type TUpdatePrescriptionForm = yup.InferType<typeof updatePrescriptionSchema>;
-
 const UpdatePrescription: React.FC<TUpdatePrescription> = ({ open, onClose, idPrescription }) => {
   const [prescription, setPrescription] = useState<IPrescriptions>({} as IPrescriptions);
-  const [medicationCategory, setMedicationCategory] = useState([]);
+  const [medicationCategory, setMedicationCategory] = useState<{ label: string; value: string }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [medications, setMedications] = useState<IMedications[]>([]);
+  const [disabled, setDisabled] = useState<boolean>(false);
+
   const {
-    control,
-    formState: { isDirty, isSubmitting },
-    handleSubmit,
-    reset,
-    setValue,
-    getValues,
-  } = useForm<TUpdatePrescriptionForm>({
-    resolver: yupResolver(updatePrescriptionSchema),
-    mode: 'onSubmit',
-  });
+    form: {
+      control,
+      formState: { isDirty, isSubmitting },
+      handleSubmit,
+      reset,
+      setValue,
+      getValues,
+    },
+  } = useUpdatePrescriptionContextForm();
+
   const selectedCategoryId = useWatch({
     control,
     name: 'isCategory',
@@ -48,8 +50,10 @@ const UpdatePrescription: React.FC<TUpdatePrescription> = ({ open, onClose, idPr
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setValue('isCategory', '');
-    setValue('medications', undefined);
+    setValue('medications', prescription.medications);
   };
+
+  const medication = getValues('medications') as TMedicationsType[];
 
   useEffect(() => {
     if (!selectedCategoryId) return;
@@ -70,7 +74,7 @@ const UpdatePrescription: React.FC<TUpdatePrescription> = ({ open, onClose, idPr
     if (!idPrescription) return;
     (async () => {
       const res = await getPrescriptionDetails(idPrescription);
-      if (res.message === false) {
+      if (res.success === false) {
         return toast.error(renderMessageError(res.errors));
       }
       setPrescription(res.data);
@@ -83,6 +87,7 @@ const UpdatePrescription: React.FC<TUpdatePrescription> = ({ open, onClose, idPr
         name: prescription.name,
         description: prescription.description,
         medications: prescription.medications,
+        isCategory: getValues('isCategory'),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,15 +100,50 @@ const UpdatePrescription: React.FC<TUpdatePrescription> = ({ open, onClose, idPr
       setMedicationCategory(data);
     })();
   }, []);
-  const handleUpdatePrescription: SubmitHandler<TUpdatePrescriptionForm> = async data => {
-    console.log(data);
+
+  const handleUpdatePrescription: SubmitHandler<SchemaUpdate> = async data => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { isCategory, medications, ...updateData } = data;
+    const medicationsData =
+      medications &&
+      medications
+        .map(item => ({
+          medication_id: item.medication_id,
+          quantity: item.quantity,
+          duration: item.duration,
+          instructions: item.instructions,
+        }))
+        .filter(elm => elm.medication_id !== undefined);
+    const initMedicationData = prescription.medications.map(item => ({
+      medication_id: item.medication.id,
+      quantity: item.quantity,
+      duration: item.duration,
+      instructions: item.instructions,
+    }));
+    const newData = {
+      ...updateData,
+      medications: medicationsData && medicationsData?.length > 0 ? medicationsData : initMedicationData,
+    };
+    const res = idPrescription && (await updatePrescription(idPrescription, newData as IPrescriptionUpdate));
+    if (res.success === false) {
+      return toast.error(renderMessageError(res.errors));
+    }
+    toast.success('Cập nhập đơn thuốc thành công.');
   };
 
   return (
     <>
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={() => {
+          reset({
+            name: prescription.name,
+            description: prescription.description,
+            medications: prescription.medications,
+            isCategory: '',
+          });
+          onClose();
+        }}
         PaperProps={{
           component: 'form',
           onSubmit: handleSubmit(handleUpdatePrescription),
@@ -143,6 +183,14 @@ const UpdatePrescription: React.FC<TUpdatePrescription> = ({ open, onClose, idPr
                   {...field}
                   className="px-4 py-2 w-full border outline-none rounded-md truncate text-[#666] text-[14px] transition-all focus:border-third "
                   value={getValues('name')}
+                  onChange={e => {
+                    field.onChange(e);
+                    if (e.target.value.trim().length <= 0) {
+                      setDisabled(true);
+                    } else {
+                      setDisabled(false);
+                    }
+                  }}
                 />
               </>
             )}
@@ -171,24 +219,69 @@ const UpdatePrescription: React.FC<TUpdatePrescription> = ({ open, onClose, idPr
               </>
             )}
           />
+          <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+            <Typography
+              component={'h4'}
+              sx={{
+                fontWeight: 600,
+                fontSize: '14px',
+                mt: '15px',
+              }}
+            >
+              Thuốc kê đơn
+            </Typography>
+            <Typography
+              component={'span'}
+              sx={{
+                fontSize: '14px',
+                mt: '15px',
+                cursor: 'pointer',
+              }}
+              className="text-primaryAdmin"
+              onClick={() => setIsDialogOpen(true)}
+            >
+              <ChangeCircleIcon className="mr-1 mb-1" />
+              Thay đổi
+            </Typography>
+          </Stack>
+          <DialogContent sx={{ height: '130px', overflowY: 'auto', pt: 0, mt: '20px' }} className="scroll-select pl-5">
+            {medication &&
+              medication?.map((med, index) => (
+                <Stack direction="row" justifyContent="space-between" marginBottom={'8px'} key={med?.id}>
+                  <Box sx={{ maxWidth: '68%' }}>
+                    <Typography sx={{ fontSize: '13px', fontWeight: 500, color: 'black' }}>
+                      {index + 1}/. {med?.medication?.name}
+                    </Typography>
+
+                    <Typography sx={{ fontSize: '13px', fontStyle: 'italic', color: '#666' }}>
+                      HDSD: {med?.instructions}
+                    </Typography>
+                  </Box>
+                  <Typography sx={{ fontSize: '13px', maxWidth: '65%' }}>
+                    {med?.quantity} viên / {med?.duration} lần
+                  </Typography>
+                </Stack>
+              ))}
+          </DialogContent>
         </DialogContent>
         <Button
           type="submit"
           styled="normal"
           className="bg-yellow-500 text-white disabled:bg-gray-300 mt-10 w-fit ml-auto"
           isLoading={isSubmitting}
-          disabled={isSubmitting || isDirty}
+          disabled={isSubmitting || !isDirty || disabled}
         >
           Cập nhật
         </Button>
       </Dialog>
       <ModalMedication
         isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
         handleCloseDialog={handleCloseDialog}
         medications={medications}
         medicationCategory={medicationCategory}
         loading={loading}
-        setIsDialogOpen={setIsDialogOpen}
+        isUpdate
       />
     </>
   );

@@ -1,6 +1,6 @@
 import Label from '@/components/label';
 import checkIsNumberic from '@/helpers/checkIsNotNumberic';
-import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
+import { usePrescriptionContextForm, useUpdatePrescriptionContextForm } from '@/providers/PrescriptionProvider';
 import { IMedication } from '@/types/prescription.type';
 import { Box, Checkbox, Stack, styled, TextField } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
@@ -10,6 +10,7 @@ type TMedication = {
   id: string;
   name: string;
   index: number;
+  isUpdate?: boolean;
 };
 
 const CustomeInput = styled(TextField)(() => ({
@@ -20,14 +21,17 @@ const CustomeInput = styled(TextField)(() => ({
   },
 }));
 
-const Medication: React.FC<TMedication> = ({ id, name, index }) => {
+const Medication: React.FC<TMedication> = ({ id, name, index, isUpdate = false }) => {
   const [error, setError] = useState<{ quantity: boolean; duration: boolean }>({
     quantity: false,
     duration: false,
   });
-  const {
-    form: { control, setValue },
-  } = usePrescriptionContextForm();
+  const { form: formPrescription } = usePrescriptionContextForm();
+  const { form: formUpdatePrescription } = useUpdatePrescriptionContextForm();
+
+  const form = isUpdate ? formUpdatePrescription : formPrescription;
+  const { control, setValue } = form;
+
   const medications = useWatch({ control, name: 'medications' }) || [];
   const flatMedications = new Map<string | undefined, any>();
 
@@ -47,6 +51,7 @@ const Medication: React.FC<TMedication> = ({ id, name, index }) => {
           quantity: '',
           duration: '',
           instructions: '',
+          name,
         } as any,
       ]);
     } else {

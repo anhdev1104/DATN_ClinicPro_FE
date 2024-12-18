@@ -75,7 +75,7 @@ export default function Table<T, D>({
             ) : (
               <BaseTable.Row>
                 <BaseTable.Cell colSpan={props.columns.length} className="h-24 text-center">
-                  không có kết quả hiện thị
+                  Không có kết quả hiện thị.
                 </BaseTable.Cell>
               </BaseTable.Row>
             )}

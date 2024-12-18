@@ -6,7 +6,7 @@ import { CloseIcon, SearchIcon } from '../icons';
 import Medication from '@/pages/admin/prescriptions/components/Medication';
 import { FC } from 'react';
 import { IMedications } from '@/types/prescription.type';
-import { usePrescriptionContextForm } from '@/providers/PrescriptionProvider';
+import { usePrescriptionContextForm, useUpdatePrescriptionContextForm } from '@/providers/PrescriptionProvider';
 import { Option } from '../select/Select';
 import LoadingSpin from '../loading';
 import { Button } from '@mantine/core';
@@ -18,6 +18,7 @@ interface IModalMedication {
   medicationCategory: Option[];
   loading: boolean;
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isUpdate?: boolean;
 }
 
 const ModalMedication: FC<IModalMedication> = ({
@@ -27,10 +28,13 @@ const ModalMedication: FC<IModalMedication> = ({
   medicationCategory,
   loading,
   setIsDialogOpen,
+  isUpdate = false,
 }) => {
-  const {
-    form: { control },
-  } = usePrescriptionContextForm();
+  const { form: formPrescription } = usePrescriptionContextForm();
+  const { form: formUpdatePrescription } = useUpdatePrescriptionContextForm();
+
+  const form = isUpdate ? formUpdatePrescription : formPrescription;
+  const { control } = form;
 
   return (
     <Dialog
@@ -60,7 +64,7 @@ const ModalMedication: FC<IModalMedication> = ({
         <div className="flex justify-center items-start flex-col gap-2">
           <Label htmlFor="categoryId">Danh mục thuốc</Label>
           <Select
-            placeholder="Đơn thuốc chỉ định"
+            placeholder="Chọn danh mục thuốc"
             name="isCategory"
             control={control}
             options={medicationCategory}
@@ -72,7 +76,6 @@ const ModalMedication: FC<IModalMedication> = ({
             colorGlass="text-primaryAdmin"
             className="placeholder:text-sm text-sm text-primaryAdmin h-[40px] "
             control={control}
-            name="search"
             placeholder="Tìm thuốc ..."
           />
           <button
@@ -88,7 +91,13 @@ const ModalMedication: FC<IModalMedication> = ({
         {!loading && medications.length > 0 ? (
           <div className="space-y-2">
             {medications.map((medication: any, index: number) => (
-              <Medication key={medication.id} name={medication.name} id={medication.id} index={index} />
+              <Medication
+                key={medication.id}
+                name={medication.name}
+                id={medication.id}
+                index={index}
+                isUpdate={isUpdate}
+              />
             ))}
           </div>
         ) : !loading ? (
