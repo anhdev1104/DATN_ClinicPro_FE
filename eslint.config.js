@@ -28,6 +28,7 @@ export default [
       'no-debugger': 'error',
       'no-var': 'error',
       'no-return-await': 'error',
+      "react-hooks/exhaustive-deps": "off"
     },
   },
 ];

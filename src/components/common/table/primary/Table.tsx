@@ -7,7 +7,6 @@ import { usePluginTable } from '@/hooks/usePluginTable';
 import { useMemo, useRef } from 'react';
 import { TableVirtualize } from './TableVirtualize';
 import { cn } from '@/helpers/utils';
-import { ROW_PER_PAGE_SELECT } from '@/constants/config';
 
 export type BaseTableProps<T, D> = TablePlugin<T, D> &
   Omit<TableProps, 'data'> & {
@@ -17,21 +16,41 @@ export type BaseTableProps<T, D> = TablePlugin<T, D> &
     toolbar?: React.ReactNode;
     parentProps?: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
   };
-export default function Table<T, D>({
-  toolbar,
-  isFetching,
-  parentProps,
-  isLoading,
-  onRowClick,
-  data,
-  ...props
-}: BaseTableProps<T, D>) {
-  const table = usePluginTable({ data, ...props });
+export default function Table<T, D>(_props: BaseTableProps<T, D>) {
+  const {
+    toolbar,
+    isFetching,
+    parentProps,
+    isLoading,
+    onRowClick,
+    manualPagination,
+    data,
+    columns,
+    paginationFunction,
+    rowPerPageFunction,
+    filterFunction,
+    manualFiltering,
+    virtualize,
+    ...props
+  } = _props;
+  const table = usePluginTable({
+    manualPagination,
+    data,
+    columns,
+    paginationFunction,
+    rowPerPageFunction,
+    filterFunction,
+    manualFiltering,
+    virtualize,
+  } as TablePlugin<T, D>);
+
   const parentRef = useRef<HTMLDivElement>(null);
+
   const isVirtual = useMemo(
-    () => table.getState().pagination.pageSize < +ROW_PER_PAGE_SELECT[ROW_PER_PAGE_SELECT.length - 1],
+    () => virtualize && table.getState().pagination.pageSize <= +virtualize?.length,
     [table.getState().pagination.pageSize],
-  ); // eslint-disable react-hooks/exhaustive-deps
+  );
+
   return (
     <div className="w-full">
       <TableToolbar toolbar={toolbar} table={table} />
@@ -63,10 +82,10 @@ export default function Table<T, D>({
           </BaseTable.Header>
           <BaseTable.Body className="relative">
             {isLoading ? (
-              props.columns.map((_, index) => {
+              columns.map((_, index) => {
                 return (
                   <BaseTable.Row h={40} key={index}>
-                    {props.columns.map((_, index) => (
+                    {columns.map((_, index) => (
                       <BaseTable.Cell key={index}>
                         <Skeleton height={14} radius={6} />
                       </BaseTable.Cell>
@@ -101,7 +120,7 @@ export default function Table<T, D>({
               )
             ) : (
               <BaseTable.Row>
-                <BaseTable.Cell colSpan={props.columns.length} className="h-24 text-center">
+                <BaseTable.Cell colSpan={columns.length} className="h-24 text-center">
                   không có kết quả hiện thị
                 </BaseTable.Cell>
               </BaseTable.Row>

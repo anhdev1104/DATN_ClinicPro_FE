@@ -19,14 +19,6 @@ import { Table } from '@/components/common/table/primary';
 import { ROW_PER_PAGE } from '@/constants/config';
 import DirectRoute from '@/components/direct';
 
-export const makeData = (array: any[]) => {
-  let i;
-  let target = [];
-  for (i = 0; i < 10; i++) {
-    target.push(...array);
-  }
-  return target;
-};
 export default function User() {
   const [query, setQuery] = useQueryParams({
     q: withDefault(StringParam, ''),
@@ -140,6 +132,9 @@ export default function User() {
           data={users?.data || []}
           isFetching={isFetching || isUpdateLoading}
           isLoading={isLoading}
+          virtualize={{
+            length: 100000,
+          }}
         />
       </div>
     </>

@@ -180,7 +180,7 @@ export default function GetDepartment() {
               columns={columns}
               data={department?.users || []}
               isFetching={isFetching}
-              tableProps={{ highlightOnHover: true }}
+              highlightOnHover
             />
           </div>
           <div className="flex justify-end items-center space-x-4 my-4">
