@@ -3,7 +3,6 @@ import AppRouter from './routes/router';
 import { Suspense } from 'react';
 import LoadingPage from './pages/client/loading';
 import MainProvider from './providers/MainProvider';
-import Chatbox from './components/chatbox/Chatbox';
 import { QueryParamOptions, QueryParamProvider } from 'use-query-params';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import query from 'query-string';
@@ -19,7 +18,6 @@ function App() {
       <QueryParamProvider adapter={ReactRouter6Adapter} options={configOptionParams}>
         <MainProvider>
           <Suspense fallback={<LoadingPage />}>
-            <Chatbox />
             <AppRouter />
           </Suspense>
         </MainProvider>

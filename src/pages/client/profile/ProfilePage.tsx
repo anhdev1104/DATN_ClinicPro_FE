@@ -1,16 +1,17 @@
 import { Button } from '@/components/button';
 import Field from '@/components/field';
-import { EmailIcon } from '@/components/icons';
+import { EmailIcon, FlipCameraIosIcon } from '@/components/icons';
 import Input from '@/components/input';
 import Label from '@/components/label';
 import MessageForm from '@/components/message';
 import { ModalConfirm } from '@/components/modal';
 import Select from '@/components/select';
 import { getProfile, updateProfile } from '@/services/auth.service';
+import { uploadFile } from '@/services/uploadFile.service';
 import { IProfile, IUpdate } from '@/types/auth.type';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useEffect, useRef, useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
@@ -32,6 +33,7 @@ const schema = yup.object({
   address: yup.string().trim().required('Địa chỉ không được bỏ trống!'),
   insurance_number: yup.string().trim(),
   identity_card_number: yup.string().trim(),
+  avatar: yup.string().trim(),
 });
 
 const ProfilePage = () => {
@@ -39,6 +41,8 @@ const ProfilePage = () => {
   const [currentDate] = useState(() => new Date().toLocaleDateString());
   const [profile, setProfile] = useState<IProfile>({} as IProfile);
   const [modalStatus, setModalStatus] = useState(false);
+  const inputFileRef = useRef<any>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const handleClose = () => {
     setModalStatus(!modalStatus);
@@ -48,6 +52,7 @@ const ProfilePage = () => {
     control,
     reset,
     handleSubmit,
+    getValues,
     formState: { isSubmitting, errors, isValid },
   } = useForm({
     resolver: yupResolver(schema),
@@ -72,21 +77,42 @@ const ProfilePage = () => {
 
   const toggleEditMode = () => setIsEditMode(!isEditMode);
 
+  const handleClickFile = () => {
+    inputFileRef.current.click();
+  };
+
   const onSubmit: SubmitHandler<IUpdate> = async formData => {
     if (!isValid) return;
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { identity_card, insurance_number, ...dataUpdate } = formData;
 
+    const file = getValues('avatar');
+    let newAvatar = profile.user_info?.avatar;
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const uploadResponse = await uploadFile(formData);
+      newAvatar = uploadResponse.data.url;
+    }
+
     const updatedData = {
-      user_info: dataUpdate,
-      avatar: profile.user_info.avatar,
+      user_info: {
+        ...dataUpdate,
+        avatar: newAvatar,
+      },
     };
 
-    const res = await updateProfile(profile.user_info.id, updatedData);
-    handleClose();
-    toast.success(res.message, { position: 'top-right' });
-    const updatedProfile = await getProfile();
-    setProfile(updatedProfile);
+    try {
+      const res = await updateProfile(profile.user_info.id, updatedData);
+      toast.success(res.message, { position: 'top-right' });
+      const updatedProfile = await getProfile();
+      setProfile(updatedProfile);
+      handleClose();
+    } catch (error) {
+      return error;
+    }
   };
 
   const handleSubmitForm = handleSubmit(onSubmit);
@@ -100,7 +126,21 @@ const ProfilePage = () => {
 
       <div className="flex justify-between">
         <div className="flex items-center gap-5 mb-10">
-          <img className="size-[80px] rounded-full object-contain" src={profile.user_info?.avatar} alt="" />
+          <div className="size-auto relative">
+            <img
+              className="size-[80px] rounded-full object-cover"
+              src={previewUrl || profile.user_info?.avatar}
+              alt=""
+            />
+            {isEditMode && (
+              <button
+                onClick={handleClickFile}
+                className="absolute bottom-0 right-0 bg-white p-1 rounded-full shadow-lg flex justify-center items-center hover:bg-gray-200"
+              >
+                <FlipCameraIosIcon className="size-[20px]" />
+              </button>
+            )}
+          </div>
           <div className="font-bold">
             <h1 className="text-[18px] text-black tracking-[0.2px] mb-1">{profile.user_info?.fullname}</h1>
             <p className="font-light">{profile.email}</p>
@@ -113,6 +153,31 @@ const ProfilePage = () => {
 
       <form className="mb-14" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex gap-5">
+          <Controller
+            name="avatar"
+            control={control}
+            render={({ field: { onChange, ref } }) => {
+              return (
+                <input
+                  ref={e => {
+                    ref(e);
+                    inputFileRef.current = e;
+                  }}
+                  type="file"
+                  className="hidden"
+                  onChange={e => {
+                    const file = e.target.files?.[0]; // Lấy file đầu tiên từ danh sách file
+                    if (file) {
+                      onChange(file); // Đặt giá trị file cho React Hook Form
+                      const fileUrl = URL.createObjectURL(file); // Tạo URL để xem trước
+                      setPreviewUrl(fileUrl); // Cập nhật preview URL để hiển thị ảnh
+                    }
+                  }}
+                />
+              );
+            }}
+          />
+
           <Field>
             <Label htmlFor="fullname">Họ và tên:</Label>
             <Input

@@ -2,7 +2,6 @@ import DirectRoute from '@/components/direct';
 import { AddIcon, DeleteIcon, SettingsIcon, VisibilityIcon } from '@/components/icons';
 import Input from '@/components/input';
 import { useForm } from 'react-hook-form';
-import Select from '@/components/select';
 import { useEffect, useState } from 'react';
 import {
   createSpecialties,
@@ -11,27 +10,17 @@ import {
   updateSpecialties,
 } from '@/services/specialties.service';
 import { ISpecialties } from '@/types/specialties.type';
-import convertTime from '@/helpers/convertTime';
 import { toast } from 'react-toastify';
 import { ModalConfirm } from '@/components/modal';
-import LoadingSpin from '@/components/loading';
 import { Dialog } from '@mui/material';
 import { Button } from '@/components/button';
 import Label from '@/components/label';
 import Field from '@/components/field';
 import { yupResolver } from '@hookform/resolvers/yup';
 import yup from '@/lib/utils/yup';
-
-const SearchOptions = [
-  {
-    label: 'Theo mã ',
-    value: 'Theo mã ',
-  },
-  {
-    label: 'Theo mã người bệnh',
-    value: 'Theo mã người bệnh',
-  },
-];
+import { Table } from '@/components/common/table/primary';
+import { useColumn } from '@/hooks/useColumn';
+import convertTime from '@/helpers/convertTime';
 
 interface ModalDetailSpecial {
   close: () => void;
@@ -47,7 +36,6 @@ const Specialtie = () => {
   const [idSpecial, setIdSpecial] = useState<string | null | undefined>('');
   const [activeModal, setActiveModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingList, setIsLoadingList] = useState(false);
   const [resetData, setResetData] = useState(0);
   const [open, setOpen] = useState<{ status: boolean; id: ISpecialties | null; action: boolean; iUpdate: boolean }>({
     status: false,
@@ -58,10 +46,8 @@ const Specialtie = () => {
 
   useEffect(() => {
     (async () => {
-      setIsLoadingList(true);
       const data = await getSpecialties();
       setSpecialties(data);
-      setIsLoadingList(false);
     })();
   }, [resetData]);
 
@@ -86,6 +72,55 @@ const Specialtie = () => {
     setOpen({ status: false, id: null, action: false, iUpdate: false });
   };
 
+  const column = useColumn<ISpecialties>([
+    {
+      accessorKey: 'id',
+      header: '#',
+    },
+    {
+      accessorKey: 'name',
+      header: 'Tên',
+    },
+    {
+      accessorKey: 'created_at',
+      header: 'Ngày tạo',
+      cell: ({ row }) => <div>{convertTime(row.original.created_at || '')}</div>,
+    },
+    {
+      accessorKey: 'doctors_count',
+      header: 'Số lượng bác sĩ',
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => (
+        <div className="flex justify-center items-center gap-2">
+          <button
+            onClick={() => {
+              handleClickOpen(row.original);
+            }}
+          >
+            <VisibilityIcon className="text-blue-500" />
+          </button>
+          <button
+            onClick={() => {
+              handleClickOpen(row.original, true, true);
+            }}
+          >
+            <SettingsIcon className="text-yellow-500" />
+          </button>
+          <button
+            onClick={() => {
+              setActiveModal(true);
+              setIdSpecial(row.original.id);
+            }}
+          >
+            <DeleteIcon className="text-red-500" />
+          </button>
+        </div>
+      ),
+    },
+  ]);
+
   return (
     <>
       <DirectRoute nav="Quản lý chuyên khoa" subnav="Chuyên khoa" />
@@ -102,65 +137,9 @@ const Specialtie = () => {
             >
               <AddIcon className="text-primaryAdmin" />
             </button>
-            <SpecialtiesSearch />
           </div>
         </div>
-        <div className="w-full">
-          {isLoadingList && (
-            <div className="mx-auto text-center pt-10">
-              <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
-            </div>
-          )}
-          {!isLoadingList && (
-            <table className="min-w-full table-auto border-collapse">
-              <thead className="border-b-2 border-primaryAdmin/20 bg-primaryAdmin/5">
-                <tr className=" text-gray-700">
-                  <th className="p-4 font-medium text-left">#</th>
-                  <th className="p-4 font-medium text-left">Tên chuyên khoa</th>
-                  <th className="p-4 font-medium text-left">Mô tả</th>
-                  <th className="p-4 font-medium text-left">Ngày tạo</th>
-                  <th className="p-4 font-medium text-left"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {specialties &&
-                  specialties?.map((item, index) => (
-                    <tr className="even:bg-[#f5f5f5] hover:bg-yellow-50/45" key={item.id}>
-                      <td className="py-2 px-5">{index + 1}</td>
-                      <td className="py-2 px-5 text-gray-800 font-semibold max-w-[250px]">{item.name}</td>
-                      <td className="py-2 px-5 text-gray-600">{item.description}</td>
-                      <td className="py-2 px-5 text-gray-600 max-w-[300px]">{convertTime(item.created_at || '')}</td>
-                      <td className="py-2 px-5 text-end flex gap-1 justify-end">
-                        <button
-                          onClick={() => {
-                            handleClickOpen(item);
-                          }}
-                          className="flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
-                        >
-                          <VisibilityIcon className="text-blue-500" />
-                        </button>
-                        <button
-                          onClick={() => handleClickOpen(item, true, true)}
-                          className="flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
-                        >
-                          <SettingsIcon className="text-yellow-400" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setActiveModal(true);
-                            setIdSpecial(item.id);
-                          }}
-                          className="text-red-500 flex justify-center w-[15%] rounded-md border border-gray-300 shadow-sm px-4 bg-white text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-indigo-500"
-                        >
-                          <DeleteIcon />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+        <Table columns={column} data={specialties}></Table>
         <ModalConfirm
           description="Dữ liệu sẽ không thể khôi phục"
           title="Bạn có chắc muốn xóa ?"
@@ -185,25 +164,6 @@ const Specialtie = () => {
     </>
   );
 };
-
-function SpecialtiesSearch() {
-  const { control } = useForm({
-    mode: 'onChange',
-  });
-  return (
-    <form className="relative flex gap-5 items-center">
-      <Input
-        name="searchadmin"
-        className="border-none !h-10 !font-light text-primaryAdmin"
-        isGlass
-        colorGlass="text-primaryAdmin top-[9px]"
-        placeholder="Tìm kiếm chuyên khoa ..."
-        control={control}
-      />
-      <Select name="searchPrescription" placeholder="Bộ lọc chuyên khoa" options={SearchOptions} control={control} />
-    </form>
-  );
-}
 
 const schema = yup.object().shape({
   name: yup.string().trim().required(),

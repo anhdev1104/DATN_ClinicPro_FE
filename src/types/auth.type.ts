@@ -47,10 +47,11 @@ export interface IUpdate {
   gender: string;
   insurance_number?: string;
   identity_card?: IIndentityCard;
+  avatar?: string;
 }
 
 export interface IProfileUpdate {
   email?: string;
   user_info: IUpdate;
-  avatar: string | undefined;
+  avatar?: string;
 }

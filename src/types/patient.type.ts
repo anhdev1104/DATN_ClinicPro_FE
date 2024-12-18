@@ -26,7 +26,7 @@ export interface IPatient {
 
 export interface INewPatient {
   insurance_number: string;
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'disabled';
   user_info: {
     fullname: string;
     email: string;

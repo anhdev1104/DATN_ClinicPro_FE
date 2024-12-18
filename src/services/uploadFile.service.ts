@@ -27,6 +27,19 @@ export const uploadImages = async (formData: FormData) => {
   }
 };
 
+export const uploadImage = async (formData: FormData) => {
+  try {
+    const res = await http.post('/upload/image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const uploadFiles = async (formData: FormData) => {
   try {
     const res = await http.post('/upload/files', formData, {

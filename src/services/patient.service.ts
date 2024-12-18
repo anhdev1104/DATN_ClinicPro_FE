@@ -2,13 +2,18 @@ import Http from '@/helpers/http';
 import { INewPatient } from '@/types/patient.type';
 const http = new Http();
 
-export const getPatient = async (key = '') => {
+export const getPatient = async (key = '', page = '', limit = '') => {
   try {
-    const query = key ? `?q=${key}` : '';
+    const queryParams = new URLSearchParams();
+    if (key) queryParams.append('q', key);
+    if (page) queryParams.append('page', page);
+    if (limit) queryParams.append('limit', limit);
+
+    const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
     const response = await http.get(`/patients${query}`);
-    return response.data;
+    return response;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
