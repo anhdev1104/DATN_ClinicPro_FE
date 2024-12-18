@@ -10,7 +10,7 @@ interface TablePaginationProps<T> {
 export default function TablePagination<T>({ table }: TablePaginationProps<T>) {
   const rowPerPageSelect = useMemo(() => {
     const item = table.options.meta?.virtualize?.length;
-    return item && ROW_PER_PAGE_SELECT.includes(`${item}`)
+    return item && !ROW_PER_PAGE_SELECT.includes(`${item}`)
       ? ROW_PER_PAGE_SELECT.concat(`${item}`)
       : ROW_PER_PAGE_SELECT;
   }, []);
