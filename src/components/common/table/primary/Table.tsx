@@ -45,11 +45,8 @@ export default function Table<T, D>(_props: BaseTableProps<T, D>) {
   } as TablePlugin<T, D>);
 
   const parentRef = useRef<HTMLDivElement>(null);
-
-  const isVirtual = useMemo(
-    () => virtualize && table.getState().pagination.pageSize <= +virtualize?.length,
-    [table.getState().pagination.pageSize],
-  );
+  const pageSize = table.getState().pagination.pageSize;
+  const isVirtual = useMemo(() => virtualize && pageSize >= virtualize?.length, [pageSize]);
 
   return (
     <div className="w-full">

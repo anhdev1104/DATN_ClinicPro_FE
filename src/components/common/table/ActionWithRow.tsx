@@ -1,13 +1,11 @@
 import { Menu, MenuItemProps } from '@mantine/core';
-import { Row } from '@tanstack/react-table';
 
 import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 import { IconDots } from '@tabler/icons-react';
 import BaseButton from '@/components/base/button';
 import BaseIcon from '@/components/base/BaseIcon';
 
-interface ActionWithRowProps<T> {
-  row: Row<T>;
+interface ActionWithRowProps {
   data?: Array<
     Omit<
       Omit<DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, 'ref'>,
@@ -16,7 +14,7 @@ interface ActionWithRowProps<T> {
       MenuItemProps & { label: string }
   >;
 }
-export default function TableAction<T>({ data }: ActionWithRowProps<T>) {
+export default function ActionWithRow({ data }: ActionWithRowProps) {
   return (
     <Menu
       radius="md"
