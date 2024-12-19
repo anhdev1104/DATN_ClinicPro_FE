@@ -4,6 +4,7 @@ export type PaginationFunction = (page: number) => Promise<void> | void;
 export type RowPerPageFunction = (value: number) => Promise<void> | void;
 export type ManualFiltering = { timeOut: number } | boolean;
 export type ManualPaginationProps = { pageCount?: number };
+export type Virtualize = { length: number };
 
 export interface PaginationBase {
   manualPagination: ManualPaginationProps;
@@ -14,12 +15,16 @@ export interface GlobalFilterBase {
   manualFiltering: ManualFiltering;
   filterFunction: FilterFunction;
 }
+export interface Virtualizer {
+  virtualize: Virtualize;
+}
 
 export type ManualPagination = Biding<PaginationBase>;
 export type ManualGlobalFilter = Biding<GlobalFilterBase>;
 
 export type TablePlugin<T, D> = ManualPagination &
-  ManualGlobalFilter & {
+  ManualGlobalFilter &
+  Partial<Virtualizer> & {
     data: T[];
     columns: ColumnDef<T, D>[];
   };

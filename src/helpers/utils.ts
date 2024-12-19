@@ -55,3 +55,7 @@ export const formatRoleSelect = (roles: IRole[]) => {
     value: role?.id,
   }));
 };
+
+export const convertToMonth = (array: any[]) => {
+  return array.map(arr => ({ ...arr, month: `Tháng ${arr.month}` }));
+};

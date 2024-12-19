@@ -84,7 +84,6 @@ export default function Department() {
               onClick: () => navigate(`/departments/${row.original.id}`),
             },
           ]}
-          row={row}
         />
       ),
     },
@@ -121,9 +120,7 @@ export default function Department() {
               <BaseIcon icon={IconPlus} size="md" />
             </BaseButton.Icon>
           }
-          tableProps={{
-            highlightOnHover: true,
-          }}
+          highlightOnHover
         />
       </div>
     </>

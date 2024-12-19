@@ -16,7 +16,7 @@ export const UserInfo = ({ avatar, email, fullname }: UserProps) => {
         <Avatar src={avatar} size={36} radius="xl" />
         <div>
           <Text size="sm">{fullname}</Text>
-          <Text size="xs" opacity={0.5}>
+          <Text size="xs" c="dimmed">
             {email}
           </Text>
         </div>

@@ -4,7 +4,11 @@ declare module '@tanstack/react-table' {
   interface ColumnMeta {
     label?: string;
   }
-  interface TableMeta extends Required<QueryParams>, Partial<PaginationBase>, Partial<GlobalFilterBase> {}
+  interface TableMeta extends Required<QueryParams>, Partial<PaginationBase>, Partial<GlobalFilterBase> {
+    virtualize?: {
+      length: number;
+    };
+  }
 }
 
 declare module 'yup' {

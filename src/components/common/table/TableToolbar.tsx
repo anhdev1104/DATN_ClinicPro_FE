@@ -6,6 +6,7 @@ import { ExportFile } from '@/components/export';
 import BaseInput from '@/components/base/input';
 import BaseIcon from '@/components/base/BaseIcon';
 import BaseButton from '@/components/base/button';
+import { useMemo } from 'react';
 interface TableToolbarProps<T> {
   table: Table<T>;
   toolbar?: React.ReactNode;
@@ -13,16 +14,15 @@ interface TableToolbarProps<T> {
 }
 
 const TableToolbar = <T,>({ table, toolbar }: TableToolbarProps<T>) => {
-  const handleSearch = useDebouncedCallback(
-    e => {
-      table.options.meta?.filterFunction?.(e);
-      table.setGlobalFilter(e.target.value);
-      table.setPageIndex(0);
-    },
-    table.options.meta?.manualFiltering
-      ? (table.options.meta?.manualFiltering as { timeOut: number })?.timeOut || 500
-      : 0,
-  );
+  const timeOut = useMemo(() => {
+    const instance = table.options.meta?.manualFiltering;
+    return instance ? (instance as { timeOut: number })?.timeOut || 500 : 0;
+  }, []);
+  const handleSearch = useDebouncedCallback(e => {
+    table.options.meta?.filterFunction?.(e);
+    table.setGlobalFilter(e.target.value);
+    table.setPageIndex(0);
+  }, timeOut);
   return (
     <>
       <Box className="flex items-center py-2 space-x-2 justify-between">
