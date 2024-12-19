@@ -110,7 +110,6 @@ export default function GetDepartment() {
                 leftSection: <BaseIcon icon={IconTrash} />,
               },
             ]}
-            row={row}
           />
         );
       },

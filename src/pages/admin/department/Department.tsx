@@ -84,7 +84,6 @@ export default function Department() {
               onClick: () => navigate(`/departments/${row.original.id}`),
             },
           ]}
-          row={row}
         />
       ),
     },

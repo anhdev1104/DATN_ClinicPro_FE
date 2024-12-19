@@ -98,9 +98,7 @@ export default function User() {
     },
     {
       id: 'actions',
-      cell: ({ row }) => (
-        <ActionWithRow row={row} data={[{ label: 'Xem Chi Tiết', onClick: () => navigate(row.original.id) }]} />
-      ),
+      cell: ({ row }) => <ActionWithRow data={[{ label: 'Xem Chi Tiết', onClick: () => navigate(row.original.id) }]} />,
     },
   ]);
   return (
