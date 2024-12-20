@@ -1,26 +1,16 @@
 import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { DeleteIcon, EditNoteIcon, KeyboardArrowDownIcon, KeyboardArrowUpIcon } from '@/components/icons';
 import { IPermissions } from '@/types/permissions.type';
-import { useGetActionDetailQuery } from '@/redux/api/action';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 type TPermissionRow = {
   data: IPermissions;
-  index: number;
   handleToggleConfirm: (id: string) => void;
   handleToggleFormUpdate: (id: string) => void;
 };
 
-const PermissionRow = ({ data, index, handleToggleConfirm, handleToggleFormUpdate }: TPermissionRow) => {
-  const [idPermission, setIdPermission] = useState<string | undefined>('');
+const PermissionRow = ({ data, handleToggleConfirm, handleToggleFormUpdate }: TPermissionRow) => {
   const [open, setOpen] = useState(false);
-  const { data: actionData } = useGetActionDetailQuery(idPermission || '');
-
-  useEffect(() => {
-    if (data) {
-      data.permission_actions[index ?? 0] && setIdPermission(data.permission_actions[index ?? 0].action_id);
-    }
-  }, [data, index]);
 
   return (
     <>
@@ -74,12 +64,10 @@ const PermissionRow = ({ data, index, handleToggleConfirm, handleToggleFormUpdat
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data.permission_actions.map(permission => (
-                    <TableRow key={permission.id}>
-                      <TableCell component="th" scope="row">
-                        {actionData?.data.name}
-                      </TableCell>
-                      <TableCell> {actionData?.data.value}</TableCell>
+                  {data.action.map((item: any) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.name}</TableCell>
+                      <TableCell> {item.value}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

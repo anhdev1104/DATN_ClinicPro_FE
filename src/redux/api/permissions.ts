@@ -18,7 +18,7 @@ export const permissionsApi = createApi({
               ...result.data.map(({ id }) => ({ type: 'Permissions' as const, id })),
               { type: 'Permissions', id: 'PERMISSIONS-LIST' },
             ]
-          : [{ type: 'Permissions', id: 'PERMISSIONS_LIST' }],
+          : [{ type: 'Permissions', id: 'PERMISSIONS-LIST' }],
       keepUnusedDataFor: 120,
     }),
     getPermissionsDetail: builder.query<ResponseTypes<IPermissions>, string>({

@@ -1,7 +1,12 @@
-import { LogoutIcon, MenuIcon, NotificationsIcon } from '@/components/icons';
+import { LogoutIcon, MenuIcon } from '@/components/icons';
 import Input from '@/components/input';
+import { authLogout } from '@/redux/auth/authSlice';
+import { RootState } from '@/redux/store';
+import { logoutService } from '@/services/auth.service';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const hoverIcon: string =
@@ -51,14 +56,22 @@ function SearchAdmin() {
 }
 
 function AccountManagement() {
+  const auth = useSelector((state: RootState) => state.auth.data);
+  const dispatch = useDispatch();
+
+  const handleLogoutUser = async () => {
+    await logoutService();
+    dispatch(authLogout());
+  };
+
   return (
     <div className="flex items-center gap-10">
-      <div className={`cursor-pointer p-1 relative ${hoverIcon}`}>
+      {/* <div className={`cursor-pointer p-1 relative ${hoverIcon}`}>
         <NotificationsIcon className="text-primaryAdmin" />
         <div className="flex items-center justify-center bg-red-500 rounded-full w-4 h-4 text-xs text-white absolute right-[2px] top-1">
           1
         </div>
-      </div>
+      </div> */}
       <div className="flex gap-2 items-center">
         <div className="flex gap-2 cursor-pointer">
           <div className="flex flex-col text-right">
@@ -66,14 +79,10 @@ function AccountManagement() {
             <span className="text-gray-400 text-xs mt-1">Admin</span>
           </div>
           <div className="w-10 rounded-[14px] overflow-hidden">
-            <img
-              src="https://avatars.githubusercontent.com/u/121429011?v=4"
-              alt="avartar-"
-              className="w-full h-full object-cover"
-            />
+            <img src={auth?.data.user_info.avatar} alt="avartar-" className="w-full h-full object-cover" />
           </div>
         </div>
-        <div className="p-1 ml-3" title="Đăng xuất">
+        <div className="p-1 ml-3" title="Đăng xuất" onClick={handleLogoutUser}>
           <LogoutIcon className="cursor-pointer" />
         </div>
       </div>

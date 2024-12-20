@@ -19,3 +19,18 @@ export const permissionSchema = yup.object({
     }),
   ),
 });
+
+export const rolesSchema = yup.object({
+  name: yup.string().required('Tên role là bắt buộc'),
+  description: yup.string().required('Giá trị của role là bắt buộc'),
+  permissions: yup.array().of(
+    yup.object({
+      id: yup.string(),
+      actions: yup.array().of(
+        yup.object({
+          id: yup.string(),
+        }),
+      ),
+    }),
+  ),
+});

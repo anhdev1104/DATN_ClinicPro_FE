@@ -1,6 +1,4 @@
-import { STATUS } from '@/constants/define';
-
-interface IPermissionAction {
+export interface IPermissionAction {
   id?: string;
   permission_id: string;
   action_id: string;
@@ -26,6 +24,7 @@ export interface IPermissions {
   created_at?: Date;
   updated_at?: Date;
   permission_actions: IPermissionAction[];
+  action?: any;
 }
 export interface ICreatePermissions {
   id?: string;
@@ -38,11 +37,7 @@ export interface ICreatePermissions {
 export interface UserRole {
   id: string;
   fullname: string;
-  status: `${STATUS}`;
-  email: string;
-  role_id: string;
-  created_at: Date;
-  updated_at: Date;
+  avatar: string;
 }
 
 export interface IRoles {
@@ -53,4 +48,23 @@ export interface IRoles {
   updated_at?: Date;
   users_count: number;
   users: UserRole[];
+}
+export interface IRolesDetail extends IRoles {
+  permissions: [
+    {
+      id?: string;
+      name: string;
+      description: string;
+      actions: { id: string; name: string }[];
+    },
+  ];
+}
+export interface ICreateRoles {
+  id?: string;
+  name: string;
+  description: string;
+  permissions: {
+    id: string;
+    actions: { id: string }[];
+  }[];
 }

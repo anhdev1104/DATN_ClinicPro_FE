@@ -124,6 +124,7 @@ const ActionForm = ({ open, onClose, isEdit, idAction }: TActionForm) => {
         reset({
           name: '',
           value: '',
+          permissions: [],
         });
         onClose();
       }}
@@ -143,6 +144,7 @@ const ActionForm = ({ open, onClose, isEdit, idAction }: TActionForm) => {
           reset({
             name: '',
             value: '',
+            permissions: [],
           });
           onClose();
         }}

@@ -47,14 +47,18 @@ const LoginPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const handleLogin: SubmitHandler<IAccount> = async dataLogin => {
     if (!isValid) return;
-    const res = await dispatch(loginAuth(dataLogin));
-    if (res.payload.access_token) {
+    const { payload } = await dispatch(loginAuth(dataLogin));
+    if (payload.access_token) {
       toast.success('Đăng nhập thành công !', { position: 'top-right' });
-      navigate('/');
+      if (payload.data.role.name === 'patient') {
+        navigate('/');
+      } else {
+        navigate('/dashboard');
+      }
+      reset();
     } else {
-      toast.error(res.payload.response.data.message, { position: 'top-right' });
+      toast.error(payload.response.data.message, { position: 'top-right' });
     }
-    reset();
   };
 
   return (

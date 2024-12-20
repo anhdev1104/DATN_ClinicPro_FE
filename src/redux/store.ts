@@ -10,6 +10,7 @@ import { servicesApi } from './api/services';
 import { statisticsApi } from './api/statistics';
 import { actionApi } from './api/action';
 import { permissionsApi } from './api/permissions';
+import { rolesApi } from './api/roles';
 const persistConfig = {
   key: 'root',
   version: 1,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   [statisticsApi.reducerPath]: statisticsApi.reducer,
   [actionApi.reducerPath]: actionApi.reducer,
   [permissionsApi.reducerPath]: permissionsApi.reducer,
+  [rolesApi.reducerPath]: rolesApi.reducer,
 });
 const persisted = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
@@ -42,6 +44,7 @@ export const store = configureStore({
       statisticsApi.middleware,
       actionApi.middleware,
       permissionsApi.middleware,
+      rolesApi.middleware,
     ),
 });
 

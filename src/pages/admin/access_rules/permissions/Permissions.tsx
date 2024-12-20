@@ -68,10 +68,9 @@ const Permissions = () => {
             <TableBody>
               {!isLoading &&
                 permissionsData &&
-                permissionsData.data.map((result, index) => (
+                permissionsData.data.map(result => (
                   <PermissionRow
                     data={result}
-                    index={index}
                     handleToggleConfirm={handleToggleConfirm}
                     handleToggleFormUpdate={handleToggleFormUpdate}
                   />
