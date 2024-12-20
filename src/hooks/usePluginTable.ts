@@ -16,6 +16,7 @@ export const usePluginTable = <T, D>({
   rowPerPageFunction,
   filterFunction,
   manualFiltering,
+  virtualize,
 }: TablePlugin<T, D>) => {
   const [query] = useQueryParams({
     q: withDefault(StringParam, ''),
@@ -41,6 +42,7 @@ export const usePluginTable = <T, D>({
       q: query.q,
       limit: query.limit,
       page: query.page,
+      virtualize,
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

@@ -1,6 +1,8 @@
 import { ChevronRightIcon } from '../icons';
 
-const DirectRoute = ({ nav, subnav, targetnav }: { nav: string; subnav: string; targetnav?: string }) => {
+type TDirectRoute = { nav: string; subnav: string; targetnav?: string };
+
+const DirectRoute = ({ nav, subnav, targetnav }: TDirectRoute) => {
   return (
     <div className="text-primaryAdmin flex items-center text-base mb-10">
       <h2>{nav}</h2>

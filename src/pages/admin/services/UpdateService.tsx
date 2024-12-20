@@ -7,7 +7,7 @@ import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
 import yup from '@/lib/utils/yup';
 import { useUpdateServiceMutation } from '@/redux/api/services';
 import { Services } from '@/types/services.type';
-import { IconPencil } from '@tabler/icons-react';
+import { IconBrandAws, IconCurrencyDong, IconPencil } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 
 const updateServiceSchema = yup.object({
@@ -44,6 +44,7 @@ export default function UpdateService({ close, ...props }: UpdateServiceProps) {
             autoComplete="service_name"
             placeholder="Tên dịch vụ"
             label="Tên dịch vụ"
+            leftSection={<BaseIcon icon={IconBrandAws} />}
             withAsterisk
           />
           <BaseInput.Number
@@ -53,6 +54,7 @@ export default function UpdateService({ close, ...props }: UpdateServiceProps) {
             label="Giá dịch vụ"
             thousandSeparator=","
             suffix=" VND"
+            leftSection={<BaseIcon icon={IconCurrencyDong} />}
             withAsterisk
           />
           <BaseInput.Textarea name="description" autoComplete="description" placeholder="Mô tả" label="Mô tả" />

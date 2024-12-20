@@ -52,30 +52,22 @@ const ListPrescriptions = ({ navigate }: ListPrescriptons) => {
   const handleRemovePrescription = async () => {
     handleToggleConfirm();
     if (!idPrescription) return;
-    try {
-      const res = await deletePrescription(idPrescription);
-      if (res.message === false) {
-        return toast.error(renderMessageError(res.errors));
-      }
-      setPrescription(prev => prev.filter(item => item.id !== idPrescription));
-      toast.success('Xoá đơn thuốc thành công');
-    } catch (error) {
-      console.log(error);
+    const res = await deletePrescription(idPrescription);
+    if (res.message === false) {
+      return toast.error(renderMessageError(res.errors));
     }
+    setPrescription(prev => prev.filter(item => item.id !== idPrescription));
+    toast.success('Xoá đơn thuốc thành công');
   };
 
   const getPrescriptionDetail = async (id: string | undefined) => {
     if (!id) return;
-    try {
-      const res = await getPrescriptionDetails(id);
-      if (res.message === false) {
-        return toast.error(renderMessageError(res.errors));
-      }
-      setDetailMedication(res.data);
-      setPrescriptionDetail();
-    } catch (error) {
-      console.log(error);
+    const res = await getPrescriptionDetails(id);
+    if (res.message === false) {
+      return toast.error(renderMessageError(res.errors));
     }
+    setDetailMedication(res.data);
+    setPrescriptionDetail();
   };
 
   return (

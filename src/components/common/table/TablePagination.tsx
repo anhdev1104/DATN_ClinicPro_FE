@@ -2,11 +2,18 @@ import BaseInput from '@/components/base/input';
 import { ROW_PER_PAGE_SELECT } from '@/constants/config';
 import { Flex, Pagination } from '@mantine/core';
 import { Table } from '@tanstack/react-table';
+import { useMemo } from 'react';
 
 interface TablePaginationProps<T> {
   table: Table<T>;
 }
 export default function TablePagination<T>({ table }: TablePaginationProps<T>) {
+  const rowPerPageSelect = useMemo(() => {
+    const item = table.options.meta?.virtualize?.length;
+    return item && !ROW_PER_PAGE_SELECT.includes(`${item}`)
+      ? ROW_PER_PAGE_SELECT.concat(`${item}`)
+      : ROW_PER_PAGE_SELECT;
+  }, []);
   return (
     <Flex justify="space-between" className="relative p-2 min-h-12">
       <Flex className="absolute left-2 top-2/4 -translate-y-2/4 space-x-2 items-center">
@@ -18,7 +25,7 @@ export default function TablePagination<T>({ table }: TablePaginationProps<T>) {
             table.resetPageIndex();
             table.options.meta?.rowPerPageFunction?.(Number(value));
           }}
-          data={ROW_PER_PAGE_SELECT}
+          data={rowPerPageSelect}
           comboboxProps={{
             width: 120,
             position: 'top-start',

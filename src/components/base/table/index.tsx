@@ -20,10 +20,14 @@ interface BaseTableProps extends Omit<TableFactory, 'staticComponents' | 'props'
 const BaseTable = factory<BaseTableProps>(({ withTableBorder, parentProps, ...props }, ref) => {
   return (
     <div
-      className={cn('px-2', parentProps?.className, {
-        'border rounded-md': withTableBorder,
-      })}
       {...parentProps}
+      className={cn(
+        'px-2',
+        {
+          'border rounded-md': withTableBorder,
+        },
+        parentProps?.className,
+      )}
     >
       <Table ref={ref} {...props} />
     </div>
