@@ -9,7 +9,7 @@ const MainLayout = () => {
 
   return (
     <>
-      {location.pathname != '/chat-ai' && <NavigateChatBot />}
+      {location.pathname !== '/chat-ai' && <NavigateChatBot />}
       <ScrollToTopButton />
 
       <main className="overflow-x-hidden min-h-dvh">

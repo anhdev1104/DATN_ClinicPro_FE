@@ -75,8 +75,8 @@ function AccountManagement() {
       <div className="flex gap-2 items-center">
         <div className="flex gap-2 cursor-pointer">
           <div className="flex flex-col text-right">
-            <span className="font-bold ">Bùi Hoàng Anh</span>
-            <span className="text-gray-400 text-xs mt-1">Admin</span>
+            <span className="font-bold ">{auth?.data.user_info.fullname}</span>
+            <span className="text-gray-400 text-xs mt-1">{auth?.data.role.description}</span>
           </div>
           <div className="w-10 rounded-[14px] overflow-hidden">
             <img src={auth?.data.user_info.avatar} alt="avartar-" className="w-full h-full object-cover" />
