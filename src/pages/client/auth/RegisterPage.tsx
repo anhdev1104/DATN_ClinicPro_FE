@@ -53,10 +53,11 @@ const RegisterPage = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password_confirm, ...dataRegister } = data;
     const res = await registerService(dataRegister);
+
     if (res.errors) {
       toast.error(res.message, { position: 'top-right' });
     } else {
-      toast.success(res.message, { position: 'top-right' });
+      toast.success(res.data.message, { position: 'top-right' });
       navigate('/login');
     }
     reset();

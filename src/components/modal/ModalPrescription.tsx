@@ -129,7 +129,7 @@ const ModalPrescription = React.forwardRef(({ open, onClose, detailMedication }:
               <Stack direction="row" justifyContent="space-between" marginBottom={'8px'} key={med?.id}>
                 <Box sx={{ maxWidth: '68%' }}>
                   <Typography sx={{ fontSize: '13px', fontWeight: 500, color: 'black' }}>
-                    {index + 1}/. {med?.medication_name}
+                    {index + 1}/. {med?.medication.name}
                   </Typography>
 
                   <Typography sx={{ fontSize: '13px', fontStyle: 'italic', color: '#666' }}>

@@ -1,41 +1,30 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { IPrescription } from '@/types/prescription.type';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { MedicalRecord } from '@/types/medicalHistories.type';
-
-const medicationSchema = yup.object().shape({
-  medication_id: yup.string(),
-  instructions: yup.string(),
-  quantity: yup.number(),
-  duration: yup.number(),
-});
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const prescriptionSchema = yup.object().shape({
-  patient_id: yup.string().required('Bệnh nhân là trường bắt buộc'),
-  user_id: yup.string(),
-  name: yup.string().required('Tên đơn thuốc là bắt buộc'),
-  description: yup.string(),
-  medications: yup.array().of(medicationSchema),
-  medical_histories_id: yup.string().required('Bệnh án là bắt buộc'),
-  isCategory: yup.string().required('Cần có ít nhất một thuốc trong đơn thuốc'),
-});
+import { prescriptionSchema, updatePrescriptionSchema } from '@/schema/prescriptions.schema';
 
 type Schema = yup.InferType<typeof prescriptionSchema>;
+export type SchemaUpdate = yup.InferType<typeof updatePrescriptionSchema>;
 
 type TPrescriptionContext = {
   form: UseFormReturn<Schema>;
   medicalRecord: MedicalRecord;
   setMedicalRecord: React.Dispatch<React.SetStateAction<MedicalRecord>>;
 };
+type TUpdatePrescriptionContext = {
+  form: UseFormReturn<SchemaUpdate>;
+};
 
 const PrescriptionContext = createContext<TPrescriptionContext>({} as TPrescriptionContext);
+const UpdatePrescriptionContext = createContext<TUpdatePrescriptionContext>({} as TUpdatePrescriptionContext);
 
 const initialMedicationData = {} as IPrescription;
-// eslint-disable-next-line react-refresh/only-export-components
 export const usePrescriptionContextForm = () => useContext(PrescriptionContext);
+export const useUpdatePrescriptionContextForm = () => useContext(UpdatePrescriptionContext);
 
 export default function PrescriptionProvider({ children }: { children: ReactNode }) {
   const form = useForm<Schema>({
@@ -45,6 +34,11 @@ export default function PrescriptionProvider({ children }: { children: ReactNode
   });
   const [medicalRecord, setMedicalRecord] = useState<MedicalRecord>({} as MedicalRecord);
 
+  const formUpdate = useForm<SchemaUpdate>({
+    resolver: yupResolver(updatePrescriptionSchema),
+    mode: 'onChange',
+  });
+
   return (
     <PrescriptionContext.Provider
       value={{
@@ -53,7 +47,13 @@ export default function PrescriptionProvider({ children }: { children: ReactNode
         setMedicalRecord,
       }}
     >
-      {children}
+      <UpdatePrescriptionContext.Provider
+        value={{
+          form: formUpdate,
+        }}
+      >
+        {children}
+      </UpdatePrescriptionContext.Provider>
     </PrescriptionContext.Provider>
   );
 }

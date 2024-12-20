@@ -33,7 +33,7 @@ export const ExportFile = <T,>({ rows }: ExportFileProps<T>) => {
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item leftSection={<BaseIcon icon={IconFileSpreadsheet} />}>
-          <CSVLink filename="table.xlsx" data={excelRow as any[]}>
+          <CSVLink filename="table.csv" data={excelRow as any[]}>
             Excel
           </CSVLink>
         </Menu.Item>

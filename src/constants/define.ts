@@ -18,3 +18,10 @@ export enum GENDER {
   FEMALE = 'female',
   OTHER = 'other',
 }
+
+export enum ACTION {
+  CREATE = 'CREATE',
+  READ = 'READ',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+}

@@ -4,7 +4,10 @@ import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import ProtectedRoute from '@/components/auth';
+import Permissions from '@/pages/admin/access_rules/permissions/Permissions';
+import Roles from '@/pages/admin/access_rules/roles/Roles';
 
+const Action = React.lazy(() => import('@/pages/admin/access_rules/action/Action'));
 const ServicesPage = React.lazy(() => import('@/pages/admin/services/Services'));
 const Appointment = React.lazy(() => import('@/pages/admin/appointments/Compontents/ListAppointment'));
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
@@ -185,22 +188,37 @@ const adminRouter: IRouter[] = [
   {
     path: '/specialties',
     element: <Specialties />,
-    title: 'Trang chuyên khoa',
+    title: 'Quản lý chuyên khoa',
   },
   {
     path: '/patient',
     element: <Patients />,
-    title: 'Trang bệnh nhân',
+    title: 'Quản lý bệnh nhân',
   },
   {
     path: '/patient/:id',
     element: <DetailPatient />,
-    title: 'Trang bệnh nhân',
+    title: 'Chi tiết bệnh nhân',
   },
   {
     path: '/add-patient',
     element: <AddPatient />,
-    title: 'Trang bệnh nhân',
+    title: 'Thêm bệnh nhân',
+  },
+  {
+    path: '/action',
+    element: <Action />,
+    title: 'Quản lý hành động',
+  },
+  {
+    path: '/permission',
+    element: <Permissions />,
+    title: 'Quản lý quyền',
+  },
+  {
+    path: '/roles',
+    element: <Roles />,
+    title: 'Quản lý roles',
   },
 ];
 

@@ -81,7 +81,7 @@ const NotFoundPage: React.FC<NotFoundProps> = ({ title }) => {
             <ellipse
               cx="154.88"
               cy="140.894"
-              enableBackground="new    "
+              enableBackground="new"
               fill="#FF0000"
               opacity="0.18"
               rx="17.371"
@@ -93,7 +93,7 @@ const NotFoundPage: React.FC<NotFoundProps> = ({ title }) => {
             />
             <circle cx="113" cy="113" fill="none" r="109" stroke="#6E6E96" strokeWidth="8" />
           </svg>
-          <div className=" tracking-widest mt-4">
+          <div className=" tracking-widest mt-10">
             <span className="text-gray-500 text-3xl sm:text-4xl md:text-5xl lg:text-6xl block my-5">
               <span>4 0 4</span>
             </span>

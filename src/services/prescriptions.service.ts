@@ -1,5 +1,5 @@
 import Http from '@/helpers/http';
-import { IPrescription } from '@/types/prescription.type';
+import { IPrescription, IPrescriptionUpdate } from '@/types/prescription.type';
 const http = new Http();
 
 export const createPrescription = async (newPrescription: IPrescription) => {
@@ -29,10 +29,10 @@ export const getPrescriptionDetails = async (id: string) => {
   }
 };
 
-export const updatePrescription = async (id: string, prescription: IPrescription) => {
+export const updatePrescription = async (id: string, prescription: IPrescriptionUpdate) => {
   try {
     const response = await http.update(`/prescriptions/${id}`, prescription);
-    return response;
+    return response.data || response;
   } catch (error) {
     return error;
   }

@@ -51,7 +51,7 @@ export default function Table<T, D>(_props: BaseTableProps<T, D>) {
   return (
     <>
       <TableToolbar toolbar={toolbar} table={table} />
-      <BaseTable.Scroll minWidth={800} className='overflow-y-hidden'>
+      <BaseTable.Scroll minWidth={800} className="overflow-y-hidden">
         <BaseTable
           parentProps={{
             ref: parentRef,
@@ -59,7 +59,7 @@ export default function Table<T, D>(_props: BaseTableProps<T, D>) {
             className: cn('max-h-[560px] overflow-y-auto scrollbar-thin', parentProps?.className),
             style: {
               transform: 'translate3d(0, 0, 0)',
-              ...parentProps?.style
+              ...parentProps?.style,
             },
           }}
           withTableBorder
@@ -119,7 +119,7 @@ export default function Table<T, D>(_props: BaseTableProps<T, D>) {
             ) : (
               <BaseTable.Row>
                 <BaseTable.Cell colSpan={columns.length} className="h-24 text-center">
-                  không có kết quả hiện thị
+                  Không có kết quả hiện thị
                 </BaseTable.Cell>
               </BaseTable.Row>
             )}

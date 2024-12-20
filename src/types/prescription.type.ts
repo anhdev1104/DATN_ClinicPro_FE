@@ -29,9 +29,19 @@ export interface IPrescription {
   created_at?: string;
 }
 
-type TMedicationsType = IMedication & {
-  medication_name: string;
+export type TMedicationsType = IMedication & {
+  medication: {
+    id: string;
+    name: string;
+    category_id: string;
+  };
 };
+
+export interface IPrescriptionUpdate {
+  name: string;
+  description?: string;
+  medications: Omit<IMedication, 'prescription_id'>[];
+}
 
 export interface IPrescriptions extends Omit<IPrescription, 'patient_id' | 'user_id' | 'medical_histories_id'> {
   patient: Omit<IPatient, 'user_id' | 'created_at' | 'updated_at'>;
