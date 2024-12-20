@@ -20,7 +20,7 @@ export const TableVirtualize = <T extends unknown>({ table, parentRef, onRowClic
     return (
       <BaseTable.Row
         key={row.id}
-        className="cursor-pointer"
+        className="cursor-pointer -z-10"
         style={{
           height: `${virtualRow.size}px`,
           transform: `translateY(${virtualRow.start - index * virtualRow.size}px)`,

@@ -11,7 +11,7 @@ interface ActionWithRowProps {
       Omit<DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, 'ref'>,
       keyof MenuItemProps | 'component'
     > &
-      MenuItemProps & { label: string }
+    MenuItemProps & { label: string }
   >;
 }
 export default function ActionWithRow({ data }: ActionWithRowProps) {
@@ -20,18 +20,19 @@ export default function ActionWithRow({ data }: ActionWithRowProps) {
       radius="md"
       offset={4}
       classNames={{
-        item: 'min-w-[100px] flex justify-between items-center',
+        item: 'min-w-[100px] z-50 flex justify-between items-center',
         itemLabel: 'capitalize',
       }}
-      transitionProps={{ transition: 'pop-top-right' }}
+      transitionProps={{ transition: 'pop-top-right', }}
       position="bottom-end"
+      withinPortal
     >
       <Menu.Target>
         <BaseButton.Icon radius="md" variant="subtle">
           <BaseIcon icon={IconDots} />
         </BaseButton.Icon>
       </Menu.Target>
-      <Menu.Dropdown>
+      <Menu.Dropdown >
         {data &&
           data?.length > 0 &&
           data.map(({ label, ...props }) => (

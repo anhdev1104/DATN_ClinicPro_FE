@@ -49,17 +49,18 @@ export default function Table<T, D>(_props: BaseTableProps<T, D>) {
   const isVirtual = useMemo(() => virtualize && pageSize >= virtualize?.length, [pageSize]);
 
   return (
-    <div className="w-full">
+    <>
       <TableToolbar toolbar={toolbar} table={table} />
-      <BaseTable.Scroll minWidth={800}>
+      <BaseTable.Scroll minWidth={800} className='overflow-y-hidden'>
         <BaseTable
           parentProps={{
             ref: parentRef,
-            className: 'max-h-[560px] overflow-y-auto scrollbar-thin',
+            ...parentProps,
+            className: cn('max-h-[560px] overflow-y-auto scrollbar-thin', parentProps?.className),
             style: {
               transform: 'translate3d(0, 0, 0)',
+              ...parentProps?.style
             },
-            ...parentProps,
           }}
           withTableBorder
           {...props}
@@ -91,7 +92,7 @@ export default function Table<T, D>(_props: BaseTableProps<T, D>) {
                 );
               })
             ) : table.getRowModel().rows.length ? (
-              isVirtual ? (
+              !isVirtual ? (
                 table.getRowModel().rows.map(row => (
                   <BaseTable.Row
                     key={row.id}
@@ -126,6 +127,6 @@ export default function Table<T, D>(_props: BaseTableProps<T, D>) {
         </BaseTable>
       </BaseTable.Scroll>
       <TablePagination table={table} />
-    </div>
+    </>
   );
 }
