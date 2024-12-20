@@ -40,6 +40,7 @@ const Specialties = React.lazy(() => import('@/pages/admin/specialties/Specialti
 const Patients = React.lazy(() => import('@/pages/admin/patient/Patients'));
 const DetailPatient = React.lazy(() => import('@/pages/admin/patient/components/DetailPatient'));
 const AddPatient = React.lazy(() => import('@/pages/admin/patient/components/AddPatient'));
+const ChatBoxPage = React.lazy(() => import('@/pages/client/chatbox/ChatBoxPage'));
 
 type IRouter = RouteProps & {
   title: string;
@@ -98,6 +99,11 @@ const clientRouter: IRouter[] = [
       </ProtectedRoute>
     ),
     title: 'Thay đổi mật khẩu',
+  },
+  {
+    path: '/chat-ai',
+    element: <ChatBoxPage />,
+    title: 'ClinicPro AI',
   },
   {
     path: '/',
