@@ -11,10 +11,10 @@
     "format": "prettier . --write"
   },
   "dependencies": {
-    "@chatscope/chat-ui-kit-react": "^2.0.3",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@hookform/resolvers": "^3.9.0",
+    "@mantine/charts": "^7.15.1",
     "@mantine/core": "^7.13.4",
     "@mantine/dates": "^7.13.4",
     "@mantine/hooks": "^7.13.4",
@@ -25,6 +25,7 @@
     "@reduxjs/toolkit": "^2.2.7",
     "@tabler/icons-react": "3.17.0",
     "@tanstack/react-table": "^8.20.5",
+    "@tanstack/react-virtual": "^3.11.1",
     "@types/react-slick": "^0.23.13",
     "axios": "^1.7.7",
     "clsx": "^2.1.1",
@@ -46,6 +47,7 @@
     "react-select": "^5.8.2",
     "react-slick": "^0.30.2",
     "react-toastify": "^10.0.5",
+    "recharts": "2",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",

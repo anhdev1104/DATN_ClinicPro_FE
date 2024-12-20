@@ -31,18 +31,18 @@ export default function User() {
   const navigate = useNavigate();
   const columns = useColumn<IUserInfo>([
     {
-      accessorFn: ({ user_info }) => user_info.fullname,
+      accessorFn: ({ user_info }) => user_info?.fullname,
       id: 'fullname',
       header: 'Tên',
       cell: ({ getValue, row }) => (
-        <UserInfo avatar={row.original?.user_info.fullname} fullname={getValue()} email={row.original.email} />
+        <UserInfo avatar={row.original?.user_info?.avatar} fullname={getValue()} email={row.original.email} />
       ),
       meta: {
         label: 'Tên',
       },
     },
     {
-      accessorFn: ({ user_info }) => user_info.address,
+      accessorFn: ({ user_info }) => user_info?.address,
       id: 'address',
       header: 'Địa Chỉ',
       meta: {
@@ -51,7 +51,7 @@ export default function User() {
       enableSorting: false,
     },
     {
-      accessorFn: ({ user_info }) => user_info.dob,
+      accessorFn: ({ user_info }) => user_info?.dob,
       id: 'dob',
       header: 'Ngày sinh',
       meta: {
@@ -60,7 +60,7 @@ export default function User() {
       enableSorting: false,
     },
     {
-      accessorFn: ({ user_info }) => user_info.phone_number,
+      accessorFn: ({ user_info }) => user_info?.phone_number,
       id: 'phone_number',
       header: 'số điện thoại',
       meta: {
@@ -78,7 +78,7 @@ export default function User() {
             variant="unstyled"
             data={Object.values(STATUS)}
             defaultValue={value}
-            className="max-w-32"
+            className="w-32"
             allowDeselect={false}
             onChange={async value => {
               const response = await handleUpdate({ id: row.original.id, status: value as `${STATUS}` });
@@ -98,12 +98,9 @@ export default function User() {
     },
     {
       id: 'actions',
-      cell: ({ row }) => (
-        <ActionWithRow row={row} data={[{ label: 'Xem Chi Tiết', onClick: () => navigate(row.original.id) }]} />
-      ),
+      cell: ({ row }) => <ActionWithRow data={[{ label: 'Xem Chi Tiết', onClick: () => navigate(row.original.id) }]} />,
     },
   ]);
-
   return (
     <>
       <DirectRoute nav="Quản lý nhân viên" subnav="Danh sách thông tin nhân viên" />
@@ -133,6 +130,9 @@ export default function User() {
           data={users?.data || []}
           isFetching={isFetching || isUpdateLoading}
           isLoading={isLoading}
+          virtualize={{
+            length: 100000,
+          }}
         />
       </div>
     </>
