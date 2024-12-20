@@ -8,6 +8,7 @@ import { usersApi } from './api/users';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { servicesApi } from './api/services';
 import { actionApi } from './api/action';
+import { permissionsApi } from './api/permissions';
 const persistConfig = {
   key: 'root',
   version: 1,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   [globalSlice.name]: globalSlice.reducer,
   [servicesApi.reducerPath]: servicesApi.reducer,
   [actionApi.reducerPath]: actionApi.reducer,
+  [permissionsApi.reducerPath]: permissionsApi.reducer,
 });
 const persisted = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
@@ -31,7 +33,13 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(departmentApi.middleware, usersApi.middleware, servicesApi.middleware, actionApi.middleware),
+    }).concat(
+      departmentApi.middleware,
+      usersApi.middleware,
+      servicesApi.middleware,
+      actionApi.middleware,
+      permissionsApi.middleware,
+    ),
 });
 
 const persistor = persistStore(store);

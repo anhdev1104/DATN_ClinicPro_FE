@@ -103,7 +103,7 @@ export default function Action() {
           <Pagination
             value={page}
             onChange={setPage}
-            total={(actions && actions.total / 4) || 1}
+            total={(actions && Math.ceil(actions.total / 6)) || 1}
             radius="md"
             className="w-full flex justify-center"
           />

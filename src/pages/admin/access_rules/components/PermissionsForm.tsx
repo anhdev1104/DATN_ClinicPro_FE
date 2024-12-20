@@ -2,10 +2,14 @@ import { CloseIcon } from '@/components/icons';
 import MessageForm from '@/components/message';
 import { resolveErrorResponse } from '@/helpers/utils';
 import { AxiosBaseQueryError } from '@/lib/utils/axiosBaseQuery';
-import { useAddActionMutation, useGetActionDetailQuery, useUpdateActionMutation } from '@/redux/api/action';
-import { useGetPermissionsQuery } from '@/redux/api/permissions';
-import { actionSchema } from '@/schema/permission.schema';
-import { ICreateAction } from '@/types/permissions.type';
+import { useGetActionQuery } from '@/redux/api/action';
+import {
+  useAddPermissionsMutation,
+  useGetPermissionsDetailQuery,
+  useUpdatePermissionsMutation,
+} from '@/redux/api/permissions';
+import { permissionSchema } from '@/schema/permission.schema';
+import { ICreatePermissions } from '@/types/permissions.type';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@mantine/core';
 import {
@@ -23,53 +27,53 @@ import { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-type TActionForm = {
+type TPermissionsForm = {
   open: boolean;
   onClose: () => void;
   isEdit: boolean;
-  idAction: string;
+  idPermissions: string;
 };
 
-const ActionForm = ({ open, onClose, isEdit, idAction }: TActionForm) => {
-  const { data: actionDetail } = useGetActionDetailQuery(idAction);
-  const [handleCreate] = useAddActionMutation();
-  const [handleUpdate] = useUpdateActionMutation();
-  const { data: permissionsData } = useGetPermissionsQuery();
+const PermissionsForm = ({ open, onClose, isEdit, idPermissions }: TPermissionsForm) => {
+  const { data: permissionsDetail } = useGetPermissionsDetailQuery(idPermissions);
+  const [handleCreate] = useAddPermissionsMutation();
+  const [handleUpdate] = useUpdatePermissionsMutation();
+  const { data: actionsData } = useGetActionQuery();
 
   const {
     control,
     handleSubmit,
     getValues,
-    formState: { isValid, errors, isSubmitting, isDirty },
+    formState: { isValid, errors, isSubmitting },
     reset,
   } = useForm({
     mode: 'onSubmit',
-    resolver: yupResolver(actionSchema),
+    resolver: yupResolver(permissionSchema),
     defaultValues: {
-      name: actionDetail?.data.name || '',
-      value: actionDetail?.data.value || '',
-      permissions:
-        actionDetail?.data.permission_actions?.map(permission => ({
-          permission_id: permission.permission_id,
+      name: permissionsDetail?.data.name || '',
+      description: permissionsDetail?.data.description || '',
+      actions:
+        permissionsDetail?.data.permission_actions?.map(permission => ({
+          action_id: permission.action_id,
         })) || [],
     },
   });
 
-  const handleSubmitForm: SubmitHandler<ICreateAction> = async data => {
+  const handleSubmitForm: SubmitHandler<ICreatePermissions> = async data => {
     if (!isValid) return;
     const newData = {
       name: data.name.toUpperCase(),
-      value: data.value,
-      permissions: data.permissions,
+      description: data.description,
+      actions: data.actions,
     };
     const res = await handleCreate(newData);
     if (res.data) {
       reset({
         name: '',
-        value: '',
-        permissions: [],
+        description: '',
+        actions: [],
       });
-      toast.success('Tạo mới thành công hành động.');
+      toast.success('Tạo thành công một quyền mới.');
       return onClose();
     }
     resolveErrorResponse((res.error as AxiosBaseQueryError).data);
@@ -79,39 +83,40 @@ const ActionForm = ({ open, onClose, isEdit, idAction }: TActionForm) => {
     if (!isEdit) {
       reset({
         name: '',
-        value: '',
-        permissions: [],
+        description: '',
+        actions: [],
       });
     } else {
       reset({
-        name: (actionDetail && actionDetail?.data.name) ?? '',
-        value: (actionDetail && actionDetail?.data.value) ?? '',
-        permissions:
-          (actionDetail &&
-            actionDetail.data.permission_actions?.map(permission => ({
-              permission_id: permission.permission_id,
-            }))) ||
-          [],
+        name: (permissionsDetail && permissionsDetail?.data.name) ?? '',
+        description: (permissionsDetail && permissionsDetail?.data.description) ?? '',
+        actions:
+          permissionsDetail?.data.permission_actions?.map(permission => ({
+            action_id: permission.action_id,
+          })) || [],
       });
     }
-  }, [actionDetail, isEdit, reset]);
+  }, [permissionsDetail, isEdit, reset]);
 
-  const handleUpdateAction: SubmitHandler<ICreateAction> = async data => {
+  const handleUpdatePermissions: SubmitHandler<ICreatePermissions> = async data => {
     if (!isValid) return;
     const newDataUpdate = {
-      id: idAction,
+      id: idPermissions,
       name: data.name.toUpperCase(),
-      value: data.value,
-      permissions: data.permissions,
+      description: data.description,
+      actions: data.actions,
     };
     const res = await handleUpdate(newDataUpdate);
     if (res.data) {
       reset({
         name: '',
-        value: '',
-        permissions: [],
+        description: '',
+        actions:
+          permissionsDetail?.data.permission_actions?.map(permission => ({
+            action_id: permission.action_id,
+          })) || [],
       });
-      toast.success('Cập nhật thành công hành động.');
+      toast.success('Cập nhật thành công quyền.');
       return onClose();
     }
     resolveErrorResponse((res.error as AxiosBaseQueryError).data);
@@ -123,7 +128,8 @@ const ActionForm = ({ open, onClose, isEdit, idAction }: TActionForm) => {
       onClose={() => {
         reset({
           name: '',
-          value: '',
+          description: '',
+          actions: [],
         });
         onClose();
       }}
@@ -134,7 +140,7 @@ const ActionForm = ({ open, onClose, isEdit, idAction }: TActionForm) => {
           position: 'relative',
         },
         component: 'form',
-        onSubmit: handleSubmit(isEdit ? handleUpdateAction : handleSubmitForm),
+        onSubmit: handleSubmit(isEdit ? handleUpdatePermissions : handleSubmitForm),
       }}
     >
       <div
@@ -142,7 +148,7 @@ const ActionForm = ({ open, onClose, isEdit, idAction }: TActionForm) => {
         onClick={() => {
           reset({
             name: '',
-            value: '',
+            description: '',
           });
           onClose();
         }}
@@ -150,7 +156,7 @@ const ActionForm = ({ open, onClose, isEdit, idAction }: TActionForm) => {
         <CloseIcon />
       </div>
       <Box sx={{ p: '20px' }}>
-        <DialogTitle sx={{ fontWeight: 600, p: 0 }}> {isEdit ? 'Sửa hành động' : 'Tạo hành động'} </DialogTitle>
+        <DialogTitle sx={{ fontWeight: 600, p: 0 }}> {isEdit ? 'Sửa quyền' : 'Tạo quyền'} </DialogTitle>
         <DialogContent sx={{ p: 0 }}>
           <Typography sx={{ fontSize: '14px', mt: '25px', fontWeight: 550, mb: '3px' }}>Tên</Typography>
           <Controller
@@ -159,52 +165,48 @@ const ActionForm = ({ open, onClose, isEdit, idAction }: TActionForm) => {
             defaultValue={getValues('name') || ''}
             render={({ field }) => (
               <>
-                <input {...field} placeholder="Nhập vào tên hành động" className="appointment-input text-[#333]" />
+                <input {...field} placeholder="Nhập vào tên quyền" className="appointment-input text-[#333]" />
                 <MessageForm error={errors.name?.message} className="!mt-0 !text-[10px]" />
               </>
             )}
           />
           <Typography sx={{ fontSize: '14px', mt: '10px', fontWeight: 550, mb: '3px' }}>Mô tả</Typography>
           <Controller
-            name="value"
+            name="description"
             control={control}
             render={({ field }) => (
               <>
-                <input
-                  {...field}
-                  placeholder="Mô tả cho nội dung hành động"
-                  className="appointment-input text-[#333]"
-                />
-                <MessageForm error={errors.value?.message} className="!mt-0 !text-[10px]" />
+                <input {...field} placeholder="Mô tả cho nội dung quyền" className="appointment-input text-[#333]" />
+                <MessageForm error={errors.description?.message} className="!mt-0 !text-[10px]" />
               </>
             )}
           />
           <FormGroup>
             <Stack direction={'row'} alignItems={'center'} flexWrap={'wrap'}>
-              {permissionsData &&
-                permissionsData.data.map(permission => (
+              {actionsData &&
+                actionsData.data.map(action => (
                   <Controller
-                    key={permission.id}
-                    name="permissions"
+                    key={action.id}
+                    name="actions"
                     control={control}
                     render={({ field }) => (
                       <FormControlLabel
                         control={
                           <Checkbox
-                            value={permission.id}
-                            checked={field.value?.some(perm => perm.permission_id === permission.id) || false}
+                            value={action.id}
+                            checked={field.value?.some(act => act.action_id === action.id) || false}
                             onChange={e => {
                               const checked = e.target.checked;
 
                               field.onChange(
                                 checked
-                                  ? [...(field.value || []), { permission_id: permission.id }]
-                                  : field.value?.filter(perm => perm.permission_id !== permission.id),
+                                  ? [...(field.value || []), { action_id: action.id }]
+                                  : field.value?.filter(act => act.action_id !== action.id),
                               );
                             }}
                           />
                         }
-                        label={permission.name}
+                        label={action.name}
                         sx={{
                           '& .MuiFormControlLabel-label': {
                             fontSize: '13px',
@@ -219,7 +221,7 @@ const ActionForm = ({ open, onClose, isEdit, idAction }: TActionForm) => {
         </DialogContent>
       </Box>
       <Stack direction={'row'} justifyContent={'end'} sx={{ paddingRight: '20px', paddingBottom: '20px' }}>
-        <Button loading={isSubmitting} disabled={!isDirty} type="submit" color={(isEdit && 'yellow') || ''}>
+        <Button loading={isSubmitting} type="submit" color={(isEdit && 'yellow') || ''}>
           {isEdit ? 'Cập nhật' : 'Xác nhận'}
         </Button>
       </Stack>
@@ -227,4 +229,4 @@ const ActionForm = ({ open, onClose, isEdit, idAction }: TActionForm) => {
   );
 };
 
-export default ActionForm;
+export default PermissionsForm;

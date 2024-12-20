@@ -40,7 +40,7 @@ export const actionApi = createApi({
         data: {
           name: data.name,
           value: data.value,
-          permission_actions: data.permission_actions,
+          permissions: data.permissions,
         },
       }),
       invalidatesTags: (result, _, arg) => (result ? [{ type: 'Action', id: arg.id }] : []),

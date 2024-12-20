@@ -4,8 +4,10 @@ import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import ProtectedRoute from '@/components/auth';
-import Action from '@/pages/admin/access_rules/action/Action';
+import Permissions from '@/pages/admin/access_rules/permissions/Permissions';
+import Roles from '@/pages/admin/access_rules/roles/Roles';
 
+const Action = React.lazy(() => import('@/pages/admin/access_rules/action/Action'));
 const ServicesPage = React.lazy(() => import('@/pages/admin/services/Services'));
 const Appointment = React.lazy(() => import('@/pages/admin/appointments/Compontents/ListAppointment'));
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
@@ -207,6 +209,16 @@ const adminRouter: IRouter[] = [
     path: '/action',
     element: <Action />,
     title: 'Quản lý hành động',
+  },
+  {
+    path: '/permission',
+    element: <Permissions />,
+    title: 'Quản lý quyền',
+  },
+  {
+    path: '/roles',
+    element: <Roles />,
+    title: 'Quản lý roles',
   },
 ];
 
