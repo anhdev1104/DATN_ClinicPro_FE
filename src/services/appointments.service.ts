@@ -10,6 +10,38 @@ export const getAppointments = async () => {
     return error;
   }
 };
+export const addAppointments = async (data: IAppointment) => {
+  try {
+    const response = await http.post('/appointments', data);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+export const getAppointmentbyId = async (id: string) => {
+  try {
+    const response = await http.get(`/appointments/${id}`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+export const cancelledAppointment = async (id: string, data: IAppointment) => {
+  try {
+    const response = await http.post(`/appointments/${id}`, data);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+export const updateApointment = async (id: string, data: IAppointment) => {
+  try {
+    const response = await http.update(`/appointments/${id}`, data);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
 export const deleteAppointment = async (id: string) => {
   try {
     const response = await http.delete(`/appointments`, id);
@@ -18,9 +50,26 @@ export const deleteAppointment = async (id: string) => {
     return error;
   }
 };
-export const addAppointments = async (data: IAppointment) => {
+
+export const getAppointmentAsign = async (id: string) => {
   try {
-    const response = await http.post('/appointments', data);
+    const response = await http.get(`/appointments/send/${id}`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+export const asignAppointment = async (id: string, data: IAppointment) => {
+  try {
+    const response = await http.post(`/appointments/assign/${id}`, data);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+export const getAppointmentByPatient = async (id: string) => {
+  try {
+    const response = await http.get(`/appointments/patient/${id}`);
     return response;
   } catch (error) {
     return error;

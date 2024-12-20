@@ -159,7 +159,7 @@ const EditPackage = () => {
               <MessageForm error={errors.category_id?.message} />
             </div>
             <div className="min-w-[380px] w-[45%]">
-              <Label htmlFor="specialty_id" className="text-sm font-medium mb-1">
+              <Label htmlFor="" className="text-sm font-medium mb-1">
                 Chuyên khoa <span className="text-red-500">*</span>
               </Label>
               <Select placeholder="Chọn chuyên khoa" name="specialty_id" control={control} options={Specialty} />
@@ -212,7 +212,7 @@ const EditPackage = () => {
             <div className="flex justify-end space-x-4">
               <button
                 type="submit"
-                className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition duration-200"
+                className="bg-primaryAdmin text-white hover:bg-primaryAdmin/50 px-6 py-2 rounded-md transition duration-200"
               >
                 {loading ? 'Đang cập nhật...' : 'Cập nhật gói khám'}
               </button>

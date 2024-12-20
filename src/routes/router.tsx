@@ -4,12 +4,14 @@ import PageToTopUtils from '@/helpers/PageToTopUtils';
 import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import ProtectedRoute from '@/components/auth';
-import Permissions from '@/pages/admin/access_rules/permissions/Permissions';
-import Roles from '@/pages/admin/access_rules/roles/Roles';
 
+const Permissions = React.lazy(() => import('@/pages/admin/access_rules/permissions/Permissions'));
+const Roles = React.lazy(() => import('@/pages/admin/access_rules/roles/Roles'));
 const Action = React.lazy(() => import('@/pages/admin/access_rules/action/Action'));
+const Appointment = React.lazy(() => import('@/pages/admin/appointments/Appointment'));
+const DetailAppointment = React.lazy(() => import('@/pages/admin/appointments/Compontents/DetailAppointment'));
+const EditAppointment = React.lazy(() => import('@/pages/admin/appointments/Compontents/EditAppointment'));
 const ServicesPage = React.lazy(() => import('@/pages/admin/services/Services'));
-const Appointment = React.lazy(() => import('@/pages/admin/appointments/Compontents/ListAppointment'));
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
 const Department = React.lazy(() => import('@/pages/admin/department/Department'));
 const GetDepartment = React.lazy(() => import('@/pages/admin/department/GetDepartment'));
@@ -23,11 +25,11 @@ const RegisterPage = React.lazy(() => import('@/pages/client/auth/RegisterPage')
 const BranchsPage = React.lazy(() => import('@/pages/client/branchs/BranchsPage'));
 const CommunityPage = React.lazy(() => import('@/pages/client/community/CommunityPage'));
 const HomePage = React.lazy(() => import('@/pages/client/home/HomePage'));
-const PackageDetail = React.lazy(() => import('@/pages/admin/package/component/PackageDetail'));
 const Prescription = React.lazy(() => import('@/pages/admin/prescriptions/Prescription'));
 const ProfilePage = React.lazy(() => import('@/pages/client/profile/ProfilePage'));
 const ChangePassword = React.lazy(() => import('@/pages/client/auth/ChangePassword'));
 const ForgotPassword = React.lazy(() => import('@/pages/client/auth/ForgotPassword'));
+const AppointmentPage = React.lazy(() => import('@/pages/client/appointment/AppointmentPage'));
 const MedicalHistoriesPage = React.lazy(() => import('@/pages/client/medical_histories/MedicalHistoriesPage'));
 const EditMedicalHistories = React.lazy(
   () => import('@/pages/admin/medical_histories/components/EditMedicalHistories'),
@@ -95,6 +97,11 @@ const clientRouter: IRouter[] = [
     title: 'Lịch sử khám bệnh',
   },
   {
+    path: '/appoint-patient',
+    element: <AppointmentPage />,
+    title: 'Lịch hẹn khám',
+  },
+  {
     path: '/change-password',
     element: (
       <ProtectedRoute>
@@ -125,6 +132,16 @@ const adminRouter: IRouter[] = [
     path: '/appointments',
     element: <Appointment />,
     title: 'Danh sách lịch hẹn',
+  },
+  {
+    path: '/appointments/send/:id',
+    element: <DetailAppointment />,
+    title: 'Lịch hẹn chi tiết',
+  },
+  {
+    path: '/appointments/:id',
+    element: <EditAppointment />,
+    title: 'Chỉnh sửa lịch hẹn ',
   },
   {
     path: '/medical-record',
@@ -159,11 +176,6 @@ const adminRouter: IRouter[] = [
   {
     path: '/packages',
     element: <Package />,
-    title: 'Danh sách gói khám',
-  },
-  {
-    path: '/package/:id',
-    element: <PackageDetail />,
     title: 'Danh sách gói khám',
   },
   {

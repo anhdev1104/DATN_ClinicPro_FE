@@ -107,15 +107,21 @@ const ListPackage: React.FC<ListPackageProps> = ({ navigate }) => {
                     <label className="block text-sm font-medium text-gray-700">Danh mục</label>
                     <input
                       type="text"
-                      defaultValue={getCategoryName(pkg.category_id)}
+                      value={getCategoryName(pkg.category_id)}
                       className="w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Nội dung </label>
-                    <textarea name="" id="" cols={25} rows={6} disabled className="w-full bg-white scroll-select">
-                      {pkg.content}
-                    </textarea>
+                    <textarea
+                      name="content"
+                      id=""
+                      cols={25}
+                      rows={6}
+                      disabled
+                      value={pkg.content}
+                      className="w-full bg-white scroll-select"
+                    />
                   </div>
                   <div className="relative inline-block text-left ml-52">
                     <button

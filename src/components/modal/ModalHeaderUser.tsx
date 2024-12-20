@@ -26,13 +26,13 @@ const ModalHeaderUser = forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElemen
         Thông tin cá nhân
       </Link>
       <Link
-        to=""
+        to="/appoint-patient"
         className="bg-white px-3 py-2 text-xs cursor-pointer block transition-all ease-linear hover:bg-gray-100"
       >
         Lịch hẹn khám bệnh
       </Link>
       <Link
-        to=""
+        to="/"
         className="bg-white px-3 py-2 text-xs cursor-pointer block transition-all ease-linear hover:bg-gray-100"
       >
         Lịch sử khám bệnh
