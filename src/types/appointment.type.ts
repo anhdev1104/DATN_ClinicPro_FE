@@ -25,7 +25,6 @@ export interface IListAppointment {
     id: string;
     insurance_number: string;
     status: `${STATUS}`;
-    user_id: string;
     identity_card_id: string;
     created_at: string;
     updated_at: string;
@@ -39,6 +38,29 @@ export interface IListAppointment {
       address: string;
       dob: string;
       gender: `${GENDER}`;
+      created_at: string;
+      updated_at: string;
+    };
+  };
+  user: {
+    id: string;
+    status: `${APPOINTMENT_STATUS}`;
+    role: {
+      id: string;
+      name: string;
+      description: string;
+    };
+    user_info: {
+      id: string;
+      full_name: string;
+      address: string;
+      avatar: string;
+      phone_number: string;
+      gender: `${GENDER}`;
+      user_id: string;
+      dob: string;
+      identity_card_id: null;
+      department_id: string;
       created_at: string;
       updated_at: string;
     };

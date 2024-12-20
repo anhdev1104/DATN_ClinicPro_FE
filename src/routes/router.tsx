@@ -5,8 +5,8 @@ import AdminLayout from '@/layouts/AdminLayout';
 import MainLayout from '@/layouts/MainLayout';
 import ProtectedRoute from '@/components/auth';
 const Appointment = React.lazy(() => import('@/pages/admin/appointments/Appointment'));
-const AppointmentDetail = React.lazy(() => import('@/pages/admin/appointments/Compontents/AppointmentDetail'));
-
+const DetailAppointment = React.lazy(() => import('@/pages/admin/appointments/Compontents/DetailAppointment'));
+const EditAppointment = React.lazy(() => import('@/pages/admin/appointments/Compontents/EditAppointment'));
 const ServicesPage = React.lazy(() => import('@/pages/admin/services/Services'));
 const Dashboard = React.lazy(() => import('@/pages/admin/dashboard/DashBoard'));
 const Department = React.lazy(() => import('@/pages/admin/department/Department'));
@@ -25,6 +25,7 @@ const Prescription = React.lazy(() => import('@/pages/admin/prescriptions/Prescr
 const ProfilePage = React.lazy(() => import('@/pages/client/profile/ProfilePage'));
 const ChangePassword = React.lazy(() => import('@/pages/client/auth/ChangePassword'));
 const ForgotPassword = React.lazy(() => import('@/pages/client/auth/ForgotPassword'));
+const AppointmentPage = React.lazy(() => import('@/pages/client/appointment/AppointmentPage'));
 const MedicalHistoriesPage = React.lazy(() => import('@/pages/client/medical_histories/MedicalHistoriesPage'));
 const EditMedicalHistories = React.lazy(
   () => import('@/pages/admin/medical_histories/components/EditMedicalHistories'),
@@ -91,6 +92,11 @@ const clientRouter: IRouter[] = [
     title: 'Lịch sử khám bệnh',
   },
   {
+    path: '/appoint-patient',
+    element: <AppointmentPage />,
+    title: 'Lịch hẹn khám',
+  },
+  {
     path: '/change-password',
     element: (
       <ProtectedRoute>
@@ -118,9 +124,14 @@ const adminRouter: IRouter[] = [
     title: 'Danh sách lịch hẹn',
   },
   {
-    path: '/appointments/:id',
-    element: <AppointmentDetail />,
+    path: '/appointments/send/:id',
+    element: <DetailAppointment />,
     title: 'Lịch hẹn chi tiết',
+  },
+  {
+    path: '/appointments/:id',
+    element: <EditAppointment />,
+    title: 'Chỉnh sửa lịch hẹn ',
   },
   {
     path: '/medical-record',
