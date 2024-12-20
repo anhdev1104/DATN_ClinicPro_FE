@@ -85,8 +85,7 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
     const images = uploadFilesRef.current ? uploadFilesRef.current.getFiles() : [];
 
     if (!images.length) {
-      // eslint-disable-next-line no-console
-      console.warn('No images selected for upload.');
+      toast.warn('Chưa chọn ảnh', { position: 'top-right' });
       return;
     }
 
@@ -97,6 +96,9 @@ const AddMedicalHistories = ({ navigate }: AddMedicalHistories) => {
 
     try {
       const res = await uploadImages(formData);
+      if (res) {
+        toast.error('Tải ảnh thất bại', { position: 'top-right' });
+      }
 
       if (res?.data?.urls) {
         const imagesWithDescriptions = res.data?.urls?.map((url: string, index: any) => ({

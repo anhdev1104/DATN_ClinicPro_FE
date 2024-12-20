@@ -92,7 +92,7 @@ const Patients = () => {
         }
 
         return (
-          <div className={`${styled} px-3 py-1 text-[12px] text-white text-center rounded-xl w-max border`}>
+          <div className={`${styled} px-3 py-1 text-[12px] text-center rounded-xl w-max border`}>
             {convertToStatus(row.original.status)}
           </div>
         );

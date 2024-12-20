@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CachedIcon, CompareArrows } from '@/components/icons';
+import { CachedIcon } from '@/components/icons';
 import { getMedicalHistoriesById } from '@/services/medicalHistories.service';
 import { MedicalRecord } from '@/types/medicalHistories.type';
 import convertTime from '@/helpers/convertTime';
@@ -51,9 +51,6 @@ const MedicalHistoriesPage = () => {
       <div className="mb-10 flex justify-between">
         <div className="text-[25px] font-bold ">Lịch sử khám bệnh:</div>
         <div className="flex gap-3">
-          <button>
-            <CompareArrows className="!transform !rotate-90 size-[25px] hover:text-primaryAdmin cursor-pointer" />
-          </button>
           <button onClick={handleReset}>
             <CachedIcon className="size-[25px] hover:text-primaryAdmin cursor-pointer" />
           </button>
