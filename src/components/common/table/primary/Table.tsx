@@ -7,43 +7,63 @@ import { usePluginTable } from '@/hooks/usePluginTable';
 import { useMemo, useRef } from 'react';
 import { TableVirtualize } from './TableVirtualize';
 import { cn } from '@/helpers/utils';
-import { ROW_PER_PAGE_SELECT } from '@/constants/config';
 
-export type BaseTableProps<T, D> = TablePlugin<T, D> & {
-  isFetching?: boolean;
-  isLoading?: boolean;
-  onRowClick?: (row: Row<T>, event: React.MouseEvent) => void;
-  toolbar?: React.ReactNode;
-  tableProps?: Omit<TableProps, 'data'>;
-};
-export default function Table<T, D>({
-  toolbar,
-  tableProps,
-  isFetching,
-  isLoading,
-  onRowClick,
-  ...props
-}: BaseTableProps<T, D>) {
-  const table = usePluginTable(props);
+export type BaseTableProps<T, D> = TablePlugin<T, D> &
+  Omit<TableProps, 'data'> & {
+    isFetching?: boolean;
+    isLoading?: boolean;
+    onRowClick?: (row: Row<T>, event: React.MouseEvent) => void;
+    toolbar?: React.ReactNode;
+    parentProps?: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+  };
+export default function Table<T, D>(_props: BaseTableProps<T, D>) {
+  const {
+    toolbar,
+    isFetching,
+    parentProps,
+    isLoading,
+    onRowClick,
+    manualPagination,
+    data,
+    columns,
+    paginationFunction,
+    rowPerPageFunction,
+    filterFunction,
+    manualFiltering,
+    virtualize,
+    ...props
+  } = _props;
+  const table = usePluginTable({
+    manualPagination,
+    data,
+    columns,
+    paginationFunction,
+    rowPerPageFunction,
+    filterFunction,
+    manualFiltering,
+    virtualize,
+  } as TablePlugin<T, D>);
+
   const parentRef = useRef<HTMLDivElement>(null);
-  const isVirtual = useMemo(
-    () => table.getState().pagination.pageSize < +ROW_PER_PAGE_SELECT[ROW_PER_PAGE_SELECT.length - 1],
-    [table.getState().pagination.pageSize],
-  ); // eslint-disable react-hooks/exhaustive-deps
+  const pageSize = table.getState().pagination.pageSize;
+  const isVirtual = useMemo(() => virtualize && pageSize >= virtualize?.length, [pageSize]);
+
   return (
-    <div className="w-full">
+    <>
       <TableToolbar toolbar={toolbar} table={table} />
-      <BaseTable.Scroll minWidth={800}>
+      <BaseTable.Scroll minWidth={800} className='overflow-y-hidden'>
         <BaseTable
           parentProps={{
             ref: parentRef,
-            className: 'max-h-[560px] overflow-y-auto scrollbar-thin',
+            ...parentProps,
+            className: cn('max-h-[560px] overflow-y-auto scrollbar-thin', parentProps?.className),
             style: {
               transform: 'translate3d(0, 0, 0)',
+              ...parentProps?.style
             },
           }}
           withTableBorder
-          {...tableProps}
+          {...props}
         >
           <BaseTable.Header>
             {table.getHeaderGroups().map(({ headers, id }) => (
@@ -60,10 +80,10 @@ export default function Table<T, D>({
           </BaseTable.Header>
           <BaseTable.Body className="relative">
             {isLoading ? (
-              props.columns.map((_, index) => {
+              columns.map((_, index) => {
                 return (
                   <BaseTable.Row h={40} key={index}>
-                    {props.columns.map((_, index) => (
+                    {columns.map((_, index) => (
                       <BaseTable.Cell key={index}>
                         <Skeleton height={14} radius={6} />
                       </BaseTable.Cell>
@@ -72,7 +92,7 @@ export default function Table<T, D>({
                 );
               })
             ) : table.getRowModel().rows.length ? (
-              isVirtual ? (
+              !isVirtual ? (
                 table.getRowModel().rows.map(row => (
                   <BaseTable.Row
                     key={row.id}
@@ -83,6 +103,7 @@ export default function Table<T, D>({
                     {row.getVisibleCells().map(cell => {
                       return (
                         <BaseTable.Cell
+                          className="ml-3"
                           onClick={e => cell.column.columnDef.id !== 'actions' && onRowClick && onRowClick(row, e)}
                           key={cell.id}
                         >
@@ -97,7 +118,7 @@ export default function Table<T, D>({
               )
             ) : (
               <BaseTable.Row>
-                <BaseTable.Cell colSpan={props.columns.length} className="h-24 text-center">
+                <BaseTable.Cell colSpan={columns.length} className="h-24 text-center">
                   không có kết quả hiện thị
                 </BaseTable.Cell>
               </BaseTable.Row>
@@ -106,6 +127,6 @@ export default function Table<T, D>({
         </BaseTable>
       </BaseTable.Scroll>
       <TablePagination table={table} />
-    </div>
+    </>
   );
 }
