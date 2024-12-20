@@ -133,7 +133,7 @@ const Patients = () => {
               />
             </button>
             <span className={`text-sm font-medium ${status === 'active' ? 'text-green-600' : 'text-gray-600'}`}>
-              {status === 'active' ? 'Active' : 'Disabled'}
+              {convertToStatus(status)}
             </span>
           </div>
         );
