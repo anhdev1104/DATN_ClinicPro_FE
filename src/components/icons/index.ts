@@ -45,3 +45,8 @@ export { default as HandymanIcon } from '@mui/icons-material/Handyman';
 export { default as Diversity2Icon } from '@mui/icons-material/Diversity2';
 export { default as ReduceCapacityIcon } from '@mui/icons-material/ReduceCapacity';
 export { default as AddCircleOutlineIcon } from '@mui/icons-material/AddCircleOutline';
+export { default as ChatIcon } from '@mui/icons-material/Chat';
+export { default as DescriptionIcon } from '@mui/icons-material/Description';
+export { default as RefreshIcon } from '@mui/icons-material/Refresh';
+export { default as SendIcon } from '@mui/icons-material/Send';
+export { default as FlipCameraIosIcon } from '@mui/icons-material/FlipCameraIos';

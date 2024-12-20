@@ -52,6 +52,7 @@
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "tailwind-merge": "^2.5.2",
+    "typewriter-effect": "^2.21.0",
     "use-query-params": "^2.2.1",
     "yup": "^1.4.0"
   },
