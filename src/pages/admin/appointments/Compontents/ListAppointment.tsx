@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -13,7 +14,6 @@ import convertStatusAppointments from '@/helpers/convertStatusAppointments';
 const ListAppointment = () => {
   const [appointments, setAppointments] = useState<IListAppointment[]>([]);
   const [loading, setLoading] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState('');
   const [searchAppointment, setSearchAppointment] = useState('');
   const [activeModal, setActiveModal] = useState(false);
@@ -45,7 +45,7 @@ const ListAppointment = () => {
   const filteredAppointments = appointments.filter(pkg => {
     return (
       pkg?.patient?.id?.toString().includes(searchAppointment) ||
-      pkg?.specialty?.name?.toLowerCase().includes(searchAppointment) ||
+      pkg?.specialty?.description?.toLowerCase().includes(searchAppointment) ||
       pkg?.user?.user_info?.fullname?.toLowerCase().includes(searchAppointment) ||
       pkg?.package?.name?.toLowerCase().includes(searchAppointment)
     );
@@ -54,6 +54,8 @@ const ListAppointment = () => {
     const fetchAppointments = async () => {
       try {
         const response = await getAppointments();
+        console.log(response);
+
         setAppointments(response.data || []);
       } catch (error) {
         console.error(error);
@@ -105,7 +107,7 @@ const ListAppointment = () => {
                   {filteredAppointments.map((pkg, index) => (
                     <tr key={index} className=" even:bg-[#f5f5f5] hover:bg-yellow-50/45">
                       <td className="py-2 px-5 text-gray-800 max-w-[200px] truncate ">{pkg?.patient?.id}</td>
-                      <td className="p-4 text-center text-gray-600">{pkg?.specialty?.name}</td>
+                      <td className="p-4 text-center text-gray-600">{pkg?.specialty?.description}</td>
                       <td className="p-4 text-center text-gray-600">{pkg?.package?.name}</td>
                       <td className="p-4 text-center text-blue-600">{pkg?.user?.user_info?.fullname || 'Chưa có'}</td>
                       <td className="p-4 text-center text-gray-600">{convertTime(pkg.appointment_date)}</td>

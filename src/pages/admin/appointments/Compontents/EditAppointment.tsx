@@ -10,6 +10,7 @@ import { getPatientById } from '@/services/patient.service';
 import { getDoctors } from '@/services/user.service';
 import dayjs from 'dayjs';
 import convertTime from '@/helpers/convertTime';
+import convertGender from '@/helpers/convertToGender';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { IListAppointment } from '@/types/appointment.type';
 import SelectUsers from '@/components/select';
@@ -85,8 +86,10 @@ const EditAppointment = () => {
       const res = await asignAppointment(EditAppointment?.id, finalData);
       if (res?.status === 200) {
         toast.success('Chỉnh sửa lịch hẹn thành công');
-        navigate('/appointments');
+      } else {
+        toast.error('Kiểm tra lại thông tin lịch hẹn');
       }
+      navigate('/appointments');
     } catch (error) {
       console.error('Chi tiết lỗi:', error);
     } finally {
@@ -125,7 +128,7 @@ const EditAppointment = () => {
                     <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
                   </div>
                 </div>
-                <span className="text-gray-700 text-sm">{PatientById?.patient_info?.gender}</span>
+                <span className="text-gray-700 text-sm">{convertGender(PatientById?.patient_info?.gender)}</span>
               </label>
             </div>
           </div>
@@ -192,7 +195,7 @@ const EditAppointment = () => {
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Chọn trạng thái cuộc hẹn:</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Trạng thái cuộc hẹn:</label>
               <div className="block w-full rounded-md border border-gray-300 bg-gray-100 p-2 h-10">
                 {' '}
                 {EditAppointment?.status}

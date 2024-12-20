@@ -1,12 +1,12 @@
-function convertStatusAppointments(status: string): string {
-  const statusMap: { [key: string]: string } = {
+function convertStatusAppointments(gender: string): string {
+  const genderMap: { [key: string]: string } = {
     pending: 'Đang chờ',
     confirmed: 'Đã xác nhận',
     completed: 'Đã hoàn thành',
-    cancled: 'Đã hủy',
+    cancelled: 'Đã hủy',
   };
 
-  return statusMap[status] || 'Trạng thái không xác định';
+  return genderMap[gender];
 }
 
 export default convertStatusAppointments;

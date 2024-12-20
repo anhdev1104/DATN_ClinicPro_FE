@@ -16,7 +16,7 @@ const SortOrderToggle: React.FC<SortOrderToggleProps> = ({ onSort }) => {
 
   return (
     <button className="flex items-center gap-1 text-gray-600 hover:text-gray-800" onClick={handleToggleSort}>
-      <SwapVertIcon className={sortOrder === 'asc' ? 'rotate-180' : ''} />
+      <SwapVertIcon className={sortOrder === 'asc'} />
       {sortOrder === 'asc'}
     </button>
   );

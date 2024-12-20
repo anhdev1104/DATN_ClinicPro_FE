@@ -13,6 +13,8 @@ import dayjs from 'dayjs';
 import { IListAppointment } from '@/types/appointment.type';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+convertGender;
+import convertGender from '@/helpers/convertToGender';
 import convertTime from '@/helpers/convertTime';
 import { toast } from 'react-toastify';
 const schema = yup.object().shape({
@@ -45,7 +47,6 @@ const AppointmentDetail = () => {
   const handleClickOpen = (id: IListAppointment | null, action = false) => {
     setOpen({ status: true, id, action });
   };
-
   const [open, setOpen] = useState<{ status: boolean; id: IListAppointment | null; action: boolean }>({
     status: false,
     id: null,
@@ -67,7 +68,7 @@ const AppointmentDetail = () => {
                   {loading ? '.....' : PatientById?.patient_info?.fullname}
                 </h2>
                 <span className="text-gray-700 text-sm mt-1">
-                  - {loading ? '.....' : PatientById?.patient_info?.gender}
+                  - ({convertGender(loading ? '.....' : PatientById?.patient_info?.gender)})
                 </span>
               </div>
               <p className="text-sm text-gray-500">{dayjs(PatientById?.patient_info?.dob).format('DD/MM/YYYY')}</p>

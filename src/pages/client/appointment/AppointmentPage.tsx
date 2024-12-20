@@ -1,15 +1,16 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import LoadingSpin from '@/components/loading';
 import { getPatientById } from '@/services/patient.service';
 import { getAppointmentByPatient } from '@/services/appointments.service';
 import convertTime from '@/helpers/convertTime';
 import convertStatusAppointments from '@/helpers/convertStatusAppointments';
 const AppointmentPage = () => {
   const auth = useSelector((state: RootState) => state.auth.data) as IUser;
+  const [currentDate] = useState(() => new Date().toLocaleDateString());
   const [appointments, setAppointments] = useState<any[]>([]);
   const [patient, setPatient] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
@@ -44,20 +45,20 @@ const AppointmentPage = () => {
 
     fetchPatient();
   }, [appointments]);
-
   return (
     <section className="package">
       <div className="bg-white rounded-2xl py-[3rem] container-page">
         <div className="mb-20 flex flex-col gap-2">
           <div className="font-bold text-[30px] text-primary">Xin chào, {auth.data.user_info.fullname} ...</div>
+          <div>{currentDate}</div>
         </div>
-        <div className="list-package p-4">
+        <div className="list-package">
+          <div className="text-[25px] font-bold py-7 ">Lịch hẹn khám bệnh:</div>
           {loading ? (
             <div className="mx-auto text-center pt-10">
-              <span>Loading...</span>
+              <LoadingSpin className="!w-10 !h-10" color="border-primaryAdmin" />
             </div>
           ) : (
-            // <div className="overflow-x-auto whitespace-nowrap">
             <table className="min-w-full table-auto border-collapse  whitespace-nowrap">
               <thead>
                 <tr className="border-b-2 border-primaryAdmin/20 bg-primaryAdmin/5 h-full">
@@ -77,7 +78,7 @@ const AppointmentPage = () => {
                       <td className="py-2 px-5 text-gray-800 max-w-[200px] truncate">
                         {appointment.patient?.id || 'N/A'}
                       </td>
-                      <td className="p-4 text-center text-gray-600">{appointment.specialty?.name || 'N/A'}</td>
+                      <td className="p-4 text-center text-gray-600">{appointment.specialty?.description || 'N/A'}</td>
                       <td className="p-4 text-center text-gray-600">{appointment.package?.name || 'N/A'}</td>
                       <td className="p-4 text-center text-blue-600">
                         {appointment.user?.user_info?.fullname || 'Chưa có'}
