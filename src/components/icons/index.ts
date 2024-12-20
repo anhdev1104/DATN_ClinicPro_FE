@@ -44,3 +44,4 @@ export { default as DescriptionIcon } from '@mui/icons-material/Description';
 export { default as RefreshIcon } from '@mui/icons-material/Refresh';
 export { default as SendIcon } from '@mui/icons-material/Send';
 export { default as FlipCameraIosIcon } from '@mui/icons-material/FlipCameraIos';
+export { default as RemoveCircleOutline } from '@mui/icons-material/RemoveCircleOutline';

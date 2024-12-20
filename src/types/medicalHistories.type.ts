@@ -38,6 +38,7 @@ export interface NewMedical {
   indication: string;
   user_id: string;
   files: FileMidecal[];
+  services?: string[];
 }
 
 export interface MedicalRecord {

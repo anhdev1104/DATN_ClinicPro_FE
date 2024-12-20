@@ -1,4 +1,4 @@
-import { AddIcon, ChatIcon, DeleteIcon, DescriptionIcon, LocalHospitalIcon, SendIcon } from '@/components/icons';
+import { AddIcon, ChatIcon, DeleteIcon, DescriptionIcon, SendIcon } from '@/components/icons';
 import { MessageAi } from '@/components/message';
 import { ModalConfirm } from '@/components/modal';
 import convertTime from '@/helpers/convertTime';
@@ -41,6 +41,7 @@ const ChatBoxPage = () => {
   const [previousConversationId, setPreviousConversationId] = useState('');
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [LoadingMessageAI, setLoadingMessageAI] = useState<any>(null);
+  const [progressMessage, setProgressMessage] = useState<boolean>(false);
 
   useEffect(() => {
     if (auth) {
@@ -61,6 +62,7 @@ const ChatBoxPage = () => {
   const {
     control,
     handleSubmit,
+    setValue,
     reset,
     // formState: { isSubmitting, errors, isValid },
   } = useForm({
@@ -171,7 +173,6 @@ const ChatBoxPage = () => {
         <div className="w-64 bg-white border-r border-gray-200">
           <div className="py-4 pr-4 border-b border-gray-200 max-h-[65px]">
             <button
-              disabled={!LoadingMessageAI}
               onClick={() => {
                 setConversationDetail({} as IConversation);
                 setPreviousConversationId('');
@@ -236,7 +237,9 @@ const ChatBoxPage = () => {
               {loadingDetail ? (
                 <LoadingMessage />
               ) : conversationDetail && conversationDetail?.messages?.length > 0 ? (
-                conversationDetail?.messages.map((item: any, index: number) => <MessageAi key={index} message={item} />)
+                conversationDetail?.messages.map((item: any, index: number) => (
+                  <MessageAi setProgressMessage={setProgressMessage} key={index} message={item} />
+                ))
               ) : (
                 <div>
                   <div className="text-center mb-8">
@@ -249,14 +252,16 @@ const ChatBoxPage = () => {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 mb-8">
-                    <div className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                      <DescriptionIcon className="text-gray-600 mb-2" />
-                      <p className="text-sm">Tạo lịch tái khám và theo dõi sức khỏe cá nhân</p>
-                    </div>
-                    <div className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                      <LocalHospitalIcon className="text-gray-600 mb-2" />
-                      <p className="text-sm">Tra cứu thông tin về thuốc và liều dùng</p>
+                  <div className="w-max mx-auto">
+                    <div
+                      onClick={() => {
+                        setValue('prompt', 'Tra cứu thông tin dịch vụ tại ClinicPro');
+                        handleSubmit(onSubmit)();
+                      }}
+                      className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer flex items-center gap-4"
+                    >
+                      <DescriptionIcon className="text-gray-600" />
+                      <p className="text-sm">Tra cứu thông tin dịch vụ tại ClinicPro</p>
                     </div>
                   </div>
                 </div>
@@ -292,7 +297,7 @@ const ChatBoxPage = () => {
                   }}
                 />
 
-                <button className="bg-[#4db6ac] p-2 rounded-full text-white">
+                <button disabled={progressMessage} className="bg-[#4db6ac] p-2 rounded-full text-white">
                   <SendIcon sx={{ fontSize: 20 }} />
                 </button>
               </form>

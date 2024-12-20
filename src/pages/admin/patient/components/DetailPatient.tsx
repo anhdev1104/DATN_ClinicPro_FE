@@ -30,7 +30,7 @@ const GENDER_OPTIONS = [
 const STATUS_OPTIONS = [
   { label: 'Hoạt động', value: 'active' },
   { label: 'Không hoạt động', value: 'inactive' },
-  { label: 'Vô hiệu hóa', value: 'disabled' },
+  { label: 'Chuyển viện', value: 'transferred' },
 ];
 
 const identity_card_options = [
@@ -43,7 +43,7 @@ const schema = yup.object({
   status: yup
     .string()
     .trim()
-    .oneOf(['active', 'inactive', 'disabled'], 'Trạng thái không hợp lệ!')
+    .oneOf(['active', 'inactive', 'transferred'], 'Trạng thái không hợp lệ!')
     .required('Trạng thái không được bỏ trống!'),
   user_info: yup.object({
     fullname: yup.string().trim().required('Họ và tên không được bỏ trống!'),

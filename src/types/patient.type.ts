@@ -12,11 +12,16 @@ export interface IPatientInfo {
   avatar: string;
 }
 
+interface UserAccount {
+  id: string;
+  status: string;
+}
+
 export interface IPatient {
   id: string;
   insurance_number: string;
   status: string;
-  user_id: string;
+  user?: UserAccount;
   identity_card_id: string;
   created_at: string;
   updated_at: string;
@@ -26,7 +31,7 @@ export interface IPatient {
 
 export interface INewPatient {
   insurance_number: string;
-  status: 'active' | 'inactive' | 'disabled';
+  status: 'active' | 'inactive' | 'transferred';
   user_info: {
     fullname: string;
     email: string;

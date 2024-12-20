@@ -1,7 +1,7 @@
 import { Button } from '@/components/button';
 import DirectRoute from '@/components/direct';
 import Field from '@/components/field';
-import { List } from '@/components/icons';
+import { List, RemoveCircleOutline } from '@/components/icons';
 import Input from '@/components/input';
 import Label from '@/components/label';
 import { Controller, useForm } from 'react-hook-form';
@@ -16,6 +16,9 @@ import { FileMidecal, MedicalRecord } from '@/types/medicalHistories.type';
 import FormPatient from './FormPatient';
 import { toast } from 'react-toastify';
 import { ModalConfirm } from '@/components/modal';
+import { getService } from '@/services/service.service';
+import { Services } from '@/types/services.type';
+import FormService from './FormService';
 
 interface ImageWithDescription {
   file?: any;
@@ -26,7 +29,6 @@ const schema = yup.object().shape({
   diagnosis: yup.string().trim().required(),
   description: yup.string().trim().required(),
   treatment: yup.string().trim().required(),
-  indication: yup.string().trim().required(),
 });
 
 interface IPatientSelect {
@@ -52,8 +54,25 @@ const EditMedicalHistories = () => {
   const [initFiles, setInitFiles] = useState<FileMidecal[] | []>(medicalDetail?.files || []);
   const [filesDelete, setFilesDelete] = useState<string[]>([]);
   const [modalStatus, setModalStatus] = useState(false);
+  const [selectService, setSelectService] = useState(false);
+  const [services, setServices] = useState<Services[]>([]);
+  const [selectServiceId, setSelectServiceId] = useState<string[]>([]);
+  const [serviceDelete, setServiceDelete] = useState<string[]>([]);
 
   const { id } = useParams();
+
+  useEffect(() => {
+    (async () => {
+      const response = await getService();
+      setServices(response);
+    })();
+  }, []);
+
+  const filteredServices = services.filter(service => selectServiceId.includes(service.id));
+
+  const handleCloseDialogService = () => {
+    setSelectService(false);
+  };
 
   // Xử lý với form Patient
   const handleCloseDialog = () => {
@@ -93,11 +112,15 @@ const EditMedicalHistories = () => {
         setSelectedPatientId(oldPatient);
         setInitFiles(oldFiles);
 
+        setSelectServiceId((prev: any) => {
+          const newIds = data.services.map((service: any) => service.id);
+          return Array.from(new Set([...prev, ...newIds]));
+        });
+
         reset({
           diagnosis: data.diagnosis,
           description: data.description,
           treatment: data.treatment,
-          indication: data.indication,
         });
       } catch (error) {
         toast.error('Lỗi khi lấy dữ liệu bệnh án:', error ? error : '');
@@ -127,12 +150,19 @@ const EditMedicalHistories = () => {
     }
 
     try {
+      const finalSelectId = [...new Set(selectServiceId)].map(id => ({ id }));
+      const updatedServiceDelete = [
+        ...new Set(serviceDelete.filter(deleteId => !finalSelectId.some(selected => selected.id === deleteId))),
+      ];
+
       const finalData = {
         ...data,
         patient_id: selectedPatientId?.id,
         user_id: '885acee8-3042-4f9f-a306-923991dee831',
         files: [...newImages],
         file_deletes: [...filesDelete],
+        services: finalSelectId,
+        service_deletes: updatedServiceDelete,
       };
 
       const idDoctor = id ? id : '';
@@ -177,55 +207,7 @@ const EditMedicalHistories = () => {
                   control={control}
                 />
               </Field>
-              <Field className="flex gap-3 flex-col">
-                <Label htmlFor="patient_id">Danh sách bệnh nhân:</Label>
-                {selectedPatientId ? (
-                  <div className="flex flex-col gap-2 border p-3 rounded-md bg-gray-100">
-                    <div>
-                      <strong>ID:</strong> {selectedPatientId.id}
-                    </div>
-                    <div>
-                      <strong>Tên:</strong> {selectedPatientId.name}
-                    </div>
-                    <Button
-                      onClick={() => setSelectPatient(true)}
-                      className="text-black mt-2 bg-white border"
-                      type="button"
-                      styled="normal"
-                    >
-                      Thay đổi bệnh nhân
-                    </Button>
-                  </div>
-                ) : (
-                  <Button
-                    onClick={() => setSelectPatient(true)}
-                    className="text-black h-[48px] bg-[#F3F4F7]"
-                    type="button"
-                    styled="normal"
-                  >
-                    Chọn bệnh nhân
-                  </Button>
-                )}
-              </Field>
-              <Field className="flex gap-3 flex-col">
-                <Label htmlFor="indication">Chỉ định:</Label>
-                <Controller
-                  name="indication"
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <textarea
-                        className="scroll-select block w-full p-3 border border-borderColor rounded-md focus:border-third focus:outline-none min-h-[130px]  !font-normal !text-dark bg-white "
-                        placeholder="Chỉ định ..."
-                        id="indication"
-                        {...field}
-                      ></textarea>
-                    );
-                  }}
-                />
-              </Field>
-            </div>
-            <div className="w-1/2">
+
               <Field className="flex gap-3 flex-col">
                 <Label htmlFor="treatment">Phương pháp điều trị:</Label>
                 <Controller
@@ -259,6 +241,74 @@ const EditMedicalHistories = () => {
                     );
                   }}
                 />
+              </Field>
+            </div>
+            <div className="w-1/2">
+              <Field className="flex gap-3 flex-col">
+                <Label htmlFor="patient_id">Danh sách bệnh nhân:</Label>
+                {selectedPatientId ? (
+                  <div className="flex flex-col gap-2 border p-3 rounded-md bg-gray-100">
+                    <div>
+                      <strong>ID:</strong> {selectedPatientId.id}
+                    </div>
+                    <div>
+                      <strong>Tên:</strong> {selectedPatientId.name}
+                    </div>
+                    <Button
+                      onClick={() => setSelectPatient(true)}
+                      className="text-black mt-2 bg-white border"
+                      type="button"
+                      styled="normal"
+                    >
+                      Thay đổi bệnh nhân
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => setSelectPatient(true)}
+                    className="text-black h-[48px] bg-[#F3F4F7]"
+                    type="button"
+                    styled="normal"
+                  >
+                    Chọn bệnh nhân
+                  </Button>
+                )}
+              </Field>
+              <Field>
+                <Label htmlFor="patient_id">Danh sách dịch vụ:</Label>
+                <Button
+                  className="text-black h-[48px] bg-[#F3F4F7] w-full"
+                  onClick={() => setSelectService(true)}
+                  styled="normal"
+                  type="button"
+                >
+                  Chọn dịch vụ
+                </Button>
+
+                {selectServiceId.length > 0 && (
+                  <div className="mt-4 p-4 bg-white border border-gray-300 rounded-lg shadow-md ">
+                    <h1 className="mb-3">Dịch vụ đã chọn:</h1>
+                    <div className="max-h-60 overflow-y-auto flex gap-2 flex-wrap">
+                      {filteredServices.map(service => (
+                        <button
+                          type="button"
+                          key={service.id}
+                          className="flex items-center justify-between px-4 py-2 bg-white rounded-lg border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 gap-3"
+                        >
+                          <span className="text-sm text-gray-700">{service.service_name}</span>
+                          <div
+                            onClick={() => {
+                              setSelectServiceId(prev => prev.filter(id => id !== service.id));
+                              setServiceDelete(prev => [...prev, service.id]);
+                            }}
+                          >
+                            <RemoveCircleOutline className="w-5 h-5 text-gray-400 hover:text-red-500" />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </Field>
               <Field>
                 <Button
@@ -308,6 +358,15 @@ const EditMedicalHistories = () => {
         description="Bạn có chắc muốn cập nhập hồ sơ bệnh án ? Các thông tin cũ sẽ mất vỉnh viễn và không được khôi phục lại! "
         className="bg-primaryAdmin hover:bg-primaryAdmin/50"
       />
+      {selectService && (
+        <FormService
+          services={services}
+          selectServiceId={selectServiceId}
+          onSelectService={setSelectServiceId}
+          isDialogOpen={selectService}
+          handleCloseDialog={handleCloseDialogService}
+        />
+      )}
       {selectPatient && (
         <FormPatient
           onSelectPatient={handleSelectedPatientId}
