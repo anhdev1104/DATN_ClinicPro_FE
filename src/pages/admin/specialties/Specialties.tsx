@@ -87,10 +87,6 @@ const Specialtie = () => {
       cell: ({ row }) => <div>{convertTime(row.original.created_at || '')}</div>,
     },
     {
-      accessorKey: 'doctors_count',
-      header: 'Số lượng bác sĩ',
-    },
-    {
       id: 'actions',
       cell: ({ row }) => (
         <div className="flex justify-center items-center gap-2">

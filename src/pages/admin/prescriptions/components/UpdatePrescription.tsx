@@ -90,7 +90,6 @@ const UpdatePrescription: React.FC<TUpdatePrescription> = ({ open, onClose, idPr
         isCategory: getValues('isCategory'),
       });
     }
-     
   }, [prescription]);
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import { IMessage } from '@/types/chatAi.type';
 import Typewriter from 'typewriter-effect';
 import { useRef } from 'react';
 
-const MessageAi = ({ message, onTypingProgress }: { message: IMessage; onTypingProgress?: () => void }) => {
+const MessageAi = ({ message, setProgressMessage }: { message: IMessage; setProgressMessage: any }) => {
   const isUser = message.sender_type === 'USER';
   const typewriterRef = useRef<any>(null);
 
@@ -23,23 +23,20 @@ const MessageAi = ({ message, onTypingProgress }: { message: IMessage; onTypingP
             {message.typeMessage === 'responseAi' ? (
               <Typewriter
                 options={{
-                  delay: 1,
+                  delay: 1, // Tăng tốc độ nhanh nhất
                   cursor: '',
                 }}
                 onInit={typewriter => {
                   typewriterRef.current = typewriter;
-                  const chars = message.message_text.split('');
-                  chars.forEach(char => {
-                    typewriter
-                      .typeString(char)
-                      .pauseFor(1)
-                      .callFunction(() => {
-                        if (onTypingProgress) {
-                          onTypingProgress();
-                        }
-                      });
-                  });
-                  typewriter.start();
+
+                  typewriter
+                    .typeString(message.message_text)
+                    .callFunction(() => {
+                      setProgressMessage(false);
+                    })
+                    .start();
+
+                  setProgressMessage(true);
                 }}
               />
             ) : (

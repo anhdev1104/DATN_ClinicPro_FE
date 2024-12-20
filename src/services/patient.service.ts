@@ -35,7 +35,7 @@ export const createPatient = async (patient: INewPatient) => {
   }
 };
 
-export const updatePatient = async (id: string | undefined, INewPatient: INewPatient) => {
+export const updatePatient = async (id: string | undefined, INewPatient: INewPatient | any) => {
   try {
     const response = await http.update(`/patients/${id}`, INewPatient);
     return response;

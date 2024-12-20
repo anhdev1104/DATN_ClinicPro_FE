@@ -14,9 +14,11 @@ export const UserInfo = ({ avatar, email, fullname }: UserProps) => {
     <>
       <Flex gap={4}>
         <Avatar src={avatar} size={36} radius="xl" />
-        <Flex direction='column'>
+        <Flex direction="column">
           <Text size="sm">{fullname}</Text>
-          <Text size="xs" c="dimmed">{email}</Text>
+          <Text size="xs" c="dimmed">
+            {email}
+          </Text>
         </Flex>
       </Flex>
     </>

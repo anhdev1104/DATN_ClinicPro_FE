@@ -20,6 +20,7 @@ import { toast } from 'react-toastify';
 import MessageForm from '@/components/message';
 import { MedicalRecordSekeleton } from '../../medical_histories/components/MedicalRecords';
 import ModalDetailMedical from '@/components/modal/ModalDetailMedical';
+import NotFoundPage from '@/pages/client/404/NotFoundPage';
 
 const GENDER_OPTIONS = [
   { label: 'Nam', value: 'male' },
@@ -30,7 +31,7 @@ const GENDER_OPTIONS = [
 const STATUS_OPTIONS = [
   { label: 'Hoạt động', value: 'active' },
   { label: 'Không hoạt động', value: 'inactive' },
-  { label: 'Vô hiệu hóa', value: 'disabled' },
+  { label: 'Chuyển viện', value: 'transferred' },
 ];
 
 const identity_card_options = [
@@ -43,7 +44,7 @@ const schema = yup.object({
   status: yup
     .string()
     .trim()
-    .oneOf(['active', 'inactive', 'disabled'], 'Trạng thái không hợp lệ!')
+    .oneOf(['active', 'inactive', 'transferred'], 'Trạng thái không hợp lệ!')
     .required('Trạng thái không được bỏ trống!'),
   user_info: yup.object({
     fullname: yup.string().trim().required('Họ và tên không được bỏ trống!'),
@@ -87,6 +88,7 @@ const DetailPatient = () => {
   });
   const [modalStatus, setModalStatus] = useState(false);
   const [isLoadingList, setIsLoadingList] = useState(false);
+  const [error, setError] = useState<boolean>(false);
 
   const { id } = useParams();
 
@@ -100,26 +102,31 @@ const DetailPatient = () => {
 
   useEffect(() => {
     (async () => {
-      setIsLoadingList(true);
-      const data = await getPatientById(id);
-      setPatient(data);
-      reset({
-        insurance_number: data.insurance_number || 'Chưa nhập',
-        status: data.status || 'inactive',
-        user_info: {
-          fullname: data.patient_info?.fullname || 'Chưa nhập',
-          email: data.patient_info?.email || 'Chưa nhập',
-          phone_number: data.patient_info?.phone_number || 'Chưa nhập',
-          address: data.patient_info?.address || 'Chưa nhập',
-          gender: data.patient_info?.gender || 'male',
-          dob: data.patient_info?.dob || '1970-01-01',
-        },
-        identity_card: {
-          type_name: data.identity_card?.type_name || 'Căn cước công dân',
-          identity_card_number: data.identity_card?.identity_card_number || 'Chưa nhập',
-        },
-      });
-      setIsLoadingList(false);
+      try {
+        setIsLoadingList(true);
+        const data = await getPatientById(id);
+        setPatient(data);
+        reset({
+          insurance_number: data.insurance_number || 'Chưa nhập',
+          status: data.status || 'inactive',
+          user_info: {
+            fullname: data.patient_info?.fullname || 'Chưa nhập',
+            email: data.patient_info?.email || 'Chưa nhập',
+            phone_number: data.patient_info?.phone_number || 'Chưa nhập',
+            address: data.patient_info?.address || 'Chưa nhập',
+            gender: data.patient_info?.gender || 'male',
+            dob: data.patient_info?.dob || '1970-01-01',
+          },
+          identity_card: {
+            type_name: data.identity_card?.type_name || 'Căn cước công dân',
+            identity_card_number: data.identity_card?.identity_card_number || 'Chưa nhập',
+          },
+        });
+        setIsLoadingList(false);
+      } catch (error) {
+        setError(true);
+        return error;
+      }
     })();
   }, [id, reset]);
 
@@ -144,6 +151,10 @@ const DetailPatient = () => {
   };
 
   const handleSubmitForm = handleSubmit(onSubmit);
+
+  if (error) {
+    return <NotFoundPage title="Không tìm thấy bệnh nhân" />;
+  }
 
   return (
     <>
@@ -312,67 +323,70 @@ const DetailPatient = () => {
           <div className={`grid grid-cols-3 gap-5`}>
             {isLoadingList && new Array(6).fill(0).map((_, index) => <MedicalRecordSekeleton key={index} />)}
             {!isLoadingList &&
-              (patient.medical_histories || []).length > 0 &&
-              patient?.medical_histories?.map(item => (
-                <div
-                  className="border-2 border-gray-300 p-3 rounded-md cursor-pointer hover:bg-primaryAdmin/5 transition-all ease-linear"
-                  key={item.id}
-                >
-                  <div className="flex gap-4 items-center">
-                    <div className="w-12 h-12 rounded-full overflow-hidden">
-                      <img src={item?.doctor.avatar} alt="" className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">{item?.doctor?.fullname}</h3>
-                      <span className="font-light text-xs">{item?.doctor?.phone_number}</span>
-                    </div>
-                  </div>
-                  <div className="text-xs mt-3">
-                    <p>Mã bệnh án:</p>
-                    <div className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm">
-                      {item?.id}
-                    </div>
-                  </div>
-                  <div className="text-xs mt-3">
-                    <p>Chuẩn đoán bệnh:</p>
-                    <div
-                      className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate"
-                      title={item?.diagnosis}
-                    >
-                      {item?.diagnosis}
-                    </div>
-                  </div>
-                  <div className="text-xs mt-3">
-                    <p>Chỉ định:</p>
-                    <div
-                      className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate"
-                      title={item?.indication}
-                    >
-                      {item?.indication}
-                    </div>
-                  </div>
-                  <div className="text-xs mt-3">
-                    <p>Bác sĩ phụ trách:</p>
-                    <div className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate">
-                      BS: <span className="font-normal pl-1 text-primaryAdmin">{item?.doctor?.fullname}</span>
-                    </div>
-                  </div>
-                  <div className="text-xs mt-3">
-                    <p>Ngày khám bệnh:</p>
-                    <div
-                      className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate"
-                      title=""
-                    >
-                      {convertTime(item.created_at || '')}
-                    </div>
-                  </div>
+              ((patient?.medical_histories || []).length > 0 ? (
+                patient?.medical_histories?.map(item => (
                   <div
-                    onClick={() => handleClickOpen(item)}
-                    className="text-xs mt-3 bg-primaryAdmin text-white rounded-sm py-2 px-5 text-center transition-all ease-linear hover:bg-opacity-75"
+                    className="border-2 border-gray-300 p-3 rounded-md cursor-pointer hover:bg-primaryAdmin/5 transition-all ease-linear"
+                    key={item.id}
                   >
-                    Chi tiết
+                    <div className="flex gap-4 items-center">
+                      <div className="w-12 h-12 rounded-full overflow-hidden">
+                        <img src={item?.doctor.avatar} alt="" className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium">{item?.doctor?.fullname}</h3>
+                        <span className="font-light text-xs">{item?.doctor?.phone_number}</span>
+                      </div>
+                    </div>
+                    <div className="text-xs mt-3">
+                      <p>Mã bệnh án:</p>
+                      <div className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm">
+                        {item?.id}
+                      </div>
+                    </div>
+                    <div className="text-xs mt-3">
+                      <p>Chuẩn đoán bệnh:</p>
+                      <div
+                        className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate"
+                        title={item?.diagnosis}
+                      >
+                        {item?.diagnosis}
+                      </div>
+                    </div>
+                    <div className="text-xs mt-3">
+                      <p>Chỉ định:</p>
+                      <div
+                        className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate"
+                        title={item?.indication}
+                      >
+                        {item?.indication}
+                      </div>
+                    </div>
+                    <div className="text-xs mt-3">
+                      <p>Bác sĩ phụ trách:</p>
+                      <div className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate">
+                        BS: <span className="font-normal pl-1 text-primaryAdmin">{item?.doctor?.fullname}</span>
+                      </div>
+                    </div>
+                    <div className="text-xs mt-3">
+                      <p>Ngày khám bệnh:</p>
+                      <div
+                        className="px-3 py-2 mt-1 bg-white border border-gray-200 font-light rounded-sm truncate"
+                        title=""
+                      >
+                        {convertTime(item.created_at || '')}
+                      </div>
+                    </div>
+                    <div
+                      onClick={() => handleClickOpen(item)}
+                      className="text-xs mt-3 bg-primaryAdmin text-white rounded-sm py-2 px-5 text-center transition-all ease-linear hover:bg-opacity-75"
+                    >
+                      Chi tiết
+                    </div>
                   </div>
-                </div>
+                ))
+              ) : (
+                <div>Chưa có bệnh án</div>
               ))}
           </div>
         </div>
