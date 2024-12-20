@@ -18,6 +18,7 @@ import {
 } from '@/components/icons';
 import { cn } from '@/helpers/utils';
 import useToggle from '@/hooks/useToggle';
+import { IUser } from '@/types/user.type';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -35,6 +36,7 @@ interface ICategoryManagement {
   pathActive: string[];
   isChildren?: boolean;
   children?: TChildren[];
+  define?: string;
 }
 
 const dumpCategory = [
@@ -44,6 +46,7 @@ const dumpCategory = [
     path: '/dashboard',
     icon: SpaceDashboardIcon,
     pathActive: ['/dashboard'],
+    define: 'DASHBOARD MANAGEMENT',
   },
   {
     id: 2,
@@ -51,6 +54,7 @@ const dumpCategory = [
     path: '/appointments',
     icon: CalendarMonthIcon,
     pathActive: ['/appointment'],
+    define: 'APPOINTMENT MANAGEMENT',
   },
   {
     id: 3,
@@ -58,6 +62,7 @@ const dumpCategory = [
     path: '/patient',
     icon: Patient,
     pathActive: ['/patient'],
+    define: 'PATIENT MANAGEMENT',
   },
   {
     id: 4,
@@ -65,6 +70,7 @@ const dumpCategory = [
     path: '/medical-record',
     icon: MedicalRecord,
     pathActive: ['/medical-record'],
+    define: 'MEDICAL MANAGEMENT',
   },
   {
     id: 5,
@@ -72,6 +78,7 @@ const dumpCategory = [
     path: '/prescriptions',
     icon: Tablet,
     pathActive: ['/prescriptions'],
+    define: 'PRESCRIPTION MANAGEMENT',
   },
   {
     id: 6,
@@ -79,6 +86,7 @@ const dumpCategory = [
     path: '/departments',
     icon: ApartmentIcon,
     pathActive: ['/departments'],
+    define: 'DEPARTMENT MANAGEMENT',
   },
   {
     id: 7,
@@ -86,6 +94,7 @@ const dumpCategory = [
     path: '/users',
     icon: GroupIcon,
     pathActive: ['/users'],
+    define: 'USER MANAGEMENT',
   },
   {
     id: 8,
@@ -93,6 +102,7 @@ const dumpCategory = [
     path: '/services',
     icon: MedicalServicesIcon,
     pathActive: ['/services'],
+    define: 'SERVICE MANAGEMENT',
   },
   {
     id: 9,
@@ -100,6 +110,7 @@ const dumpCategory = [
     path: '/packages',
     icon: AssignmentIcon,
     pathActive: ['/packages'],
+    define: 'PACKAGE MANAGEMENT',
   },
   {
     id: 10,
@@ -107,6 +118,7 @@ const dumpCategory = [
     path: '/specialties',
     icon: SpecialtiesIcon,
     pathActive: ['/specialties'],
+    define: 'SPECIALTY MANAGEMENT',
   },
   {
     id: 11,
@@ -115,6 +127,7 @@ const dumpCategory = [
     icon: AdminPanelSettingsIcon,
     pathActive: [''],
     isChildren: true,
+    define: 'ROLE MANAGEMENT',
     children: [
       {
         id: 1,
@@ -138,7 +151,7 @@ const dumpCategory = [
   },
 ];
 
-const Sidebar = ({ show }: { show: boolean }) => {
+const Sidebar = ({ show, auth }: { show: boolean; auth: IUser | null }) => {
   const [categoryManagement] = useState<ICategoryManagement[]>(dumpCategory);
   const [tabActive, setTabActive] = useState<number>(1);
   const { show: isDropdown, handleToggle } = useToggle();
@@ -178,78 +191,80 @@ const Sidebar = ({ show }: { show: boolean }) => {
           {categoryManagement.map(category => {
             let isActive = tabActive === category.id || handleActiveTab(category.pathActive, pathname);
 
-            return (
-              <div key={category.id}>
-                <li
-                  className={cn(
-                    'px-5 py-2 flex items-center cursor-pointer border-l-[3px] border-transparent transition-all ease-linear group',
-                    isActive ? 'border-l-primaryAdmin bg-primaryAdmin/5' : ' hover:bg-primaryAdmin/5',
-                  )}
-                  onClick={() => {
-                    handleCategory(category.id, category.path, category.isChildren);
-                    category.isChildren && handleToggle();
-                  }}
-                >
-                  <div className="flex gap-5 flex-1 items-center">
-                    <span
-                      className={cn(
-                        'p-2 rounded-md transition-all ease-linear group-hover:bg-white',
-                        isActive ? '!bg-white' : 'bg-primaryAdmin/5',
-                      )}
-                    >
-                      <category.icon
+            if (auth?.some((role: any) => role.name === category.define)) {
+              return (
+                <div key={category.id}>
+                  <li
+                    className={cn(
+                      'px-5 py-2 flex items-center cursor-pointer border-l-[3px] border-transparent transition-all ease-linear group',
+                      isActive ? 'border-l-primaryAdmin bg-primaryAdmin/5' : ' hover:bg-primaryAdmin/5',
+                    )}
+                    onClick={() => {
+                      handleCategory(category.id, category.path, category.isChildren);
+                      category.isChildren && handleToggle();
+                    }}
+                  >
+                    <div className="flex gap-5 flex-1 items-center">
+                      <span
                         className={cn(
-                          'transition-all ease-linear text-gray-500 group-hover:text-primaryAdmin',
-                          isActive && '!text-primaryAdmin',
+                          'p-2 rounded-md transition-all ease-linear group-hover:bg-white',
+                          isActive ? '!bg-white' : 'bg-primaryAdmin/5',
                         )}
-                      />
-                    </span>
-                    <span>{category.categoryName}</span>
-                  </div>
-                  {category.isChildren && !isDropdown ? (
-                    <ChevronRightIcon fontSize="small" />
-                  ) : (
-                    category.isChildren && isDropdown && <ArrowDownIcon fontSize="small" />
-                  )}
-                </li>
-                {category.isChildren &&
-                  isDropdown &&
-                  category.children?.map(item => {
-                    // isActive = tabActive === item.id || handleActiveTab(item.pathActive, pathname);
-                    return (
-                      <>
-                        <li
+                      >
+                        <category.icon
                           className={cn(
-                            'px-5 py-2 flex items-center cursor-pointer border-l-[3px] border-transparent transition-all ease-linear group',
-                            isActive ? 'border-l-primaryAdmin bg-primaryAdmin/5' : ' hover:bg-primaryAdmin/5',
+                            'transition-all ease-linear text-gray-500 group-hover:text-primaryAdmin',
+                            isActive && '!text-primaryAdmin',
                           )}
-                          onClick={() => {
-                            handleCategory(item.id, item.path);
-                          }}
-                          key={item.id}
-                        >
-                          <div className="flex gap-5 flex-1 items-center">
-                            <span
-                              className={cn(
-                                'p-2 rounded-md transition-all ease-linear group-hover:bg-white',
-                                isActive ? '!bg-white' : 'bg-primaryAdmin/5',
-                              )}
-                            >
-                              <item.icon
+                        />
+                      </span>
+                      <span>{category.categoryName}</span>
+                    </div>
+                    {category.isChildren && !isDropdown ? (
+                      <ChevronRightIcon fontSize="small" />
+                    ) : (
+                      category.isChildren && isDropdown && <ArrowDownIcon fontSize="small" />
+                    )}
+                  </li>
+                  {category.isChildren &&
+                    isDropdown &&
+                    category.children?.map(item => {
+                      // isActive = tabActive === item.id || handleActiveTab(item.pathActive, pathname);
+                      return (
+                        <>
+                          <li
+                            className={cn(
+                              'px-5 py-2 flex items-center cursor-pointer border-l-[3px] border-transparent transition-all ease-linear group',
+                              isActive ? 'border-l-primaryAdmin bg-primaryAdmin/5' : ' hover:bg-primaryAdmin/5',
+                            )}
+                            onClick={() => {
+                              handleCategory(item.id, item.path);
+                            }}
+                            key={item.id}
+                          >
+                            <div className="flex gap-5 flex-1 items-center">
+                              <span
                                 className={cn(
-                                  'transition-all ease-linear text-gray-500 group-hover:text-primaryAdmin',
-                                  isActive && '!text-primaryAdmin',
+                                  'p-2 rounded-md transition-all ease-linear group-hover:bg-white',
+                                  isActive ? '!bg-white' : 'bg-primaryAdmin/5',
                                 )}
-                              />
-                            </span>
-                            <span>{item.childName}</span>
-                          </div>
-                        </li>
-                      </>
-                    );
-                  })}
-              </div>
-            );
+                              >
+                                <item.icon
+                                  className={cn(
+                                    'transition-all ease-linear text-gray-500 group-hover:text-primaryAdmin',
+                                    isActive && '!text-primaryAdmin',
+                                  )}
+                                />
+                              </span>
+                              <span>{item.childName}</span>
+                            </div>
+                          </li>
+                        </>
+                      );
+                    })}
+                </div>
+              );
+            }
           })}
         </ul>
       </div>

@@ -1,3 +1,4 @@
+import { ROLE } from '@/constants/define';
 import { useSelector } from '@/hooks/redux';
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
@@ -7,14 +8,14 @@ interface IProtectedRoute {
   children: React.ReactNode;
 }
 const ProtectedRoute: React.FC<IProtectedRoute> = ({ children }) => {
-  const auth = useSelector(state => state.auth.data?.access_token);
+  const auth = useSelector(state => state.auth.data);
 
   useEffect(() => {
-    if (!auth) {
+    if (auth && !auth.access_token) {
       toast.info('Hết phiên đăng nhập, vui lòng đăng nhập lại !');
     }
   }, [auth]);
 
-  return auth ? children : <Navigate to="/login" />;
+  return auth && auth.access_token && auth.data.role.name !== ROLE.PATIENT ? children : <Navigate to="/login" />;
 };
 export default ProtectedRoute;

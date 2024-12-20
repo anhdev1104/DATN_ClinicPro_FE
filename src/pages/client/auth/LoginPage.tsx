@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import PosterAuth from './components/PosterAuth';
 import useToggle from '@/hooks/useToggle';
 import { emailRegex, passwordRegex } from '@/constants/regex';
+import { ROLE } from '@/constants/define';
 
 const schema = yup.object({
   email: yup
@@ -50,7 +51,7 @@ const LoginPage = () => {
     const { payload } = await dispatch(loginAuth(dataLogin));
     if (payload.access_token) {
       toast.success('Đăng nhập thành công !', { position: 'top-right' });
-      if (payload.data.role.name === 'patient') {
+      if (payload.data.role.name === ROLE.PATIENT) {
         navigate('/');
       } else {
         navigate('/dashboard');
